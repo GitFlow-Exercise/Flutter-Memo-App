@@ -13,18 +13,22 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Set up Flutter
+        id: flutter_setup
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.7.2'  # Ensure this matches a compatible Dart SDK version
+          flutter-version: '3.7.2'
           channel: 'stable'
-      - name: Get dependencies
+      - name: Get dependencies cache
         uses: actions/cache@v3
         with:
           path: ${{ github.workspace }}/.pub-cache
-          key: ${{ runner.os }}-pub-${{ hashFiles('pubspec.lock') }}
-      - run: flutter pub get
-      - run: flutter analyze
-      - run: flutter test --fail-fast  # Stop tests on first failure
+          key: ${{ runner.os }}-pub-${{ hashFiles('pubspec.lock') }}-flutter-${{ steps.flutter_setup.outputs.flutter-version }}
+      - name: Get dependencies
+        run: flutter pub get
+      - name: Analyze code
+        run: flutter analyze
+      - name: Run tests --fail-fast
+        run: flutter test --fail-fast
 
   build:
     name: Build Web
@@ -33,16 +37,18 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Set up Flutter
+        id: flutter_setup
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.7.2'
           channel: 'stable'
-      - name: Get dependencies
+      - name: Get dependencies cache
         uses: actions/cache@v3
         with:
           path: ${{ github.workspace }}/.pub-cache
-          key: ${{ runner.os }}-pub-${{ hashFiles('pubspec.lock') }}
-      - run: flutter pub get
+          key: ${{ runner.os }}-pub-${{ hashFiles('pubspec.lock') }}-flutter-${{ steps.flutter_setup.outputs.flutter-version }}
+      - name: Get dependencies
+        run: flutter pub get
       - run: flutter build web --release
       - name: Upload artifacts
         if: github.ref == 'refs/heads/main'
