@@ -19,7 +19,7 @@ jobs:
       - name: Install Flutter SDK
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.x' # 최신 버전으로 업데이트
+          flutter-version: '3.29.3' # 최신 버전으로 업데이트
           channel: 'stable'
 
       # Step 3: GitHub Secrets를 사용하여 .env 파일 생성 (dev.env로 변경)
