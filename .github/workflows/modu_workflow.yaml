@@ -63,7 +63,7 @@ jobs:
       # Step 11: 빌드 결과물 업로드 (main 브랜치인 경우)
       - name: Upload artifacts
         if: github.ref == 'refs/heads/main'
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v3
         with:
           name: web-build
           path: build/web
