@@ -15,7 +15,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.10.5' # 특정 Flutter 버전 명시
+          flutter-version: '3.7.2' # 특정 Flutter 버전 명시
           channel: 'stable'
       - name: Get dependencies
         uses: actions/cache@v3
@@ -35,7 +35,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.10.5'
+          flutter-version: '3.7.2'
           channel: 'stable'
       - name: Get dependencies
         uses: actions/cache@v3
