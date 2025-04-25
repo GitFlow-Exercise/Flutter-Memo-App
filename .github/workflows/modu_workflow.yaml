@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main, develop ] # main 및 develop 브랜치에 푸시될 때 실행
   pull_request:
-    branches: [ main, develop, prod ] # prod, dev, main 브랜치로의 Pull Request 시 실행
+    branches: [ main, develop ] # dev, main 브랜치로의 Pull Request 시 실행
 
 jobs:
   build:
@@ -19,7 +19,7 @@ jobs:
       - name: Install Flutter SDK
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.27.1' # 최신 버전으로 업데이트
+          flutter-version: '3.16.x' # 최신 버전으로 업데이트
           channel: 'stable'
 
       # Step 3: GitHub Secrets를 사용하여 .env 파일 생성 (dev.env로 변경)
