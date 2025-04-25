@@ -2,54 +2,65 @@ name: Flutter Web CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop ] # main 및 develop 브랜치에 푸시될 때 실행
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main, develop, prod ] # prod, dev, main 브랜치로의 Pull Request 시 실행
 
 jobs:
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Flutter
-        id: flutter_setup
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.7.2'
-          channel: 'stable'
-      - name: Get dependencies cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ github.workspace }}/.pub-cache
-          key: ${{ runner.os }}-pub-${{ hashFiles('pubspec.lock') }}-flutter-${{ steps.flutter_setup.outputs.flutter-version }}
-      - name: Get dependencies
-        run: flutter pub get
-      - name: Analyze code
-        run: flutter analyze
-      - name: Run tests --fail-fast
-        run: flutter test --fail-fast
-
   build:
-    name: Build Web
-    needs: test
+    name: Running Test and CI
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Flutter
-        id: flutter_setup
+      # Step 1: 소스 코드 체크아웃
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      # Step 2: Flutter SDK 설치
+      - name: Install Flutter SDK
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.7.2'
+          flutter-version: '3.27.1' # 최신 버전으로 업데이트
           channel: 'stable'
-      - name: Get dependencies cache
+
+      # Step 3: GitHub Secrets를 사용하여 .env 파일 생성 (dev.env로 변경)
+      - name: Create dev.env file
+        run: |
+          echo "BASE_URL=${{ secrets.BASE_URL }}" >> dev.env
+          echo "DEEP_LINK_URL=${{ secrets.DEEP_LINK_URL }}" >> dev.env
+
+      # Step 4: Flutter 의존성 캐싱 (빌드 속도 향상)
+      - name: Cache Flutter dependencies
         uses: actions/cache@v3
         with:
-          path: ${{ github.workspace }}/.pub-cache
-          key: ${{ runner.os }}-pub-${{ hashFiles('pubspec.lock') }}-flutter-${{ steps.flutter_setup.outputs.flutter-version }}
-      - name: Get dependencies
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-flutter-${{ hashFiles('pubspec.yaml') }}
+
+      # Step 5: Flutter 의존성 가져오기
+      - name: Get Flutter Dependencies
         run: flutter pub get
-      - run: flutter build web --release
+
+      # Step 6: Flutter Clean
+      - name: Clean Flutter Project
+        run: flutter clean
+
+      # Step 7: 코드 자동 생성 (Freezed, GoRouter 등)
+      - name: Generate Source Code
+        run: flutter packages pub run build_runner build --delete-conflicting-outputs
+
+      # Step 8: Flutter 분석 실행
+      - name: Analyze Flutter Code
+        run: flutter analyze --fatal-infos --fatal-warnings || { echo "Flutter Analyze failed"; exit 1; }
+
+      # Step 9: Flutter 테스트 실행 (커버리지 포함, 실패 시 워크플로 중단)
+      - name: Run Flutter Tests
+        run: |
+          flutter test --coverage || { echo "Tests failed"; exit 1; }
+
+      # Step 10: 웹 빌드 (테스트 및 분석 통과 시)
+      - name: Build Web
+        run: flutter build web --release
+
+      # Step 11: 빌드 결과물 업로드 (main 브랜치인 경우)
       - name: Upload artifacts
         if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v2
