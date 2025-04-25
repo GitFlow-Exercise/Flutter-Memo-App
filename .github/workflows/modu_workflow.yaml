@@ -15,7 +15,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.10.x' # 특정 Flutter 버전 명시
+          flutter-version: '3.7.2'  # Ensure this matches a compatible Dart SDK version
           channel: 'stable'
       - name: Get dependencies
         uses: actions/cache@v3
@@ -24,7 +24,7 @@ jobs:
           key: ${{ runner.os }}-pub-${{ hashFiles('pubspec.lock') }}
       - run: flutter pub get
       - run: flutter analyze
-      - run: flutter test --fail-fast # 테스트 실패 시 즉시 중단
+      - run: flutter test --fail-fast  # Stop tests on first failure
 
   build:
     name: Build Web
@@ -35,7 +35,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.10.x'
+          flutter-version: '3.7.2'
           channel: 'stable'
       - name: Get dependencies
         uses: actions/cache@v3
