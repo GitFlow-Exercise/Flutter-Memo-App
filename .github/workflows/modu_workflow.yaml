@@ -2,56 +2,51 @@ name: Flutter Web CI
 
 on:
   push:
-    branches: [ main, develop ] # main 및 develop 브랜치에 푸시될 때 실행
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main, develop ] # main 및 develop 브랜치로의 Pull Request가 생성/수정될 때 실행
+    branches: [ main, develop ]
 
 jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v3 # 저장소 코드 체크아웃
-
+      - uses: actions/checkout@v3
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x' # 사용할 Flutter 버전 지정 (최신 안정 버전 권장)
+          flutter-version: '3.10.5' # 특정 Flutter 버전 명시
           channel: 'stable'
-
       - name: Get dependencies
-        run: flutter pub get
-
-      - name: Analyze code
-        run: flutter analyze
-
-      - name: Run tests
-        run: flutter test
+        uses: actions/cache@v3
+        with:
+          path: ${{ github.workspace }}/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('pubspec.lock') }}
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test --fail-fast # 테스트 실패 시 즉시 중단
 
   build:
     name: Build Web
-    needs: test # test 작업이 성공해야 build 작업 실행
+    needs: test
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v3 # 저장소 코드 체크아웃
-
+      - uses: actions/checkout@v3
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x' # 사용할 Flutter 버전 지정 (최신 안정 버전 권장)
+          flutter-version: '3.10.5'
           channel: 'stable'
-
       - name: Get dependencies
-        run: flutter pub get
-
-      - name: Build web
-        run: flutter build web --release
-
+        uses: actions/cache@v3
+        with:
+          path: ${{ github.workspace }}/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('pubspec.lock') }}
+      - run: flutter pub get
+      - run: flutter build web --release
       - name: Upload artifacts
+        if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v2
-        if: github.ref == 'refs/heads/main' # main 브랜치인 경우에만 Artifact 업로드
         with:
           path: build/web
 
@@ -65,7 +60,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    if: github.ref == 'refs/heads/main' # main 브랜치인 경우에만 배포
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
