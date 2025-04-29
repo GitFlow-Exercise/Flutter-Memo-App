@@ -22,6 +22,20 @@
     - PostgreSQL 데이터베이스
 
 
+
+## Dart, Flutter 스타일 규칙 ⚠️
+
+### 헬퍼 메소드 지양
+
+- 기능적인 로직을 단순 메소드로 빼는 것을 지양합니다.
+  - **최대한 위젯 단위로 분리**하여 재사용성과 가독성을 높입니다.
+
+### const Lint 적용
+
+- const lint 적용으로 메모리 성능 최적화
+
+
+
 ## 아키텍처 🏗️
 
 MVI + MVVM, Clean Architecture 패턴을 사용합니다.
@@ -38,6 +52,33 @@ lib/
 │       ├── domain/
 │       └── presentation/
 ```
+
+### Dart 클래스 작성 순서
+
+- **필드** → **게터/세터** → **생성자** → **오버라이드 메소드** 순으로 작성합니다.
+
+
+
+### Presentation 폴더 구조
+
+`$NAME$Screen.dart`
+
+- 각 화면별 UI 컴포넌트를 정의하는 폴더입니다.
+
+$NAME$`ScreenRoot.dart`
+
+-  화면 진입 지점을 정의하는 폴더입니다.
+
+`Controller/`
+
+- 각 화면과 연결되는 로직을 관리하는 폴더입니다.
+- 내부 구성:
+  -  $NAME$`ViewModel` : 화면 상태 관리 및 비즈니스 로직 처리
+  -  $NAME$`State` : ViewModel이 관리하는 상태 정의
+  - $NAME$`Action` : 화면에서 발생하는 사용자 액션 정의
+  - $NAME$`Event` : 외부에서 발생하여 ViewModel이 수신하는 이벤트 정의
+
+
 
 ## 개발 프로세스 🔄
 
