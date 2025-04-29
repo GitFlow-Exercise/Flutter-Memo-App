@@ -1,5 +1,5 @@
-name: "✨ Feature"
-description: "새로운 기능 추가"
+name: "Issue"
+description: "새로운 이슈 생성"
 labels: ["feature"]
 body:
   - type: textarea
