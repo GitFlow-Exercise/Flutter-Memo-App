@@ -42,6 +42,10 @@ dependencies:
   flutter_riverpod: ^2.6.1
   riverpod_annotation: ^2.6.1
 
+  # 경로 기반 URL 전략
+  flutter_web_plugins:
+    sdk: flutter
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
