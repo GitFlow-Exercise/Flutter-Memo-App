@@ -133,6 +133,7 @@ GoogleService-Info.plist
 
 # FVM (Flutter Version Management)
 .fvm/
+.idea/
 
 # Melos
 pubspec_overrides.yaml
