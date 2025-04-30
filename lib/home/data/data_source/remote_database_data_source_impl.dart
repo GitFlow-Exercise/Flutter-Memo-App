@@ -27,13 +27,13 @@ class RemoteDataBaseDataSourceImpl implements RemoteDataBaseDataSource {
       return fromJson(data);
     } catch (e) {
       if (e is PostgrestException) {
-        throw AppException.network(
+        throw AppException.remoteDataBase(
           message: '데이터를 가져오는 중 오류가 발생했습니다: ${e.message}',
           error: e,
         );
       }
 
-      throw AppException.network(
+      throw AppException.remoteDataBase(
         message: '데이터를 가져오는 중 오류가 발생했습니다',
         error: e,
         stackTrace: StackTrace.current,
@@ -56,13 +56,13 @@ class RemoteDataBaseDataSourceImpl implements RemoteDataBaseDataSource {
       return fromJson(responseData);
     } catch (e) {
       if (e is PostgrestException) {
-        throw AppException.network(
+        throw AppException.remoteDataBase(
           message: '데이터를 생성하는 중 오류가 발생했습니다: ${e.message}',
           error: e,
         );
       }
 
-      throw AppException.network(
+      throw AppException.remoteDataBase(
         message: '데이터를 생성하는 중 오류가 발생했습니다',
         error: e,
         stackTrace: StackTrace.current,
@@ -91,13 +91,13 @@ class RemoteDataBaseDataSourceImpl implements RemoteDataBaseDataSource {
       return fromJson(responseData);
     } catch (e) {
       if (e is PostgrestException) {
-        throw AppException.network(
+        throw AppException.remoteDataBase(
           message: '데이터를 업데이트하는 중 오류가 발생했습니다: ${e.message}',
           error: e,
         );
       }
 
-      throw AppException.network(
+      throw AppException.remoteDataBase(
         message: '데이터를 업데이트하는 중 오류가 발생했습니다',
         error: e,
         stackTrace: StackTrace.current,
@@ -111,13 +111,13 @@ class RemoteDataBaseDataSourceImpl implements RemoteDataBaseDataSource {
       await _client.from(table).delete().eq('id', id);
     } catch (e) {
       if (e is PostgrestException) {
-        throw AppException.network(
+        throw AppException.remoteDataBase(
           message: '데이터를 삭제하는 중 오류가 발생했습니다: ${e.message}',
           error: e,
         );
       }
 
-      throw AppException.network(
+      throw AppException.remoteDataBase(
         message: '데이터를 삭제하는 중 오류가 발생했습니다',
         error: e,
         stackTrace: StackTrace.current,
@@ -163,13 +163,13 @@ class RemoteDataBaseDataSourceImpl implements RemoteDataBaseDataSource {
           .toList();
     } catch (e) {
       if (e is PostgrestException) {
-        throw AppException.network(
+        throw AppException.remoteDataBase(
           message: '데이터를 조회하는 중 오류가 발생했습니다: ${e.message}',
           error: e,
         );
       }
 
-      throw AppException.network(
+      throw AppException.remoteDataBase(
         message: '데이터를 조회하는 중 오류가 발생했습니다',
         error: e,
         stackTrace: StackTrace.current,
