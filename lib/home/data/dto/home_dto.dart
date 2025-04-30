@@ -1,9 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:memo_app/home/data/dto/base_dto.dart';
 
 part 'home_dto.g.dart';
 
 @JsonSerializable()
-class HomeDto {
+class HomeDto implements BaseDto {
   final String title;
   final String description;
   final String imageUrl;
@@ -17,5 +18,9 @@ class HomeDto {
   factory HomeDto.fromJson(Map<String, dynamic> json) =>
       _$HomeDtoFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$HomeDtoToJson(this);
+
+  @override
+  String? getId() => title;
 }
