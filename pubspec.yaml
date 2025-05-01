@@ -34,7 +34,6 @@ dependencies:
   permission_handler: ^12.0.0+1
 
   # 키 값 관리
-  flutter_dotenv: ^5.2.1
   freezed_annotation: ^3.0.0
 
   # 파일 처리
