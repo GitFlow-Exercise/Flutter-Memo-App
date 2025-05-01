@@ -1,4 +1,4 @@
-abstract interface class BaseDto {
+abstract class BaseDto {
   /// JSON으로 변환하는 메서드
   Map<String, dynamic> toJson();
 
