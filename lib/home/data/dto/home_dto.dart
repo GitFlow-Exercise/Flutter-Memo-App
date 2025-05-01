@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:memo_app/home/data/dto/base_dto.dart';
+import 'package:mongo_ai/home/data/dto/base_dto.dart';
 
 part 'home_dto.g.dart';
 

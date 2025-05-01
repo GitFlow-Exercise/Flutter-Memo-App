@@ -1,4 +1,4 @@
-import 'package:memo_app/home/data/dto/base_dto.dart';
+import 'package:mongo_ai/home/data/dto/base_dto.dart';
 
 /// Supabase 데이터 접근 인터페이스
 /// 데이터 조회

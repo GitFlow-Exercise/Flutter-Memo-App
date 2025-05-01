@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
-import 'package:memo_app/core/exception/app_exception.dart';
-import 'package:memo_app/home/data/data_source/local_database_data_source.dart';
-import 'package:memo_app/home/data/dto/base_dto.dart';
+import 'package:mongo_ai/core/exception/app_exception.dart';
+import 'package:mongo_ai/home/data/data_source/local_database_data_source.dart';
+import 'package:mongo_ai/home/data/dto/base_dto.dart';
 import 'package:uuid/uuid.dart';
 
 /// Hive 로컬 데이터베이스 구현

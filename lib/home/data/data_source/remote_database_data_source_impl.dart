@@ -1,6 +1,6 @@
-import 'package:memo_app/core/exception/app_exception.dart';
-import 'package:memo_app/home/data/data_source/remote_database_data_source.dart';
-import 'package:memo_app/home/data/dto/base_dto.dart';
+import 'package:mongo_ai/core/exception/app_exception.dart';
+import 'package:mongo_ai/home/data/data_source/remote_database_data_source.dart';
+import 'package:mongo_ai/home/data/dto/base_dto.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Supabase Data Source 구현

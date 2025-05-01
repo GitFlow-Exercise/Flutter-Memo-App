@@ -1,4 +1,4 @@
-import 'package:memo_app/home/data/dto/base_dto.dart';
+import 'package:mongo_ai/home/data/dto/base_dto.dart';
 
 /// Hive 로컬 데이터베이스 접근 인터페이스
 /// 데이터 조회

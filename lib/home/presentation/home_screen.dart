@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:memo_app/home/domain/model/home.dart';
-import 'package:memo_app/home/presentation/home_state.dart';
+import 'package:mongo_ai/home/domain/model/home.dart';
+import 'package:mongo_ai/home/presentation/home_state.dart';
 
 import 'home_action.dart';
 

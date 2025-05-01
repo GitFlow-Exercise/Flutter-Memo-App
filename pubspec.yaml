@@ -1,4 +1,4 @@
-name: memo_app
+name: mongo_ai
 description: "깃협업 연습을 위한 메모앱"
 
 publish_to: 'none'
