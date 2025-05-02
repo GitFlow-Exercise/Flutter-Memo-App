@@ -1,3 +1,4 @@
+import 'package:mongo_ai/core/constants/ai_constant.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/create/data/data_source/open_ai_data_source.dart';
@@ -19,7 +20,7 @@ class OpenAiRepositoryImpl implements OpenAiRepository {
     try {
       final aiRespDto =
           await _openAiDataSource.createProblem(body.toOpenAiBodyDto());
-      if (aiRespDto.status != 'completed') {
+      if (aiRespDto.status != AiConstant.completed) {
         AppException.network(
           message: '데이터를 가져오는 중 에러가 발생하였습니다.',
           error: 'aiRespDto.',

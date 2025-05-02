@@ -12,4 +12,7 @@ abstract class AiConstant {
 
   // role
   static const String role = 'user';
+
+  // status
+  static const String completed = 'completed';
 }
