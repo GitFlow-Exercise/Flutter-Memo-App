@@ -35,7 +35,8 @@ class _TestScreenState extends ConsumerState<TestScreen> {
           InputContent.text(text: inputText),
         ]),
       ],
-      instructions: Prompt.prompt1.detail,
+      instructions: '이모티몬 이쁘게 넣으면서 답장해줘',
+      // instructions: Prompt.prompt1.detail,
     );
     final resp = await ref.read(createProblemUseCaseProvider).execute(body);
 
@@ -70,7 +71,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Edge Fn + OpenAI 예제')),
+      appBar: AppBar(title: const Text('OpenAI 테스트')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
