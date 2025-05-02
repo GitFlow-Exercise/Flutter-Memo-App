@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:mongo_ai/core/constants/ai_constant.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
 
 part 'input_content_dto.g.dart';
@@ -11,11 +12,11 @@ sealed class InputContentDto {
   static InputContentDto fromJson(Map<String, dynamic> json) {
     final type = json['type'] as String;
     switch (type) {
-      case 'input_text':
+      case AiConstant.inputText:
         return InputTextDto.fromJson(json);
-      case 'input_image':
+      case AiConstant.inputImage:
         return InputImageDto.fromJson(json);
-      case 'input_file':
+      case AiConstant.inputFile:
         return InputFileDto.fromJson(json);
       default:
         throw const AppException.openAIType(
@@ -32,7 +33,7 @@ class InputTextDto extends InputContentDto {
   final String text;
 
   InputTextDto({
-    this.type = 'input_text',
+    this.type = AiConstant.inputText,
     required this.text,
   });
 
@@ -52,7 +53,7 @@ class InputImageDto extends InputContentDto {
   final String imageUrl;
 
   InputImageDto({
-    this.type = 'input_image',
+    this.type = AiConstant.inputImage,
     required this.imageExtension,
     required this.imageUrl,
   });
@@ -77,7 +78,7 @@ class InputFileDto extends InputContentDto {
   final String fileData;
 
   InputFileDto({
-    this.type = 'input_file',
+    this.type = AiConstant.inputFile,
     required this.filename,
     required this.fileData,
   });

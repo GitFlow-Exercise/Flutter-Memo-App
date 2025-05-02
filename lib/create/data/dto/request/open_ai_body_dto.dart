@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:mongo_ai/core/constants/ai_constant.dart';
 import 'package:mongo_ai/create/data/dto/request/message_input_dto.dart';
 
 part 'open_ai_body_dto.g.dart';
@@ -12,7 +13,7 @@ class OpenAIBodyDto {
   final String previousResponseId;
 
   OpenAIBodyDto({
-    this.model = 'gpt-4.1',
+    this.model = AiConstant.aiModel,
     required this.input,
     required this.instructions,
     required this.previousResponseId,
