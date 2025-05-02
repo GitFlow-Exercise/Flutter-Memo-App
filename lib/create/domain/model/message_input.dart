@@ -1,0 +1,16 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:mongo_ai/create/domain/model/input_content.dart';
+
+part 'message_input.freezed.dart';
+part 'message_input.g.dart';
+
+@freezed
+abstract class MessageInput with _$MessageInput {
+  const factory MessageInput({
+    required String role,
+    required List<InputContent> content,
+  }) = _MessageInput;
+
+  factory MessageInput.fromJson(Map<String, dynamic> json) =>
+      _$MessageInputFromJson(json);
+}

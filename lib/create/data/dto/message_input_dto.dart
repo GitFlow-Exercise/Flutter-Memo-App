@@ -8,7 +8,7 @@ part 'message_input_dto.g.dart';
 class MessageInputDto {
   final String role;
   @InputContentListConverter()
-  final List<InputContent> content;
+  final List<InputContentDto> content;
 
   MessageInputDto({required this.role, required this.content});
 

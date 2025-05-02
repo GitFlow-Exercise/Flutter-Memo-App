@@ -4,18 +4,18 @@ import 'package:mongo_ai/core/exception/app_exception.dart';
 part 'input_content_dto.g.dart';
 
 // 기본 타입
-abstract class InputContent {
+abstract class InputContentDto {
   String get type;
 
   // generated code가 호출할 수 있게, static 팩토리 메서드로 등록
-  static InputContent fromJson(Map<String, dynamic> json) =>
-      inputContentFromJson(json);
+  static InputContentDto fromJson(Map<String, dynamic> json) =>
+      inputContentDtoFromJson(json);
 }
 
 // --------------------------------
 // 텍스트를 담은 body
 @JsonSerializable()
-class InputText implements InputContent {
+class InputText implements InputContentDto {
   @override
   final String type;
   final String text;
@@ -30,7 +30,7 @@ class InputText implements InputContent {
 // --------------------------------
 // 이미지를 담은 body
 @JsonSerializable()
-class InputImage implements InputContent {
+class InputImage implements InputContentDto {
   @override
   final String type;
   final String imageExtension;
@@ -61,7 +61,7 @@ class InputImage implements InputContent {
 // --------------------------------
 // 파일을 담은 body
 @JsonSerializable()
-class InputFile implements InputContent {
+class InputFile implements InputContentDto {
   @override
   final String type;
   final String filename;
@@ -87,7 +87,7 @@ class InputFile implements InputContent {
 
 // InputContent에서 type 값을 확인 후
 // 해당 타입에 맞게 fromJson 함수를 반환하는 함수
-InputContent inputContentFromJson(Map<String, dynamic> json) {
+InputContentDto inputContentDtoFromJson(Map<String, dynamic> json) {
   final type = json['type'];
   switch (type) {
     case 'input_text':

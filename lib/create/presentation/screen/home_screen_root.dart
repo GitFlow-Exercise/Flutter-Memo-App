@@ -1,72 +1,72 @@
-import 'dart:async';
+// import 'dart:async';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mongo_ai/home/presentation/controller/home_action.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import 'package:mongo_ai/home/presentation/controller/home_action.dart';
 
-import '../controller/home_event.dart';
-import 'home_screen.dart';
-import '../controller/home_view_model.dart';
+// import '../controller/home_event.dart';
+// import 'home_screen.dart';
+// import '../controller/home_view_model.dart';
 
-class HomeScreenRoot extends ConsumerStatefulWidget {
-  const HomeScreenRoot({super.key});
+// class HomeScreenRoot extends ConsumerStatefulWidget {
+//   const HomeScreenRoot({super.key});
 
-  @override
-  ConsumerState<HomeScreenRoot> createState() => _HomeScreenRootState();
-}
+//   @override
+//   ConsumerState<HomeScreenRoot> createState() => _HomeScreenRootState();
+// }
 
-class _HomeScreenRootState extends ConsumerState<HomeScreenRoot> {
-  StreamSubscription? _subscription;
+// class _HomeScreenRootState extends ConsumerState<HomeScreenRoot> {
+//   StreamSubscription? _subscription;
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final viewModel = ref.watch(homeViewModelProvider.notifier);
+//   @override
+//   void initState() {
+//     super.initState();
+//     WidgetsBinding.instance.addPostFrameCallback((_) {
+//       final viewModel = ref.watch(homeViewModelProvider.notifier);
 
-      _subscription = viewModel.eventStream.listen(_handleEvent);
+//       _subscription = viewModel.eventStream.listen(_handleEvent);
 
-      _handleAction(const HomeAction.loadHomeInfo());
-    });
-  }
+//       _handleAction(const HomeAction.loadHomeInfo());
+//     });
+//   }
 
-  // 1회성 이벤트 처리 메서드
-  void _handleEvent(HomeEvent event) {
-    switch (event) {
-      case ShowSnackBar(message: final message):
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(message)));
-    }
-  }
+//   // 1회성 이벤트 처리 메서드
+//   void _handleEvent(HomeEvent event) {
+//     switch (event) {
+//       case ShowSnackBar(message: final message):
+//         ScaffoldMessenger.of(
+//           context,
+//         ).showSnackBar(SnackBar(content: Text(message)));
+//     }
+//   }
 
-  @override
-  void dispose() {
-    _subscription?.cancel();
-    super.dispose();
-  }
+//   @override
+//   void dispose() {
+//     _subscription?.cancel();
+//     super.dispose();
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    final state = ref.watch(homeViewModelProvider);
+//   @override
+//   Widget build(BuildContext context) {
+//     final state = ref.watch(homeViewModelProvider);
 
-    return Scaffold(body: HomeScreen(state: state, onAction: _handleAction));
-  }
+//     return Scaffold(body: HomeScreen(state: state, onAction: _handleAction));
+//   }
 
-  Future<void> _handleAction(HomeAction action) async {
-    final viewModel = ref.watch(homeViewModelProvider.notifier);
+//   Future<void> _handleAction(HomeAction action) async {
+//     final viewModel = ref.watch(homeViewModelProvider.notifier);
 
-    switch (action) {
-      case LoadHomeInfo():
-        await viewModel.loadHomeInfo();
-      case Refresh():
-        await viewModel.refreshHomeInfo();
-      case OnTapDetail():
-        _onTapDetail();
-    }
-  }
+//     switch (action) {
+//       case LoadHomeInfo():
+//         await viewModel.loadHomeInfo();
+//       case Refresh():
+//         await viewModel.refreshHomeInfo();
+//       case OnTapDetail():
+//         _onTapDetail();
+//     }
+//   }
 
-  void _onTapDetail() {
-    debugPrint('tapped onTapDetail');
-  }
-}
+//   void _onTapDetail() {
+//     debugPrint('tapped onTapDetail');
+//   }
+// }
