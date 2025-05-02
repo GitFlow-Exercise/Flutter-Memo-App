@@ -1,19 +1,18 @@
-// openai_request.dart
 import 'package:json_annotation/json_annotation.dart';
-import 'package:mongo_ai/create/data/dto/input_content_dto.dart';
+import 'package:mongo_ai/create/data/dto/message_input_dto.dart';
 
 part 'open_ai_body_dto.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class OpenAIBodyDto {
   final String model;
-  final List<MessageInput> input;
+  final List<MessageInputDto> input;
   final String instructions;
   @JsonKey(name: 'previous_response_id')
   final String previousResponseId;
 
   OpenAIBodyDto({
-    required this.model,
+    this.model = 'gpt-4.1',
     required this.input,
     required this.instructions,
     required this.previousResponseId,
@@ -22,19 +21,6 @@ class OpenAIBodyDto {
   factory OpenAIBodyDto.fromJson(Map<String, dynamic> json) =>
       _$OpenAIBodyDtoFromJson(json);
   Map<String, dynamic> toJson() => _$OpenAIBodyDtoToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class MessageInput {
-  final String role;
-  @InputContentListConverter()
-  final List<InputContent> content;
-
-  MessageInput({required this.role, required this.content});
-
-  factory MessageInput.fromJson(Map<String, dynamic> json) =>
-      _$MessageInputFromJson(json);
-  Map<String, dynamic> toJson() => _$MessageInputToJson(this);
 }
 
 // {
