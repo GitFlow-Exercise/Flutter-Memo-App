@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:memo_app/auth/sign_in/controller/sign_in_action.dart';
-import 'package:memo_app/auth/sign_in/controller/sign_in_state.dart';
-import 'package:memo_app/core/component/base_text_field.dart';
+import 'package:mongo_ai/auth/sign_in/controller/sign_in_action.dart';
+import 'package:mongo_ai/auth/sign_in/controller/sign_in_state.dart';
+import 'package:mongo_ai/core/component/base_text_field.dart';
 
 class SignInScreen extends StatefulWidget {
   final SignInState state;

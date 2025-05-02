@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
-import 'package:memo_app/core/routing/router.dart';
+import 'package:mongo_ai/core/routing/router.dart';
 
 void main() {
   // 경로 기반 URL 전략

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:memo_app/home/presentation/home_action.dart';
+import 'package:mongo_ai/home/presentation/home_action.dart';
 
 import 'home_event.dart';
 import 'home_screen.dart';

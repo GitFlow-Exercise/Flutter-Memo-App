@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memo_app/auth/sign_in/controller/sign_in_state.dart';
+import 'package:mongo_ai/auth/sign_in/controller/sign_in_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'sign_in_view_model.g.dart';

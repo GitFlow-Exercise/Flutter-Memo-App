@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:memo_app/auth/sign_up/controller/sign_up_state.dart';
+import 'package:mongo_ai/auth/sign_up/controller/sign_up_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'sign_up_view_model.g.dart';

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:memo_app/auth/sign_up/controller/sign_up_action.dart';
-import 'package:memo_app/auth/sign_up/controller/sign_up_view_model.dart';
-import 'package:memo_app/auth/sign_up/screen/password_sign_up_screen.dart';
-import 'package:memo_app/auth/sign_up/screen/sign_up_screen.dart';
-import 'package:memo_app/core/routing/routes.dart';
+import 'package:mongo_ai/auth/sign_up/controller/sign_up_action.dart';
+import 'package:mongo_ai/auth/sign_up/controller/sign_up_view_model.dart';
+import 'package:mongo_ai/auth/sign_up/screen/password_sign_up_screen.dart';
+import 'package:mongo_ai/auth/sign_up/screen/sign_up_screen.dart';
+import 'package:mongo_ai/core/routing/routes.dart';
 
 class SignUpScreenRoot extends ConsumerStatefulWidget {
   const SignUpScreenRoot({super.key});

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:memo_app/auth/sign_in/screen/sign_in_screen_root.dart';
-import 'package:memo_app/auth/sign_up/screen/sign_up_complete_screen.dart';
-import 'package:memo_app/auth/sign_up/screen/sign_up_screen_root.dart';
-import 'package:memo_app/core/routing/routes.dart';
-import 'package:memo_app/home/presentation/home_screen_root.dart';
+import 'package:mongo_ai/auth/sign_in/screen/sign_in_screen_root.dart';
+import 'package:mongo_ai/auth/sign_up/screen/sign_up_complete_screen.dart';
+import 'package:mongo_ai/auth/sign_up/screen/sign_up_screen_root.dart';
+import 'package:mongo_ai/core/routing/routes.dart';
+import 'package:mongo_ai/home/presentation/home_screen_root.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
