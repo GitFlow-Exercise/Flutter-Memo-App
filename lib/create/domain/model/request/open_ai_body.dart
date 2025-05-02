@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:mongo_ai/create/domain/model/message_input.dart';
+import 'package:mongo_ai/create/domain/model/request/message_input.dart';
 
 part 'open_ai_body.freezed.dart';
 part 'open_ai_body.g.dart';

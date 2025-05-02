@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:mongo_ai/create/data/dto/message_input_dto.dart';
+import 'package:mongo_ai/create/data/dto/request/message_input_dto.dart';
 
 part 'open_ai_body_dto.g.dart';
 

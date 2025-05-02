@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:mongo_ai/create/data/dto/input_content_dto.dart';
+import 'package:mongo_ai/create/data/dto/request/input_content_dto.dart';
 
 // InputContent을 자동으로 변환시켜주는 converter
 class InputContentListConverter
