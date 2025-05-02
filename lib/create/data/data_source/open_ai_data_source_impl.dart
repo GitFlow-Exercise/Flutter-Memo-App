@@ -1,6 +1,7 @@
+import 'package:mongo_ai/core/constants/ai_constant.dart';
 import 'package:mongo_ai/create/data/data_source/open_ai_data_source.dart';
+import 'package:mongo_ai/create/data/dto/request/open_ai_body_dto.dart';
 import 'package:mongo_ai/create/data/dto/response/open_ai_response_dto.dart';
-import 'package:mongo_ai/create/domain/model/request/open_ai_body.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class OpenAiDataSourceImpl implements OpenAiDataSource {
@@ -9,9 +10,9 @@ class OpenAiDataSourceImpl implements OpenAiDataSource {
   OpenAiDataSourceImpl(this._client);
 
   @override
-  Future<OpenAiResponseDto> createProblum(OpenAiBody body) async {
+  Future<OpenAiResponseDto> createProblem(OpenAIBodyDto body) async {
     final resp = await _client.functions.invoke(
-      'functionName',
+      AiConstant.invokeFunction,
       body: body,
     );
     return OpenAiResponseDto.fromJson(resp.data);
