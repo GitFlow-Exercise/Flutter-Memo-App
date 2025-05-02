@@ -9,6 +9,7 @@ abstract class OpenAiResponse with _$OpenAiResponse {
   const factory OpenAiResponse({
     required String id,
     required String status,
+    Object? error,
     required String instructions,
     required List<Output> output,
   }) = _OpenAiResponse;

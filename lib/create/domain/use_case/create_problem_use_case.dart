@@ -9,8 +9,7 @@ class CreateProblemUseCase {
 
   const CreateProblemUseCase(this._repository);
 
-  Future<Result<OpenAiResponse, AppException>> getHomeInfo(
-      OpenAiBody body) async {
+  Future<Result<OpenAiResponse, AppException>> execute(OpenAiBody body) async {
     return await _repository.createProblem(body);
   }
 }

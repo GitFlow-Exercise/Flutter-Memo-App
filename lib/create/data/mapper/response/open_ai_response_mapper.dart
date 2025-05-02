@@ -7,6 +7,7 @@ extension OpenAiResponseMapper on OpenAiResponseDto {
     return OpenAiResponse(
       id: id,
       status: status,
+      error: error,
       instructions: instructions,
       output: output.map((e) => e.toOutput()).toList(),
     );

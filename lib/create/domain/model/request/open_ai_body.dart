@@ -11,7 +11,7 @@ abstract class OpenAiBody with _$OpenAiBody {
     @Default(AiConstant.aiModel) String model,
     required List<MessageInput> input,
     required String instructions,
-    required String previousResponseId,
+    String? previousResponseId,
   }) = _OpenAiBody;
 
   factory OpenAiBody.fromJson(Map<String, dynamic> json) =>

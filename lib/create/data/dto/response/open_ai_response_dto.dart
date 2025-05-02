@@ -7,12 +7,14 @@ part 'open_ai_response_dto.g.dart';
 class OpenAiResponseDto {
   final String id;
   final String status;
+  final Object? error;
   final String instructions;
   final List<OutputDto> output;
 
   OpenAiResponseDto({
     required this.id,
     required this.status,
+    this.error,
     required this.instructions,
     required this.output,
   });
