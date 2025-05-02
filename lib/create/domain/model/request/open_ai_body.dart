@@ -7,7 +7,7 @@ part 'open_ai_body.g.dart';
 @freezed
 abstract class OpenAiBody with _$OpenAiBody {
   const factory OpenAiBody({
-    required String model,
+    @Default("gpt-4.1") String model,
     required List<MessageInput> input,
     required String instructions,
     required String previousResponseId,
