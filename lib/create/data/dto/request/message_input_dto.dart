@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:mongo_ai/core/constants/ai_constant.dart';
 import 'package:mongo_ai/core/converter/input_converter.dart';
 import 'package:mongo_ai/create/data/dto/request/input_content_dto.dart';
 
@@ -10,7 +11,7 @@ class MessageInputDto {
   @InputContentListConverter()
   final List<InputContentDto> content;
 
-  MessageInputDto({required this.role, required this.content});
+  MessageInputDto({this.role = AiConstant.role, required this.content});
 
   factory MessageInputDto.fromJson(Map<String, dynamic> json) =>
       _$MessageInputDtoFromJson(json);

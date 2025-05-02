@@ -8,5 +8,8 @@ abstract class AiConstant {
   static const String inputFile = 'input_file';
 
   // AI Model
-  static const String aiModel = '"gpt-4.1"';
+  static const String aiModel = 'gpt-4.1';
+
+  // role
+  static const String role = 'user';
 }

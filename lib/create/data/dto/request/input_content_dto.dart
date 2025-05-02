@@ -33,7 +33,7 @@ class InputTextDto extends InputContentDto {
   final String text;
 
   InputTextDto({
-    this.type = AiConstant.inputText,
+    required this.type,
     required this.text,
   });
 
@@ -53,7 +53,7 @@ class InputImageDto extends InputContentDto {
   final String imageUrl;
 
   InputImageDto({
-    this.type = AiConstant.inputImage,
+    required this.type,
     required this.imageExtension,
     required this.imageUrl,
   });
@@ -78,7 +78,7 @@ class InputFileDto extends InputContentDto {
   final String fileData;
 
   InputFileDto({
-    this.type = AiConstant.inputFile,
+    required this.type,
     required this.filename,
     required this.fileData,
   });
