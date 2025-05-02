@@ -23,7 +23,7 @@ class OpenAiRepositoryImpl implements OpenAiRepository {
       if (aiRespDto.status != AiConstant.completed) {
         AppException.network(
           message: '데이터를 가져오는 중 에러가 발생하였습니다.',
-          error: 'aiRespDto.',
+          error: aiRespDto.error,
           stackTrace: StackTrace.current,
         );
       }
