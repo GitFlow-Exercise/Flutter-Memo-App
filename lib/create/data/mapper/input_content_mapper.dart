@@ -1,8 +1,10 @@
-import 'package:mongo_ai/home/data/dto/home_dto.dart';
-import 'package:mongo_ai/home/domain/model/home.dart';
+// import 'package:mongo_ai/create/data/dto/input_content_dto.dart';
+// import 'package:mongo_ai/create/domain/model/input_content.dart';
+// import 'package:mongo_ai/home/data/dto/home_dto.dart';
+// import 'package:mongo_ai/home/domain/model/home.dart';
 
-extension HomeMapper on HomeDto {
-  Home toHome() {
-    return Home(title: title, description: description, imageUrl: imageUrl);
-  }
-}
+// extension InputContentMapper on InputContent {
+//   InputContentDto toInputContentDto() {
+//     return InputContentDto
+//   }
+// }
