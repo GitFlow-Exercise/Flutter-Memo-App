@@ -9,6 +9,7 @@
 .pub/
 /build/
 pubspec.lock
+package_config.json
 
 # Flutter Web 관련
 /web/favicon.png
@@ -145,3 +146,4 @@ pubspec_overrides.yaml
 # 빌드 디렉토리 및 로그
 out/
 logs/
+

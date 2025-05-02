@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:memo_app/home/domain/model/home.dart';
+import 'package:mongo_ai/home/domain/model/home.dart';
 
 part 'home_state.freezed.dart';
 

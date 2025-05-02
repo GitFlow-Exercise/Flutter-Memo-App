@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:memo_app/core/di/providers.dart';
-import 'package:memo_app/core/result/result.dart';
-import 'package:memo_app/home/presentation/home_event.dart';
-import 'package:memo_app/home/presentation/home_state.dart';
+import 'package:mongo_ai/core/di/providers.dart';
+import 'package:mongo_ai/core/result/result.dart';
+import 'package:mongo_ai/home/presentation/controller/home_event.dart';
+import 'package:mongo_ai/home/presentation/controller/home_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'home_view_model.g.dart';

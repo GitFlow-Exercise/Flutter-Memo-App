@@ -1,4 +1,4 @@
-name: memo_app
+name: mongo_ai
 description: "깃협업 연습을 위한 메모앱"
 
 publish_to: 'none'
@@ -27,11 +27,13 @@ dependencies:
   hive: ^2.2.3 # 로컬
   supabase_flutter: ^2.8.4 # 원격
 
+  # UUID 생성(RFC4122 아니면 RFC9562)
+  uuid: ^4.5.1
+
   # 권한 설정
   permission_handler: ^12.0.0+1
 
   # 키 값 관리
-  flutter_dotenv: ^5.2.1
   freezed_annotation: ^3.0.0
 
   # 파일 처리

@@ -1,9 +1,9 @@
-import 'package:memo_app/core/exception/app_exception.dart';
-import 'package:memo_app/core/result/result.dart';
-import 'package:memo_app/home/data/data_source/home_data_source.dart';
-import 'package:memo_app/home/data/mapper/home_mapper.dart';
-import 'package:memo_app/home/domain/model/home.dart';
-import 'package:memo_app/home/domain/repository/home_repository.dart';
+import 'package:mongo_ai/core/exception/app_exception.dart';
+import 'package:mongo_ai/core/result/result.dart';
+import 'package:mongo_ai/home/data/data_source/home_data_source.dart';
+import 'package:mongo_ai/home/data/mapper/home_mapper.dart';
+import 'package:mongo_ai/home/domain/model/home.dart';
+import 'package:mongo_ai/home/domain/repository/home_repository.dart';
 
 class HomeRepositoryImpl implements HomeRepository {
   final HomeDataSource _homeDataSource;
