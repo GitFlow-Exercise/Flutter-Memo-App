@@ -1,6 +1,6 @@
 abstract class AiConstant {
   // invoke function name
-  static const String invokeFunction = 'clever-handler';
+  static const String invokeFunction = 'open-ai';
 
   // Data Type
   static const String inputText = 'input_text';
@@ -18,6 +18,8 @@ abstract class AiConstant {
 
   // --------------------------------
   // Prompt Detail Data
+  // --TODO
+  // 추후 Prompt 데이터 받아서 추가하기
   static const String prompt1 = '''
 # MongoAI - 본문 분석편 Step 1, 3 (Ver 1.1)
 

@@ -15,6 +15,7 @@ class OpenAiDataSourceImpl implements OpenAiDataSource {
       AiConstant.invokeFunction,
       body: body,
     );
+    print('datasource: $resp');
     return OpenAiResponseDto.fromJson(resp.data);
   }
 }
