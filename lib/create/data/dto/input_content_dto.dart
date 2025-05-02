@@ -3,16 +3,14 @@ import 'package:mongo_ai/core/exception/app_exception.dart';
 
 part 'input_content_dto.g.dart';
 
-/// sealed 클래스로 외부에서의 임플리먼트를 막고,
-/// 같은 파일 내에서만 하위 타입을 정의합니다.
 sealed class InputContentDto {
   String get type;
   Map<String, dynamic> toJson();
 
   /// factory를 통해 json 타입에 맞는 구현체로 변환
   static InputContentDto fromJson(Map<String, dynamic> json) {
-    final t = json['type'] as String;
-    switch (t) {
+    final type = json['type'] as String;
+    switch (type) {
       case 'input_text':
         return InputTextDto.fromJson(json);
       case 'input_image':

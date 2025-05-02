@@ -1,8 +1,13 @@
-import 'package:mongo_ai/home/data/dto/home_dto.dart';
-import 'package:mongo_ai/home/domain/model/home.dart';
+import 'package:mongo_ai/create/data/dto/open_ai_body_dto.dart';
+import 'package:mongo_ai/create/data/mapper/message_input_mapper.dart';
+import 'package:mongo_ai/create/domain/model/open_ai_body.dart';
 
-extension HomeMapper on HomeDto {
-  Home toHome() {
-    return Home(title: title, description: description, imageUrl: imageUrl);
+extension OpenAiBodyMapper on OpenAiBody {
+  OpenAIBodyDto toOpenAiBodyDto() {
+    return OpenAIBodyDto(
+      input: input.map((e) => e.toMessageInputDto()).toList(),
+      instructions: instructions,
+      previousResponseId: previousResponseId,
+    );
   }
 }

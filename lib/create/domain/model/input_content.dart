@@ -5,7 +5,7 @@ part 'input_content.freezed.dart';
 part 'input_content.g.dart';
 
 @freezed
-abstract class InputContent with _$InputContent {
+sealed class InputContent with _$InputContent {
   const factory InputContent.text({
     @Default('input_text') String type,
     required String text,
