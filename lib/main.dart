@@ -5,7 +5,7 @@ import 'package:memo_app/core/routing/router.dart';
 
 void main() {
   // 경로 기반 URL 전략
-  setUrlStrategy(PathUrlStrategy());
+  setUrlStrategy(const PathUrlStrategy());
 
   runApp(const ProviderScope(child: PracticeApp()));
 }

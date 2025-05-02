@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 class SignUpCompleteScreen extends StatelessWidget {
-  const SignUpCompleteScreen({super.key});
+  final VoidCallback onTapHome;
+  const SignUpCompleteScreen({super.key, required this.onTapHome});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class SignUpCompleteScreen extends StatelessWidget {
             ),
             const Gap(15),
             const Text(
-              '회원가입이 완료되었습니다.\n웅고와 함께 수업 자료를 빠르게 만들어보세요.',
+              '회원가입이 완료되었습니다.\n몽고와 함께 수업 자료를 빠르게 만들어보세요.',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 20, color: Colors.black87),
             ),
@@ -40,7 +41,7 @@ class SignUpCompleteScreen extends StatelessWidget {
               width: MediaQuery.sizeOf(context).width * 0.25,
               height: 50,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: onTapHome,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
                   foregroundColor: Colors.white,

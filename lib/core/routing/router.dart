@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:memo_app/auth/sign_in/screen/sign_in_screen.dart';
-import 'package:memo_app/auth/sign_up/screen/password_sign_up_screen.dart';
+import 'package:memo_app/auth/sign_in/screen/sign_in_screen_root.dart';
 import 'package:memo_app/auth/sign_up/screen/sign_up_complete_screen.dart';
-import 'package:memo_app/auth/sign_up/screen/sign_up_screen.dart';
 import 'package:memo_app/auth/sign_up/screen/sign_up_screen_root.dart';
 import 'package:memo_app/core/routing/routes.dart';
 import 'package:memo_app/home/presentation/home_screen_root.dart';
@@ -11,7 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: Routes.signUp,
+    initialLocation: Routes.signIn,
     routes: [
       GoRoute(
         path: Routes.home,
@@ -39,7 +37,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: Routes.signIn,
-        builder: (context, state) => const SignInScreen(),
+        builder: (context, state) => const SignInScreenRoot(),
       ),
       GoRoute(
         path: Routes.signUp,
@@ -47,7 +45,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         routes: [
           GoRoute(
             path: "/complete",
-            builder: (context, state) => const SignUpCompleteScreen(),
+            builder:
+                (context, state) => SignUpCompleteScreen(
+                  onTapHome: () => context.go(Routes.home),
+                ),
           ),
         ],
       ),

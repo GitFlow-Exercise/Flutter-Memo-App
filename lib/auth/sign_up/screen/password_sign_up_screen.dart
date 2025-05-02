@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:memo_app/auth/sign_up/controller/sign_up_action.dart';
+import 'package:memo_app/auth/sign_up/controller/sign_up_state.dart';
 import 'package:memo_app/core/component/base_text_field.dart';
 
 class PasswordSignupScreen extends StatefulWidget {
-  const PasswordSignupScreen({super.key});
+  final SignUpState state;
+  final void Function(SignUpAction action) onAction;
+  const PasswordSignupScreen({
+    super.key,
+    required this.state,
+    required this.onAction,
+  });
 
   @override
   State<PasswordSignupScreen> createState() => _PasswordSignupScreenState();
@@ -11,14 +19,11 @@ class PasswordSignupScreen extends StatefulWidget {
 
 class _PasswordSignupScreenState extends State<PasswordSignupScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
-  bool _isChecked = false;
 
   bool get _isFormValid {
-    return _passwordController.text.isNotEmpty &&
-        _confirmPasswordController.text.isNotEmpty &&
-        _isChecked;
+    return widget.state.passwordController.text.isNotEmpty &&
+        widget.state.passwordConfirmController.text.isNotEmpty &&
+        widget.state.isTermsOfUseChecked;
   }
 
   @override
@@ -79,52 +84,32 @@ class _PasswordSignupScreenState extends State<PasswordSignupScreen> {
               SizedBox(
                 width: MediaQuery.sizeOf(context).width * 0.25,
                 child: BaseTextField(
-                  controller: _passwordController,
+                  controller: widget.state.passwordController,
                   hintText: '비밀번호를 입력해주세요.',
                   isObscure: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return '비밀번호를 입력해주세요.';
-                    }
-                    final passwordRegex = RegExp(
-                      r'^(?=.*[a-z])(?=.*[!@#\$&*~]).{9,}$',
-                    );
-                    if (!passwordRegex.hasMatch(value)) {
-                      return '소문자와 특수문자를 포함해주세요.';
-                    }
-                    return null;
-                  },
+                  validator: _validatePassword,
                 ),
               ),
               const Gap(16),
               SizedBox(
                 width: MediaQuery.sizeOf(context).width * 0.25,
                 child: BaseTextField(
-                  controller: _confirmPasswordController,
+                  controller: widget.state.passwordConfirmController,
                   hintText: '비밀번호 확인',
                   isObscure: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return '비밀번호 확인을 입력해주세요.';
-                    }
-                    if (value != _passwordController.text) {
-                      return '비밀번호가 서로 일치하지 않습니다.';
-                    }
-                    return null;
-                  },
+                  validator: _validatePasswordConfirm,
                 ),
               ),
               const Gap(16),
               SizedBox(
                 width: MediaQuery.sizeOf(context).width * 0.25,
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Checkbox(
-                      value: _isChecked,
+                      value: widget.state.isTermsOfUseChecked,
                       onChanged: (value) {
-                        setState(() {
-                          _isChecked = value ?? false;
-                        });
+                        widget.onAction(const SignUpAction.onTapTermsOfUse());
                       },
                     ),
                     Expanded(
@@ -156,13 +141,13 @@ class _PasswordSignupScreenState extends State<PasswordSignupScreen> {
               const Gap(24),
               SizedBox(
                 width: MediaQuery.sizeOf(context).width * 0.25,
+                height: 50,
                 child: ElevatedButton(
                   onPressed:
                       _isFormValid
                           ? () {
                             if (_formKey.currentState!.validate()) {
-                              // 유효성 검사가 통과되었을 때 실행할 코드
-                              print('비밀번호 설정 완료');
+                              widget.onAction(const SignUpAction.onTapSignUp());
                             }
                           }
                           : null,
@@ -173,7 +158,6 @@ class _PasswordSignupScreenState extends State<PasswordSignupScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
                   child: const Text('회원가입하기'),
                 ),
@@ -183,5 +167,26 @@ class _PasswordSignupScreenState extends State<PasswordSignupScreen> {
         ),
       ),
     );
+  }
+
+  String? _validatePasswordConfirm(value) {
+    if (value == null || value.isEmpty) {
+      return '비밀번호 확인을 입력해주세요.';
+    }
+    if (value != widget.state.passwordController.text) {
+      return '비밀번호가 서로 일치하지 않습니다.';
+    }
+    return null;
+  }
+
+  String? _validatePassword(value) {
+    if (value == null || value.isEmpty) {
+      return '비밀번호를 입력해주세요.';
+    }
+    final passwordRegex = RegExp(r'^(?=.*[a-z])(?=.*[!@#\$&*~]).{9,}$');
+    if (!passwordRegex.hasMatch(value)) {
+      return '소문자와 특수문자를 포함해주세요.';
+    }
+    return null;
   }
 }

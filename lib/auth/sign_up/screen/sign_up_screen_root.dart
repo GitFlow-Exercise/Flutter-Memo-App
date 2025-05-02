@@ -1,0 +1,42 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:memo_app/auth/sign_up/controller/sign_up_action.dart';
+import 'package:memo_app/auth/sign_up/controller/sign_up_view_model.dart';
+import 'package:memo_app/auth/sign_up/screen/password_sign_up_screen.dart';
+import 'package:memo_app/auth/sign_up/screen/sign_up_screen.dart';
+import 'package:memo_app/core/routing/routes.dart';
+
+class SignUpScreenRoot extends ConsumerStatefulWidget {
+  const SignUpScreenRoot({super.key});
+
+  @override
+  ConsumerState<SignUpScreenRoot> createState() => _SignUpScreenRootState();
+}
+
+class _SignUpScreenRootState extends ConsumerState<SignUpScreenRoot> {
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(signUpViewModelProvider);
+
+    return state.isEmailCompleted
+        ? PasswordSignupScreen(state: state, onAction: _handleAction)
+        : SignUpScreen(state: state, onAction: _handleAction);
+  }
+
+  void _handleAction(SignUpAction action) {
+    final viewModel = ref.read(signUpViewModelProvider.notifier);
+
+    switch (action) {
+      case OnTapStart():
+        viewModel.isEmailCompleted = true;
+      case OnTapTermsOfUse():
+        viewModel.toggleTermsOfUse();
+      case OnTapSignUp():
+        // TODO: 회원가입 처리 로직 구현
+        context.go(Routes.signUpComplete);
+      case OnTapSignIn():
+        context.go(Routes.signIn);
+    }
+  }
+}

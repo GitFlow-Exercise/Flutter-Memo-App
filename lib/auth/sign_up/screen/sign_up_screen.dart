@@ -1,17 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
+import 'package:memo_app/auth/sign_up/controller/sign_up_action.dart';
+import 'package:memo_app/auth/sign_up/controller/sign_up_state.dart';
 import 'package:memo_app/core/component/base_text_field.dart';
-import 'package:memo_app/core/routing/routes.dart';
 
-class SignUpScreen extends StatelessWidget {
-  const SignUpScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+  final SignUpState state;
+  final void Function(SignUpAction action) onAction;
+  const SignUpScreen({super.key, required this.state, required this.onAction});
+
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  final formKey = GlobalKey<FormState>();
+
+  bool get _isFormValid => widget.state.emailController.text.isNotEmpty;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.state.emailController.addListener(() {
+      setState(() {}); // 이메일 입력값이 변경될 때마다 화면 갱신
+    });
+  }
+
+  @override
+  void dispose() {
+    widget.state.emailController.removeListener(() {
+      setState(() {});
+    });
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    final emailController = TextEditingController();
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
@@ -44,34 +68,25 @@ class SignUpScreen extends StatelessWidget {
                   width: MediaQuery.of(context).size.width * 0.25,
                   child: BaseTextField(
                     hintText: '이메일 주소를 입력해주세요',
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return '이메일을 입력해주세요.';
-                      }
-                      final emailRegex = RegExp(
-                        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-                      );
-                      if (!emailRegex.hasMatch(value)) {
-                        return '유효한 이메일 주소를 입력해주세요.';
-                      }
-                      return null;
-                    },
-                    controller: emailController,
+                    controller: widget.state.emailController,
+                    validator: _validator,
                   ),
                 ),
-
                 const Gap(20),
                 GestureDetector(
                   onTap: () {
                     if (formKey.currentState!.validate()) {
-                      context.go(Routes.signUpPassword);
+                      widget.onAction(const SignUpAction.onTapStart());
                     }
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.25,
                     padding: const EdgeInsets.symmetric(vertical: 12.5),
                     decoration: BoxDecoration(
-                      color: Colors.grey,
+                      color:
+                          _isFormValid
+                              ? Colors.black
+                              : Colors.grey, // 값 입력 여부에 따라 색상 변경
                       borderRadius: BorderRadius.circular(100),
                     ),
                     child: const Text(
@@ -86,7 +101,12 @@ class SignUpScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text('이미 계정이 있으신가요?'),
-                    TextButton(onPressed: () {}, child: const Text('로그인')),
+                    TextButton(
+                      onPressed:
+                          () =>
+                              widget.onAction(const SignUpAction.onTapSignIn()),
+                      child: const Text('로그인'),
+                    ),
                   ],
                 ),
               ],
@@ -95,5 +115,18 @@ class SignUpScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String? _validator(value) {
+    if (value == null || value.isEmpty) {
+      return '이메일을 입력해주세요.';
+    }
+    final emailRegex = RegExp(
+      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+    );
+    if (!emailRegex.hasMatch(value)) {
+      return '유효한 이메일 주소를 입력해주세요.';
+    }
+    return null;
   }
 }
