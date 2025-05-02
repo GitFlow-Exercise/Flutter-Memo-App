@@ -1,6 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mongo_ai/home/data/data_source/local_database_data_source.dart';
-import 'package:mongo_ai/home/data/data_source/local_database_data_source_impl.dart';
 import 'package:mongo_ai/home/data/data_source/remote_database_data_source.dart';
 import 'package:mongo_ai/home/data/data_source/remote_database_data_source_impl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -13,10 +11,6 @@ import '../../home/domain/use_case/get_home_info_use_case.dart';
 
 final supabaseClientProvider = Provider<SupabaseClient>((ref) {
   return Supabase.instance.client;
-});
-
-final localDatabaseProvider = Provider<LocalDatabaseDataSource>((ref) {
-  return LocalDatabaseDataSourceImpl();
 });
 
 final remoteDatabaseProvider = Provider<RemoteDataBaseDataSource>((ref) {

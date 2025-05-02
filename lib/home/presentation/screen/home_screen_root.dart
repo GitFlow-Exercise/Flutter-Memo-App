@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mongo_ai/home/presentation/home_action.dart';
+import 'package:mongo_ai/home/presentation/controller/home_action.dart';
 
-import 'home_event.dart';
+import '../controller/home_event.dart';
 import 'home_screen.dart';
-import 'home_view_model.dart';
+import '../controller/home_view_model.dart';
 
 class HomeScreenRoot extends ConsumerStatefulWidget {
   const HomeScreenRoot({super.key});
