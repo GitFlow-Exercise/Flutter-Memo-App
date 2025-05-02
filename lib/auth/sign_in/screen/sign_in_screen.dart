@@ -1,21 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:mongo_ai/auth/sign_in/controller/sign_in_action.dart';
+import 'package:mongo_ai/auth/sign_in/controller/sign_in_state.dart';
+import 'package:mongo_ai/core/component/base_text_field.dart';
 
-class SignInScreen extends StatelessWidget {
-  const SignInScreen({super.key});
+class SignInScreen extends StatefulWidget {
+  final SignInState state;
+  final void Function(SignInAction action) onAction;
+  const SignInScreen({super.key, required this.state, required this.onAction});
+
+  @override
+  State<SignInScreen> createState() => _SignInScreenState();
+}
+
+class _SignInScreenState extends State<SignInScreen> {
+  final _formKey = GlobalKey<FormState>();
+
+  bool get _isFormValid =>
+      widget.state.emailController.text.isNotEmpty &&
+      widget.state.passwordController.text.isNotEmpty;
+
+  @override
+  void initState() {
+    super.initState();
+    // 이메일과 비밀번호 모두 리스너 추가
+    widget.state.emailController.addListener(_onInputChanged);
+    widget.state.passwordController.addListener(_onInputChanged);
+  }
+
+  @override
+  void dispose() {
+    // 리스너 제거
+    widget.state.emailController.removeListener(_onInputChanged);
+    widget.state.passwordController.removeListener(_onInputChanged);
+    super.dispose();
+  }
+
+  void _onInputChanged() {
+    setState(() {}); // 입력값이 변경될 때마다 화면 갱신
+  }
 
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
-    final ValueNotifier<String?> errorNotifier = ValueNotifier<String?>(null);
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
         child: Form(
-          key: formKey,
+          key: _formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -44,55 +75,33 @@ class SignInScreen extends StatelessWidget {
                     children: [
                       SizedBox(
                         width: MediaQuery.sizeOf(context).width * 0.25,
-                        child: TextFormField(
-                          controller: emailController,
-                          decoration: const InputDecoration(
-                            hintText: '이메일 주소',
-                            border: OutlineInputBorder(),
-                            isDense: true,
-                          ),
+                        child: BaseTextField(
+                          hintText: '이메일 주소',
+                          controller: widget.state.emailController,
                           validator: _validateEmail,
                         ),
                       ),
                       const Gap(8),
                       SizedBox(
                         width: MediaQuery.sizeOf(context).width * 0.25,
-                        child: ValueListenableBuilder<String?>(
-                          valueListenable: errorNotifier,
-                          builder: (context, errorText, child) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextFormField(
-                                  controller: passwordController,
-                                  obscureText: true,
-                                  decoration: const InputDecoration(
-                                    focusColor: Colors.black,
-                                    hintText: '비밀번호',
-                                    border: OutlineInputBorder(),
-                                    isDense: true,
-                                  ),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return '비밀번호를 입력해주세요.';
-                                    }
-                                    return null;
-                                  },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            BaseTextField(
+                              hintText: '비밀번호',
+                              controller: widget.state.passwordController,
+                              isObscure: true,
+                              validator: _validatePassword,
+                            ),
+                            if (widget.state.isLoginRejected)
+                              const Text(
+                                '이메일 또는 비밀번호가 올바르지 않습니다.',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.red,
                                 ),
-                                if (errorText != null)
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: Text(
-                                      errorText,
-                                      style: const TextStyle(
-                                        color: Colors.red,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            );
-                          },
+                              ),
+                          ],
                         ),
                       ),
                       const Gap(8),
@@ -118,23 +127,13 @@ class SignInScreen extends StatelessWidget {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      // 유효성 검사가 통과되었을 때 실행할 코드
-                      final email = emailController.text;
-                      final password = passwordController.text;
-
-                      // 예시: 이메일 또는 비밀번호가 잘못된 경우
-                      if (email != 'test@example.com' ||
-                          password != 'password123') {
-                        errorNotifier.value = '이메일 또는 비밀번호가 올바르지 않습니다';
-                      } else {
-                        errorNotifier.value = null;
-                        print('로그인 성공');
-                      }
+                    if (_formKey.currentState!.validate()) {
+                      widget.onAction(const SignInAction.onTapLogin());
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xffBEBEBE),
+                    backgroundColor:
+                        _isFormValid ? Colors.black : const Color(0xffBEBEBE),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
@@ -145,26 +144,36 @@ class SignInScreen extends StatelessWidget {
                 ),
               ),
               const Gap(15),
-              const Text.rich(
-                TextSpan(
-                  text: '계정이 없으신가요? ',
-                  style: TextStyle(fontSize: 12),
-                  children: [
-                    TextSpan(
-                      text: '회원가입',
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('계정이 없으신가요? '),
+                  GestureDetector(
+                    onTap:
+                        () => widget.onAction(const SignInAction.onTapSignUp()),
+                    child: const Text(
+                      '회원가입',
                       style: TextStyle(
-                        decoration: TextDecoration.underline,
+                        color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  String? _validatePassword(value) {
+    if (value == null || value.isEmpty) {
+      return '비밀번호를 입력해주세요.';
+    }
+
+    return null;
   }
 
   String? _validateEmail(value) {
