@@ -72,8 +72,6 @@ class _UploadRawScreenRootState extends ConsumerState<UploadRawScreenRoot> {
         viewModel.handlePickPdf(context);
       case SubmitForm():
         viewModel.handleSubmitForm(context);
-      case OnTap():
-        debugPrint('tapped onTap');
     }
   }
 }

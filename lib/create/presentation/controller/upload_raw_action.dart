@@ -4,8 +4,6 @@ part 'upload_raw_action.freezed.dart';
 
 @freezed
 sealed class UploadRawAction with _$UploadRawAction {
-  const factory UploadRawAction.onTap() = OnTap;
-
   const factory UploadRawAction.selectUploadType(String type) =
       SelectUploadType;
 
