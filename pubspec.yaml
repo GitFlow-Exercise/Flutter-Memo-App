@@ -48,6 +48,8 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
 
+  printing: ^5.11.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
