@@ -6,7 +6,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() {
   // 경로 기반 URL 전략
-  setUrlStrategy(const PathUrlStrategy());
+  // ignore: prefer_const_constructors
+  setUrlStrategy(PathUrlStrategy());
 
   // Remote Database 연결
   // 환경변수 가져오기
