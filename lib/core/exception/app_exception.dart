@@ -30,6 +30,12 @@ sealed class AppException with _$AppException implements Exception {
     StackTrace? stackTrace,
   }) = OpenAITypeException;
 
+  const factory AppException.filePick({
+    required String message,
+    Object? error,
+    StackTrace? stackTrace,
+  }) = FilePickException;
+
   String get userFriendlyMessage {
     switch (this) {
       case NetworkException():
@@ -39,6 +45,8 @@ sealed class AppException with _$AppException implements Exception {
         return '데이터를 불러오지 못했습니다.';
       case OpenAITypeException():
         return '올바르지 않은 타입입니다.';
+      case FilePickException():
+        return '파일을 정상적으로 불러오지 못했습니다.';
     }
   }
 }
