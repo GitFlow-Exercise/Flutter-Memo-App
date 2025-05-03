@@ -29,13 +29,27 @@ class _TestScreenState extends ConsumerState<TestScreen> {
     });
 
     // 1) 클라이언트에서 보낼 OpenAI 요청 페이로드를 Map으로 정의
-    final body = OpenAiBody(
+    final body = const OpenAiBody(
       input: [
-        MessageInput(content: [
-          InputContent.text(text: inputText),
-        ]),
+        MessageInput(
+          content: [
+            // ------------------------------
+            // 텍스트 보내는 예제
+            InputContent.text(text: 'text'),
+
+            // ------------------------------
+            // 이미지 보내는 예제
+            InputContent.image(imageExtension: 'png', base64: '{base64}'),
+
+            // ------------------------------
+            // 파일 보내는 예제
+            InputContent.file(filename: 'test.pdf', base64: '{base64}'),
+          ],
+        ),
       ],
-      instructions: '이모티몬 이쁘게 넣으면서 답장해줘',
+      previousResponseId:
+          'resp_6815d6a10fb88192b2041a7ae053c9d902023d1f901296d6',
+      instructions: '내 이름을 이모티콘과 함께 부르며 해당 문제에 대한 clean text를 추출해줘.',
       // instructions: Prompt.prompt1.detail,
     );
     final resp = await ref.read(createProblemUseCaseProvider).execute(body);

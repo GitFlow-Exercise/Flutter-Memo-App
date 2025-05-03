@@ -6,23 +6,20 @@ extension InputContentMapper on InputContent {
     switch (this) {
       case InputText():
         final type = this as InputText;
-        return InputTextDto(
-          type: type.type,
-          text: type.text,
-        );
+        return InputTextDto(type: type.type, text: type.text);
       case InputImage():
         final type = this as InputImage;
         return InputImageDto(
           type: type.type,
           imageExtension: type.imageExtension,
-          imageUrl: type.imageUrl,
+          base64: type.base64,
         );
       case InputFile():
         final type = this as InputFile;
         return InputFileDto(
           type: type.type,
           filename: type.filename,
-          fileData: type.fileData,
+          base64: type.base64,
         );
     }
   }

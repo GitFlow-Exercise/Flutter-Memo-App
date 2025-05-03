@@ -1,6 +1,6 @@
 abstract class AiConstant {
   // invoke function name
-  static const String invokeFunction = 'open-ai';
+  static const String invokeFunction = 'clever-handler';
 
   // Data Type
   static const String inputText = 'input_text';

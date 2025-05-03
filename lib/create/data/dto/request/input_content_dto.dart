@@ -19,9 +19,7 @@ sealed class InputContentDto {
       case AiConstant.inputFile:
         return InputFileDto.fromJson(json);
       default:
-        throw const AppException.openAIType(
-          message: '지원하지 않는 데이터 타입입니다.',
-        );
+        throw const AppException.openAIType(message: '지원하지 않는 데이터 타입입니다.');
     }
   }
 }
@@ -32,10 +30,7 @@ class InputTextDto extends InputContentDto {
   final String type;
   final String text;
 
-  InputTextDto({
-    required this.type,
-    required this.text,
-  });
+  InputTextDto({required this.type, required this.text});
 
   factory InputTextDto.fromJson(Map<String, dynamic> json) =>
       _$InputTextDtoFromJson(json);
@@ -48,14 +43,15 @@ class InputTextDto extends InputContentDto {
 class InputImageDto extends InputContentDto {
   @override
   final String type;
+  @JsonKey(includeToJson: false)
   final String imageExtension;
   @JsonKey(name: 'image_url')
-  final String imageUrl;
+  final String base64;
 
   InputImageDto({
     required this.type,
     required this.imageExtension,
-    required this.imageUrl,
+    required this.base64,
   });
 
   factory InputImageDto.fromJson(Map<String, dynamic> json) =>
@@ -64,7 +60,7 @@ class InputImageDto extends InputContentDto {
   @override
   Map<String, dynamic> toJson() {
     final map = _$InputImageDtoToJson(this);
-    map['image_url'] = 'data:image/$imageExtension;base64,$imageUrl';
+    map['image_url'] = 'data:image/$imageExtension;base64,$base64';
     return map;
   }
 }
@@ -75,12 +71,12 @@ class InputFileDto extends InputContentDto {
   final String type;
   final String filename;
   @JsonKey(name: 'file_data')
-  final String fileData;
+  final String base64;
 
   InputFileDto({
     required this.type,
     required this.filename,
-    required this.fileData,
+    required this.base64,
   });
 
   factory InputFileDto.fromJson(Map<String, dynamic> json) =>
@@ -89,7 +85,7 @@ class InputFileDto extends InputContentDto {
   @override
   Map<String, dynamic> toJson() {
     final map = _$InputFileDtoToJson(this);
-    map['file_data'] = 'data:application/pdf;base64,$fileData';
+    map['file_data'] = 'data:application/pdf;base64,$base64';
     return map;
   }
 }

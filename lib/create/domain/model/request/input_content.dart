@@ -15,13 +15,13 @@ sealed class InputContent with _$InputContent {
   const factory InputContent.image({
     @Default(AiConstant.inputImage) String type,
     required String imageExtension,
-    required String imageUrl,
+    required String base64,
   }) = InputImage;
 
   const factory InputContent.file({
     @Default(AiConstant.inputFile) String type,
     required String filename,
-    required String fileData,
+    required String base64,
   }) = InputFile;
 
   factory InputContent.fromJson(Map<String, dynamic> json) =>

@@ -13,7 +13,7 @@ class OpenAiDataSourceImpl implements OpenAiDataSource {
   Future<OpenAiResponseDto> createProblem(OpenAIBodyDto body) async {
     final resp = await _client.functions.invoke(
       AiConstant.invokeFunction,
-      body: body,
+      body: body.toJson(),
     );
     print('datasource: $resp');
     return OpenAiResponseDto.fromJson(resp.data);
