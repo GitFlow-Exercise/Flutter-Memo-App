@@ -29,10 +29,8 @@ class OpenAiRepositoryImpl implements OpenAiRepository {
           stackTrace: StackTrace.current,
         );
       }
-      print('datasource: ${aiRespDto.toJson()}');
       return Result.success(aiRespDto.toContent());
     } catch (e) {
-      print('repo error :$e');
       return Result.error(
         AppException.network(
           message: '데이터를 가져오는 중 에러가 발생하였습니다.',

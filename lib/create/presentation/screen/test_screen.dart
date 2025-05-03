@@ -47,8 +47,10 @@ class _TestScreenState extends ConsumerState<TestScreen> {
           ],
         ),
       ],
+      // 이전 AI의 respId 값
       previousResponseId:
           'resp_6815d6a10fb88192b2041a7ae053c9d902023d1f901296d6',
+      // prompt
       instructions: '내 이름을 이모티콘과 함께 부르며 해당 문제에 대한 clean text를 추출해줘.',
       // instructions: Prompt.prompt1.detail,
     );

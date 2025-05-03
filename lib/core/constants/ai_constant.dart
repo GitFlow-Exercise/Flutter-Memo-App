@@ -1,3 +1,4 @@
+// AI 관련 상수 텍스트들 정의
 abstract class AiConstant {
   // invoke function name
   static const String invokeFunction = 'clever-handler';

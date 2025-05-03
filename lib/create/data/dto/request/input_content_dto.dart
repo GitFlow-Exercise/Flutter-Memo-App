@@ -8,7 +8,7 @@ sealed class InputContentDto {
   String get type;
   Map<String, dynamic> toJson();
 
-  /// factory를 통해 json 타입에 맞는 구현체로 변환
+  // json 타입에 맞는 구현체로 변환
   static InputContentDto fromJson(Map<String, dynamic> json) {
     final type = json['type'] as String;
     switch (type) {
@@ -43,9 +43,9 @@ class InputTextDto extends InputContentDto {
 class InputImageDto extends InputContentDto {
   @override
   final String type;
-  @JsonKey(includeToJson: false)
+  @JsonKey(includeToJson: false) // 확장자는 toJson 함수에서 제외
   final String imageExtension;
-  @JsonKey(name: 'image_url')
+  @JsonKey(name: 'image_url') // Json key 재설정
   final String base64;
 
   InputImageDto({
@@ -57,6 +57,8 @@ class InputImageDto extends InputContentDto {
   factory InputImageDto.fromJson(Map<String, dynamic> json) =>
       _$InputImageDtoFromJson(json);
 
+  // base64 데이터와
+  // open AI 필수 속성값 추가하여 재설정
   @override
   Map<String, dynamic> toJson() {
     final map = _$InputImageDtoToJson(this);
@@ -82,6 +84,8 @@ class InputFileDto extends InputContentDto {
   factory InputFileDto.fromJson(Map<String, dynamic> json) =>
       _$InputFileDtoFromJson(json);
 
+  // base64 데이터와
+  // open AI 필수 속성값 추가하여 재설정
   @override
   Map<String, dynamic> toJson() {
     final map = _$InputFileDtoToJson(this);
