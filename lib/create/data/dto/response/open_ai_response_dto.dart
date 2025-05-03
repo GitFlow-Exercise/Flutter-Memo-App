@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:mongo_ai/create/data/dto/response/output_dto.dart';
+import 'package:mongo_ai/create/data/dto/response/open_ai_response_output_dto.dart';
 
 part 'open_ai_response_dto.g.dart';
 
@@ -9,7 +9,7 @@ class OpenAiResponseDto {
   final String status;
   final Object? error;
   final String instructions;
-  final List<OutputDto> output;
+  final List<OpenAIResponseOutputDto> output;
 
   OpenAiResponseDto({
     required this.id,

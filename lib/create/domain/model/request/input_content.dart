@@ -3,7 +3,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mongo_ai/core/constants/ai_constant.dart';
 
 part 'input_content.freezed.dart';
-part 'input_content.g.dart';
 
 @freezed
 sealed class InputContent with _$InputContent {
@@ -23,7 +22,4 @@ sealed class InputContent with _$InputContent {
     required String filename,
     required String base64,
   }) = InputFile;
-
-  factory InputContent.fromJson(Map<String, dynamic> json) =>
-      _$InputContentFromJson(json);
 }

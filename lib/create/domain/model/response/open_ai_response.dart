@@ -1,8 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:mongo_ai/create/domain/model/response/output.dart';
+import 'package:mongo_ai/create/domain/model/response/open_ai_response_output.dart';
 
 part 'open_ai_response.freezed.dart';
-part 'open_ai_response.g.dart';
 
 @freezed
 abstract class OpenAiResponse with _$OpenAiResponse {
@@ -11,9 +10,6 @@ abstract class OpenAiResponse with _$OpenAiResponse {
     required String status,
     Object? error,
     required String instructions,
-    required List<Output> output,
+    required List<OpenAIResponseOutput> output,
   }) = _OpenAiResponse;
-
-  factory OpenAiResponse.fromJson(Map<String, dynamic> json) =>
-      _$OpenAiResponseFromJson(json);
 }
