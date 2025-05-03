@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:mongo_ai/core/constants/ai_constant.dart';
-import 'package:mongo_ai/core/enum/allowed_extension_type.dart';
+import 'package:mongo_ai/core/di/providers.dart';
+import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/create/presentation/controller/upload_raw_event.dart';
 import 'package:mongo_ai/create/presentation/controller/upload_raw_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -43,42 +43,46 @@ class UploadRawViewModel extends _$UploadRawViewModel {
   }
 
   Future<void> handlePickImage(BuildContext context) async {
-    try {
-      final result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: [
-          AllowedExtensionType.png.name,
-          AllowedExtensionType.jpg.name,
-          AllowedExtensionType.jpeg.name,
-        ],
-      );
+    state = state.copyWith(isLoading: true);
 
-      if (result != null) {
+    final useCase = ref.read(pickFileUseCaseProvider);
+    final result = await useCase.selectImage();
+
+    switch (result) {
+      case Success():
         state = state.copyWith(
-          imageBytes: result.files.single.bytes,
-          imageName: result.files.single.name,
+          imageBytes: result.data.bytes,
+          imageName: result.data.fileName,
+          isLoading: false,
         );
-      }
-    } catch (e) {
-      _readyForSnackBar('이미지 선택 중 오류 발생: $e');
+        break;
+      case Error(:final error):
+        _readyForSnackBar(error.userFriendlyMessage);
+        debugPrint(error.stackTrace.toString());
+        state = state.copyWith(isLoading: false);
+        break;
     }
   }
 
   Future<void> handlePickPdf(BuildContext context) async {
-    try {
-      final result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: [AllowedExtensionType.pdf.name],
-      );
+    state = state.copyWith(isLoading: true);
 
-      if (result != null) {
+    final useCase = ref.read(pickFileUseCaseProvider);
+    final result = await useCase.selectPdf();
+
+    switch (result) {
+      case Success():
         state = state.copyWith(
-          pdfBytes: result.files.single.bytes,
-          pdfName: result.files.single.name,
+          pdfBytes: result.data.bytes,
+          pdfName: result.data.fileName,
+          isLoading: false,
         );
-      }
-    } catch (e) {
-      _readyForSnackBar('PDF 선택 중 오류 발생: $e');
+        break;
+      case Error(:final error):
+        _readyForSnackBar(error.userFriendlyMessage);
+        debugPrint(error.stackTrace.toString());
+        state = state.copyWith(isLoading: false);
+        break;
     }
   }
 
