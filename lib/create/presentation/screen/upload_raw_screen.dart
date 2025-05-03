@@ -191,7 +191,7 @@ class _UploadRawScreenState extends State<UploadRawScreen> {
         ),
         if (widget.state.isLoading)
           Container(
-            color: Colors.black.withOpacity(0.5),
+            color: Colors.black.withValues(alpha: 0.5),
             width: double.infinity,
             height: double.infinity,
             child: const Center(child: CircularProgressIndicator()),
