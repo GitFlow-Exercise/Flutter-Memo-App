@@ -1,9 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mongo_ai/create/data/data_source/file_picker_data_source.dart';
+import 'package:mongo_ai/create/data/data_source/file_picker_data_source_impl.dart';
 import 'package:mongo_ai/create/data/data_source/open_ai_data_source.dart';
 import 'package:mongo_ai/create/data/data_source/open_ai_data_source_impl.dart';
+import 'package:mongo_ai/create/data/repository/file_picker_repository_impl.dart';
 import 'package:mongo_ai/create/data/repository/open_ai_repository_impl.dart';
+import 'package:mongo_ai/create/domain/repository/file_picker_repository.dart';
 import 'package:mongo_ai/create/domain/repository/open_ai_repository.dart';
 import 'package:mongo_ai/create/domain/use_case/create_problem_use_case.dart';
+import 'package:mongo_ai/create/domain/use_case/pick_file_use_case.dart';
 import 'package:mongo_ai/home/data/data_source/remote_database_data_source.dart';
 import 'package:mongo_ai/home/data/data_source/remote_database_data_source_impl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -44,12 +49,27 @@ final openAIDataSourceProvider = Provider<OpenAiDataSource>((ref) {
   return OpenAiDataSourceImpl(client);
 });
 
+final filePickerDataSourceProvider = Provider<FilePickerDataSource>((ref) {
+  return FilePickerDataSourceImpl();
+});
+
 final openAIRepositoryProvider = Provider<OpenAiRepository>((ref) {
   final dataSource = ref.watch(openAIDataSourceProvider);
   return OpenAiRepositoryImpl(openAiDataSource: dataSource);
+});
+
+final filePickerRepositoryProvider = Provider<FilePickerRepository>((ref) {
+  final dataSource = ref.watch(filePickerDataSourceProvider);
+  return FilePickerRepositoryImpl(filePickerDataSource: dataSource);
 });
 
 final createProblemUseCaseProvider = Provider<CreateProblemUseCase>((ref) {
   final repository = ref.watch(openAIRepositoryProvider);
   return CreateProblemUseCase(repository);
 });
+
+final pickFileUseCaseProvider = Provider<PickFileUseCase>((ref) {
+  final repository = ref.watch(filePickerRepositoryProvider);
+  return PickFileUseCase(filePickerRepository: repository);
+});
+
