@@ -9,6 +9,7 @@ extension PickFileDtoMapper on PickFileDto {
     return PickFile(
       type: type ?? AiConstant.inputText,
       fileName: fileName ?? 'unknown',
+      extension: extension ?? '',
       bytes: bytes ?? Uint8List(0),
     );
   }

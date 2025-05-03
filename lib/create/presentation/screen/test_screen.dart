@@ -29,7 +29,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
     });
 
     // 1) 클라이언트에서 보낼 OpenAI 요청 페이로드를 Map으로 정의
-    final body = const OpenAiBody(
+    final body = OpenAiBody(
       input: [
         MessageInput(
           content: [
