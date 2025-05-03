@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:mongo_ai/core/constants/ai_constant.dart';
@@ -105,12 +107,12 @@ class UploadRawViewModel extends _$UploadRawViewModel {
     if (state.selectedUploadType == AiConstant.inputImage) {
       inputContent = InputContent.image(
         imageExtension: state.extension ?? '',
-        base64: state.imageBytes?.toString() ?? '',
+        base64: base64Encode(state.imageBytes ?? Uint8List(0)),
       );
     } else {
       inputContent = InputContent.file(
         filename: state.pdfName ?? '',
-        base64: state.pdfBytes?.toString() ?? '',
+        base64: base64Encode(state.pdfBytes ?? Uint8List(0)),
       );
     }
     final body = OpenAiBody(
@@ -118,7 +120,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
         MessageInput(content: [inputContent]),
       ],
       previousResponseId: null,
-      instructions: '다른 안내는 하지말고 오로지 안의 내용만 인식해서 알려줘',
+      instructions: 'Just OCR Result Please',
     );
 
     final result = await ref.read(createProblemUseCaseProvider).execute(body);
@@ -129,6 +131,8 @@ class UploadRawViewModel extends _$UploadRawViewModel {
       case Error<OpenAiResponse, AppException>():
         debugPrint(result.error.toString());
     }
+
+    state = state.copyWith(isLoading: false);
   }
 
   void _readyForSnackBar(String message) {
