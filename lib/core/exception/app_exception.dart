@@ -24,6 +24,12 @@ sealed class AppException with _$AppException implements Exception {
     StackTrace? stackTrace,
   }) = localDataBaseException;
 
+  const factory AppException.openAIType({
+    required String message,
+    Object? error,
+    StackTrace? stackTrace,
+  }) = OpenAITypeException;
+
   String get userFriendlyMessage {
     switch (this) {
       case NetworkException():
@@ -31,6 +37,8 @@ sealed class AppException with _$AppException implements Exception {
       case RemoteDataBaseException():
       case localDataBaseException():
         return '데이터를 불러오지 못했습니다.';
+      case OpenAITypeException():
+        return '올바르지 않은 타입입니다.';
     }
   }
 }
