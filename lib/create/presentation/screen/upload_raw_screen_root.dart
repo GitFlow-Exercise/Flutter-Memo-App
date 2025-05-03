@@ -12,7 +12,8 @@ class UploadRawScreenRoot extends ConsumerStatefulWidget {
   const UploadRawScreenRoot({super.key});
 
   @override
-  ConsumerState<UploadRawScreenRoot> createState() => _UploadRawScreenRootState();
+  ConsumerState<UploadRawScreenRoot> createState() =>
+      _UploadRawScreenRootState();
 }
 
 class _UploadRawScreenRootState extends ConsumerState<UploadRawScreenRoot> {
@@ -46,14 +47,31 @@ class _UploadRawScreenRootState extends ConsumerState<UploadRawScreenRoot> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(uploadRawViewModelProvider);
-
-    return Scaffold(body: UploadRawScreen(state: state, onAction: _handleAction),);
-  }
-
-  Future<void> _handleAction(UploadRawAction action) async {
     final viewModel = ref.watch(uploadRawViewModelProvider.notifier);
 
+    return Scaffold(
+      appBar: AppBar(title: const Text('파일 업로드')),
+      body: UploadRawScreen(
+        state: state,
+        onAction: (action) => _handleAction(action, context, viewModel),
+      ),
+    );
+  }
+
+  void _handleAction(
+    UploadRawAction action,
+    BuildContext context,
+    UploadRawViewModel viewModel,
+  ) {
     switch (action) {
+      case SelectUploadType(:final type):
+        viewModel.handleSelectUploadType(type);
+      case PickImage():
+        viewModel.handlePickImage(context);
+      case PickPdf():
+        viewModel.handlePickPdf(context);
+      case SubmitForm():
+        viewModel.handleSubmitForm(context);
       case OnTap():
         debugPrint('tapped onTap');
     }
