@@ -1,3 +1,6 @@
+# metadata
+.metadata
+
 # Flutter/Dart/Pub 관련
 **/doc/api/
 **/ios/Flutter/.last_build_id
