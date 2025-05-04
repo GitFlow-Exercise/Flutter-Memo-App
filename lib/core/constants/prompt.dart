@@ -3,21 +3,33 @@
 // AI Prompt enum을 정의,
 // 실질적인 prompt 내용은 'PromptData' 에 정의해서 사용할 예정
 enum Prompt {
-  prompt1(PromptData.prompt1),
-  prompt2(''),
-  prompt3('');
+  prompt1(name: PromptData.promptName1, detail: PromptData.promptDetail1),
+  prompt2(name: PromptData.promptName2, detail: PromptData.promptDetail2),
+  prompt3(name: PromptData.promptName3, detail: PromptData.promptDetail3),
+  prompt4(name: PromptData.promptName4, detail: PromptData.promptDetail4),
+  prompt5(name: PromptData.promptName5, detail: PromptData.promptDetail5),
+  prompt6(name: PromptData.promptName6, detail: PromptData.promptDetail6);
 
+  final String name;
   final String detail;
 
-  const Prompt(this.detail);
+  const Prompt({required this.name, required this.detail});
 }
 
 abstract class PromptData {
+  // prompt name
+  static const String promptName1 = 'promptName1';
+  static const String promptName2 = 'promptName2';
+  static const String promptName3 = 'promptName3';
+  static const String promptName4 = 'promptName4';
+  static const String promptName5 = 'promptName5';
+  static const String promptName6 = 'promptName6';
+
   // --------------------------------
-  // Prompt Detail Data
+  // Prompt detail
   // --TODO
   // 추후 Prompt 데이터 받아서 추가하기
-  static const String prompt1 = '''
+  static const String promptDetail1 = '''
 # MongoAI - 본문 분석편 Step 1, 3 (Ver 1.1)
 
 ─────────────────────────────────────────────────────────
@@ -206,9 +218,9 @@ ________________________________________________________________________________
 5. **O/X 문제**: 해설 전체를 빈칸으로 변경 예: "→ ❌ - ________________________________________________________"
 ''';
 
-  static const String prompt2 = 'prompt2';
-  static const String prompt3 = 'prompt3';
-  static const String prompt4 = 'prompt4';
-  static const String prompt5 = 'prompt5';
-  static const String prompt6 = 'prompt6';
+  static const String promptDetail2 = 'promptDetail2';
+  static const String promptDetail3 = 'promptDetail3';
+  static const String promptDetail4 = 'promptDetail4';
+  static const String promptDetail5 = 'promptDetail5';
+  static const String promptDetail6 = 'promptDetail6';
 }
