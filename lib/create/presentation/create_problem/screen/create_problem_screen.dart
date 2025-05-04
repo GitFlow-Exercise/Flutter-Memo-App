@@ -26,6 +26,12 @@ class CreateProblemScreen extends StatelessWidget {
       backgroundColor: AppColor.white,
       body: state.problem.when(
         data: (value) {
+          // ------ Todo ------
+          // 다음 화면 라우팅 연결
+          // 값이 할당되었다면 프레임 빌드 후 다른 화면으로 이동
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (value != null) {}
+          });
           return Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -82,16 +88,14 @@ class CreateProblemScreen extends StatelessWidget {
                     InkWell(
                       onTap: () {
                         onAction(
-                          CreateProblemAction.createProblem(
+                          const CreateProblemAction.createProblem(
                             OpenAiBody(
                               input: [
                                 MessageInput(
-                                  content: [
-                                    InputContent.text(text: state.cleanText),
-                                  ],
+                                  content: [InputContent.text(text: '안녕 반가워')],
                                 ),
                               ],
-                              instructions: state.problemType.detail,
+                              instructions: '',
                             ),
                           ),
                         );
