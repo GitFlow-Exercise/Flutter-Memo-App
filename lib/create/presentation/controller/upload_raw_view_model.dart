@@ -94,10 +94,16 @@ class UploadRawViewModel extends _$UploadRawViewModel {
     }
   }
 
-  //TODO: 이후 screen으로 넘겨줘야 함
-  void handleSubmitForm(BuildContext context) async {
+  Future<void> handleSubmitForm(BuildContext context) async {
     if (state.selectedUploadType == AiConstant.inputText) {
-      debugPrint(state.textController.text);
+      final text = state.textController.text.trim();
+      if (text.isEmpty) {
+        _readyForSnackBar('텍스트를 입력해주세요.');
+        return;
+      }
+
+      //TODO: 다음 화면으로 데이터 이동
+      debugPrint(text);
       return;
     }
 
@@ -105,16 +111,27 @@ class UploadRawViewModel extends _$UploadRawViewModel {
     InputContent inputContent;
 
     if (state.selectedUploadType == AiConstant.inputImage) {
+      if (state.imageBytes == null) {
+        _readyForSnackBar('이미지를 선택해주세요.');
+        state = state.copyWith(isLoading: false);
+        return;
+      }
       inputContent = InputContent.image(
         imageExtension: state.extension ?? '',
-        base64: base64Encode(state.imageBytes ?? Uint8List(0)),
+        base64: base64Encode(state.imageBytes!),
       );
     } else {
+      if (state.pdfBytes == null) {
+        _readyForSnackBar('PDF 파일을 선택해주세요.');
+        state = state.copyWith(isLoading: false);
+        return;
+      }
       inputContent = InputContent.file(
         filename: state.pdfName ?? '',
-        base64: base64Encode(state.pdfBytes ?? Uint8List(0)),
+        base64: base64Encode(state.pdfBytes!),
       );
     }
+
     final body = OpenAiBody(
       input: [
         MessageInput(content: [inputContent]),
@@ -127,9 +144,10 @@ class UploadRawViewModel extends _$UploadRawViewModel {
 
     switch (result) {
       case Success<OpenAiResponse, AppException>():
+      //TODO: 다음 화면으로 데이터 이동
         debugPrint(result.data.toString());
       case Error<OpenAiResponse, AppException>():
-        debugPrint(result.error.toString());
+        _readyForSnackBar(result.error.userFriendlyMessage);
     }
 
     state = state.copyWith(isLoading: false);

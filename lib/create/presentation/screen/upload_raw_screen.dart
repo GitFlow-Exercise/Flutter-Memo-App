@@ -45,48 +45,48 @@ class _UploadRawScreenState extends State<UploadRawScreen> {
                       ElevatedButton(
                         onPressed:
                             () => widget.onAction(
-                          const UploadRawAction.selectUploadType(
-                            AiConstant.inputText,
-                          ),
-                        ),
+                              const UploadRawAction.selectUploadType(
+                                AiConstant.inputText,
+                              ),
+                            ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
-                          widget.state.selectedUploadType ==
-                              AiConstant.inputText
-                              ? Colors.blue
-                              : Colors.white70,
+                              widget.state.selectedUploadType ==
+                                      AiConstant.inputText
+                                  ? Colors.blue
+                                  : Colors.white70,
                         ),
                         child: const Text('텍스트'),
                       ),
                       ElevatedButton(
                         onPressed:
                             () => widget.onAction(
-                          const UploadRawAction.selectUploadType(
-                            AiConstant.inputImage,
-                          ),
-                        ),
+                              const UploadRawAction.selectUploadType(
+                                AiConstant.inputImage,
+                              ),
+                            ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
-                          widget.state.selectedUploadType ==
-                              AiConstant.inputImage
-                              ? Colors.blue
-                              : Colors.white70,
+                              widget.state.selectedUploadType ==
+                                      AiConstant.inputImage
+                                  ? Colors.blue
+                                  : Colors.white70,
                         ),
                         child: const Text('이미지'),
                       ),
                       ElevatedButton(
                         onPressed:
                             () => widget.onAction(
-                          const UploadRawAction.selectUploadType(
-                            AiConstant.inputFile,
-                          ),
-                        ),
+                              const UploadRawAction.selectUploadType(
+                                AiConstant.inputFile,
+                              ),
+                            ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
-                          widget.state.selectedUploadType ==
-                              AiConstant.inputFile
-                              ? Colors.blue
-                              : Colors.white70,
+                              widget.state.selectedUploadType ==
+                                      AiConstant.inputFile
+                                  ? Colors.blue
+                                  : Colors.white70,
                         ),
                         child: const Text('PDF'),
                       ),
@@ -106,7 +106,6 @@ class _UploadRawScreenState extends State<UploadRawScreen> {
                         border: OutlineInputBorder(),
                         hintText: '텍스트를 입력하세요...',
                       ),
-                      onChanged: (_) => setState(() {}),
                     ),
                   ] else if (widget.state.selectedUploadType ==
                       AiConstant.inputImage) ...[
@@ -115,8 +114,8 @@ class _UploadRawScreenState extends State<UploadRawScreen> {
                     ElevatedButton(
                       onPressed:
                           () => widget.onAction(
-                        const UploadRawAction.pickImage(),
-                      ),
+                            const UploadRawAction.pickImage(),
+                          ),
                       child: const Text('이미지 선택'),
                     ),
                     if (widget.state.imageBytes != null) ...[
@@ -143,7 +142,7 @@ class _UploadRawScreenState extends State<UploadRawScreen> {
                     ElevatedButton(
                       onPressed:
                           () =>
-                          widget.onAction(const UploadRawAction.pickPdf()),
+                              widget.onAction(const UploadRawAction.pickPdf()),
                       child: const Text('PDF 선택'),
                     ),
                     if (widget.state.pdfBytes != null) ...[
@@ -174,11 +173,11 @@ class _UploadRawScreenState extends State<UploadRawScreen> {
                   if (widget.state.selectedUploadType != null)
                     ElevatedButton(
                       onPressed:
-                      widget.state.isSubmitEnabled
-                          ? () => widget.onAction(
-                        const UploadRawAction.submitForm(),
-                      )
-                          : null,
+                          widget.state.isSubmitEnabled
+                              ? () => widget.onAction(
+                                const UploadRawAction.submitForm(),
+                              )
+                              : null,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 15),
                       ),
