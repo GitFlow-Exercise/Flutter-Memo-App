@@ -1,8 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'home_event.freezed.dart';
+part 'create_problem_event.freezed.dart';
 
 @freezed
-sealed class HomeEvent with _$HomeEvent {
-  const factory HomeEvent.showSnackBar(String message) = ShowSnackBar;
+sealed class CreateProblemEvent with _$CreateProblemEvent {
+  const factory CreateProblemEvent.showSnackBar(String message) = ShowSnackBar;
 }

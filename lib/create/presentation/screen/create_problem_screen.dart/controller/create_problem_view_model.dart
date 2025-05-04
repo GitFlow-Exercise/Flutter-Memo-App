@@ -2,56 +2,62 @@ import 'dart:async';
 
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/result/result.dart';
-import 'package:mongo_ai/home/presentation/controller/home_event.dart';
-import 'package:mongo_ai/home/presentation/controller/home_state.dart';
+import 'package:mongo_ai/create/domain/model/request/open_ai_body.dart';
+import 'package:mongo_ai/create/presentation/screen/create_problem_screen.dart/controller/create_problem_event.dart';
+import 'package:mongo_ai/create/presentation/screen/create_problem_screen.dart/controller/create_problem_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'home_view_model.g.dart';
+part 'create_problem_view_model.g.dart';
 
 @riverpod
-class HomeViewModel extends _$HomeViewModel {
-  final _eventController = StreamController<HomeEvent>.broadcast();
+class CreateProblemViewModel extends _$CreateProblemViewModel {
+  final _eventController = StreamController<CreateProblemEvent>.broadcast();
 
-  Stream<HomeEvent> get eventStream => _eventController.stream;
+  Stream<CreateProblemEvent> get eventStream => _eventController.stream;
 
   @override
-  HomeState build() {
+  CreateProblemState build() {
     ref.onDispose(() {
       _eventController.close();
     });
 
-    return const HomeState();
+    return const CreateProblemState();
   }
 
-  Future<void> loadHomeInfo() async {
-    state = state.copyWith(homeData: const AsyncValue.loading());
+  // AI에 요청을 보내서 데이터 생성
+  Future<void> createProblem(OpenAiBody body) async {
+    state = state.copyWith(problem: const AsyncValue.loading());
 
-    final useCase = ref.read(getHomeInfoUseCaseProvider);
-    final result = await useCase.getHomeInfo();
+    final useCase = ref.read(createProblemUseCaseProvider);
+    final result = await useCase.execute(body);
 
     switch (result) {
-      case Success(data: final homeData):
-        state = state.copyWith(homeData: AsyncValue.data(homeData));
+      case Success(data: final problem):
+        state = state.copyWith(problem: AsyncValue.data(problem));
       case Error(error: final error):
         state = state.copyWith(
-          homeData: AsyncValue.error(
+          problem: AsyncValue.error(
             error,
             error.stackTrace ?? StackTrace.empty,
           ),
         );
     }
 
-    if (state.homeData is AsyncError) {
-      final error = (state.homeData as AsyncError).error;
-      emitEvent(HomeEvent.showSnackBar('정보를 불러오는데 실패했습니다: $error'));
+    if (state.problem is AsyncError) {
+      final error = (state.problem as AsyncError).error;
+      _eventController.add(
+        CreateProblemEvent.showSnackBar('정보를 불러오는데 실패했습니다: $error'),
+      );
     }
   }
 
-  Future<void> refreshHomeInfo() async {
-    await loadHomeInfo();
+  // cleanText 데이터 할당
+  void setCleanText(String cleanText) {
+    state = state.copyWith(cleanText: cleanText);
   }
 
-  void emitEvent(HomeEvent event) {
-    _eventController.add(event);
+  // 문제 유형 설정
+  void changeProblemType(String problemType) {
+    state = state.copyWith(problemType: problemType);
   }
 }

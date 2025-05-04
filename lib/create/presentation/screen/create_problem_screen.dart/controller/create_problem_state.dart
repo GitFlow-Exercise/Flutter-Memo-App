@@ -1,12 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:mongo_ai/home/domain/model/home.dart';
+import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 
-part 'home_state.freezed.dart';
+part 'create_problem_state.freezed.dart';
 
 @freezed
-abstract class HomeState with _$HomeState {
-  const factory HomeState({
-    @Default(AsyncValue.loading()) AsyncValue<Home> homeData,
-  }) = _HomeState;
+abstract class CreateProblemState with _$CreateProblemState {
+  const factory CreateProblemState({
+    // AI 통신전에는 null 값을 지닌 AsyncData로 시작
+    @Default(AsyncValue.data(null)) AsyncValue<OpenAiResponse?> problem,
+    @Default('') String cleanText,
+    @Default('') String problemType,
+  }) = _CreateProblemState;
 }

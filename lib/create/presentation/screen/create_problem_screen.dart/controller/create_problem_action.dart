@@ -1,12 +1,15 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:mongo_ai/create/domain/model/request/open_ai_body.dart';
 
-part 'home_action.freezed.dart';
+part 'create_problem_action.freezed.dart';
 
 @freezed
-sealed class HomeAction with _$HomeAction {
-  const factory HomeAction.loadHomeInfo() = LoadHomeInfo;
+sealed class CreateProblemAction with _$CreateProblemAction {
+  const factory CreateProblemAction.changeType(String type) = ChangeType;
 
-  const factory HomeAction.refresh() = Refresh;
+  const factory CreateProblemAction.createProblem(OpenAiBody body) =
+      CreateProblem;
 
-  const factory HomeAction.onTapDetail() = OnTapDetail;
+  const factory CreateProblemAction.setCleanText(String cleanText) =
+      SetCleanText;
 }
