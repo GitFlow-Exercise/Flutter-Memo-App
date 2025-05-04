@@ -35,15 +35,11 @@ class SignUpViewModel extends _$SignUpViewModel {
     switch (result) {
       case Success<bool, AppException>():
         if (result.data) {
-          print('이미 존재하는 이메일입니다.');
           return false;
         } else {
-          print('사용 가능한 이메일입니다.');
           return true;
         }
       case Error<bool, AppException>():
-        print(result.error.message);
-
         return false;
     }
   }
@@ -57,20 +53,14 @@ class SignUpViewModel extends _$SignUpViewModel {
 
     switch (result) {
       case Success<void, AppException>():
-        print('회원가입 성공');
         return true;
       case Error<void, AppException>():
         switch (result.error) {
           case AppException.emailAlreadyExist:
-            print(result.error.message);
-
             break;
           case AppException.unknown:
-            print(result.error.message);
-
             break;
           default:
-            print(result.error.message);
         }
         return false;
     }
