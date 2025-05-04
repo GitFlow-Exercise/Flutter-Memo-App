@@ -4,7 +4,7 @@ import 'package:mongo_ai/auth/sign_in/screen/sign_in_screen_root.dart';
 import 'package:mongo_ai/auth/sign_up/screen/sign_up_complete_screen.dart';
 import 'package:mongo_ai/auth/sign_up/screen/sign_up_screen_root.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
-import 'package:mongo_ai/create/presentation/screen/create_problem_screen.dart/screen/create_problem_screen_root.dart';
+import 'package:mongo_ai/create/presentation/create_problem/screen/create_problem_screen_root.dart';
 import 'package:mongo_ai/home/presentation/screen/home_screen_root.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

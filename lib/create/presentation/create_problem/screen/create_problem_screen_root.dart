@@ -2,10 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mongo_ai/create/presentation/screen/create_problem_screen.dart/controller/create_problem_action.dart';
-import 'package:mongo_ai/create/presentation/screen/create_problem_screen.dart/controller/create_problem_event.dart';
-import 'package:mongo_ai/create/presentation/screen/create_problem_screen.dart/controller/create_problem_view_model.dart';
-import 'package:mongo_ai/create/presentation/screen/create_problem_screen.dart/screen/create_problem_screen.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mongo_ai/core/exception/app_exception.dart';
+import 'package:mongo_ai/core/result/result.dart';
+import 'package:mongo_ai/core/routing/routes.dart';
+import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
+import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_action.dart';
+import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_event.dart';
+import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_view_model.dart';
+import 'package:mongo_ai/create/presentation/create_problem/screen/create_problem_screen.dart';
 
 class CreateProblemScreenRoot extends ConsumerStatefulWidget {
   final String cleanText;
@@ -58,13 +63,20 @@ class _CreateProblemScreenRootState
   }
 
   Future<void> _handleAction(CreateProblemAction action) async {
+    // 1) 위젯이 이미 dispose 됐으면, 즉시 리턴
     final viewModel = ref.watch(createProblemViewModelProvider.notifier);
-
     switch (action) {
       case ChangeType(type: final type):
         viewModel.changeProblemType(type);
       case CreateProblem(body: final body):
-        viewModel.createProblem(body);
+        final result = await viewModel.createProblem(body);
+        switch (result) {
+          case Success<OpenAiResponse, AppException>():
+            if (mounted) {
+              context.pushNamed(Routes.signIn);
+            }
+          case Error<OpenAiResponse, AppException>():
+        }
       case SetCleanText(cleanText: final cleanText):
         viewModel.setCleanText(cleanText);
     }

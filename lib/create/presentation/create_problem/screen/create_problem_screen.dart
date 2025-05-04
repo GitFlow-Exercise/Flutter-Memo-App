@@ -4,11 +4,12 @@ import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/create/domain/model/request/input_content.dart';
 import 'package:mongo_ai/create/domain/model/request/message_input.dart';
 import 'package:mongo_ai/create/domain/model/request/open_ai_body.dart';
-import 'package:mongo_ai/create/presentation/screen/create_problem_screen.dart/controller/create_problem_state.dart';
+import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../controller/create_problem_action.dart';
 
+// Todo
 class CreateProblemScreen extends StatelessWidget {
   final CreateProblemState state;
   final void Function(CreateProblemAction) onAction;

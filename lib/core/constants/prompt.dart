@@ -33,6 +33,7 @@ abstract class _PromptData {
   // --TODO
   // 추후 Prompt 데이터 받아서 추가하기
   static const String promptDetail1 = '''
+해당 지문을 아래와 같이 정리해줘.
 # MongoAI - 본문 분석편 Step 1, 3 (Ver 1.1)
 
 ─────────────────────────────────────────────────────────
