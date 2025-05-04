@@ -10,6 +10,7 @@ abstract class CreateProblemState with _$CreateProblemState {
     // AI 통신전에는 null 값을 지닌 AsyncData로 시작
     @Default(AsyncValue.data(null)) AsyncValue<OpenAiResponse?> problem,
     @Default('') String cleanText,
+    @Default([]) List<String> problemTypes,
     @Default('') String problemType,
   }) = _CreateProblemState;
 }

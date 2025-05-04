@@ -4,7 +4,7 @@ import 'package:mongo_ai/create/presentation/screen/create_problem_screen.dart/c
 
 import '../controller/create_problem_action.dart';
 
-class CreateProblemScreen extends ConsumerStatefulWidget {
+class CreateProblemScreen extends StatelessWidget {
   final CreateProblemState state;
   final void Function(CreateProblemAction) onAction;
 
@@ -15,13 +15,15 @@ class CreateProblemScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<CreateProblemScreen> createState() =>
-      _CreateProblemScreenState();
-}
-
-class _CreateProblemScreenState extends ConsumerState<CreateProblemScreen> {
-  @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Column(children: []));
+    return Scaffold(
+      body: Row(
+        children: [
+          ...List.generate(state.problemTypes.length, (index) {
+            return Container(child: Text(state.problemTypes[index]));
+          }),
+        ],
+      ),
+    );
   }
 }
