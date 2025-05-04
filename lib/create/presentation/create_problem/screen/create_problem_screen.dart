@@ -9,7 +9,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../controller/create_problem_action.dart';
 
-// Todo
 class CreateProblemScreen extends StatelessWidget {
   final CreateProblemState state;
   final void Function(CreateProblemAction) onAction;
