@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:mongo_ai/core/style/app_color.dart';
+import 'package:mongo_ai/create/domain/model/request/input_content.dart';
+import 'package:mongo_ai/create/domain/model/request/message_input.dart';
+import 'package:mongo_ai/create/domain/model/request/open_ai_body.dart';
 import 'package:mongo_ai/create/presentation/screen/create_problem_screen.dart/controller/create_problem_state.dart';
 
 import '../controller/create_problem_action.dart';
@@ -17,6 +21,7 @@ class CreateProblemScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.white,
       body: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -35,8 +40,22 @@ class CreateProblemScreen extends StatelessWidget {
                       horizontal: 16,
                       vertical: 8,
                     ),
-                    decoration: BoxDecoration(border: Border.all()),
-                    child: Text(promptName),
+                    decoration: BoxDecoration(
+                      color:
+                          state.problemType == prompt
+                              ? AppColor.black
+                              : AppColor.white,
+                      border: Border.all(),
+                    ),
+                    child: Text(
+                      promptName,
+                      style: TextStyle(
+                        color:
+                            state.problemType == prompt
+                                ? AppColor.white
+                                : AppColor.black,
+                      ),
+                    ),
                   ),
                 );
               },
@@ -57,7 +76,20 @@ class CreateProblemScreen extends StatelessWidget {
               ),
               const Gap(12),
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  onAction(
+                    CreateProblemAction.createProblem(
+                      OpenAiBody(
+                        input: [
+                          MessageInput(
+                            content: [InputContent.text(text: state.cleanText)],
+                          ),
+                        ],
+                        instructions: state.problemType.detail,
+                      ),
+                    ),
+                  );
+                },
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
