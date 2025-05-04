@@ -12,16 +12,18 @@ class FilePickerDataSourceImpl implements FilePickerDataSource {
     try {
       final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
-        allowedExtensions: [
-          AllowedExtensionType.png.name,
-        ],
+        allowedExtensions: [AllowedExtensionType.png.name],
       );
+
+      if (result == null || result.files.isEmpty) {
+        throw const AppException.filePick(message: '이미지가 선택되지 않았습니다.');
+      }
 
       return PickFileDto(
         type: AiConstant.inputImage,
-        fileName: result?.files.single.name,
-        bytes: result?.files.single.bytes,
-        extension: result?.files.single.extension,
+        fileName: result.files.single.name,
+        bytes: result.files.single.bytes,
+        extension: result.files.single.extension,
       );
     } catch (e) {
       throw AppException.filePick(
@@ -38,11 +40,15 @@ class FilePickerDataSourceImpl implements FilePickerDataSource {
         allowedExtensions: [AllowedExtensionType.pdf.name],
       );
 
+      if (result == null || result.files.isEmpty) {
+        throw const AppException.filePick(message: 'PDF가 선택되지 않았습니다.');
+      }
+
       return PickFileDto(
         type: AiConstant.inputFile,
-        fileName: result?.files.single.name,
-        extension: result?.files.single.extension,
-        bytes: result?.files.single.bytes,
+        fileName: result.files.single.name,
+        extension: result.files.single.extension,
+        bytes: result.files.single.bytes,
       );
     } catch (e) {
       throw AppException.filePick(
