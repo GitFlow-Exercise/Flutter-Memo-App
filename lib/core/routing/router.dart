@@ -10,7 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: Routes.createProblem,
+    initialLocation: Routes.signIn,
     routes: [
       GoRoute(
         path: Routes.home,
