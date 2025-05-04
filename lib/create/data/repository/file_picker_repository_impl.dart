@@ -17,6 +17,8 @@ class FilePickerRepositoryImpl implements FilePickerRepository {
     try {
       final pickFileDto = await _filePickerDataSource.selectImage();
       return Result.success(pickFileDto.toPickFile());
+    } on AppException catch (e) {
+      return Result.error(e);
     } catch (e) {
       return Result.error(
         AppException.filePick(
@@ -31,6 +33,8 @@ class FilePickerRepositoryImpl implements FilePickerRepository {
     try {
       final pickFileDto = await _filePickerDataSource.selectPdf();
       return Result.success(pickFileDto.toPickFile());
+    } on AppException catch (e) {
+      return Result.error(e);
     } catch (e) {
       return Result.error(
         AppException.filePick(
