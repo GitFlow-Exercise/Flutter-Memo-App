@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:mongo_ai/core/constants/prompt.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/create/domain/model/request/open_ai_body.dart';
@@ -57,7 +58,7 @@ class CreateProblemViewModel extends _$CreateProblemViewModel {
   }
 
   // 문제 유형 설정
-  void changeProblemType(String problemType) {
+  void changeProblemType(Prompt problemType) {
     state = state.copyWith(problemType: problemType);
   }
 }

@@ -3,12 +3,12 @@
 // AI Prompt enum을 정의,
 // 실질적인 prompt 내용은 'PromptData' 에 정의해서 사용할 예정
 enum Prompt {
-  prompt1(name: PromptData.promptName1, detail: PromptData.promptDetail1),
-  prompt2(name: PromptData.promptName2, detail: PromptData.promptDetail2),
-  prompt3(name: PromptData.promptName3, detail: PromptData.promptDetail3),
-  prompt4(name: PromptData.promptName4, detail: PromptData.promptDetail4),
-  prompt5(name: PromptData.promptName5, detail: PromptData.promptDetail5),
-  prompt6(name: PromptData.promptName6, detail: PromptData.promptDetail6);
+  prompt1(name: _PromptData.promptName1, detail: _PromptData.promptDetail1),
+  prompt2(name: _PromptData.promptName2, detail: _PromptData.promptDetail2),
+  prompt3(name: _PromptData.promptName3, detail: _PromptData.promptDetail3),
+  prompt4(name: _PromptData.promptName4, detail: _PromptData.promptDetail4),
+  prompt5(name: _PromptData.promptName5, detail: _PromptData.promptDetail5),
+  prompt6(name: _PromptData.promptName6, detail: _PromptData.promptDetail6);
 
   final String name;
   final String detail;
@@ -16,7 +16,10 @@ enum Prompt {
   const Prompt({required this.name, required this.detail});
 }
 
-abstract class PromptData {
+// 해당 클래스는
+// 해당 파일 내부에서만 이용되므로
+// '_' 를 사용한다.
+abstract class _PromptData {
   // prompt name
   static const String promptName1 = 'promptName1';
   static const String promptName2 = 'promptName2';
