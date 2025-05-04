@@ -15,9 +15,8 @@ void main() {
   const supabaseAnonKey = String.fromEnvironment('SUPABASE_ANON_KEY');
 
   Supabase.initialize(
-    url: 'https://uzohehefpjjptcxisfng.supabase.co',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV6b2hlaGVmcGpqcHRjeGlzZm5nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYxNTI3OTcsImV4cCI6MjA2MTcyODc5N30.872S1gvw29Sas_omRxNvuw5-GUGIFV53HqQa_ARlE34',
+    url: supabaseUrl,
+    anonKey: supabaseAnonKey,
     authOptions: const FlutterAuthClientOptions(autoRefreshToken: true),
   );
 
