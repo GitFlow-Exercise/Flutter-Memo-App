@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mongo_ai/auth/sign_in/screen/sign_in_screen_root.dart';
-import 'package:mongo_ai/auth/sign_up/screen/sign_up_complete_screen.dart';
-import 'package:mongo_ai/auth/sign_up/screen/sign_up_screen_root.dart';
+import 'package:mongo_ai/auth/presentation/sign_in/screen/sign_in_screen_root.dart';
+import 'package:mongo_ai/auth/presentation/sign_up/screen/sign_up_complete_screen.dart';
+import 'package:mongo_ai/auth/presentation/sign_up/screen/sign_up_screen_root.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/create/presentation/screen/test_screen.dart';
 import 'package:mongo_ai/home/presentation/screen/home_screen_root.dart';

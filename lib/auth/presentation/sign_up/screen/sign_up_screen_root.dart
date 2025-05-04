@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mongo_ai/auth/sign_up/controller/sign_up_action.dart';
-import 'package:mongo_ai/auth/sign_up/controller/sign_up_view_model.dart';
-import 'package:mongo_ai/auth/sign_up/screen/password_sign_up_screen.dart';
-import 'package:mongo_ai/auth/sign_up/screen/sign_up_screen.dart';
+import 'package:mongo_ai/auth/presentation/sign_up/controller/sign_up_action.dart';
+import 'package:mongo_ai/auth/presentation/sign_up/controller/sign_up_view_model.dart';
+import 'package:mongo_ai/auth/presentation/sign_up/screen/password_sign_up_screen.dart';
+import 'package:mongo_ai/auth/presentation/sign_up/screen/sign_up_screen.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 
 class SignUpScreenRoot extends ConsumerStatefulWidget {
@@ -24,17 +24,21 @@ class _SignUpScreenRootState extends ConsumerState<SignUpScreenRoot> {
         : SignUpScreen(state: state, onAction: _handleAction);
   }
 
-  void _handleAction(SignUpAction action) {
+  void _handleAction(SignUpAction action) async {
     final viewModel = ref.read(signUpViewModelProvider.notifier);
 
     switch (action) {
       case OnTapStart():
-        viewModel.isEmailCompleted = true;
+        if (await viewModel.checkEmail()) {
+          viewModel.isEmailCompleted = true;
+        }
       case OnTapTermsOfUse():
         viewModel.toggleTermsOfUse();
       case OnTapSignUp():
-        // TODO: 회원가입 처리 로직 구현
-        context.go(Routes.signUpComplete);
+        final isUserRegistered = await viewModel.signUp();
+        if (isUserRegistered && mounted) {
+          context.go(Routes.signUpComplete);
+        }
       case OnTapSignIn():
         context.go(Routes.signIn);
     }
