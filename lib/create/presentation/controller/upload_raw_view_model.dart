@@ -60,6 +60,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
         state = state.copyWith(
           imageBytes: result.data.bytes,
           imageName: result.data.fileName,
+          extension: result.data.extension,
           isLoading: false,
         );
         break;
