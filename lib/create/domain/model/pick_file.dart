@@ -9,7 +9,7 @@ abstract class PickFile with _$PickFile {
   const factory PickFile({
     required String type,
     required String fileName,
-    required String extension,
+    required String fileExtension,
     required Uint8List bytes,
   }) = _PickFile;
 }

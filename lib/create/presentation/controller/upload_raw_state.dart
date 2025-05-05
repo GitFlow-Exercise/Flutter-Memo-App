@@ -15,7 +15,7 @@ abstract class UploadRawState with _$UploadRawState {
     String? imageName,
     Uint8List? pdfBytes,
     String? pdfName,
-    String? extension,
+    String? fileExtension,
     required TextEditingController textController,
   }) = _UploadRawState;
 }

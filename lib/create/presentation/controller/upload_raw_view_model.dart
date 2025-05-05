@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:mongo_ai/core/constants/ai_constant.dart';
@@ -60,7 +59,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
         state = state.copyWith(
           imageBytes: result.data.bytes,
           imageName: result.data.fileName,
-          extension: result.data.extension,
+          fileExtension: result.data.fileExtension,
           isLoading: false,
         );
         break;
@@ -83,7 +82,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
         state = state.copyWith(
           pdfBytes: result.data.bytes,
           pdfName: result.data.fileName,
-          extension: result.data.extension,
+          fileExtension: result.data.fileExtension,
           isLoading: false,
         );
         break;
@@ -118,7 +117,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
         return;
       }
       inputContent = InputContent.image(
-        imageExtension: state.extension ?? '',
+        imageExtension: state.fileExtension ?? '',
         base64: base64Encode(state.imageBytes!),
       );
     } else {
@@ -145,7 +144,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
 
     switch (result) {
       case Success<OpenAiResponse, AppException>():
-      //TODO: 다음 화면으로 데이터 이동
+        //TODO: 다음 화면으로 데이터 이동
         debugPrint(result.data.toString());
       case Error<OpenAiResponse, AppException>():
         _readyForSnackBar(result.error.userFriendlyMessage);

@@ -3,13 +3,13 @@ import 'dart:typed_data';
 class PickFileDto {
   String? type;
   String? fileName;
-  String? extension;
+  String? fileExtension;
   Uint8List? bytes;
 
   PickFileDto({
-    required this.type,
-    required this.fileName,
-    required this.extension,
-    required this.bytes,
+    this.type,
+    this.fileName,
+    this.fileExtension,
+    this.bytes,
   });
 }
