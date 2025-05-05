@@ -35,15 +35,20 @@ class UploadRawViewModel extends _$UploadRawViewModel {
   }
 
   void handleSelectUploadType(String type) {
+    final isImageType = type == AiConstant.inputImage;
+    final isFileType = type == AiConstant.inputFile;
+    final isTextType = type == AiConstant.inputText;
+
     state = state.copyWith(
       selectedUploadType: type,
-      imageBytes: type != AiConstant.inputImage ? null : state.imageBytes,
-      imageName: type != AiConstant.inputImage ? null : state.imageName,
-      pdfBytes: type != AiConstant.inputFile ? null : state.pdfBytes,
-      pdfName: type != AiConstant.inputFile ? null : state.pdfName,
+      imageBytes: isImageType ? state.imageBytes : null,
+      imageName: isImageType ? state.imageName : null,
+      pdfBytes: isFileType ? state.pdfBytes : null,
+      pdfName: isFileType ? state.pdfName : null,
+      fileExtension: isTextType ? null : state.fileExtension,
     );
 
-    if (type != AiConstant.inputText) {
+    if (!isTextType) {
       state.textController.clear();
     }
   }
