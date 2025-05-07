@@ -3,22 +3,38 @@ import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/auth/presentation/sign_in/screen/sign_in_screen_root.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/screen/sign_up_complete_screen.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/screen/sign_up_screen_root.dart';
+import 'package:mongo_ai/core/di/providers.dart';
+import 'package:mongo_ai/core/routing/redirect.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
+import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
+import 'package:mongo_ai/dashboard/presentation/dashboard_screen.dart';
+import 'package:mongo_ai/dashboard/presentation/home/home_screen.dart';
+import 'package:mongo_ai/dashboard/presentation/recent_files/recent_files_screen.dart';
 import 'package:mongo_ai/create/presentation/screen/upload_raw_screen_root.dart';
 import 'package:mongo_ai/create/presentation/create_problem/screen/create_problem_screen_root.dart';
-import 'package:mongo_ai/home/presentation/screen/home_screen_root.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
+  final auth = ref.watch(authRepositoryProvider);
   return GoRouter(
     initialLocation: Routes.signIn,
+    // auth 관찰해서 변화가 있다면,
+    // 새로 reidrect 함수 실행
+    refreshListenable: auth,
+    redirect: (context, state) {
+      final path = state.fullPath;
+      return AppRedirect.authRedirect(
+        isAuthenticated: auth.isAuthenticated,
+        nowPath: path,
+      );
+    },
     routes: [
       GoRoute(
-        path: Routes.home,
+        path: Routes.create,
         pageBuilder: (context, state) {
           return CustomTransitionPage(
             key: state.pageKey,
-            child: const HomeScreenRoot(),
+            child: const UploadRawScreenRoot(),
             transitionsBuilder: (
               context,
               animation,
@@ -36,27 +52,6 @@ final routerProvider = Provider<GoRouter>((ref) {
             transitionDuration: const Duration(milliseconds: 100),
           );
         },
-        routes: [
-          GoRoute(
-              path: Routes.create,
-              pageBuilder: (context, state) {
-                return CustomTransitionPage(
-                  key: state.pageKey,
-                  child: const UploadRawScreenRoot(),
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                    return FadeTransition(
-                      opacity: CurvedAnimation(
-                        parent: animation,
-                        curve: Curves.easeInOut,
-                      ),
-                      child: child,
-                    );
-                  },
-                  transitionDuration: const Duration(milliseconds: 100),
-                );
-              },
-          ),
-        ]
       ),
       GoRoute(
         path: Routes.signIn,
@@ -75,9 +70,53 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
         ],
       ),
+      StatefulShellRoute.indexedStack(
+        builder:
+            (context, state, navigationShell) =>
+                DashboardScreen(navigationShell: navigationShell),
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.home,
+                builder: (context, state) => const HomeScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.recentFiles,
+                builder: (context, state) => const RecentFilesScreen(),
+              ),
+            ],
+          ),
+          // StatefulShellBranch(routes: [
+          //   GoRoute(
+          //     path: '/folder/:id',
+          //     builder: (context, state) {
+          //       final folderId = state.pathParameters['id']!;
+          //       return FolderScreen(folderId: folderId);
+          //     },
+          //   ),
+          // ]),
+        ],
+      ),
       GoRoute(
         path: Routes.createProblem,
-        builder: (context, state) => const CreateProblemScreenRoot(''),
+        builder: (context, state) {
+          final extra = state.extra as OpenAiResponse;
+          return CreateProblemScreenRoot(extra);
+        },
+        redirect: (context, state) {
+          // 만약 화면 이동간 필요한 데이터가 타입과 일치하지 않는다면,
+          // 강제로 문제 생성 처음 화면으로 이동시킵니다.
+          final extra = state.extra;
+          if (extra is! OpenAiResponse) {
+            return Routes.create;
+          }
+          return null;
+        },
       ),
     ],
   );

@@ -4,10 +4,10 @@ import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class AuthRepositoryImpl implements AuthRepository {
+class AuthRepositoryImpl extends AuthRepository {
   final AuthDataSource _authDataSource;
 
-  const AuthRepositoryImpl({required AuthDataSource authDataSource})
+  AuthRepositoryImpl({required AuthDataSource authDataSource})
     : _authDataSource = authDataSource;
 
   @override
@@ -17,8 +17,8 @@ class AuthRepositoryImpl implements AuthRepository {
   ) async {
     try {
       await _authDataSource.login(email, password);
-
       // 로그인 성공
+      notifyListeners();
       return const Result.success(null);
     } on AuthException catch (e) {
       // Supabase가 제공하는 메시지를 기반으로 판단
@@ -65,6 +65,7 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Result<void, AppException>> signOut() async {
     try {
       await _authDataSource.logout();
+      notifyListeners();
       return const Result.success(null);
     } catch (e) {
       // 기타 예외 (네트워크, 파싱 등)
@@ -133,5 +134,10 @@ class AuthRepositoryImpl implements AuthRepository {
         ),
       );
     }
+  }
+
+  @override
+  bool get isAuthenticated {
+    return _authDataSource.isAuthenticated();
   }
 }

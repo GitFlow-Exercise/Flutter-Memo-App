@@ -77,11 +77,13 @@ class CreateProblemScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text('Clean Text'),
+                    // --------------------
+                    // TODO 아래 코드가 복잡해서 어떻게 처리할지 추가로 수정할 예정입니다.
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(border: Border.all()),
                       width: MediaQuery.sizeOf(context).width / 3,
-                      child: Text(state.cleanText),
+                      child: Text(state.response!.output[0].content[0].text),
                     ),
                     const Gap(12),
                     InkWell(

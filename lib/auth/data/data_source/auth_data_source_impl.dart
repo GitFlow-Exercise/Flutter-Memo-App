@@ -37,4 +37,13 @@ class AuthDataSourceImpl implements AuthDataSource {
 
     return response != null;
   }
+
+  @override
+  bool isAuthenticated() {
+    final user = _client.auth.currentUser;
+    if (user == null) {
+      return false;
+    }
+    return true;
+  }
 }

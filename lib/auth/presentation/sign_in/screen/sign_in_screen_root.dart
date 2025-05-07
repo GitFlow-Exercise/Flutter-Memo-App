@@ -27,10 +27,7 @@ class SignInScreenRoot extends ConsumerWidget {
 
     switch (action) {
       case OnTapLogin():
-        final updatedState = await viewModel.login();
-        if (!updatedState.isLoginRejected) {
-          if (context.mounted) context.go(Routes.home);
-        }
+        await viewModel.login();
       case OnTapForgotPassword():
       // TODO: 비밀번호 찾기 처리 로직 구현
       case OnTapSignUp():
