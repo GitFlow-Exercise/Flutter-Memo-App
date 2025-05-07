@@ -8,7 +8,8 @@ import 'package:mongo_ai/create/data/repository/open_ai_repository_impl.dart';
 import 'package:mongo_ai/create/domain/repository/file_picker_repository.dart';
 import 'package:mongo_ai/create/domain/repository/open_ai_repository.dart';
 import 'package:mongo_ai/create/domain/use_case/create_problem_use_case.dart';
-import 'package:mongo_ai/create/domain/use_case/pick_file_use_case.dart';
+import 'package:mongo_ai/create/domain/use_case/image_pick_file_use_case.dart';
+import 'package:mongo_ai/create/domain/use_case/pdf_pick_file_use_case.dart';
 import 'package:mongo_ai/home/data/data_source/remote_database_data_source.dart';
 import 'package:mongo_ai/home/data/data_source/remote_database_data_source_impl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -68,8 +69,12 @@ final createProblemUseCaseProvider = Provider<CreateProblemUseCase>((ref) {
   return CreateProblemUseCase(repository);
 });
 
-final pickFileUseCaseProvider = Provider<PickFileUseCase>((ref) {
+final imagePickFileUseCaseProvider = Provider<ImagePickFileUseCase>((ref) {
   final repository = ref.watch(filePickerRepositoryProvider);
-  return PickFileUseCase(filePickerRepository: repository);
+  return ImagePickFileUseCase(filePickerRepository: repository);
 });
 
+final pdfPickFileUseCaseProvider = Provider<PdfPickFileUseCase>((ref) {
+  final repository = ref.watch(filePickerRepositoryProvider);
+  return PdfPickFileUseCase(filePickerRepository: repository);
+});

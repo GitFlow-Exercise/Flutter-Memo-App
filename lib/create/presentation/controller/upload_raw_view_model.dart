@@ -48,11 +48,10 @@ class UploadRawViewModel extends _$UploadRawViewModel {
   }
 
   Future<void> handlePickImage(BuildContext context) async {
-    final currentFile = state.pickFile.value;
-    state = state.copyWith(pickFile: AsyncValue.loading());
+    state = state.copyWith(pickFile: const AsyncValue.loading());
 
-    final useCase = ref.read(pickFileUseCaseProvider);
-    final result = await useCase.selectImage();
+    final useCase = ref.read(imagePickFileUseCaseProvider);
+    final result = await useCase.execute();
 
     switch (result) {
       case Success():
@@ -72,11 +71,10 @@ class UploadRawViewModel extends _$UploadRawViewModel {
   }
 
   Future<void> handlePickPdf(BuildContext context) async {
-    final currentFile = state.pickFile.value;
-    state = state.copyWith(pickFile: AsyncValue.loading());
+    state = state.copyWith(pickFile: const AsyncValue.loading());
 
-    final useCase = ref.read(pickFileUseCaseProvider);
-    final result = await useCase.selectPdf();
+    final useCase = ref.read(pdfPickFileUseCaseProvider);
+    final result = await useCase.execute();
 
     switch (result) {
       case Success():
