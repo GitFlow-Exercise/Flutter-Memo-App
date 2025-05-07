@@ -3,25 +3,31 @@ import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/auth/presentation/sign_in/screen/sign_in_screen_root.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/screen/sign_up_complete_screen.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/screen/sign_up_screen_root.dart';
+import 'package:mongo_ai/core/di/providers.dart';
+import 'package:mongo_ai/core/routing/redirect.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/dashboard/presentation/dashboard_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/home/home_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/recent_files/recent_files_screen.dart';
 import 'package:mongo_ai/create/presentation/screen/upload_raw_screen_root.dart';
 import 'package:mongo_ai/create/presentation/create_problem/screen/create_problem_screen_root.dart';
-import 'package:mongo_ai/home/presentation/screen/home_screen_root.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
+  final auth = ref.watch(authRepositoryProvider);
   return GoRouter(
     initialLocation: Routes.signIn,
+    refreshListenable: auth,
+    redirect: (context, state) {
+      return AppRedirect.authRedirect(auth.isAuthenticated);
+    },
     routes: [
       GoRoute(
         path: Routes.home,
         pageBuilder: (context, state) {
           return CustomTransitionPage(
             key: state.pageKey,
-            child: const HomeScreenRoot(),
+            child: const SignInScreenRoot(),
             transitionsBuilder: (
               context,
               animation,
@@ -41,25 +47,30 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
         routes: [
           GoRoute(
-              path: Routes.create,
-              pageBuilder: (context, state) {
-                return CustomTransitionPage(
-                  key: state.pageKey,
-                  child: const UploadRawScreenRoot(),
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                    return FadeTransition(
-                      opacity: CurvedAnimation(
-                        parent: animation,
-                        curve: Curves.easeInOut,
-                      ),
-                      child: child,
-                    );
-                  },
-                  transitionDuration: const Duration(milliseconds: 100),
-                );
-              },
+            path: Routes.create,
+            pageBuilder: (context, state) {
+              return CustomTransitionPage(
+                key: state.pageKey,
+                child: const UploadRawScreenRoot(),
+                transitionsBuilder: (
+                  context,
+                  animation,
+                  secondaryAnimation,
+                  child,
+                ) {
+                  return FadeTransition(
+                    opacity: CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeInOut,
+                    ),
+                    child: child,
+                  );
+                },
+                transitionDuration: const Duration(milliseconds: 100),
+              );
+            },
           ),
-        ]
+        ],
       ),
       GoRoute(
         path: Routes.signIn,
@@ -79,14 +90,26 @@ final routerProvider = Provider<GoRouter>((ref) {
         ],
       ),
       StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) => DashboardScreen(navigationShell: navigationShell),
+        builder:
+            (context, state, navigationShell) =>
+                DashboardScreen(navigationShell: navigationShell),
         branches: [
-          StatefulShellBranch(routes: [
-            GoRoute(path: Routes.home, builder: (context, state) => const HomeScreen()),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(path: Routes.recentFiles, builder: (context, state) => const RecentFilesScreen()),
-          ]),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.home,
+                builder: (context, state) => const HomeScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.recentFiles,
+                builder: (context, state) => const RecentFilesScreen(),
+              ),
+            ],
+          ),
           // StatefulShellBranch(routes: [
           //   GoRoute(
           //     path: '/folder/:id',

@@ -4,11 +4,13 @@ import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class AuthRepositoryImpl implements AuthRepository {
+class AuthRepositoryImpl extends AuthRepository {
   final AuthDataSource _authDataSource;
 
-  const AuthRepositoryImpl({required AuthDataSource authDataSource})
+  AuthRepositoryImpl({required AuthDataSource authDataSource})
     : _authDataSource = authDataSource;
+
+  bool _isAuthenticated = false;
 
   @override
   Future<Result<void, AppException>> signIn(
@@ -17,7 +19,7 @@ class AuthRepositoryImpl implements AuthRepository {
   ) async {
     try {
       await _authDataSource.login(email, password);
-
+      _isAuthenticated = true;
       // 로그인 성공
       return const Result.success(null);
     } on AuthException catch (e) {
@@ -133,5 +135,10 @@ class AuthRepositoryImpl implements AuthRepository {
         ),
       );
     }
+  }
+
+  @override
+  bool get isAuthenticated {
+    return _isAuthenticated;
   }
 }
