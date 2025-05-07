@@ -217,6 +217,18 @@ class PdfGenerator {
             bottomPadding: 5,
           ),
         );
+      } else if (trimmedLine.startsWith('### ')) {
+        // 소제목
+        columnItems.add(
+          _createColumnTextWidget(
+            text: trimmedLine.substring(4),
+            style: contentStyle.copyWith(
+              fontSize: 14,
+              fontWeight: pw.FontWeight.bold,
+            ),
+            bottomPadding: 5,
+          ),
+        );
       } else if (trimmedLine.startsWith('- ')) {
         // 불릿 포인트
         columnItems.add(
