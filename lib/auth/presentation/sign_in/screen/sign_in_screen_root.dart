@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mongo_ai/auth/sign_in/controller/sign_in_action.dart';
-import 'package:mongo_ai/auth/sign_in/controller/sign_in_view_model.dart';
-import 'package:mongo_ai/auth/sign_in/screen/sign_in_screen.dart';
+import 'package:mongo_ai/auth/presentation/sign_in/controller/sign_in_action.dart';
+import 'package:mongo_ai/auth/presentation/sign_in/controller/sign_in_view_model.dart';
+import 'package:mongo_ai/auth/presentation/sign_in/screen/sign_in_screen.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 
 class SignInScreenRoot extends ConsumerWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:mongo_ai/auth/sign_up/controller/sign_up_action.dart';
-import 'package:mongo_ai/auth/sign_up/controller/sign_up_state.dart';
+import 'package:mongo_ai/auth/presentation/sign_up/controller/sign_up_action.dart';
+import 'package:mongo_ai/auth/presentation/sign_up/controller/sign_up_state.dart';
 import 'package:mongo_ai/core/component/base_text_field.dart';
 
 class PasswordSignupScreen extends StatefulWidget {
