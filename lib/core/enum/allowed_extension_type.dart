@@ -1,0 +1,3 @@
+enum AllowedExtensionType {
+  png, pdf
+}
