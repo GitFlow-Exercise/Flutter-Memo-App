@@ -4,7 +4,7 @@ import 'package:mongo_ai/auth/presentation/sign_in/screen/sign_in_screen_root.da
 import 'package:mongo_ai/auth/presentation/sign_up/screen/sign_up_complete_screen.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/screen/sign_up_screen_root.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
-import 'package:mongo_ai/create/presentation/screen/test_screen.dart';
+import 'package:mongo_ai/create/presentation/create_problem/screen/create_problem_screen_root.dart';
 import 'package:mongo_ai/home/presentation/screen/home_screen_root.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -52,6 +52,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                 ),
           ),
         ],
+      ),
+      GoRoute(
+        path: Routes.createProblem,
+        builder: (context, state) => const CreateProblemScreenRoot(''),
       ),
     ],
   );
