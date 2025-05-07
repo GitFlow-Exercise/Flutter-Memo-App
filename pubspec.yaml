@@ -48,6 +48,7 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
 
+  printing: ^5.11.1
   # .env 파일
   flutter_dotenv: ^5.2.1
 

@@ -6,7 +6,7 @@ part 'message_input.freezed.dart';
 
 @freezed
 abstract class MessageInput with _$MessageInput {
-  const factory MessageInput({
+  factory MessageInput({
     @Default(AiConstant.role) String role,
     required List<InputContent> content,
   }) = _MessageInput;

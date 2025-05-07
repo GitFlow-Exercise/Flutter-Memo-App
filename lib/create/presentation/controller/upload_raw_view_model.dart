@@ -1,0 +1,163 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:mongo_ai/core/constants/ai_constant.dart';
+import 'package:mongo_ai/core/di/providers.dart';
+import 'package:mongo_ai/core/exception/app_exception.dart';
+import 'package:mongo_ai/core/result/result.dart';
+import 'package:mongo_ai/create/domain/model/request/input_content.dart';
+import 'package:mongo_ai/create/domain/model/request/message_input.dart';
+import 'package:mongo_ai/create/domain/model/request/open_ai_body.dart';
+import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
+import 'package:mongo_ai/create/presentation/controller/upload_raw_event.dart';
+import 'package:mongo_ai/create/presentation/controller/upload_raw_state.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'upload_raw_view_model.g.dart';
+
+@riverpod
+class UploadRawViewModel extends _$UploadRawViewModel {
+  final _eventController = StreamController<UploadRawEvent>();
+
+  Stream<UploadRawEvent> get eventStream => _eventController.stream;
+
+  @override
+  UploadRawState build() {
+    final textController = TextEditingController();
+
+    ref.onDispose(() {
+      _eventController.close();
+      textController.dispose();
+    });
+
+    return UploadRawState(textController: textController);
+  }
+
+  void handleSelectUploadType(String type) {
+    final isTextType = type == AiConstant.inputText;
+
+    state = state.copyWith(
+      selectedUploadType: type,
+      pickFile: isTextType ? state.pickFile : const AsyncValue.data(null),
+    );
+
+    if (!isTextType) {
+      state.textController.clear();
+    }
+  }
+
+  Future<void> handlePickImage(BuildContext context) async {
+    state = state.copyWith(pickFile: const AsyncValue.loading());
+
+    final useCase = ref.read(imagePickFileUseCaseProvider);
+    final result = await useCase.execute();
+
+    switch (result) {
+      case Success():
+        state = state.copyWith(pickFile: AsyncValue.data(result.data));
+        break;
+      case Error(:final error):
+        _readyForSnackBar(error.userFriendlyMessage);
+        debugPrint(error.stackTrace.toString());
+        state = state.copyWith(
+          pickFile: AsyncValue.error(
+            error,
+            error.stackTrace ?? StackTrace.empty,
+          ),
+        );
+        break;
+    }
+  }
+
+  Future<void> handlePickPdf(BuildContext context) async {
+    state = state.copyWith(pickFile: const AsyncValue.loading());
+
+    final useCase = ref.read(pdfPickFileUseCaseProvider);
+    final result = await useCase.execute();
+
+    switch (result) {
+      case Success():
+        state = state.copyWith(pickFile: AsyncValue.data(result.data));
+        break;
+      case Error(:final error):
+        _readyForSnackBar(error.userFriendlyMessage);
+        debugPrint(error.stackTrace.toString());
+        state = state.copyWith(
+          pickFile: AsyncValue.error(
+            error,
+            error.stackTrace ?? StackTrace.empty,
+          ),
+        );
+        break;
+    }
+  }
+
+  Future<void> handleSubmitForm(BuildContext context) async {
+    if (state.selectedUploadType == AiConstant.inputText) {
+      final text = state.textController.text.trim();
+      if (text.isEmpty) {
+        _readyForSnackBar('텍스트를 입력해주세요.');
+        return;
+      }
+
+      //TODO: 다음 화면으로 데이터 이동
+      debugPrint(text);
+      return;
+    }
+
+    final file = state.pickFile.value;
+    if (file == null) {
+      if (state.selectedUploadType == AiConstant.inputImage) {
+        _readyForSnackBar('이미지를 선택해주세요.');
+      } else {
+        _readyForSnackBar('PDF 파일을 선택해주세요.');
+      }
+      return;
+    }
+
+    state = state.copyWith(result: const AsyncValue.loading());
+
+    InputContent inputContent;
+    if (state.selectedUploadType == AiConstant.inputImage) {
+      inputContent = InputContent.image(
+        imageExtension: file.fileExtension,
+        base64: base64Encode(file.bytes),
+      );
+    } else {
+      inputContent = InputContent.file(
+        filename: file.fileName,
+        base64: base64Encode(file.bytes),
+      );
+    }
+
+    final body = OpenAiBody(
+      input: [
+        MessageInput(content: [inputContent]),
+      ],
+      previousResponseId: null,
+      instructions: 'Just OCR Result Please',
+    );
+
+    final result = await ref.read(createProblemUseCaseProvider).execute(body);
+
+    switch (result) {
+      case Success<OpenAiResponse, AppException>():
+        //TODO: 다음 화면으로 데이터 이동
+        debugPrint(result.data.toString());
+        state = state.copyWith(result: AsyncValue.data(result.data));
+      case Error<OpenAiResponse, AppException>():
+        _readyForSnackBar(result.error.userFriendlyMessage);
+        state = state.copyWith(
+          result: AsyncValue.error(
+            result.error,
+            result.error.stackTrace ?? StackTrace.empty,
+          ),
+        );
+    }
+  }
+
+  void _readyForSnackBar(String message) {
+    _eventController.add(UploadRawEvent.showSnackBar(message));
+  }
+}

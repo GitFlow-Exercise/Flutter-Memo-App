@@ -6,7 +6,7 @@ part 'open_ai_body.freezed.dart';
 
 @freezed
 abstract class OpenAiBody with _$OpenAiBody {
-  const factory OpenAiBody({
+  factory OpenAiBody({
     @Default(AiConstant.aiModel) String model,
     required List<MessageInput> input,
     required String instructions,

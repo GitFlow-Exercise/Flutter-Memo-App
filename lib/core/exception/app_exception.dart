@@ -30,6 +30,12 @@ sealed class AppException with _$AppException implements Exception {
     StackTrace? stackTrace,
   }) = OpenAITypeException;
 
+  const factory AppException.filePick({
+    required String message,
+    Object? error,
+    StackTrace? stackTrace,
+  }) = FilePickException;
+
   const factory AppException.unknown({
     required String message,
     Object? error,
@@ -63,6 +69,8 @@ sealed class AppException with _$AppException implements Exception {
         return '데이터를 불러오지 못했습니다.';
       case OpenAITypeException():
         return '올바르지 않은 타입입니다.';
+      case FilePickException():
+        return '파일을 정상적으로 불러오지 못했습니다.';
       case UnknownException():
         return '알 수 없는 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
       case InvalidEmailException():

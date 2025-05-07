@@ -87,7 +87,7 @@ class CreateProblemScreen extends StatelessWidget {
                     InkWell(
                       onTap: () {
                         onAction(
-                          const CreateProblemAction.createProblem(
+                          CreateProblemAction.createProblem(
                             OpenAiBody(
                               input: [
                                 MessageInput(
