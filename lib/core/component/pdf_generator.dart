@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -50,55 +51,60 @@ class PdfGenerator {
     bool useDoubleColumn = false,
     double columnSpacing = 10.0,
   }) async {
-    // 1. 스타일 설정
-    final effectiveHeaderStyle = _createHeaderStyle(headerStyle);
-    final effectiveContentStyle = _createContentStyle(contentsStyle);
+    try {
+      // 1. 스타일 설정
+      final effectiveHeaderStyle = _createHeaderStyle(headerStyle);
+      final effectiveContentStyle = _createContentStyle(contentsStyle);
 
-    // 2. 콘텐츠 처리
-    final contentLines = contentsText.split('\n');
+      // 2. 콘텐츠 처리
+      final contentLines = contentsText.split('\n');
 
-    // 3. PDF 문서 생성
-    final pdf = pw.Document();
+      // 3. PDF 문서 생성
+      final pdf = pw.Document();
 
-    // 4. 페이지 추가
-    pdf.addPage(
-      pw.MultiPage(
-        pageFormat: pageFormat,
-        build: (pw.Context context) {
-          // 제목 및 콘텐츠 위젯 준비
-          final widgets = _buildHeaderWidget(
-            headerText: headerText,
-            headerStyle: effectiveHeaderStyle,
-            headerHeight: headerHeight,
-          );
-
-          // 레이아웃 유형에 따라 콘텐츠 구성
-          if (useDoubleColumn) {
-            widgets.add(
-              _createDoubleColumnLayout(
-                contentLines: contentLines,
-                contentStyle: effectiveContentStyle,
-                pageFormat: pageFormat,
-                columnSpacing: columnSpacing,
-              ),
+      // 4. 페이지 추가
+      pdf.addPage(
+        pw.MultiPage(
+          pageFormat: pageFormat,
+          build: (pw.Context context) {
+            // 제목 및 콘텐츠 위젯 준비
+            final widgets = _buildHeaderWidget(
+              headerText: headerText,
+              headerStyle: effectiveHeaderStyle,
+              headerHeight: headerHeight,
             );
-          } else {
-            widgets.addAll(
-              _createSingleColumnLayout(
-                contentLines: contentLines,
-                contentStyle: effectiveContentStyle,
-                headerStyle: effectiveHeaderStyle,
-              ),
-            );
-          }
 
-          return widgets;
-        },
-      ),
-    );
+            // 레이아웃 유형에 따라 콘텐츠 구성
+            if (useDoubleColumn) {
+              widgets.add(
+                _createDoubleColumnLayout(
+                  contentLines: contentLines,
+                  contentStyle: effectiveContentStyle,
+                  pageFormat: pageFormat,
+                  columnSpacing: columnSpacing,
+                ),
+              );
+            } else {
+              widgets.addAll(
+                _createSingleColumnLayout(
+                  contentLines: contentLines,
+                  contentStyle: effectiveContentStyle,
+                  headerStyle: effectiveHeaderStyle,
+                ),
+              );
+            }
 
-    // 5. PDF 생성 완료
-    return pdf.save();
+            return widgets;
+          },
+        ),
+      );
+
+      // 5. PDF 생성 완료
+      return pdf.save();
+    } catch (e) {
+      debugPrint('PDF 생성 중 오류 발생: $e');
+      rethrow;
+    }
   }
 
   /// 제목 위젯을 구성합니다
