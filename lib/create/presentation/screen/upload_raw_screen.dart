@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mongo_ai/core/constants/ai_constant.dart';
 import 'package:mongo_ai/create/presentation/controller/upload_raw_action.dart';
 import 'package:mongo_ai/create/presentation/controller/upload_raw_state.dart';
@@ -100,6 +101,9 @@ class _UploadRawScreenState extends State<UploadRawScreen> {
                     const Text('텍스트 입력:'),
                     const SizedBox(height: 10),
                     TextField(
+                      onChanged: (_) {
+                        setState(() {});
+                      },
                       controller: widget.state.textController,
                       maxLines: 12,
                       decoration: const InputDecoration(
@@ -118,23 +122,70 @@ class _UploadRawScreenState extends State<UploadRawScreen> {
                           ),
                       child: const Text('이미지 선택'),
                     ),
-                    if (widget.state.imageBytes != null) ...[
-                      const SizedBox(height: 10),
-                      Text('선택된 이미지: ${widget.state.imageName}'),
-                      const SizedBox(height: 10),
-                      Container(
-                        height: 500,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                        ),
-                        child: Center(
-                          child: Image.memory(
-                            widget.state.imageBytes ?? Uint8List(0),
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ),
-                    ],
+                    widget.state.pickFile.when(
+                      data: (file) {
+                        if (file != null) {
+                          return Column(
+                            children: [
+                              const SizedBox(height: 10),
+                              Text('선택된 이미지: ${file.fileName}'),
+                              const SizedBox(height: 10),
+                              Container(
+                                height: 500,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                ),
+                                child: Center(
+                                  child: Image.memory(
+                                    file.bytes,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      },
+                      loading: () {
+                        final file = widget.state.pickFile.value;
+                        if (file != null) {
+                          return Column(
+                            children: [
+                              const SizedBox(height: 10),
+                              Text('선택된 이미지: ${file.fileName}'),
+                              const SizedBox(height: 10),
+                              Container(
+                                height: 500,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                ),
+                                child: Stack(
+                                  children: [
+                                    Center(
+                                      child: Image.memory(
+                                        file.bytes,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                    Container(
+                                      color: Colors.black.withValues(
+                                        alpha: 0.5,
+                                      ),
+                                      child: const Center(
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      },
+                      error: (error, stackTrace) => Text('에러: $error'),
+                    ),
                   ] else if (widget.state.selectedUploadType ==
                       AiConstant.inputFile) ...[
                     const Text('PDF 업로드:'),
@@ -145,27 +196,76 @@ class _UploadRawScreenState extends State<UploadRawScreen> {
                               widget.onAction(const UploadRawAction.pickPdf()),
                       child: const Text('PDF 선택'),
                     ),
-                    if (widget.state.pdfBytes != null) ...[
-                      const SizedBox(height: 10),
-                      Text('선택된 PDF: ${widget.state.pdfName}'),
-                      const SizedBox(height: 10),
-                      Container(
-                        height: 500,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                        ),
-                        child: PdfPreview(
-                          build:
-                              (format) => widget.state.pdfBytes ?? Uint8List(0),
-                          maxPageWidth: 400,
-                          allowPrinting: false,
-                          allowSharing: false,
-                          canChangePageFormat: false,
-                          canChangeOrientation: false,
-                          canDebug: false,
-                        ),
-                      ),
-                    ],
+                    widget.state.pickFile.when(
+                      data: (file) {
+                        if (file != null) {
+                          return Column(
+                            children: [
+                              const SizedBox(height: 10),
+                              Text('선택된 PDF: ${file.fileName}'),
+                              const SizedBox(height: 10),
+                              Container(
+                                height: 500,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                ),
+                                child: PdfPreview(
+                                  build: (format) => file.bytes,
+                                  maxPageWidth: 400,
+                                  allowPrinting: false,
+                                  allowSharing: false,
+                                  canChangePageFormat: false,
+                                  canChangeOrientation: false,
+                                  canDebug: false,
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      },
+                      loading: () {
+                        final file = widget.state.pickFile.value;
+                        if (file != null) {
+                          return Column(
+                            children: [
+                              const SizedBox(height: 10),
+                              Text('선택된 PDF: ${file.fileName}'),
+                              const SizedBox(height: 10),
+                              Container(
+                                height: 500,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                ),
+                                child: Stack(
+                                  children: [
+                                    PdfPreview(
+                                      build: (format) => file.bytes,
+                                      maxPageWidth: 400,
+                                      allowPrinting: false,
+                                      allowSharing: false,
+                                      canChangePageFormat: false,
+                                      canChangeOrientation: false,
+                                      canDebug: false,
+                                    ),
+                                    Container(
+                                      color: Colors.black.withValues(
+                                        alpha: 0.5,
+                                      ),
+                                      child: const Center(
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      },
+                      error: (error, stackTrace) => Text('에러: $error'),
+                    ),
                   ],
 
                   const SizedBox(height: 30),
@@ -188,7 +288,7 @@ class _UploadRawScreenState extends State<UploadRawScreen> {
             ),
           ),
         ),
-        if (widget.state.isLoading)
+        if (widget.state.result.isLoading)
           Container(
             color: Colors.black.withValues(alpha: 0.5),
             width: double.infinity,

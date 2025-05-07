@@ -35,17 +35,11 @@ class UploadRawViewModel extends _$UploadRawViewModel {
   }
 
   void handleSelectUploadType(String type) {
-    final isImageType = type == AiConstant.inputImage;
-    final isFileType = type == AiConstant.inputFile;
     final isTextType = type == AiConstant.inputText;
 
     state = state.copyWith(
       selectedUploadType: type,
-      imageBytes: isImageType ? state.imageBytes : null,
-      imageName: isImageType ? state.imageName : null,
-      pdfBytes: isFileType ? state.pdfBytes : null,
-      pdfName: isFileType ? state.pdfName : null,
-      fileExtension: isTextType ? null : state.fileExtension,
+      pickFile: isTextType ? state.pickFile : const AsyncValue.data(null),
     );
 
     if (!isTextType) {
@@ -54,47 +48,49 @@ class UploadRawViewModel extends _$UploadRawViewModel {
   }
 
   Future<void> handlePickImage(BuildContext context) async {
-    state = state.copyWith(isLoading: true);
+    final currentFile = state.pickFile.value;
+    state = state.copyWith(pickFile: AsyncValue.loading());
 
     final useCase = ref.read(pickFileUseCaseProvider);
     final result = await useCase.selectImage();
 
     switch (result) {
       case Success():
-        state = state.copyWith(
-          imageBytes: result.data.bytes,
-          imageName: result.data.fileName,
-          fileExtension: result.data.fileExtension,
-          isLoading: false,
-        );
+        state = state.copyWith(pickFile: AsyncValue.data(result.data));
         break;
       case Error(:final error):
         _readyForSnackBar(error.userFriendlyMessage);
         debugPrint(error.stackTrace.toString());
-        state = state.copyWith(isLoading: false);
+        state = state.copyWith(
+          pickFile: AsyncValue.error(
+            error,
+            error.stackTrace ?? StackTrace.empty,
+          ),
+        );
         break;
     }
   }
 
   Future<void> handlePickPdf(BuildContext context) async {
-    state = state.copyWith(isLoading: true);
+    final currentFile = state.pickFile.value;
+    state = state.copyWith(pickFile: AsyncValue.loading());
 
     final useCase = ref.read(pickFileUseCaseProvider);
     final result = await useCase.selectPdf();
 
     switch (result) {
       case Success():
-        state = state.copyWith(
-          pdfBytes: result.data.bytes,
-          pdfName: result.data.fileName,
-          fileExtension: result.data.fileExtension,
-          isLoading: false,
-        );
+        state = state.copyWith(pickFile: AsyncValue.data(result.data));
         break;
       case Error(:final error):
         _readyForSnackBar(error.userFriendlyMessage);
         debugPrint(error.stackTrace.toString());
-        state = state.copyWith(isLoading: false);
+        state = state.copyWith(
+          pickFile: AsyncValue.error(
+            error,
+            error.stackTrace ?? StackTrace.empty,
+          ),
+        );
         break;
     }
   }
@@ -112,28 +108,28 @@ class UploadRawViewModel extends _$UploadRawViewModel {
       return;
     }
 
-    state = state.copyWith(isLoading: true);
-    InputContent inputContent;
-
-    if (state.selectedUploadType == AiConstant.inputImage) {
-      if (state.imageBytes == null) {
+    final file = state.pickFile.value;
+    if (file == null) {
+      if (state.selectedUploadType == AiConstant.inputImage) {
         _readyForSnackBar('이미지를 선택해주세요.');
-        state = state.copyWith(isLoading: false);
-        return;
+      } else {
+        _readyForSnackBar('PDF 파일을 선택해주세요.');
       }
+      return;
+    }
+
+    state = state.copyWith(result: const AsyncValue.loading());
+
+    InputContent inputContent;
+    if (state.selectedUploadType == AiConstant.inputImage) {
       inputContent = InputContent.image(
-        imageExtension: state.fileExtension ?? '',
-        base64: base64Encode(state.imageBytes!),
+        imageExtension: file.fileExtension,
+        base64: base64Encode(file.bytes),
       );
     } else {
-      if (state.pdfBytes == null) {
-        _readyForSnackBar('PDF 파일을 선택해주세요.');
-        state = state.copyWith(isLoading: false);
-        return;
-      }
       inputContent = InputContent.file(
-        filename: state.pdfName ?? '',
-        base64: base64Encode(state.pdfBytes!),
+        filename: file.fileName,
+        base64: base64Encode(file.bytes),
       );
     }
 
@@ -151,11 +147,16 @@ class UploadRawViewModel extends _$UploadRawViewModel {
       case Success<OpenAiResponse, AppException>():
         //TODO: 다음 화면으로 데이터 이동
         debugPrint(result.data.toString());
+        state = state.copyWith(result: AsyncValue.data(result.data));
       case Error<OpenAiResponse, AppException>():
         _readyForSnackBar(result.error.userFriendlyMessage);
+        state = state.copyWith(
+          result: AsyncValue.error(
+            result.error,
+            result.error.stackTrace ?? StackTrace.empty,
+          ),
+        );
     }
-
-    state = state.copyWith(isLoading: false);
   }
 
   void _readyForSnackBar(String message) {
