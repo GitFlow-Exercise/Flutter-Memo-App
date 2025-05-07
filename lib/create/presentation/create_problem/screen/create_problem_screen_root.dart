@@ -1,14 +1,15 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_action.dart';
 import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_event.dart';
 import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_view_model.dart';
 import 'package:mongo_ai/create/presentation/create_problem/screen/create_problem_screen.dart';
 
 class CreateProblemScreenRoot extends ConsumerStatefulWidget {
-  final String cleanText;
-  const CreateProblemScreenRoot(this.cleanText, {super.key});
+  final OpenAiResponse response;
+  const CreateProblemScreenRoot(this.response, {super.key});
 
   @override
   ConsumerState<CreateProblemScreenRoot> createState() =>
@@ -27,7 +28,7 @@ class _CreateProblemScreenRootState
 
       _subscription = viewModel.eventStream.listen(_handleEvent);
 
-      _handleAction(CreateProblemAction.setCleanText(widget.cleanText));
+      _handleAction(CreateProblemAction.setResponse(widget.response));
     });
   }
 
@@ -63,8 +64,8 @@ class _CreateProblemScreenRootState
         viewModel.changeProblemType(type);
       case CreateProblem(body: final body):
         viewModel.createProblem(body);
-      case SetCleanText(cleanText: final cleanText):
-        viewModel.setCleanText(cleanText);
+      case SetResponse(response: final response):
+        viewModel.setResponse(response);
     }
   }
 }

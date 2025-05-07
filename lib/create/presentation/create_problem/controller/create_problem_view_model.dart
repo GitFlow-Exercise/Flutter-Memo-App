@@ -3,6 +3,7 @@ import 'package:mongo_ai/core/constants/prompt.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/create/domain/model/request/open_ai_body.dart';
+import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_event.dart';
 import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -52,8 +53,8 @@ class CreateProblemViewModel extends _$CreateProblemViewModel {
   }
 
   // cleanText 데이터 할당
-  void setCleanText(String cleanText) {
-    state = state.copyWith(cleanText: cleanText);
+  void setResponse(OpenAiResponse response) {
+    state = state.copyWith(response: response);
   }
 
   // 문제 유형 설정

@@ -10,8 +10,6 @@ class AuthRepositoryImpl extends AuthRepository {
   AuthRepositoryImpl({required AuthDataSource authDataSource})
     : _authDataSource = authDataSource;
 
-  bool _isAuthenticated = false;
-
   @override
   Future<Result<void, AppException>> signIn(
     String email,
@@ -19,8 +17,8 @@ class AuthRepositoryImpl extends AuthRepository {
   ) async {
     try {
       await _authDataSource.login(email, password);
-      _isAuthenticated = true;
       // 로그인 성공
+      notifyListeners();
       return const Result.success(null);
     } on AuthException catch (e) {
       // Supabase가 제공하는 메시지를 기반으로 판단
@@ -67,6 +65,7 @@ class AuthRepositoryImpl extends AuthRepository {
   Future<Result<void, AppException>> signOut() async {
     try {
       await _authDataSource.logout();
+      notifyListeners();
       return const Result.success(null);
     } catch (e) {
       // 기타 예외 (네트워크, 파싱 등)
@@ -139,6 +138,6 @@ class AuthRepositoryImpl extends AuthRepository {
 
   @override
   bool get isAuthenticated {
-    return _isAuthenticated;
+    return _authDataSource.isAuthenticated();
   }
 }
