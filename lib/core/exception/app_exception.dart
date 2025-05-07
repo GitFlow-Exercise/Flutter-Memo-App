@@ -36,6 +36,30 @@ sealed class AppException with _$AppException implements Exception {
     StackTrace? stackTrace,
   }) = FilePickException;
 
+  const factory AppException.unknown({
+    required String message,
+    Object? error,
+    StackTrace? stackTrace,
+  }) = UnknownException;
+
+  const factory AppException.invalidEmail({
+    required String message,
+    Object? error,
+    StackTrace? stackTrace,
+  }) = InvalidEmailException;
+
+  const factory AppException.invalidPassword({
+    required String message,
+    Object? error,
+    StackTrace? stackTrace,
+  }) = InvalidPasswordException;
+
+  const factory AppException.emailAlreadyExist({
+    required String message,
+    Object? error,
+    StackTrace? stackTrace,
+  }) = EmailAlreadyExistException;
+
   String get userFriendlyMessage {
     switch (this) {
       case NetworkException():
@@ -47,6 +71,14 @@ sealed class AppException with _$AppException implements Exception {
         return '올바르지 않은 타입입니다.';
       case FilePickException():
         return '파일을 정상적으로 불러오지 못했습니다.';
+      case UnknownException():
+        return '알 수 없는 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+      case InvalidEmailException():
+        return '유효하지 않은 이메일 주소입니다.';
+      case InvalidPasswordException():
+        return '유효하지 않은 비밀번호입니다.';
+      case EmailAlreadyExistException():
+        return '이미 존재하는 이메일입니다.';
     }
   }
 }
