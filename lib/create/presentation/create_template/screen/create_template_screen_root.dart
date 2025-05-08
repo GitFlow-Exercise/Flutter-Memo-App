@@ -1,22 +1,23 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_action.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_event.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_view_model.dart';
 import 'package:mongo_ai/create/presentation/create_template/screen/create_template_screen.dart';
 
-class CreateTemplateScreenRoot extends StatefulWidget {
+class CreateTemplateScreenRoot extends ConsumerStatefulWidget {
   final CreateTemplateViewModel viewModel;
 
   const CreateTemplateScreenRoot({super.key, required this.viewModel});
 
   @override
-  State<CreateTemplateScreenRoot> createState() => _CreateTemplateScreenRootState();
+  ConsumerState<CreateTemplateScreenRoot> createState() => _CreateTemplateScreenRootState();
 }
 
-class _CreateTemplateScreenRootState extends State<CreateTemplateScreenRoot> {
+class _CreateTemplateScreenRootState extends ConsumerState<CreateTemplateScreenRoot> {
   StreamSubscription? _subscription;
 
   CreateTemplateViewModel get viewModel => widget.viewModel;
@@ -45,14 +46,10 @@ class _CreateTemplateScreenRootState extends State<CreateTemplateScreenRoot> {
 
   @override
   Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: viewModel,
-      builder: (_, __) {
-        return CreateTemplateScreen(
-          state: state,
-          onAction: _handleAction,
-        );
-      },
+    final state = ref.watch(createTemplateViewModelProvider);
+
+    return Scaffold(
+      body: CreateTemplateScreen(state: state, onAction: _handleAction),
     );
   }
 

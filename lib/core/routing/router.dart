@@ -118,6 +118,21 @@ final routerProvider = Provider<GoRouter>((ref) {
           return null;
         },
       ),
+      GoRoute(
+        path: Routes.createTemplate,
+        builder: (context, state) {
+          final extra = state.extra as OpenAiResponse;
+          return CreateProblemScreenRoot(extra);
+        },
+        redirect: (context, state) {
+          final extra = state.extra;
+          if (extra is! OpenAiResponse) {
+            return Routes.create;
+          }
+          return null;
+        },
+      ),
+
     ],
   );
 });

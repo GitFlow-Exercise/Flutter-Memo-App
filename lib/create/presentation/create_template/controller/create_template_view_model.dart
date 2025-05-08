@@ -1,10 +1,13 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_event.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class CreateTemplateViewModel with ChangeNotifier {
+part 'create_template_view_model.g.dart';
+
+@riverpod
+class CreateTemplateViewModel extends _$CreateTemplateViewModel {
   CreateTemplateState _state = const CreateTemplateState();
   CreateTemplateState get state => _state;
 
@@ -12,8 +15,11 @@ class CreateTemplateViewModel with ChangeNotifier {
   Stream<CreateTemplateEvent> get eventStream => _eventController.stream;
 
   @override
-  void dispose() {
-    _eventController.close();
-    super.dispose();
+  CreateTemplateState build() {
+    ref.onDispose(() {
+      _eventController.close();
+    });
+
+    return const CreateTemplateState();
   }
 }
