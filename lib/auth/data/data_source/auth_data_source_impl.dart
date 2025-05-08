@@ -18,11 +18,11 @@ class AuthDataSourceImpl implements AuthDataSource {
 
   @override
   Future<AuthResponse> signUp(String email, String password) async {
-    // TODO(jh): 회원가입 수정 예정
     final authResponse = await _client.auth.signUp(
       email: email,
       password: password,
     );
+
     return authResponse;
   }
 
@@ -30,12 +30,22 @@ class AuthDataSourceImpl implements AuthDataSource {
   Future<bool> isEmailExist(String email) async {
     final response =
         await _client
-            .from('user_private')
+            .from('users')
             .select()
             .eq('user_email', email)
             .maybeSingle();
 
     return response != null;
+  }
+
+  @override
+  Future<void> saveUser() async {
+    await _client.from('users').insert({
+      'user_id': _client.auth.currentUser?.id,
+      'user_name': _client.auth.currentUser?.email?.split('@')[0],
+      'user_email': _client.auth.currentUser?.email,
+      'created_at': DateTime.now().toIso8601String(),
+    });
   }
 
   @override
