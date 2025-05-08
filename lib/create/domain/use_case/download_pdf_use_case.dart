@@ -11,7 +11,9 @@ class DownloadPdfUseCase {
     required String fileName,
   }) {
     try {
-      return Result.success(PdfGenerator().downloadPdf(pdfBytes));
+      return Result.success(
+        PdfGenerator().downloadPdf(pdfBytes, fileName: fileName),
+      );
     } catch (e) {
       return const Result.error(
         AppException.pdfDownload(message: '다운로드 중 에러가 발생하였습니다.'),
