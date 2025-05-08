@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mongo_ai/core/exception/app_exception.dart';
+import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/create/data/data_source/file_picker_data_source.dart';
 import 'package:mongo_ai/create/data/data_source/file_picker_data_source_impl.dart';
 import 'package:mongo_ai/create/data/data_source/open_ai_data_source.dart';
@@ -14,12 +16,31 @@ import 'package:mongo_ai/auth/data/data_source/auth_data_source.dart';
 import 'package:mongo_ai/auth/data/data_source/auth_data_source_impl.dart';
 import 'package:mongo_ai/auth/data/repository/auth_repository_impl.dart';
 import 'package:mongo_ai/auth/domain/repository/auth_repository.dart';
+import 'package:mongo_ai/dashboard/data/data_source/login_user_data_source.dart';
+import 'package:mongo_ai/dashboard/data/data_source/login_user_data_source_impl.dart';
+import 'package:mongo_ai/dashboard/data/repository/login_user_repository_impl.dart';
+import 'package:mongo_ai/dashboard/domain/model/login_user.dart';
+import 'package:mongo_ai/dashboard/domain/repository/login_user_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final supabaseClientProvider = Provider<SupabaseClient>((ref) {
   return Supabase.instance.client;
 });
 
+final appUserDataSourceProvider = Provider<LoginUserDataSource>((ref) {
+  final client = ref.watch(supabaseClientProvider);
+  return LoginUserDataSourceImpl(client: client);
+});
+
+final appUserRepositoryProvider = Provider<LoginUserRepository>((ref) {
+  final dataSource = ref.watch(appUserDataSourceProvider);
+  return LoginUserRepositoryImpl(dataSource: dataSource);
+});
+
+final getCurrentLoginUserProvider = FutureProvider<Result<LoginUser, AppException>>((ref) async {
+  final repository = ref.watch(appUserRepositoryProvider);
+  return repository.getCurrentLoginUser();
+});
 
 // -----------------------------------
 // create
