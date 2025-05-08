@@ -15,11 +15,11 @@ abstract class OpenAiResponse with _$OpenAiResponse {
     required List<OpenAIResponseOutput> output,
   }) = _OpenAiResponse;
 
-  factory OpenAiResponse.justText(String contents, String? instructions) {
+  factory OpenAiResponse.justText({required String contents}) {
     return OpenAiResponse(
       id: const Uuid().v4(),
       status: '',
-      instructions: instructions ?? '',
+      instructions: '',
       output: [
         OpenAIResponseOutput(
           id: const Uuid().v4(),
