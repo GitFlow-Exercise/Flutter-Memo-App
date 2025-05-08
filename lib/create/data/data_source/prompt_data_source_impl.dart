@@ -8,7 +8,7 @@ import 'package:mongo_ai/create/data/dto/prompt_dto.dart';
 class PromptDataSourceImpl implements PromptDataSource {
   final SupabaseClient _client;
 
-  PromptDataSourceImpl({required SupabaseClient client}) : _client = client;
+  PromptDataSourceImpl(this._client);
 
   @override
   Future<List<PromptDto>> getPrompts() async {
