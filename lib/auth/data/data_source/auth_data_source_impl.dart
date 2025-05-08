@@ -1,4 +1,5 @@
 import 'package:mongo_ai/auth/data/data_source/auth_data_source.dart';
+import 'package:mongo_ai/core/constants/app_table_name.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthDataSourceImpl implements AuthDataSource {
@@ -30,7 +31,7 @@ class AuthDataSourceImpl implements AuthDataSource {
   Future<bool> isEmailExist(String email) async {
     final response =
         await _client
-            .from('users')
+            .from(AppTableName.users)
             .select()
             .eq('user_email', email)
             .maybeSingle();
@@ -40,7 +41,7 @@ class AuthDataSourceImpl implements AuthDataSource {
 
   @override
   Future<void> saveUser() async {
-    await _client.from('users').insert({
+    await _client.from(AppTableName.users).insert({
       'user_id': _client.auth.currentUser?.id,
       'user_name': _client.auth.currentUser?.email?.split('@')[0],
       'user_email': _client.auth.currentUser?.email,
