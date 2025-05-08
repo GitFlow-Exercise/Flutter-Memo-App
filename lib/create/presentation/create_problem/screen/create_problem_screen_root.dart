@@ -25,6 +25,7 @@ class _CreateProblemScreenRootState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final viewModel = ref.watch(createProblemViewModelProvider.notifier);
+      _handleAction(const CreateProblemAction.getPrompts());
 
       _subscription = viewModel.eventStream.listen(_handleEvent);
 
@@ -66,6 +67,8 @@ class _CreateProblemScreenRootState
         viewModel.createProblem(body);
       case SetResponse(response: final response):
         viewModel.setResponse(response);
+      case GetPrompts():
+        viewModel.getPrompts();
     }
   }
 }

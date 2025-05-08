@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:mongo_ai/core/constants/prompt.dart';
+import 'package:mongo_ai/create/domain/model/prompt.dart';
 import 'package:mongo_ai/create/domain/model/request/open_ai_body.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 
@@ -14,4 +14,6 @@ sealed class CreateProblemAction with _$CreateProblemAction {
 
   const factory CreateProblemAction.setResponse(OpenAiResponse response) =
       SetResponse;
+
+  const factory CreateProblemAction.getPrompts() = GetPrompts;
 }
