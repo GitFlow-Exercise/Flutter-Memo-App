@@ -27,7 +27,7 @@ class PdfPreViewViewModel extends _$PdfPreViewViewModel {
   // pdf data 설정
   void setPdfData(OpenAiResponse response) async {
     state = state.copyWith(file: const AsyncValue.loading());
-    final text = response.output[0].content[0].text;
+    final text = response.getContent();
     final pdfFile = await PdfGenerator().generatePdf(
       headerText: 'test header',
       contentsText: text,

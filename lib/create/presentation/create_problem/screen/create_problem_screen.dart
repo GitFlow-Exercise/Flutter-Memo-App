@@ -4,6 +4,7 @@ import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/create/domain/model/request/input_content.dart';
 import 'package:mongo_ai/create/domain/model/request/message_input.dart';
 import 'package:mongo_ai/create/domain/model/request/open_ai_body.dart';
+import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -85,12 +86,12 @@ class CreateProblemScreen extends StatelessWidget {
                     const Text('Clean Text'),
                     // --------------------
                     // TODO 아래 코드가 복잡해서 어떻게 처리할지 추가로 수정할 예정입니다.
-                    // Container(
-                    //   padding: const EdgeInsets.all(16),
-                    //   decoration: BoxDecoration(border: Border.all()),
-                    //   width: MediaQuery.sizeOf(context).width / 3,
-                    //   child: Text(state.response!.output[0].content[0].text),
-                    // ),
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(border: Border.all()),
+                      width: MediaQuery.sizeOf(context).width / 3,
+                      child: Text(state.response!.getContent()),
+                    ),
                     const Gap(12),
                     InkWell(
                       onTap: () {
