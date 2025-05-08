@@ -2,9 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
-import 'package:mongo_ai/create/presentation/controller/upload_raw_action.dart';
-import 'package:mongo_ai/create/presentation/controller/upload_raw_event.dart';
-import 'package:mongo_ai/create/presentation/controller/upload_raw_view_model.dart';
+import 'package:mongo_ai/create/presentation/pdf_preview/controller/pdf_preview_action.dart';
+import 'package:mongo_ai/create/presentation/pdf_preview/controller/pdf_preview_event.dart';
+import 'package:mongo_ai/create/presentation/pdf_preview/controller/pdf_preview_view_model.dart';
 import 'package:mongo_ai/create/presentation/pdf_preview/screen/pdf_preview_screen.dart';
 
 class PdfPreviewScreenRoot extends ConsumerStatefulWidget {
@@ -23,8 +23,8 @@ class _PdfPreviewScreenRootState extends ConsumerState<PdfPreviewScreenRoot> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final viewModel = ref.watch(uploadRawViewModelProvider.notifier);
-
+      final viewModel = ref.watch(pdfPreViewViewModelProvider.notifier);
+      _handleAction(PdfPreViewActions.setPdfData(widget.response));
       _subscription = viewModel.eventStream.listen(_handleEvent);
     });
   }
@@ -35,7 +35,7 @@ class _PdfPreviewScreenRootState extends ConsumerState<PdfPreviewScreenRoot> {
     super.dispose();
   }
 
-  void _handleEvent(UploadRawEvent event) {
+  void _handleEvent(PdfPreViewEvent event) {
     switch (event) {
       case ShowSnackBar(message: final message):
         ScaffoldMessenger.of(
@@ -46,14 +46,19 @@ class _PdfPreviewScreenRootState extends ConsumerState<PdfPreviewScreenRoot> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(uploadRawViewModelProvider);
-    final viewModel = ref.watch(uploadRawViewModelProvider.notifier);
-
+    final state = ref.watch(pdfPreViewViewModelProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('파일 업로드')),
-      body: const PdfPreviewScreen(),
+      body: PdfPreviewScreen(state: state, onAction: _handleAction),
     );
   }
 
-  void _handleAction() {}
+  void _handleAction(PdfPreViewActions action) {
+    final viewModel = ref.read(pdfPreViewViewModelProvider.notifier);
+    switch (action) {
+      case SetPdfData(:final response):
+        viewModel.setPdfData(response);
+      case DownloadPdf():
+        viewModel.downloadPdf();
+    }
+  }
 }

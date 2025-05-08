@@ -7,6 +7,8 @@ import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/routing/redirect.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
+import 'package:mongo_ai/create/domain/model/response/open_ai_response_content.dart';
+import 'package:mongo_ai/create/domain/model/response/open_ai_response_output.dart';
 import 'package:mongo_ai/create/presentation/pdf_preview/screen/pdf_preview_screen_root.dart';
 import 'package:mongo_ai/dashboard/presentation/dashboard_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/home/home_screen.dart';
@@ -116,12 +118,33 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.pdfPreview,
         builder: (context, state) {
-          final extra = state.extra as OpenAiResponse;
-          return PdfPreviewScreenRoot(response: extra);
+          // final extra = state.extra as OpenAiResponse;
+          return const PdfPreviewScreenRoot(
+            response: OpenAiResponse(
+              id: 'id',
+              status: 'status',
+              instructions: 'instructions',
+              output: [
+                OpenAIResponseOutput(
+                  id: 'id',
+                  type: 'type',
+                  status: 'status',
+                  content: [
+                    OpenAIResponseContent(
+                      type: 'type',
+                      annotations: [],
+                      text: 'textsadfasdfasfdsadfasfds',
+                    ),
+                  ],
+                  role: 'role',
+                ),
+              ],
+            ),
+          );
         },
-        redirect: (context, state) {
-          return AppRedirect.createProblemRedirect(state.extra);
-        },
+        // redirect: (context, state) {
+        //   return AppRedirect.createProblemRedirect(state.extra);
+        // },
       ),
     ],
   );

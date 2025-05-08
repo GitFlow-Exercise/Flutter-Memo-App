@@ -1,10 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:mongo_ai/create/presentation/pdf_preview/controller/pdf_preview_action.dart';
+import 'package:mongo_ai/create/presentation/pdf_preview/controller/pdf_preview_state.dart';
+import 'package:printing/printing.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class PdfPreviewScreen extends StatelessWidget {
-  const PdfPreviewScreen({super.key});
+  final PdfPreViewState state;
+  final void Function(PdfPreViewActions action) onAction;
+  const PdfPreviewScreen({
+    super.key,
+    required this.state,
+    required this.onAction,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return state.file.when(
+      data: (value) {
+        return Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
+                children: [
+                  const SizedBox(height: 10),
+                  Text('선택된 PDF: ${value.fileName}'),
+                  const SizedBox(height: 10),
+                  Container(
+                    height: 500,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    child: PdfPreview(
+                      build: (format) => value.bytes,
+                      maxPageWidth: 400,
+                      allowPrinting: false,
+                      allowSharing: false,
+                      canChangePageFormat: false,
+                      canChangeOrientation: false,
+                      canDebug: false,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 40),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(border: Border.all()),
+                child: const Text('다운로드'),
+              ),
+            ],
+          ),
+        );
+      },
+      error: (error, stackTrace) => const Center(child: Text('에러가 발생하였습니다.')),
+      loading: () => const Center(child: CircularProgressIndicator()),
+    );
   }
 }

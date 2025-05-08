@@ -59,7 +59,7 @@ class _CreateProblemScreenRootState
   }
 
   Future<void> _handleAction(CreateProblemAction action) async {
-    final viewModel = ref.watch(createProblemViewModelProvider.notifier);
+    final viewModel = ref.read(createProblemViewModelProvider.notifier);
     switch (action) {
       case ChangeType(type: final type):
         viewModel.changeProblemType(type);
