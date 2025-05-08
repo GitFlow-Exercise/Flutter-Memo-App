@@ -60,6 +60,12 @@ sealed class AppException with _$AppException implements Exception {
     StackTrace? stackTrace,
   }) = EmailAlreadyExistException;
 
+  const factory AppException.pdfDownload({
+    required String message,
+    Object? error,
+    StackTrace? stackTrace,
+  }) = PdfDownloadException;
+
   String get userFriendlyMessage {
     switch (this) {
       case NetworkException():
@@ -79,6 +85,8 @@ sealed class AppException with _$AppException implements Exception {
         return '유효하지 않은 비밀번호입니다.';
       case EmailAlreadyExistException():
         return '이미 존재하는 이메일입니다.';
+      case PdfDownloadException():
+        return '다운로드 중 에러가 발생하였습니다.';
     }
   }
 }

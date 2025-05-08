@@ -15,6 +15,7 @@ import 'package:mongo_ai/create/domain/repository/file_picker_repository.dart';
 import 'package:mongo_ai/create/domain/repository/open_ai_repository.dart';
 import 'package:mongo_ai/create/domain/repository/prompt_repository.dart';
 import 'package:mongo_ai/create/domain/use_case/create_problem_use_case.dart';
+import 'package:mongo_ai/create/domain/use_case/download_pdf_use_case.dart';
 import 'package:mongo_ai/create/domain/use_case/get_prompts_use_case.dart';
 import 'package:mongo_ai/create/domain/use_case/image_pick_file_use_case.dart';
 import 'package:mongo_ai/create/domain/use_case/pdf_pick_file_use_case.dart';
@@ -85,6 +86,10 @@ final getPromptsUseCaseProvider =
       final repository = ref.watch(promptRepositoryProvider);
       return GetPromptsUseCase(repository).execute();
     });
+
+final downloadPdfUseCase = Provider<DownloadPdfUseCase>((ref) {
+  return const DownloadPdfUseCase();
+});
 
 // -----------------------------------
 // Auth
