@@ -7,6 +7,7 @@ import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/routing/redirect.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
+import 'package:mongo_ai/create/presentation/pdf_preview/screen/pdf_preview_screen_root.dart';
 import 'package:mongo_ai/dashboard/presentation/dashboard_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/home/home_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/recent_files/recent_files_screen.dart';
@@ -109,13 +110,17 @@ final routerProvider = Provider<GoRouter>((ref) {
           return CreateProblemScreenRoot(extra);
         },
         redirect: (context, state) {
-          // 만약 화면 이동간 필요한 데이터가 타입과 일치하지 않는다면,
-          // 강제로 문제 생성 처음 화면으로 이동시킵니다.
-          final extra = state.extra;
-          if (extra is! OpenAiResponse) {
-            return Routes.create;
-          }
-          return null;
+          return AppRedirect.createProblemRedirect(state.extra);
+        },
+      ),
+      GoRoute(
+        path: Routes.pdfPreview,
+        builder: (context, state) {
+          final extra = state.extra as OpenAiResponse;
+          return PdfPreviewScreenRoot(response: extra);
+        },
+        redirect: (context, state) {
+          return AppRedirect.createProblemRedirect(state.extra);
         },
       ),
     ],
