@@ -52,6 +52,9 @@ dependencies:
   # .env 파일
   flutter_dotenv: ^5.2.1
 
+  #PDF 생성
+  pdf: ^3.11.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
