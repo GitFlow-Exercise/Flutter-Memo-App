@@ -13,3 +13,10 @@ abstract class OpenAiResponse with _$OpenAiResponse {
     required List<OpenAIResponseOutput> output,
   }) = _OpenAiResponse;
 }
+
+// 바로 응답값의 content를 반환해주는 Extension
+extension GetContent on OpenAiResponse {
+  String getContent() {
+    return output[0].content[0].text;
+  }
+}
