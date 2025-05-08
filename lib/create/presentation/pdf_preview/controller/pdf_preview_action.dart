@@ -10,5 +10,5 @@ sealed class PdfPreViewActions with _$PdfPreViewActions {
   const factory PdfPreViewActions.setPdfData(OpenAiResponse response) =
       SetPdfData;
 
-  const factory PdfPreViewActions.downloadPdf(Uint8List file) = DownloadPdf;
+  const factory PdfPreViewActions.downloadPdf(Uint8List pdfBytes) = DownloadPdf;
 }
