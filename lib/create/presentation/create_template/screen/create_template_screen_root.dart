@@ -29,6 +29,8 @@ class _CreateTemplateScreenRootState
       final viewModel = ref.watch(createTemplateViewModelProvider.notifier);
 
       _subscription = viewModel.eventStream.listen(_handleEvent);
+
+      viewModel.setProblem(problem: widget.response);
     });
   }
 
@@ -57,9 +59,13 @@ class _CreateTemplateScreenRootState
   }
 
   void _handleAction(CreateTemplateAction action) {
+    final viewModel = ref.watch(createTemplateViewModelProvider.notifier);
+
     switch (action) {
-      case OnTap():
-        debugPrint('tapped onTap');
+      case OnTapColumnsTemplate(isSingleColumns: final isSingleColumns):
+        viewModel.toggleColumnsButton(isSingleColumns: isSingleColumns);
+      case OnChangeContents(contents: final contents):
+        viewModel.changedContents(contents: contents);
     }
   }
 }
