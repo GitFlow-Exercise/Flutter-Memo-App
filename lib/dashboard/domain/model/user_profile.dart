@@ -1,9 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'login_user.g.dart';
+part 'user_profile.g.dart';
 
 @JsonSerializable()
-class LoginUser {
+class UserProfile {
   @JsonKey(name: 'user_id')
   final String userId;
 
@@ -13,14 +13,14 @@ class LoginUser {
   @JsonKey(name: 'user_image')
   final String? userImage;
 
-  const LoginUser({
+  const UserProfile({
     required this.userId,
     required this.userName,
     this.userImage,
   });
 
-  factory LoginUser.fromJson(Map<String, dynamic> json) =>
-      _$LoginUserFromJson(json);
+  factory UserProfile.fromJson(Map<String, dynamic> json) =>
+      _$UserProfileFromJson(json);
 
-  Map<String, dynamic> toJson() => _$LoginUserToJson(this);
+  Map<String, dynamic> toJson() => _$UserProfileToJson(this);
 }
