@@ -22,6 +22,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     // 새로 reidrect 함수 실행
     refreshListenable: auth,
     redirect: (context, state) {
+      // 현재 경로
       final path = state.fullPath;
       return AppRedirect.authRedirect(
         isAuthenticated: auth.isAuthenticated,
