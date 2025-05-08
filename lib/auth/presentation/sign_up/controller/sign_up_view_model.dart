@@ -64,8 +64,15 @@ class SignUpViewModel extends _$SignUpViewModel {
     }
   }
 
-  Future<void> saveUser() async {
+  Future<bool> saveUser() async {
     final authRepository = ref.read(authRepositoryProvider);
-    await authRepository.saveUser();
+    final result = await authRepository.saveUser();
+    switch (result) {
+      case Success<void, AppException>():
+        return true;
+      case Error<void, AppException>():
+        _eventController.add(SignUpEvent.showSnackBar(result.error.message));
+        return false;
+    }
   }
 }

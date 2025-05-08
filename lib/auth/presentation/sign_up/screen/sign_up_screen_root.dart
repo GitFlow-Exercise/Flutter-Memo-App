@@ -68,8 +68,9 @@ class _SignUpScreenRootState extends ConsumerState<SignUpScreenRoot> {
       case OnTapSignUp():
         final isUserRegistered = await viewModel.signUp();
         if (isUserRegistered) {
-          await viewModel.saveUser();
-          if (mounted) context.go(Routes.signUpComplete);
+          if (await viewModel.saveUser() && mounted) {
+            context.go(Routes.signUpComplete);
+          }
         }
       case OnTapSignIn():
         context.go(Routes.signIn);
