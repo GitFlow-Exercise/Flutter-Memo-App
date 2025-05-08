@@ -66,6 +66,8 @@ class _CreateTemplateScreenRootState
         viewModel.toggleColumnsButton(isSingleColumns: isSingleColumns);
       case OnChangeContents(contents: final contents):
         viewModel.changedContents(contents: contents);
+      case CreateProblemForPdf(contents: final contents):
+        viewModel.generatePdf(contents: contents);
     }
   }
 }

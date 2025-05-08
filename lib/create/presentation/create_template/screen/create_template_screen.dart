@@ -48,7 +48,6 @@ class _CreateTemplateScreenState extends State<CreateTemplateScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
                       width: 120,
@@ -72,7 +71,7 @@ class _CreateTemplateScreenState extends State<CreateTemplateScreen> {
                           ),
                         ),
                         child: const Text(
-                          '템플릿 설정\n한 단',
+                          'PDF 한 단',
                           textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.white),
                         ),
@@ -100,7 +99,7 @@ class _CreateTemplateScreenState extends State<CreateTemplateScreen> {
                           ),
                         ),
                         child: const Text(
-                          '템플릿 설정\n두 단',
+                          'PDF 두 단',
                           textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.white),
                         ),
@@ -135,7 +134,7 @@ class _CreateTemplateScreenState extends State<CreateTemplateScreen> {
                               ),
                             ),
                             child: const Text(
-                              '교사용 정리',
+                              'AI 선생님',
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.white,
@@ -176,13 +175,16 @@ class _CreateTemplateScreenState extends State<CreateTemplateScreen> {
               ],
             ),
 
-            Container(
+            SizedBox(
               width: 120,
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
-                  // 만들기 버튼 클릭 시 동작
-                  //TODO:
+                  widget.onAction(
+                    CreateTemplateAction.createProblemForPdf(
+                      contents: widget.state.textEditingController.text,
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.purple,
