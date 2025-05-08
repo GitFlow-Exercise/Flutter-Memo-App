@@ -7,10 +7,10 @@ import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/routing/redirect.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
+import 'package:mongo_ai/create/presentation/create/screen/upload_raw_screen_root.dart';
 import 'package:mongo_ai/dashboard/presentation/dashboard_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/home/home_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/recent_files/recent_files_screen.dart';
-import 'package:mongo_ai/create/presentation/screen/upload_raw_screen_root.dart';
 import 'package:mongo_ai/create/presentation/create_problem/screen/create_problem_screen_root.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
