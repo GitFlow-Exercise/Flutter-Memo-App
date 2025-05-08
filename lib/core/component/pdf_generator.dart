@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:web/web.dart'; // Blob, URL, document, HTMLAnchorElement 등
 
 /// PDF 문서 생성기
 ///
@@ -320,5 +323,22 @@ class PdfGenerator {
       fontSize: baseStyle?.fontSize ?? 12,
       color: baseStyle?.color,
     );
+  }
+
+  // -----
+  // pdf 파일 다운로드
+  void downloadPdf(Uint8List bytes, {String fileName = 'document.pdf'}) {
+    // 1) 바이트를 Base64 문자열로 인코딩
+    final base64Data = base64Encode(bytes);
+
+    final anchor =
+        HTMLAnchorElement()
+          ..href = 'data:application/pdf;base64,$base64Data'
+          ..download = fileName
+          ..style.display = 'none';
+
+    document.body?.append(anchor);
+    anchor.click();
+    anchor.remove();
   }
 }
