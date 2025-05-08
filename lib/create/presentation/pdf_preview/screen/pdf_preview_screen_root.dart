@@ -57,8 +57,8 @@ class _PdfPreviewScreenRootState extends ConsumerState<PdfPreviewScreenRoot> {
     switch (action) {
       case SetPdfData(:final response):
         viewModel.setPdfData(response);
-      case DownloadPdf():
-        viewModel.downloadPdf();
+      case DownloadPdf(:final file):
+        viewModel.downloadPdf(file);
     }
   }
 }

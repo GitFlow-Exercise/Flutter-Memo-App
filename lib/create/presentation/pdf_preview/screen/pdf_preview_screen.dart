@@ -28,6 +28,7 @@ class PdfPreviewScreen extends StatelessWidget {
                   const SizedBox(height: 10),
                   Container(
                     height: 500,
+                    width: 400,
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
                     ),
@@ -44,13 +45,18 @@ class PdfPreviewScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(width: 40),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 4,
+              InkWell(
+                onTap: () {
+                  onAction(PdfPreViewActions.downloadPdf(value.bytes));
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(border: Border.all()),
+                  child: const Text('다운로드'),
                 ),
-                decoration: BoxDecoration(border: Border.all()),
-                child: const Text('다운로드'),
               ),
             ],
           ),

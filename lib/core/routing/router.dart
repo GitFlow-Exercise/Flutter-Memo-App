@@ -133,7 +133,8 @@ final routerProvider = Provider<GoRouter>((ref) {
                     OpenAIResponseContent(
                       type: 'type',
                       annotations: [],
-                      text: 'textsadfasdfasfdsadfasfds',
+                      text:
+                          'textsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfasfdsadfasfdstextsadfasdfas',
                     ),
                   ],
                   role: 'role',
