@@ -8,16 +8,17 @@ import 'package:mongo_ai/core/routing/redirect.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 import 'package:mongo_ai/create/presentation/create/screen/upload_raw_screen_root.dart';
+import 'package:mongo_ai/create/presentation/create_problem/screen/create_problem_screen_root.dart';
+import 'package:mongo_ai/create/presentation/create_template/screen/create_template_screen_root.dart';
 import 'package:mongo_ai/dashboard/presentation/dashboard_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/home/home_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/recent_files/recent_files_screen.dart';
-import 'package:mongo_ai/create/presentation/create_problem/screen/create_problem_screen_root.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final auth = ref.watch(authRepositoryProvider);
   return GoRouter(
-    initialLocation: Routes.signIn,
+    initialLocation: Routes.createTemplate,
     // auth 관찰해서 변화가 있다면,
     // 새로 reidrect 함수 실행
     refreshListenable: auth,
@@ -121,18 +122,18 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.createTemplate,
         builder: (context, state) {
-          final extra = state.extra as OpenAiResponse;
-          return CreateProblemScreenRoot(extra);
+          // final extra = state.extra as OpenAiResponse;
+          final extra = OpenAiResponse.justText(contents: 'Hello World!');
+          return CreateTemplateScreenRoot(response: extra);
         },
-        redirect: (context, state) {
-          final extra = state.extra;
-          if (extra is! OpenAiResponse) {
-            return Routes.create;
-          }
-          return null;
-        },
+        // redirect: (context, state) {
+        //   final extra = state.extra;
+        //   if (extra is! OpenAiResponse) {
+        //     return Routes.create;
+        //   }
+        //   return null;
+        // },
       ),
-
     ],
   );
 });
