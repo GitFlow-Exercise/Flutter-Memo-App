@@ -16,30 +16,54 @@ import 'package:mongo_ai/auth/data/data_source/auth_data_source.dart';
 import 'package:mongo_ai/auth/data/data_source/auth_data_source_impl.dart';
 import 'package:mongo_ai/auth/data/repository/auth_repository_impl.dart';
 import 'package:mongo_ai/auth/domain/repository/auth_repository.dart';
-import 'package:mongo_ai/dashboard/data/data_source/login_user_data_source.dart';
-import 'package:mongo_ai/dashboard/data/data_source/login_user_data_source_impl.dart';
-import 'package:mongo_ai/dashboard/data/repository/login_user_repository_impl.dart';
-import 'package:mongo_ai/dashboard/domain/model/login_user.dart';
-import 'package:mongo_ai/dashboard/domain/repository/login_user_repository.dart';
+import 'package:mongo_ai/dashboard/data/data_source/team_data_source.dart';
+import 'package:mongo_ai/dashboard/data/data_source/team_data_source_impl.dart';
+import 'package:mongo_ai/dashboard/data/data_source/user_profile_data_source.dart';
+import 'package:mongo_ai/dashboard/data/data_source/user_profile_data_source_impl.dart';
+import 'package:mongo_ai/dashboard/data/repository/team_repository_impl.dart';
+import 'package:mongo_ai/dashboard/data/repository/user_profile_repository_impl.dart';
+import 'package:mongo_ai/dashboard/domain/model/team.dart';
+import 'package:mongo_ai/dashboard/domain/model/user_profile.dart';
+import 'package:mongo_ai/dashboard/domain/repository/team_repository.dart';
+import 'package:mongo_ai/dashboard/domain/repository/user_profile_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final supabaseClientProvider = Provider<SupabaseClient>((ref) {
   return Supabase.instance.client;
 });
 
-final appUserDataSourceProvider = Provider<LoginUserDataSource>((ref) {
+// -----------------------------------
+// user profile 가져오기
+final userProfileDataSourceProvider = Provider<UserProfileDataSource>((ref) {
   final client = ref.watch(supabaseClientProvider);
-  return LoginUserDataSourceImpl(client: client);
+  return UserProfileDataSourceImpl(client: client);
 });
 
-final appUserRepositoryProvider = Provider<LoginUserRepository>((ref) {
-  final dataSource = ref.watch(appUserDataSourceProvider);
-  return LoginUserRepositoryImpl(dataSource: dataSource);
+final userProfileRepositoryProvider = Provider<UserProfileRepository>((ref) {
+  final dataSource = ref.watch(userProfileDataSourceProvider);
+  return UserProfileRepositoryImpl(dataSource: dataSource);
 });
 
-final getCurrentLoginUserProvider = FutureProvider<Result<LoginUser, AppException>>((ref) async {
-  final repository = ref.watch(appUserRepositoryProvider);
-  return repository.getCurrentLoginUser();
+final getCurrentUserProfileProvider = FutureProvider<Result<UserProfile, AppException>>((ref) async {
+  final repository = ref.watch(userProfileRepositoryProvider);
+  return repository.getCurrentUserProfile();
+});
+
+// -----------------------------------
+// team data 가져오기
+final teamDataSourceProvider = Provider<TeamDataSource>((ref) {
+  final client = ref.watch(supabaseClientProvider);
+  return TeamDataSourceImpl(client: client);
+});
+
+final teamRepositoryProvider = Provider<TeamRepository>((ref) {
+  final dataSource = ref.watch(teamDataSourceProvider);
+  return TeamRepositoryImpl(dataSource: dataSource);
+});
+
+final getTeamsByCurrentUserProvider = FutureProvider<Result<List<Team>, AppException>>((ref) async {
+  final repository = ref.watch(teamRepositoryProvider);
+  return repository.getTeamsByCurrentUser();
 });
 
 // -----------------------------------
