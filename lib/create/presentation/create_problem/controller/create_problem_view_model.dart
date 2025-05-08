@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:mongo_ai/core/constants/prompt.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/result/result.dart';
+import 'package:mongo_ai/create/domain/model/prompt.dart';
 import 'package:mongo_ai/create/domain/model/request/open_ai_body.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_event.dart';
@@ -35,6 +35,33 @@ class CreateProblemViewModel extends _$CreateProblemViewModel {
     switch (result) {
       case Success(data: final problem):
         state = state.copyWith(problem: AsyncValue.data(problem));
+      case Error(error: final error):
+        state = state.copyWith(
+          problem: AsyncValue.error(
+            error,
+            error.stackTrace ?? StackTrace.empty,
+          ),
+        );
+    }
+
+    if (state.problem is AsyncError) {
+      final error = (state.problem as AsyncError).error;
+      _eventController.add(
+        CreateProblemEvent.showSnackBar('정보를 불러오는데 실패했습니다: $error'),
+      );
+    }
+  }
+
+  // prompt 데이터 조회
+  void getPrompts() async {
+    state = state.copyWith(problemTypes: const AsyncValue.loading());
+
+    final useCase = ref.read(getPromptsUseCaseProvider);
+    final result = await useCase.execute();
+
+    switch (result) {
+      case Success(data: final prompts):
+        state = state.copyWith(problemTypes: AsyncValue.data(prompts));
       case Error(error: final error):
         state = state.copyWith(
           problem: AsyncValue.error(
