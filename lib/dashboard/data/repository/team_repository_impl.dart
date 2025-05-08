@@ -3,6 +3,7 @@
 import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/dashboard/data/data_source/team_data_source.dart';
+import 'package:mongo_ai/dashboard/data/mapper/team_mapper.dart';
 import 'package:mongo_ai/dashboard/domain/model/team.dart';
 import 'package:mongo_ai/dashboard/domain/repository/team_repository.dart';
 
@@ -16,7 +17,8 @@ class TeamRepositoryImpl implements TeamRepository {
   @override
   Future<Result<List<Team>, AppException>> getTeamsByCurrentUser() async {
     try {
-      final teams = await _dataSource.getTeamsByCurrentUser();
+      final teamDtos = await _dataSource.getTeamsByCurrentUser();
+      final teams = teamDtos.map((e) => e.toTeam()).toList();
       return Result.success(teams);
     } catch (e) {
       return Result.error(

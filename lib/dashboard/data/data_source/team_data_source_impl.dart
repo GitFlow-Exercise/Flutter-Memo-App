@@ -1,4 +1,5 @@
 import 'package:mongo_ai/dashboard/data/data_source/team_data_source.dart';
+import 'package:mongo_ai/dashboard/data/dto/team_dto.dart';
 import 'package:mongo_ai/dashboard/domain/model/team.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -10,7 +11,7 @@ class TeamDataSourceImpl implements TeamDataSource {
   }) : _client = client;
 
   @override
-  Future<List<Team>> getTeamsByCurrentUser() async {
+  Future<List<TeamDto>> getTeamsByCurrentUser() async {
     final userId = _client.auth.currentUser!.id;
     final data = await _client
         .from('team_users_expand_view')
@@ -18,7 +19,7 @@ class TeamDataSourceImpl implements TeamDataSource {
         .eq('user_id', userId);
 
     return data
-        .map((e) => Team.fromJson(Map<String, dynamic>.from(e)))
+        .map((e) => TeamDto.fromJson(Map<String, dynamic>.from(e)))
         .toList();
   }
 }
