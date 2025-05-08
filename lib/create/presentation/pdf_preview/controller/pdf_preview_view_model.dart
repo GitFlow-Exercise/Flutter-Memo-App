@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:mongo_ai/core/component/pdf_generator.dart';
-import 'package:mongo_ai/create/domain/model/pick_file.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 import 'package:mongo_ai/create/presentation/pdf_preview/controller/pdf_preview_event.dart';
 import 'package:mongo_ai/create/presentation/pdf_preview/controller/pdf_preview_state.dart';
@@ -26,26 +25,17 @@ class PdfPreViewViewModel extends _$PdfPreViewViewModel {
 
   // pdf data 설정
   void setPdfData(OpenAiResponse response) async {
-    state = state.copyWith(file: const AsyncValue.loading());
+    state = state.copyWith(bytes: const AsyncValue.loading());
     final text = response.getContent();
     final pdfFile = await PdfGenerator().generatePdf(
       headerText: 'test header',
       contentsText: text,
       useDoubleColumn: true,
     );
-    state = state.copyWith(
-      file: AsyncValue.data(
-        PickFile(
-          type: 'pdf',
-          fileName: 'pdfFile',
-          fileExtension: 'pdf',
-          bytes: pdfFile,
-        ),
-      ),
-    );
+    state = state.copyWith(bytes: AsyncValue.data(pdfFile));
   }
 
-  void downloadPdf(Uint8List bytes, {String fileName = 'document.pdf'}) {
-    PdfGenerator().downloadPdf(bytes);
+  void downloadPdf(Uint8List bytes) {
+    PdfGenerator().downloadPdf(bytes, fileName: state.fileName);
   }
 }

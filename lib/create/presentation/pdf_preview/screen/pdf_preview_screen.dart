@@ -15,7 +15,7 @@ class PdfPreviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return state.file.when(
+    return state.bytes.when(
       data: (value) {
         return Center(
           child: Row(
@@ -24,7 +24,7 @@ class PdfPreviewScreen extends StatelessWidget {
               Column(
                 children: [
                   const SizedBox(height: 10),
-                  Text('선택된 PDF: ${value.fileName}'),
+                  Text('선택된 PDF: ${state.fileName}'),
                   const SizedBox(height: 10),
                   Container(
                     height: 500,
@@ -33,7 +33,7 @@ class PdfPreviewScreen extends StatelessWidget {
                       border: Border.all(color: Colors.grey),
                     ),
                     child: PdfPreview(
-                      build: (format) => value.bytes,
+                      build: (format) => value,
                       maxPageWidth: 400,
                       allowPrinting: false,
                       allowSharing: false,
@@ -47,7 +47,7 @@ class PdfPreviewScreen extends StatelessWidget {
               const SizedBox(width: 40),
               InkWell(
                 onTap: () {
-                  onAction(PdfPreViewActions.downloadPdf(value.bytes));
+                  onAction(PdfPreViewActions.downloadPdf(value));
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(
