@@ -21,28 +21,30 @@ class PdfPreviewScreen extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Column(
-                children: [
-                  const SizedBox(height: 10),
-                  Text('선택된 PDF: ${state.fileName}'),
-                  const SizedBox(height: 10),
-                  Container(
-                    height: 500,
-                    width: 400,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    Text('선택된 PDF: ${state.fileName}'),
+                    const SizedBox(height: 10),
+                    Container(
+                      height: 800,
+                      width: 400,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                      ),
+                      child: PdfPreview(
+                        build: (format) => value,
+                        maxPageWidth: 400,
+                        allowPrinting: false,
+                        allowSharing: false,
+                        canChangePageFormat: false,
+                        canChangeOrientation: false,
+                        canDebug: false,
+                      ),
                     ),
-                    child: PdfPreview(
-                      build: (format) => value,
-                      maxPageWidth: 400,
-                      allowPrinting: false,
-                      allowSharing: false,
-                      canChangePageFormat: false,
-                      canChangeOrientation: false,
-                      canDebug: false,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               const SizedBox(width: 40),
               InkWell(

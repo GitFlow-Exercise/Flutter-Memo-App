@@ -1,15 +1,15 @@
 import 'dart:async';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 import 'package:mongo_ai/create/presentation/pdf_preview/controller/pdf_preview_action.dart';
 import 'package:mongo_ai/create/presentation/pdf_preview/controller/pdf_preview_event.dart';
 import 'package:mongo_ai/create/presentation/pdf_preview/controller/pdf_preview_view_model.dart';
 import 'package:mongo_ai/create/presentation/pdf_preview/screen/pdf_preview_screen.dart';
 
 class PdfPreviewScreenRoot extends ConsumerStatefulWidget {
-  final OpenAiResponse response;
-  const PdfPreviewScreenRoot({required this.response, super.key});
+  final Uint8List pdfBytes;
+  const PdfPreviewScreenRoot({required this.pdfBytes, super.key});
 
   @override
   ConsumerState<PdfPreviewScreenRoot> createState() =>
@@ -24,7 +24,7 @@ class _PdfPreviewScreenRootState extends ConsumerState<PdfPreviewScreenRoot> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final viewModel = ref.watch(pdfPreViewViewModelProvider.notifier);
-      _handleAction(PdfPreViewActions.setPdfData(widget.response));
+      _handleAction(PdfPreViewActions.setPdfData(widget.pdfBytes));
       _subscription = viewModel.eventStream.listen(_handleEvent);
     });
   }
@@ -55,8 +55,8 @@ class _PdfPreviewScreenRootState extends ConsumerState<PdfPreviewScreenRoot> {
   void _handleAction(PdfPreViewActions action) {
     final viewModel = ref.read(pdfPreViewViewModelProvider.notifier);
     switch (action) {
-      case SetPdfData(:final response):
-        viewModel.setPdfData(response);
+      case SetPdfData(:final pdfBytes):
+        viewModel.setPdfData(pdfBytes);
       case DownloadPdf(:final pdfBytes):
         viewModel.downloadPdf(pdfBytes);
     }

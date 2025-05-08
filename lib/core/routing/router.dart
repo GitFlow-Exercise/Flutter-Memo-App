@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/auth/presentation/sign_in/screen/sign_in_screen_root.dart';
@@ -116,8 +118,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.pdfPreview,
         builder: (context, state) {
-          final extra = state.extra as OpenAiResponse;
-          return PdfPreviewScreenRoot(response: extra);
+          final extra = state.extra as Uint8List;
+          return PdfPreviewScreenRoot(pdfBytes: extra);
         },
         redirect: (context, state) {
           return AppRedirect.createProblemRedirect(state.extra);
