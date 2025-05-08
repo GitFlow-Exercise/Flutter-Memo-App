@@ -5,5 +5,6 @@ abstract interface class AuthDataSource {
   Future<AuthResponse> signUp(String email, String password);
   Future<void> logout();
   Future<bool> isEmailExist(String email);
+  Future<void> saveUser();
   bool isAuthenticated();
 }
