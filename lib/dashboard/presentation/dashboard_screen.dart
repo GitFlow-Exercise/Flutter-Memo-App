@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/result/result.dart';
+import 'package:mongo_ai/core/routing/routes.dart';
+import 'package:mongo_ai/dashboard/domain/model/team.dart';
+import 'package:mongo_ai/dashboard/presentation/dashboard_view_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
@@ -15,66 +18,94 @@ class DashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
-
   @override
   Widget build(BuildContext context) {
-    final getCurrentUserAsync = ref.watch(getCurrentLoginUserProvider);
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Mongo AI'),
-          actions: [
-            getCurrentUserAsync.when(
-              data: (result) {
-                switch (result) {
-                  case Success(data: final user):
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Center(child: Text(user.userName)),
-                    );
-                  case Error(error: final error):
-                    debugPrint(error.toString());
-                    return const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Center(child: Text('에러')),
-                    );
-                }
-              },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => const Center(child: Text('이름 로딩 오류')),
-            )
-          ],
-
-        ),
-        body: Row(
-          children: [
-            Container(
-              width: 200,
-              decoration: BoxDecoration(
-                border: Border(
-                  right: BorderSide(
-                    color: Colors.black,
-                    width: 1,
+    final dashboardAsync = ref.watch(dashboardViewModelProvider);
+    return dashboardAsync.when(
+      data: (dashboard) {
+        return Scaffold(
+            appBar: AppBar(
+              title: const Text('Mongo AI'),
+              actions: [
+                switch (dashboard.userProfileResult) {
+                  Success(data: final userProfile) => Text(
+                    userProfile.userName,
+                  ),
+                  Error(error: final error) => const Text(
+                    '이름 로딩중...'
+                  ),
+                },
+              ],
+            ),
+            body: Row(
+              children: [
+                Container(
+                  width: 200,
+                  decoration: BoxDecoration(
+                    border: Border(
+                      right: BorderSide(
+                        width: 1,
+                      ),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      switch (dashboard.teamsResult) {
+                        Success(data: final List<Team> teams) => SizedBox(
+                          height: 200,
+                          child: ListView.builder(
+                            itemCount: teams.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                title: Text(teams[index].teamName),
+                                onTap: () {},
+                              );
+                            },
+                          ),
+                        ),
+                        Error(error: final error) => const Text(
+                            '이름 로딩중...'
+                        ),
+                      },
+                      const Divider(height: 32, thickness: 1),
+                      ElevatedButton(
+                        onPressed: () => _onTap(context, 0),
+                        child: const Text('Home'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => _onTap(context, 1),
+                        child: const Text('Recent Files'),
+                      ),
+                      const Divider(height: 32, thickness: 1),
+                      // folderProvider 자리
+                    ],
                   ),
                 ),
-              ),
-              child: Column(
-                children: [
-                  ElevatedButton(
-                    onPressed: () => _onTap(context, 0),
-                    child: const Text('Home'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => _onTap(context, 1),
-                    child: const Text('Recent Files'),
-                  ),
-                  const Divider(height: 32, thickness: 1),
-                  // folderProvider 자리
-                ],
-              ),
-            ),
-            Expanded(child: widget.navigationShell),
-          ],
-        )
+                Expanded(
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              context.push(Routes.create);
+                            },
+                            child: const Text('새로 만들기'),
+                          ),
+                        ],
+                      ),
+                      Expanded(
+                        child: widget.navigationShell
+                      ),
+                    ],
+                  )
+                ),
+              ],
+            )
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => const Center(child: Text('페이지 로딩 실패')),
     );
   }
 
