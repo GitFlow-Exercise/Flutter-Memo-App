@@ -122,17 +122,16 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.createTemplate,
         builder: (context, state) {
-          // final extra = state.extra as OpenAiResponse;
-          final extra = OpenAiResponse.justText(contents: 'Hello World!');
+          final extra = state.extra as OpenAiResponse;
           return CreateTemplateScreenRoot(response: extra);
         },
-        // redirect: (context, state) {
-        //   final extra = state.extra;
-        //   if (extra is! OpenAiResponse) {
-        //     return Routes.create;
-        //   }
-        //   return null;
-        // },
+        redirect: (context, state) {
+          final extra = state.extra;
+          if (extra is! OpenAiResponse) {
+            return Routes.create;
+          }
+          return null;
+        },
       ),
     ],
   );
