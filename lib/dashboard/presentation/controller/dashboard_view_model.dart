@@ -35,6 +35,7 @@ class DashboardViewModel extends _$DashboardViewModel {
     final teamResult = await ref.watch(getTeamsByCurrentUserProvider.future);
 
     // Todo: 팀 선택 시 SharedPreferences에 저장하고 비동기로 바꾸기
+    // Todo: 보기 좋게 리팩토링 하기
     final currentTeamId = ref.watch(currentTeamIdStateProvider);
 
     final UserProfile userProfile = switch (userProfileResult) {
@@ -69,7 +70,7 @@ class DashboardViewModel extends _$DashboardViewModel {
     );
   }
 
-  /// 팀 선택 시 SharedPreferences에 저장하고 뷰모델도 리프레시
+  /// 팀 선택 시 currentTeamIdStateProvider 변하면서 자동 리빌드 됨.
   Future<void> selectTeam(int teamId) async {
     ref.read(currentTeamIdStateProvider.notifier).set(teamId);
   }
