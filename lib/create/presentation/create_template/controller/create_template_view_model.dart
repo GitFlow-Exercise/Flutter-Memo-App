@@ -44,8 +44,13 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
     state = state.copyWith(problem: AsyncValue.data(problem));
   }
 
-  void generatePdf({required String contents}) {
+  void generatePdf({required String contents}) async {
     //TODO(ok): 추후 템플릿 확정 시 변경 예정, 다음 화면으로 Uint8List 전달
-    state.pdfGenerator.generatePdf(headerText: 'Text', contentsText: contents, useDoubleColumn: !state.isSingleColumns);
+    final bytes = await state.pdfGenerator.generatePdf(
+      headerText: 'Text',
+      contentsText: contents,
+      useDoubleColumn: !state.isSingleColumns,
+    );
+    _eventController.add(CreateTemplateEvent.createPdfWithTemplate(bytes));
   }
 }

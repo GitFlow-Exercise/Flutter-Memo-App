@@ -37,7 +37,7 @@ class CreateProblemViewModel extends _$CreateProblemViewModel {
     switch (result) {
       case Success(data: final problem):
         state = state.whenData((cb) => cb.copyWith(problem: problem));
-
+        _eventController.add(CreateProblemEvent.successOpenAIRequest(problem));
       case Error(error: final error):
         state = AsyncValue.error(error, error.stackTrace ?? StackTrace.empty);
     }
