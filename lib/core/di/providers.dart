@@ -23,21 +23,33 @@ import 'package:mongo_ai/auth/data/data_source/auth_data_source.dart';
 import 'package:mongo_ai/auth/data/data_source/auth_data_source_impl.dart';
 import 'package:mongo_ai/auth/data/repository/auth_repository_impl.dart';
 import 'package:mongo_ai/auth/domain/repository/auth_repository.dart';
+import 'package:mongo_ai/dashboard/data/data_source/folder_data_source.dart';
+import 'package:mongo_ai/dashboard/data/data_source/folder_data_source_impl.dart';
 import 'package:mongo_ai/dashboard/data/data_source/team_data_source.dart';
 import 'package:mongo_ai/dashboard/data/data_source/team_data_source_impl.dart';
 import 'package:mongo_ai/dashboard/data/data_source/user_profile_data_source.dart';
 import 'package:mongo_ai/dashboard/data/data_source/user_profile_data_source_impl.dart';
+import 'package:mongo_ai/dashboard/data/data_source/workbook_data_source.dart';
+import 'package:mongo_ai/dashboard/data/data_source/workbook_data_source_impl.dart';
+import 'package:mongo_ai/dashboard/data/repository/folder_repository_impl.dart';
 import 'package:mongo_ai/dashboard/data/repository/team_repository_impl.dart';
 import 'package:mongo_ai/dashboard/data/repository/user_profile_repository_impl.dart';
+import 'package:mongo_ai/dashboard/data/repository/workbook_repository_impl.dart';
+import 'package:mongo_ai/dashboard/domain/model/folder.dart';
 import 'package:mongo_ai/dashboard/domain/model/team.dart';
 import 'package:mongo_ai/dashboard/domain/model/user_profile.dart';
+import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
+import 'package:mongo_ai/dashboard/domain/repository/folder_repository.dart';
 import 'package:mongo_ai/dashboard/domain/repository/team_repository.dart';
 import 'package:mongo_ai/dashboard/domain/repository/user_profile_repository.dart';
+import 'package:mongo_ai/dashboard/domain/repository/workbook_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final supabaseClientProvider = Provider<SupabaseClient>((ref) {
   return Supabase.instance.client;
 });
+// -----------------------------------
+// dashboard
 
 // -----------------------------------
 // user profile 가져오기
@@ -72,6 +84,43 @@ final getTeamsByCurrentUserProvider = FutureProvider<Result<List<Team>, AppExcep
   final repository = ref.watch(teamRepositoryProvider);
   return repository.getTeamsByCurrentUser();
 });
+
+// -----------------------------------
+// folder 가져오기
+final folderDataSourceProvider = Provider<FolderDataSource>((ref) {
+  final client = ref.watch(supabaseClientProvider);
+  return FolderDataSourceImpl(client: client);
+});
+
+final folderRepositoryProvider = Provider<FolderRepository>((ref) {
+  final dataSource = ref.watch(folderDataSourceProvider);
+  return FolderRepositoryImpl(dataSource: dataSource);
+});
+
+final getFoldersByCurrentTeamIdProvider = FutureProvider
+    .family<Result<List<Folder>, AppException>, int>((ref, teamId) async {
+  final repository = ref.watch(folderRepositoryProvider);
+  return repository.getFoldersByCurrentTeamId(teamId);
+});
+
+// -----------------------------------
+// workbook 가져오기
+final workbookDataSourceProvider = Provider<WorkbookDataSource>((ref) {
+  final client = ref.watch(supabaseClientProvider);
+  return WorkbookDataSourceImpl(client: client);
+});
+
+final workbookRepositoryProvider = Provider<WorkbookRepository>((ref) {
+  final dataSource = ref.watch(workbookDataSourceProvider);
+  return WorkbookRepositoryImpl(dataSource: dataSource);
+});
+
+final getWorkbooksByCurrentTeamIdProvider = FutureProvider
+    .family<Result<List<Workbook>, AppException>, int>((ref, teamId) async {
+  final repository = ref.watch(workbookRepositoryProvider);
+  return repository.getWorkbooksByCurrentTeamId(teamId);
+});
+
 
 // -----------------------------------
 // create
