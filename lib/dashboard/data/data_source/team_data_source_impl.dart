@@ -11,7 +11,7 @@ class TeamDataSourceImpl implements TeamDataSource {
   }) : _client = client;
 
   @override
-  Future<List<TeamDto>> getTeamsByCurrentUser() async {
+  Future<List<TeamDto>> getTeamsByCurrentUserId() async {
     final userId = _client.auth.currentUser!.id;
     final data = await _client
         .from('team_users_expand_view')
@@ -19,7 +19,7 @@ class TeamDataSourceImpl implements TeamDataSource {
         .eq('user_id', userId);
 
     return data
-        .map((e) => TeamDto.fromJson(Map<String, dynamic>.from(e)))
+        .map((e) => TeamDto.fromJson(e))
         .toList();
   }
 }

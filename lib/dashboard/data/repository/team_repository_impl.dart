@@ -17,7 +17,7 @@ class TeamRepositoryImpl implements TeamRepository {
   @override
   Future<Result<List<Team>, AppException>> getTeamsByCurrentUser() async {
     try {
-      final teamDtos = await _dataSource.getTeamsByCurrentUser();
+      final teamDtos = await _dataSource.getTeamsByCurrentUserId();
       final teams = teamDtos.map((e) => e.toTeam()).toList();
       return Result.success(teams);
     } catch (e) {
