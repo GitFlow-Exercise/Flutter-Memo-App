@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mongo_ai/create/presentation/controller/upload_raw_action.dart';
-import 'package:mongo_ai/create/presentation/controller/upload_raw_event.dart';
-import 'package:mongo_ai/create/presentation/controller/upload_raw_view_model.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mongo_ai/core/routing/routes.dart';
+import 'package:mongo_ai/create/presentation/create/controller/upload_raw_action.dart';
+import 'package:mongo_ai/create/presentation/create/controller/upload_raw_event.dart';
+import 'package:mongo_ai/create/presentation/create/controller/upload_raw_view_model.dart';
 
 import 'upload_raw_screen.dart';
 
@@ -41,6 +43,10 @@ class _UploadRawScreenRootState extends ConsumerState<UploadRawScreenRoot> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(message)));
+      case SuccessOCR(: final response):
+        if (mounted) {
+          context.go(Routes.createProblem, extra: response);
+        }
     }
   }
 

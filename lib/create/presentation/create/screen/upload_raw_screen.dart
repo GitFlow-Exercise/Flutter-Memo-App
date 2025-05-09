@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mongo_ai/core/constants/ai_constant.dart';
-import 'package:mongo_ai/create/presentation/controller/upload_raw_action.dart';
-import 'package:mongo_ai/create/presentation/controller/upload_raw_state.dart';
+import 'package:mongo_ai/create/presentation/create/controller/upload_raw_action.dart';
+import 'package:mongo_ai/create/presentation/create/controller/upload_raw_state.dart';
 import 'package:printing/printing.dart';
 
 class UploadRawScreen extends StatefulWidget {

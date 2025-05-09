@@ -1,0 +1,73 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
+import 'package:mongo_ai/create/presentation/create_template/controller/create_template_action.dart';
+import 'package:mongo_ai/create/presentation/create_template/controller/create_template_event.dart';
+import 'package:mongo_ai/create/presentation/create_template/controller/create_template_view_model.dart';
+import 'package:mongo_ai/create/presentation/create_template/screen/create_template_screen.dart';
+
+class CreateTemplateScreenRoot extends ConsumerStatefulWidget {
+  final OpenAiResponse response;
+
+  const CreateTemplateScreenRoot({super.key, required this.response});
+
+  @override
+  ConsumerState<CreateTemplateScreenRoot> createState() =>
+      _CreateTemplateScreenRootState();
+}
+
+class _CreateTemplateScreenRootState
+    extends ConsumerState<CreateTemplateScreenRoot> {
+  StreamSubscription? _subscription;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final viewModel = ref.watch(createTemplateViewModelProvider.notifier);
+
+      _subscription = viewModel.eventStream.listen(_handleEvent);
+
+      viewModel.setProblem(problem: widget.response);
+    });
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
+  }
+
+  void _handleEvent(CreateTemplateEvent event) {
+    switch (event) {
+      case ShowSnackBar(message: final message):
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(message)));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(createTemplateViewModelProvider);
+
+    return Scaffold(
+      body: CreateTemplateScreen(state: state, onAction: _handleAction),
+    );
+  }
+
+  void _handleAction(CreateTemplateAction action) {
+    final viewModel = ref.watch(createTemplateViewModelProvider.notifier);
+
+    switch (action) {
+      case OnTapColumnsTemplate(isSingleColumns: final isSingleColumns):
+        viewModel.toggleColumnsButton(isSingleColumns: isSingleColumns);
+      case OnChangeContents(contents: final contents):
+        viewModel.changedContents(contents: contents);
+      case CreateProblemForPdf(contents: final contents):
+        viewModel.generatePdf(contents: contents);
+    }
+  }
+}
