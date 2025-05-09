@@ -17,35 +17,33 @@ class CreateProblemViewModel extends _$CreateProblemViewModel {
   Stream<CreateProblemEvent> get eventStream => _eventController.stream;
 
   @override
-  CreateProblemState build() {
+  Future<CreateProblemState> build(OpenAiResponse response) async {
     ref.onDispose(() {
       _eventController.close();
     });
 
-    return const CreateProblemState();
+    await getPrompts();
+
+    return CreateProblemState(response: response);
   }
 
   // AI에 요청을 보내서 데이터 생성
   void createProblem(OpenAiBody body) async {
-    state = state.copyWith(problem: const AsyncValue.loading());
+    state = const AsyncValue.loading();
 
     final useCase = ref.read(createProblemUseCaseProvider);
     final result = await useCase.execute(body);
 
     switch (result) {
       case Success(data: final problem):
-        state = state.copyWith(problem: AsyncValue.data(problem));
+        state = state.whenData((cb) => cb.copyWith(problem: problem));
+
       case Error(error: final error):
-        state = state.copyWith(
-          problem: AsyncValue.error(
-            error,
-            error.stackTrace ?? StackTrace.empty,
-          ),
-        );
+        state = AsyncValue.error(error, error.stackTrace ?? StackTrace.empty);
     }
 
-    if (state.problem is AsyncError) {
-      final error = (state.problem as AsyncError).error;
+    if (state is AsyncError) {
+      final error = (state as AsyncError).error;
       _eventController.add(
         CreateProblemEvent.showSnackBar('정보를 불러오는데 실패했습니다: $error'),
       );
@@ -53,25 +51,22 @@ class CreateProblemViewModel extends _$CreateProblemViewModel {
   }
 
   // prompt 데이터 조회
-  void getPrompts() async {
-    state = state.copyWith(problemTypes: const AsyncValue.loading());
+  Future<void> getPrompts() async {
+    state = const AsyncValue.loading();
 
-    final result = ref.watch(getPromptsUseCaseProvider);
+    final result = await ref.watch(getPromptsUseCaseProvider.future);
 
     switch (result) {
       case Success(data: final prompts):
-        state = state.copyWith(problemTypes: AsyncValue.data(prompts));
-      case Error(error: final error):
-        state = state.copyWith(
-          problem: AsyncValue.error(
-            error,
-            error.stackTrace ?? StackTrace.empty,
-          ),
+        state = state.whenData(
+          (cb) => cb.copyWith(problemTypes: prompts, problemType: prompts[0]),
         );
+      case Error(error: final error):
+        state = AsyncValue.error(error, error.stackTrace ?? StackTrace.empty);
     }
 
-    if (state.problem is AsyncError) {
-      final error = (state.problem as AsyncError).error;
+    if (state is AsyncError) {
+      final error = (state as AsyncError).error;
       _eventController.add(
         CreateProblemEvent.showSnackBar('정보를 불러오는데 실패했습니다: $error'),
       );
@@ -80,11 +75,11 @@ class CreateProblemViewModel extends _$CreateProblemViewModel {
 
   // cleanText 데이터 할당
   void setResponse(OpenAiResponse response) {
-    state = state.copyWith(response: response);
+    state = state.whenData((cb) => cb.copyWith(response: response));
   }
 
   // 문제 유형 설정
   void changeProblemType(Prompt problemType) {
-    state = state.copyWith(problemType: problemType);
+    state = state.whenData((cb) => cb.copyWith(problemType: problemType));
   }
 }

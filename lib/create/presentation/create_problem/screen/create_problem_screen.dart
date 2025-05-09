@@ -11,7 +11,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../controller/create_problem_action.dart';
 
 class CreateProblemScreen extends StatelessWidget {
-  final CreateProblemState state;
+  final AsyncValue<CreateProblemState> state;
   final void Function(CreateProblemAction) onAction;
 
   const CreateProblemScreen({
@@ -24,7 +24,7 @@ class CreateProblemScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.white,
-      body: state.problem.when(
+      body: state.when(
         data: (value) {
           // ------ Todo ------
           // 다음 화면 라우팅 연결
@@ -33,50 +33,42 @@ class CreateProblemScreen extends StatelessWidget {
           return Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              state.problemTypes.when(
-                data: (value) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(value.length, (index) {
-                      final prompt = value[index];
-                      final promptName = prompt.name;
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: InkWell(
-                          onTap: () {
-                            onAction(CreateProblemAction.changeType(prompt));
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 8,
-                            ),
-                            decoration: BoxDecoration(
-                              color:
-                                  state.problemType == prompt
-                                      ? AppColor.black
-                                      : AppColor.white,
-                              border: Border.all(),
-                            ),
-                            child: Text(
-                              promptName,
-                              style: TextStyle(
-                                color:
-                                    state.problemType == prompt
-                                        ? AppColor.white
-                                        : AppColor.black,
-                              ),
-                            ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(value.problemTypes.length, (index) {
+                  final prompt = value.problemTypes[index];
+                  final promptName = prompt.name;
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: InkWell(
+                      onTap: () {
+                        onAction(CreateProblemAction.changeType(prompt));
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color:
+                              value.problemType == prompt
+                                  ? AppColor.black
+                                  : AppColor.white,
+                          border: Border.all(),
+                        ),
+                        child: Text(
+                          promptName,
+                          style: TextStyle(
+                            color:
+                                value.problemType == prompt
+                                    ? AppColor.white
+                                    : AppColor.black,
                           ),
                         ),
-                      );
-                    }),
+                      ),
+                    ),
                   );
-                },
-                error:
-                    (error, stackTrace) =>
-                        const Center(child: Text('에러가 발생하였습니다.')),
-                loading: () => const Center(child: CircularProgressIndicator()),
+                }),
               ),
               const Gap(40),
               SingleChildScrollView(
@@ -88,7 +80,7 @@ class CreateProblemScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(border: Border.all()),
                       width: MediaQuery.sizeOf(context).width / 3,
-                      child: Text(state.response!.getContent()),
+                      child: Text(value.response?.getContent() ?? ''),
                     ),
                     const Gap(12),
                     InkWell(

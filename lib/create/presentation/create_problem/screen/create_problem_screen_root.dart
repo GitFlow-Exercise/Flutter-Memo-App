@@ -24,7 +24,9 @@ class _CreateProblemScreenRootState
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final viewModel = ref.watch(createProblemViewModelProvider.notifier);
+      final viewModel = ref.watch(
+        createProblemViewModelProvider(widget.response).notifier,
+      );
       _handleAction(const CreateProblemAction.getPrompts());
 
       _subscription = viewModel.eventStream.listen(_handleEvent);
@@ -51,7 +53,7 @@ class _CreateProblemScreenRootState
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(createProblemViewModelProvider);
+    final state = ref.watch(createProblemViewModelProvider(widget.response));
 
     return Scaffold(
       body: CreateProblemScreen(state: state, onAction: _handleAction),
@@ -59,7 +61,9 @@ class _CreateProblemScreenRootState
   }
 
   Future<void> _handleAction(CreateProblemAction action) async {
-    final viewModel = ref.read(createProblemViewModelProvider.notifier);
+    final viewModel = ref.read(
+      createProblemViewModelProvider(widget.response).notifier,
+    );
     switch (action) {
       case ChangeType(type: final type):
         viewModel.changeProblemType(type);
