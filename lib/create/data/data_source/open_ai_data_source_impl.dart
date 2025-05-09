@@ -11,10 +11,12 @@ class OpenAiDataSourceImpl implements OpenAiDataSource {
 
   @override
   Future<OpenAiResponseDto> createProblem(OpenAIBodyDto body) async {
+    print('create body: ${body.toJson()}');
     final resp = await _client.functions.invoke(
       AiConstant.invokeFunction,
       body: body.toJson(),
     );
+    print('craeted body: ${resp.toString()}');
     return OpenAiResponseDto.fromJson(resp.data);
   }
 }

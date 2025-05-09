@@ -130,6 +130,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: Routes.createTemplate,
         builder: (context, state) {
           final extra = state.extra as OpenAiResponse;
+          print('extra: $extra');
           return CreateTemplateScreenRoot(response: extra);
         },
         redirect: (context, state) {

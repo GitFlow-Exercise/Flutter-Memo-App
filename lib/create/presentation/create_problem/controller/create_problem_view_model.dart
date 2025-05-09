@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/create/domain/model/prompt.dart';
+import 'package:mongo_ai/create/domain/model/request/input_content.dart';
+import 'package:mongo_ai/create/domain/model/request/message_input.dart';
 import 'package:mongo_ai/create/domain/model/request/open_ai_body.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_event.dart';
@@ -28,8 +30,23 @@ class CreateProblemViewModel extends _$CreateProblemViewModel {
   }
 
   // AI에 요청을 보내서 데이터 생성
-  void createProblem(OpenAiBody body) async {
+  void createProblem() async {
+    final pState = state.value;
     state = const AsyncValue.loading();
+    // 값이 제대로 할당되지 않은게 있다면
+    // 에러처리
+    if (pState == null || pState.response == null || pState.problem == null) {
+      state = const AsyncValue.error('에러가 발생하였습니다.', StackTrace.empty);
+      return;
+    }
+    final body = OpenAiBody(
+      input: [
+        MessageInput(
+          content: [InputContent.text(text: pState.response!.getContent())],
+        ),
+      ],
+      instructions: pState.problemType!.detail,
+    );
 
     final useCase = ref.read(createProblemUseCaseProvider);
     final result = await useCase.execute(body);

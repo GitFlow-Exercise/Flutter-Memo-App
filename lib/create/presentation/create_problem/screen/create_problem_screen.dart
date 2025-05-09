@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
-import 'package:mongo_ai/create/domain/model/request/input_content.dart';
-import 'package:mongo_ai/create/domain/model/request/message_input.dart';
-import 'package:mongo_ai/create/domain/model/request/open_ai_body.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -85,18 +82,7 @@ class CreateProblemScreen extends StatelessWidget {
                     const Gap(12),
                     InkWell(
                       onTap: () {
-                        onAction(
-                          CreateProblemAction.createProblem(
-                            OpenAiBody(
-                              input: [
-                                MessageInput(
-                                  content: [InputContent.text(text: '안녕 반가워')],
-                                ),
-                              ],
-                              instructions: '',
-                            ),
-                          ),
-                        );
+                        onAction(const CreateProblemAction.createProblem());
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(

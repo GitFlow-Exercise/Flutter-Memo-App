@@ -73,8 +73,8 @@ class _CreateProblemScreenRootState
     switch (action) {
       case ChangeType(type: final type):
         viewModel.changeProblemType(type);
-      case CreateProblem(body: final body):
-        viewModel.createProblem(body);
+      case CreateProblem():
+        viewModel.createProblem();
       case SetResponse(response: final response):
         viewModel.setResponse(response);
       case GetPrompts():
