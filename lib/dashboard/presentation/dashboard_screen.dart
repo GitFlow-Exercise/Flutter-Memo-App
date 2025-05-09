@@ -92,6 +92,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             },
                             child: const Text('새로 만들기'),
                           ),
+                          ElevatedButton(
+                            onPressed: () {
+                              ref.read(dashboardViewModelProvider.notifier).refreshAll();
+                            },
+                            child: const Text('새로고침'),
+                          ),
                         ],
                       ),
                       Expanded(
