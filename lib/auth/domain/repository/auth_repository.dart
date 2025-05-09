@@ -9,4 +9,5 @@ abstract class AuthRepository extends ChangeNotifier {
   Future<Result<void, AppException>> signUp(String email, String password);
   Future<Result<void, AppException>> signOut();
   Future<Result<bool, AppException>> isEmailExist(String email);
+  Future<Result<void, AppException>> saveUser();
 }

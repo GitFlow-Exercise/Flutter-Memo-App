@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
+import 'package:mongo_ai/auth/presentation/sign_up/controller/sign_up_event.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/controller/sign_up_state.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
@@ -9,6 +12,10 @@ part 'sign_up_view_model.g.dart';
 
 @riverpod
 class SignUpViewModel extends _$SignUpViewModel {
+  final _eventController = StreamController<SignUpEvent>();
+
+  Stream<SignUpEvent> get eventStream => _eventController.stream;
+
   @override
   SignUpState build() {
     return SignUpState(
@@ -34,12 +41,9 @@ class SignUpViewModel extends _$SignUpViewModel {
 
     switch (result) {
       case Success<bool, AppException>():
-        if (result.data) {
-          return false;
-        } else {
-          return true;
-        }
+        return true;
       case Error<bool, AppException>():
+        _eventController.add(SignUpEvent.showSnackBar(result.error.message));
         return false;
     }
   }
@@ -55,13 +59,19 @@ class SignUpViewModel extends _$SignUpViewModel {
       case Success<void, AppException>():
         return true;
       case Error<void, AppException>():
-        switch (result.error) {
-          case AppException.emailAlreadyExist:
-            break;
-          case AppException.unknown:
-            break;
-          default:
-        }
+        _eventController.add(SignUpEvent.showSnackBar(result.error.message));
+        return false;
+    }
+  }
+
+  Future<bool> saveUser() async {
+    final authRepository = ref.read(authRepositoryProvider);
+    final result = await authRepository.saveUser();
+    switch (result) {
+      case Success<void, AppException>():
+        return true;
+      case Error<void, AppException>():
+        _eventController.add(SignUpEvent.showSnackBar(result.error.message));
         return false;
     }
   }

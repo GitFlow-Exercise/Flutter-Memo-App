@@ -60,6 +60,12 @@ sealed class AppException with _$AppException implements Exception {
     StackTrace? stackTrace,
   }) = EmailAlreadyExistException;
 
+  const factory AppException.unAuthorized({
+    required String message,
+    Object? error,
+    StackTrace? stackTrace,
+  }) = UnAuthorizedException;
+
   String get userFriendlyMessage {
     switch (this) {
       case NetworkException():
@@ -79,6 +85,8 @@ sealed class AppException with _$AppException implements Exception {
         return '유효하지 않은 비밀번호입니다.';
       case EmailAlreadyExistException():
         return '이미 존재하는 이메일입니다.';
+      case UnAuthorizedException():
+        return '인증되지 않은 사용자입니다.';
     }
   }
 }
