@@ -112,9 +112,9 @@ final routerProvider = Provider<GoRouter>((ref) {
           final extra = state.extra as OpenAiResponse;
           return CreateProblemScreenRoot(extra);
         },
-        // redirect: (context, state) {
-        //   return AppRedirect.createProblemRedirect(state.extra);
-        // },
+        redirect: (context, state) {
+          return AppRedirect.createProblemRedirect(state.extra);
+        },
       ),
       GoRoute(
         path: Routes.pdfPreview,
@@ -122,20 +122,19 @@ final routerProvider = Provider<GoRouter>((ref) {
           final extra = state.extra as Uint8List;
           return PdfPreviewScreenRoot(pdfBytes: extra);
         },
-        // redirect: (context, state) {
-        //   return AppRedirect.createProblemRedirect(state.extra);
-        // },
+        redirect: (context, state) {
+          return AppRedirect.createProblemRedirect(state.extra);
+        },
       ),
       GoRoute(
         path: Routes.createTemplate,
         builder: (context, state) {
           final extra = state.extra as OpenAiResponse;
-          print('extra: $extra');
           return CreateTemplateScreenRoot(response: extra);
         },
-        // redirect: (context, state) {
-        //   return AppRedirect.createProblemRedirect(state.extra);
-        // },
+        redirect: (context, state) {
+          return AppRedirect.createProblemRedirect(state.extra);
+        },
       ),
     ],
   );
