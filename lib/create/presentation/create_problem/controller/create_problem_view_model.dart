@@ -56,8 +56,7 @@ class CreateProblemViewModel extends _$CreateProblemViewModel {
   void getPrompts() async {
     state = state.copyWith(problemTypes: const AsyncValue.loading());
 
-    final useCase = ref.read(getPromptsUseCaseProvider);
-    final result = await useCase.execute();
+    final result = ref.watch(getPromptsUseCaseProvider);
 
     switch (result) {
       case Success(data: final prompts):

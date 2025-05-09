@@ -1,4 +1,5 @@
 import 'package:mongo_ai/core/routing/routes.dart';
+import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 
 abstract class AppRedirect {
   // 인증 관련 redirect 로직입니다.
@@ -25,6 +26,15 @@ abstract class AppRedirect {
       return Routes.home;
     }
     // 원래 가려던 방향 null
+    return null;
+  }
+
+  static String? createProblemRedirect(Object? extra) {
+    // 만약 화면 이동간 필요한 데이터가 타입과 일치하지 않는다면,
+    // 강제로 문제 생성 처음 화면으로 이동시킵니다.
+    if (extra is! OpenAiResponse) {
+      return Routes.create;
+    }
     return null;
   }
 }
