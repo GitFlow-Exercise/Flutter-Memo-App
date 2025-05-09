@@ -133,11 +133,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           return CreateTemplateScreenRoot(response: extra);
         },
         redirect: (context, state) {
-          final extra = state.extra;
-          if (extra is! OpenAiResponse) {
-            return Routes.create;
-          }
-          return null;
+          return AppRedirect.createProblemRedirect(state.extra);
         },
       ),
     ],

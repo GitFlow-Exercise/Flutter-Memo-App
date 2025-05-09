@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_action.dart';
 import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_event.dart';
@@ -42,6 +44,10 @@ class _CreateProblemScreenRootState
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(message)));
+      case SuccessOpenAIRequest(:final response):
+        if (mounted) {
+          context.go(Routes.createTemplate, extra: response);
+        }
     }
   }
 
