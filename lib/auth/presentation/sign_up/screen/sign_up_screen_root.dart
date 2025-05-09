@@ -60,14 +60,14 @@ class _SignUpScreenRootState extends ConsumerState<SignUpScreenRoot> {
 
     switch (action) {
       case OnTapStart():
-        if (await viewModel.checkEmail()) {
+        if (await viewModel.verifyOtp()) {
           viewModel.isEmailCompleted = true;
         }
       case OnTapTermsOfUse():
         viewModel.toggleTermsOfUse();
       case OnTapSignUp():
-        final isUserRegistered = await viewModel.signUp();
-        if (isUserRegistered) {
+        final isPasswordUpdated = await viewModel.resetPassword();
+        if (isPasswordUpdated) {
           if (await viewModel.saveUser() && mounted) {
             context.go(Routes.signUpComplete);
           }
@@ -75,7 +75,9 @@ class _SignUpScreenRootState extends ConsumerState<SignUpScreenRoot> {
       case OnTapSignIn():
         context.go(Routes.signIn);
       case OnTapOtpSend():
-      // TODO: OTP 전송 로직 구현
+        if (await viewModel.checkEmail()) {
+          viewModel.sendOtp();
+        }
     }
   }
 }

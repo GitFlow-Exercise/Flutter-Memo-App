@@ -176,7 +176,7 @@ class AuthRepositoryImpl extends AuthRepository {
     } catch (e) {
       return Result.error(
         AppException.unknown(
-          message: '인증 번호 전송을 실패하였습니다.',
+          message: '인증번호 전송을 실패하였습니다.',
           error: e,
           stackTrace: StackTrace.current,
         ),
@@ -187,23 +187,13 @@ class AuthRepositoryImpl extends AuthRepository {
   @override
   Future<Result<void, AppException>> verifyOtp(String email, String otp) async {
     try {
-      final authResponse = await _authDataSource.verifyOtp(email, otp);
-
-      if (authResponse.session == null) {
-        return Result.error(
-          AppException.invalidOtp(
-            message: '인증 번호가 유효하지 않습니다.',
-            error: null,
-            stackTrace: StackTrace.current,
-          ),
-        );
-      }
+      await _authDataSource.verifyOtp(email, otp);
 
       return const Result.success(null);
     } catch (e) {
       return Result.error(
         AppException.unknown(
-          message: '알 수 없는 오류입니다.',
+          message: '인증번호가 일치하지 않습니다.',
           error: e,
           stackTrace: StackTrace.current,
         ),

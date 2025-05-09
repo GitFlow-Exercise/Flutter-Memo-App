@@ -74,9 +74,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   controller: widget.state.emailController,
                   validator: _emailValidator,
                   suffix: GestureDetector(
-                    onTap:
-                        () =>
-                            widget.onAction(const SignUpAction.onTapOtpSend()),
+                    onTap: () {
+                      FocusScope.of(context).unfocus();
+                      widget.onAction(const SignUpAction.onTapOtpSend());
+                    },
                     child: const Icon(Icons.send, color: Colors.grey),
                   ),
                 ),
