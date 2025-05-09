@@ -13,9 +13,6 @@ class WorkbookDto {
   @JsonKey(name: 'workbook_name')
   String? workbookName;
 
-  @JsonKey(name: 'workbook_label')
-  String? workbookLabel;
-
   @JsonKey(name: 'bookmark')
   bool? bookmark;
 
@@ -41,7 +38,6 @@ class WorkbookDto {
     this.workbookId,
     this.userId,
     this.workbookName,
-    this.workbookLabel,
     this.bookmark,
     this.level,
     this.folderId,
