@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mongo_ai/core/exception/app_exception.dart';
+import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/create/data/data_source/file_picker_data_source.dart';
 import 'package:mongo_ai/create/data/data_source/file_picker_data_source_impl.dart';
 import 'package:mongo_ai/create/data/data_source/open_ai_data_source.dart';
@@ -8,10 +10,12 @@ import 'package:mongo_ai/create/data/data_source/prompt_data_source_impl.dart';
 import 'package:mongo_ai/create/data/repository/file_picker_repository_impl.dart';
 import 'package:mongo_ai/create/data/repository/open_ai_repository_impl.dart';
 import 'package:mongo_ai/create/data/repository/prompt_repository_impl.dart';
+import 'package:mongo_ai/create/domain/model/prompt.dart';
 import 'package:mongo_ai/create/domain/repository/file_picker_repository.dart';
 import 'package:mongo_ai/create/domain/repository/open_ai_repository.dart';
 import 'package:mongo_ai/create/domain/repository/prompt_repository.dart';
 import 'package:mongo_ai/create/domain/use_case/create_problem_use_case.dart';
+import 'package:mongo_ai/create/domain/use_case/download_pdf_use_case.dart';
 import 'package:mongo_ai/create/domain/use_case/get_prompts_use_case.dart';
 import 'package:mongo_ai/create/domain/use_case/image_pick_file_use_case.dart';
 import 'package:mongo_ai/create/domain/use_case/pdf_pick_file_use_case.dart';
@@ -77,9 +81,14 @@ final pdfPickFileUseCaseProvider = Provider<PdfPickFileUseCase>((ref) {
   return PdfPickFileUseCase(filePickerRepository: repository);
 });
 
-final getPromptsUseCaseProvider = Provider<GetPromptsUseCase>((ref) {
-  final repository = ref.watch(promptRepositoryProvider);
-  return GetPromptsUseCase(repository);
+final getPromptsUseCaseProvider =
+    FutureProvider<Result<List<Prompt>, AppException>>((ref) {
+      final repository = ref.watch(promptRepositoryProvider);
+      return GetPromptsUseCase(repository).execute();
+    });
+
+final downloadPdfUseCase = Provider<DownloadPdfUseCase>((ref) {
+  return const DownloadPdfUseCase();
 });
 
 // -----------------------------------

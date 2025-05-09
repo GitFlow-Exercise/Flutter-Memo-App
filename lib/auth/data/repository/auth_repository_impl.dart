@@ -21,30 +21,9 @@ class AuthRepositoryImpl extends AuthRepository {
       notifyListeners();
       return const Result.success(null);
     } on AuthException catch (e) {
-      // Supabase가 제공하는 메시지를 기반으로 판단
-      final msg = e.message.toLowerCase();
-
-      if (msg.contains('email')) {
-        return Result.error(
-          AppException.invalidEmail(
-            message: '유효하지 않은 이메일입니다.',
-            error: e,
-            stackTrace: StackTrace.current,
-          ),
-        );
-      } else if (msg.contains('password')) {
-        return Result.error(
-          AppException.invalidPassword(
-            message: '유효하지 않은 비밀번호입니다.',
-            error: e,
-            stackTrace: StackTrace.current,
-          ),
-        );
-      }
-
       return Result.error(
         AppException.unknown(
-          message: '알 수 없는 오류입니다.',
+          message: '이메일 또는 비밀번호가 일치하지 않습니다.',
           error: e,
           stackTrace: StackTrace.current,
         ),
@@ -85,19 +64,9 @@ class AuthRepositoryImpl extends AuthRepository {
     String password,
   ) async {
     try {
-      final response = await _authDataSource.signUp(email, password);
-      if (response.user != null) {
-        // 중복 이메일 처리
-        return Result.error(
-          AppException.emailAlreadyExist(
-            message: '이미 존재하는 이메일입니다.',
-            error: const AuthException('이미 존재하는 이메일입니다.'),
-            stackTrace: StackTrace.current,
-          ),
-        );
-      } else {
-        return const Result.success(null);
-      }
+      await _authDataSource.signUp(email, password);
+
+      return const Result.success(null);
     } catch (e) {
       return Result.error(
         AppException.unknown(
@@ -125,6 +94,34 @@ class AuthRepositoryImpl extends AuthRepository {
       } else {
         return const Result.success(false);
       }
+    } catch (e) {
+      return Result.error(
+        AppException.unknown(
+          message: '알 수 없는 오류입니다.',
+          error: e,
+          stackTrace: StackTrace.current,
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Result<void, AppException>> saveUser() async {
+    try {
+      if (!isAuthenticated) {
+        return Result.error(
+          AppException.unAuthorized(
+            message: '인증되지 않은 사용자입니다.',
+            error: null,
+            stackTrace: StackTrace.current,
+          ),
+        );
+      }
+
+      await _authDataSource.saveUser();
+      // 사용자 정보 저장 성공
+      notifyListeners();
+      return const Result.success(null);
     } catch (e) {
       return Result.error(
         AppException.unknown(

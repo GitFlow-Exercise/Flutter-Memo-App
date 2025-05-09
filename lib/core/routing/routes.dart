@@ -10,4 +10,5 @@ abstract class Routes {
   static const create = '/create';
   static const createProblem = '/create-problem';
   static const createTemplate = '/create-template';
+  static const pdfPreview = '/pdf-preview';
 }
