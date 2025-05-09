@@ -32,13 +32,15 @@ class CreateProblemViewModel extends _$CreateProblemViewModel {
   // AI에 요청을 보내서 데이터 생성
   void createProblem() async {
     final pState = state.value;
-    state = const AsyncValue.loading();
     // 값이 제대로 할당되지 않은게 있다면
     // 에러처리
-    if (pState == null || pState.response == null || pState.problem == null) {
+    if (pState == null ||
+        pState.response == null ||
+        pState.problemType == null) {
       state = const AsyncValue.error('에러가 발생하였습니다.', StackTrace.empty);
       return;
     }
+    state = const AsyncValue.loading();
     final body = OpenAiBody(
       input: [
         MessageInput(
