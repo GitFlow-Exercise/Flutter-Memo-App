@@ -9,18 +9,19 @@ import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/routing/redirect.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
+import 'package:mongo_ai/create/presentation/create/screen/upload_raw_screen_root.dart';
+import 'package:mongo_ai/create/presentation/create_problem/screen/create_problem_screen_root.dart';
+import 'package:mongo_ai/create/presentation/create_template/screen/create_template_screen_root.dart';
 import 'package:mongo_ai/create/presentation/pdf_preview/screen/pdf_preview_screen_root.dart';
 import 'package:mongo_ai/dashboard/presentation/dashboard_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/home/home_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/recent_files/recent_files_screen.dart';
-import 'package:mongo_ai/create/presentation/screen/upload_raw_screen_root.dart';
-import 'package:mongo_ai/create/presentation/create_problem/screen/create_problem_screen_root.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final auth = ref.watch(authRepositoryProvider);
   return GoRouter(
-    initialLocation: Routes.signIn,
+    initialLocation: Routes.createTemplate,
     // auth 관찰해서 변화가 있다면,
     // 새로 reidrect 함수 실행
     refreshListenable: auth,
@@ -123,6 +124,20 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
         redirect: (context, state) {
           return AppRedirect.createProblemRedirect(state.extra);
+        },
+      ),
+      GoRoute(
+        path: Routes.createTemplate,
+        builder: (context, state) {
+          final extra = state.extra as OpenAiResponse;
+          return CreateTemplateScreenRoot(response: extra);
+        },
+        redirect: (context, state) {
+          final extra = state.extra;
+          if (extra is! OpenAiResponse) {
+            return Routes.create;
+          }
+          return null;
         },
       ),
     ],

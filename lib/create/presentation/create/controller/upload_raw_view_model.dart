@@ -10,8 +10,8 @@ import 'package:mongo_ai/create/domain/model/request/input_content.dart';
 import 'package:mongo_ai/create/domain/model/request/message_input.dart';
 import 'package:mongo_ai/create/domain/model/request/open_ai_body.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
-import 'package:mongo_ai/create/presentation/controller/upload_raw_event.dart';
-import 'package:mongo_ai/create/presentation/controller/upload_raw_state.dart';
+import 'package:mongo_ai/create/presentation/create/controller/upload_raw_event.dart';
+import 'package:mongo_ai/create/presentation/create/controller/upload_raw_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'upload_raw_view_model.g.dart';
@@ -101,8 +101,10 @@ class UploadRawViewModel extends _$UploadRawViewModel {
         return;
       }
 
-      //TODO: 다음 화면으로 데이터 이동
       debugPrint(text);
+      _eventController.add(
+        UploadRawEvent.successOCR(OpenAiResponse.justText(contents: text)),
+      );
       return;
     }
 
@@ -138,14 +140,13 @@ class UploadRawViewModel extends _$UploadRawViewModel {
       previousResponseId: null,
       instructions: 'Just OCR Result Please',
     );
-
     final result = await ref.read(createProblemUseCaseProvider).execute(body);
 
     switch (result) {
       case Success<OpenAiResponse, AppException>():
-        //TODO: 다음 화면으로 데이터 이동
         debugPrint(result.data.toString());
         state = state.copyWith(result: AsyncValue.data(result.data));
+        _eventController.add(UploadRawEvent.successOCR(result.data));
       case Error<OpenAiResponse, AppException>():
         _readyForSnackBar(result.error.userFriendlyMessage);
         state = state.copyWith(
