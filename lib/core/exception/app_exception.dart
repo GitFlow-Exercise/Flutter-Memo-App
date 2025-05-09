@@ -65,11 +65,18 @@ sealed class AppException with _$AppException implements Exception {
     Object? error,
     StackTrace? stackTrace,
   }) = PdfDownloadException;
+
   const factory AppException.unAuthorized({
     required String message,
     Object? error,
     StackTrace? stackTrace,
   }) = UnAuthorizedException;
+
+  const factory AppException.invalidOtp({
+    required String message,
+    Object? error,
+    StackTrace? stackTrace,
+  }) = InvalidOtpException;
 
   String get userFriendlyMessage {
     switch (this) {
@@ -94,6 +101,8 @@ sealed class AppException with _$AppException implements Exception {
         return '다운로드 중 에러가 발생하였습니다.';
       case UnAuthorizedException():
         return '인증되지 않은 사용자입니다.';
+      case InvalidOtpException():
+        return '유효하지 않은 인증번호입니다.';
     }
   }
 }
