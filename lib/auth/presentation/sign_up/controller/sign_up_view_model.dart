@@ -20,6 +20,7 @@ class SignUpViewModel extends _$SignUpViewModel {
   SignUpState build() {
     return SignUpState(
       emailController: TextEditingController(),
+      codeController: TextEditingController(),
       passwordController: TextEditingController(),
       passwordConfirmController: TextEditingController(),
     );

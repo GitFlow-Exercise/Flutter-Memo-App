@@ -74,6 +74,8 @@ class _SignUpScreenRootState extends ConsumerState<SignUpScreenRoot> {
         }
       case OnTapSignIn():
         context.go(Routes.signIn);
+      case OnTapOtpSend():
+      // TODO: OTP 전송 로직 구현
     }
   }
 }
