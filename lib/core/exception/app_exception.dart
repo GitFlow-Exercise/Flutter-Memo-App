@@ -65,6 +65,11 @@ sealed class AppException with _$AppException implements Exception {
     Object? error,
     StackTrace? stackTrace,
   }) = PdfDownloadException;
+  const factory AppException.unAuthorized({
+    required String message,
+    Object? error,
+    StackTrace? stackTrace,
+  }) = UnAuthorizedException;
 
   String get userFriendlyMessage {
     switch (this) {
@@ -87,6 +92,8 @@ sealed class AppException with _$AppException implements Exception {
         return '이미 존재하는 이메일입니다.';
       case PdfDownloadException():
         return '다운로드 중 에러가 발생하였습니다.';
+      case UnAuthorizedException():
+        return '인증되지 않은 사용자입니다.';
     }
   }
 }
