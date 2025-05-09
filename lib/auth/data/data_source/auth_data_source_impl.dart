@@ -50,6 +50,31 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
+  Future<UserResponse> resetPassword(String password) async {
+    final response = await _client.auth.updateUser(
+      UserAttributes(password: password),
+    );
+
+    return response;
+  }
+
+  @override
+  Future<void> sendOtp(String email) async {
+    await _client.auth.signInWithOtp(email: email);
+  }
+
+  @override
+  Future<AuthResponse> verifyOtp(String email, String otp) async {
+    final response = await _client.auth.verifyOTP(
+      email: email,
+      token: otp,
+      type: OtpType.email,
+    );
+
+    return response;
+  }
+
+  @override
   bool isAuthenticated() {
     final user = _client.auth.currentUser;
     if (user == null) {
