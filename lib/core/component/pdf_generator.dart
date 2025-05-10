@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 import 'package:web/web.dart'; // Blob, URL, document, HTMLAnchorElement 등
 
 /// PDF 문서 생성기
@@ -56,19 +57,16 @@ class PdfGenerator {
   }) async {
     try {
       // 0. pdf 한글 출력을 위한 폰트 설정
-      final fontData = await rootBundle.load(
-        'assets/fonts/Pretendard-Regular.ttf',
+      final font = await fontFromAssetBundle(
+        'assets/fonts/NanumGothicLight.ttf',
       );
-      final pretFont = pw.Font.ttf(fontData);
+      print('pdf font: $font');
 
       // 1. 스타일 설정
-      final effectiveHeaderStyle = _createHeaderStyle(
-        headerStyle,
-        font: pretFont,
-      );
+      final effectiveHeaderStyle = _createHeaderStyle(headerStyle, font: font);
       final effectiveContentStyle = _createContentStyle(
         contentsStyle,
-        font: pretFont,
+        font: font,
       );
 
       // 2. 콘텐츠 처리

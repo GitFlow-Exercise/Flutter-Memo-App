@@ -71,4 +71,4 @@ flutter:
   assets:
     - .env
     # pdf 파일을 위한 글꼴 추가
-    - assets/fonts/Pretendard-Regular.ttf
+    - assets/fonts/NanumGothicLight.ttf
