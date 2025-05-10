@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 import 'package:web/web.dart'; // Blob, URL, document, HTMLAnchorElement 등
 
 /// PDF 문서 생성기
@@ -55,9 +56,18 @@ class PdfGenerator {
     double columnSpacing = 10.0,
   }) async {
     try {
+      // 0. pdf 한글 출력을 위한 폰트 설정
+      final font = await fontFromAssetBundle(
+        'assets/fonts/NanumGothicLight.ttf',
+      );
+      print('pdf font: $font');
+
       // 1. 스타일 설정
-      final effectiveHeaderStyle = _createHeaderStyle(headerStyle);
-      final effectiveContentStyle = _createContentStyle(contentsStyle);
+      final effectiveHeaderStyle = _createHeaderStyle(headerStyle, font: font);
+      final effectiveContentStyle = _createContentStyle(
+        contentsStyle,
+        font: font,
+      );
 
       // 2. 콘텐츠 처리
       final contentLines = contentsText.split('\n');
@@ -309,16 +319,24 @@ class PdfGenerator {
   }
 
   /// 제목 스타일을 생성합니다
-  pw.TextStyle _createHeaderStyle(pw.TextStyle? baseStyle) {
+  pw.TextStyle _createHeaderStyle(
+    pw.TextStyle? baseStyle, {
+    required pw.Font font,
+  }) {
+    print('font: $font');
     return pw.TextStyle(
       fontSize: baseStyle?.fontSize ?? 24,
       fontWeight: pw.FontWeight.bold,
       color: baseStyle?.color,
+      font: font,
     );
   }
 
   /// 본문 스타일을 생성합니다
-  pw.TextStyle _createContentStyle(pw.TextStyle? baseStyle) {
+  pw.TextStyle _createContentStyle(
+    pw.TextStyle? baseStyle, {
+    required pw.Font font,
+  }) {
     return pw.TextStyle(
       fontSize: baseStyle?.fontSize ?? 12,
       color: baseStyle?.color,
