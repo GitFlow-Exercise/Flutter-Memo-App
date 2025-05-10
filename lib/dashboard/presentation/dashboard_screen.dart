@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mongo_ai/core/di/providers.dart';
+import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/dashboard/presentation/controller/dashboard_view_model.dart';
 
@@ -20,6 +22,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final dashboardNotifier = ref.read(dashboardViewModelProvider.notifier);
     return dashboardAsync.when(
       data: (dashboard) {
+        final folderAsync = ref.watch(getFoldersByCurrentTeamIdProvider(dashboard.currentTeamId));
         return Scaffold(
             appBar: AppBar(
               title: const Text('Mongo AI'),
@@ -68,19 +71,27 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                       const Divider(height: 32, thickness: 1),
                       const Text('폴더'),
-                      SizedBox(
-                        height: 200,
-                        child: ListView.builder(
-                          itemCount: dashboard.folderList.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              title: Text(dashboard.folderList[index].folderName),
-                              onTap: () {},
-                            );
-                          },
-                        ),
-                      ),
-                      // folderProvider 자리
+                      folderAsync.when(
+                        data: (result) {
+                          return switch(result) {
+                            Success(data: final data) => SizedBox(
+                              height: 200,
+                              child: ListView.builder(
+                                itemCount: data.length,
+                                itemBuilder: (context, index) {
+                                  return ListTile(
+                                    title: Text(data[index].folderName),
+                                    onTap: () {},
+                                  );
+                                },
+                              ),
+                            ),
+                            Error() => const SizedBox.shrink(),
+                          };
+                        },
+                        loading: () => const SizedBox.shrink(),
+                        error: (e, _) => const SizedBox.shrink(),
+                      )
                     ],
                   ),
                 ),
@@ -95,6 +106,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             },
                             child: const Text('새로 만들기'),
                           ),
+                          ElevatedButton(
+                            onPressed: () {
+                              dashboardNotifier.refreshFolderList(dashboard.currentTeamId);
+                            },
+                            child: const Text('폴더 새로고침'),
+                          )
                         ],
                       ),
                       Expanded(
