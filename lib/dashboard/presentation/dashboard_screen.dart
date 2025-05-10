@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mongo_ai/core/di/providers.dart';
-import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
-import 'package:mongo_ai/dashboard/domain/model/team.dart';
 import 'package:mongo_ai/dashboard/presentation/controller/dashboard_view_model.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   final StatefulNavigationShell navigationShell;

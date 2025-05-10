@@ -1,10 +1,7 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mongo_ai/core/state/current_team_id_state.dart';
 import 'package:mongo_ai/dashboard/domain/model/folder.dart';
-import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:mongo_ai/core/di/providers.dart';
-import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/dashboard/domain/model/team.dart';
 import 'package:mongo_ai/dashboard/domain/model/user_profile.dart';
@@ -40,7 +37,7 @@ class DashboardViewModel extends _$DashboardViewModel {
 
     final UserProfile userProfile = switch (userProfileResult) {
       Success(data: final data)   => data,
-      Error(error: final error)   => UserProfile(
+      Error()   => const UserProfile(
           userId: '',
           userName: ''
       ),
@@ -48,7 +45,7 @@ class DashboardViewModel extends _$DashboardViewModel {
 
     final List<Team> teamList = switch (teamResult) {
       Success(data: final data)   => data,
-      Error(error: final error)   => [],
+      Error()   => [],
     };
 
     List<Folder> folderList = [];
@@ -58,7 +55,7 @@ class DashboardViewModel extends _$DashboardViewModel {
 
       folderList = switch (foldersResult) {
         Success(data: final data)   => data,
-        Error(error: final error)   => [],
+        Error()   => [],
       };
     }
 
