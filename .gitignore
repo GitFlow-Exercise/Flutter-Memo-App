@@ -150,3 +150,4 @@ pubspec_overrides.yaml
 out/
 logs/
 
+devtools_options.yaml

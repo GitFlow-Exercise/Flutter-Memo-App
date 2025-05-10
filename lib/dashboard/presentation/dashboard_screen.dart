@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mongo_ai/core/di/providers.dart';
-import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
-import 'package:mongo_ai/dashboard/domain/model/team.dart';
-import 'package:mongo_ai/dashboard/presentation/dashboard_view_model.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:mongo_ai/dashboard/presentation/controller/dashboard_view_model.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   final StatefulNavigationShell navigationShell;
@@ -21,20 +17,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final dashboardAsync = ref.watch(dashboardViewModelProvider);
+    final dashboardNotifier = ref.read(dashboardViewModelProvider.notifier);
     return dashboardAsync.when(
       data: (dashboard) {
         return Scaffold(
             appBar: AppBar(
               title: const Text('Mongo AI'),
               actions: [
-                switch (dashboard.userProfileResult) {
-                  Success(data: final userProfile) => Text(
-                    userProfile.userName,
-                  ),
-                  Error(error: final error) => const Text(
-                    '이름 로딩중...'
-                  ),
-                },
+                Text(
+                  dashboard.userProfile.userName,
+                ),
               ],
             ),
             body: Row(
@@ -50,23 +42,21 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                   child: Column(
                     children: [
-                      switch (dashboard.teamsResult) {
-                        Success(data: final List<Team> teams) => SizedBox(
-                          height: 200,
-                          child: ListView.builder(
-                            itemCount: teams.length,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                title: Text(teams[index].teamName),
-                                onTap: () {},
-                              );
-                            },
-                          ),
+                      SizedBox(
+                        height: 200,
+                        child: ListView.builder(
+                          itemCount: dashboard.teamList.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(dashboard.teamList[index].teamName),
+                              tileColor: dashboard.currentTeamId == dashboard.teamList[index].teamId ? Colors.blue : Colors.white,
+                              onTap: () {
+                                dashboardNotifier.selectTeam(dashboard.teamList[index].teamId);
+                              },
+                            );
+                          },
                         ),
-                        Error(error: final error) => const Text(
-                            '이름 로딩중...'
-                        ),
-                      },
+                      ),
                       const Divider(height: 32, thickness: 1),
                       ElevatedButton(
                         onPressed: () => _onTap(context, 0),
@@ -77,6 +67,19 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         child: const Text('Recent Files'),
                       ),
                       const Divider(height: 32, thickness: 1),
+                      const Text('폴더'),
+                      SizedBox(
+                        height: 200,
+                        child: ListView.builder(
+                          itemCount: dashboard.folderList.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(dashboard.folderList[index].folderName),
+                              onTap: () {},
+                            );
+                          },
+                        ),
+                      ),
                       // folderProvider 자리
                     ],
                   ),
@@ -91,12 +94,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               context.push(Routes.create);
                             },
                             child: const Text('새로 만들기'),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              ref.read(dashboardViewModelProvider.notifier).refreshAll();
-                            },
-                            child: const Text('새로고침'),
                           ),
                         ],
                       ),

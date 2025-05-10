@@ -1,6 +1,5 @@
 import 'package:mongo_ai/dashboard/data/data_source/user_profile_data_source.dart';
 import 'package:mongo_ai/dashboard/data/dto/user_profile_dto.dart';
-import 'package:mongo_ai/dashboard/domain/model/user_profile.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UserProfileDataSourceImpl implements UserProfileDataSource {

@@ -1,6 +1,5 @@
 import 'package:mongo_ai/dashboard/data/data_source/team_data_source.dart';
 import 'package:mongo_ai/dashboard/data/dto/team_dto.dart';
-import 'package:mongo_ai/dashboard/domain/model/team.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class TeamDataSourceImpl implements TeamDataSource {
