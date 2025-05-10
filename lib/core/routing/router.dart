@@ -122,9 +122,9 @@ final routerProvider = Provider<GoRouter>((ref) {
           final extra = state.extra as Uint8List;
           return PdfPreviewScreenRoot(pdfBytes: extra);
         },
-        // redirect: (context, state) {
-        //   return AppRedirect.pdfPreviewRedirect(state.extra);
-        // },
+        redirect: (context, state) {
+          return AppRedirect.pdfPreviewRedirect(state.extra);
+        },
       ),
       GoRoute(
         path: Routes.createTemplate,
