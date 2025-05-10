@@ -20,6 +20,7 @@ class SignUpViewModel extends _$SignUpViewModel {
   SignUpState build() {
     return SignUpState(
       emailController: TextEditingController(),
+      codeController: TextEditingController(),
       passwordController: TextEditingController(),
       passwordConfirmController: TextEditingController(),
     );
@@ -67,6 +68,51 @@ class SignUpViewModel extends _$SignUpViewModel {
   Future<bool> saveUser() async {
     final authRepository = ref.read(authRepositoryProvider);
     final result = await authRepository.saveUser();
+    switch (result) {
+      case Success<void, AppException>():
+        return true;
+      case Error<void, AppException>():
+        _eventController.add(SignUpEvent.showSnackBar(result.error.message));
+        return false;
+    }
+  }
+
+  Future<void> sendOtp() async {
+    final authRepository = ref.read(authRepositoryProvider);
+    final result = await authRepository.sendOtp(state.emailController.text);
+
+    switch (result) {
+      case Success<void, AppException>():
+        _eventController.add(const SignUpEvent.showSnackBar('인증번호가 발송되었습니다.'));
+        return;
+      case Error<void, AppException>():
+        _eventController.add(SignUpEvent.showSnackBar(result.error.message));
+        return;
+    }
+  }
+
+  Future<bool> verifyOtp() async {
+    final authRepository = ref.read(authRepositoryProvider);
+    final result = await authRepository.verifyOtp(
+      state.emailController.text,
+      state.codeController.text,
+    );
+
+    switch (result) {
+      case Success<void, AppException>():
+        return true;
+      case Error<void, AppException>():
+        _eventController.add(SignUpEvent.showSnackBar(result.error.message));
+        return false;
+    }
+  }
+
+  Future<bool> resetPassword() async {
+    final authRepository = ref.read(authRepositoryProvider);
+    final result = await authRepository.resetPassword(
+      state.passwordController.text,
+    );
+
     switch (result) {
       case Success<void, AppException>():
         return true;

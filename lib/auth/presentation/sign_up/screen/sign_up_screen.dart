@@ -16,22 +16,26 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final formKey = GlobalKey<FormState>();
 
-  bool get _isFormValid => widget.state.emailController.text.isNotEmpty;
+  bool get _isFormValid =>
+      widget.state.emailController.text.isNotEmpty &&
+      widget.state.codeController.text.isNotEmpty;
 
   @override
   void initState() {
     super.initState();
-    widget.state.emailController.addListener(() {
-      setState(() {}); // 이메일 입력값이 변경될 때마다 화면 갱신
-    });
+    widget.state.emailController.addListener(_onInputChanged);
+    widget.state.codeController.addListener(_onInputChanged);
   }
 
   @override
   void dispose() {
-    widget.state.emailController.removeListener(() {
-      setState(() {});
-    });
+    widget.state.emailController.removeListener(_onInputChanged);
+    widget.state.codeController.removeListener(_onInputChanged);
     super.dispose();
+  }
+
+  void _onInputChanged() {
+    setState(() {});
   }
 
   @override
@@ -40,6 +44,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       backgroundColor: Colors.white,
       body: Center(
         child: Container(
+          width: MediaQuery.sizeOf(context).width * 0.25,
           padding: const EdgeInsets.all(32.0),
           color: Colors.white,
           child: Form(
@@ -64,13 +69,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   style: TextStyle(fontSize: 28, fontWeight: FontWeight.w500),
                 ),
                 const Gap(35),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.25,
-                  child: BaseTextField(
-                    hintText: '이메일 주소를 입력해주세요',
-                    controller: widget.state.emailController,
-                    validator: _validator,
+                BaseTextField(
+                  hintText: '이메일 주소를 입력해주세요',
+                  controller: widget.state.emailController,
+                  validator: _emailValidator,
+                  suffix: GestureDetector(
+                    onTap: () {
+                      FocusScope.of(context).unfocus();
+                      widget.onAction(const SignUpAction.onTapOtpSend());
+                    },
+                    child: const Icon(Icons.send, color: Colors.grey),
                   ),
+                ),
+                const Gap(20),
+                BaseTextField(
+                  hintText: '인증번호를 입력해주세요',
+                  controller: widget.state.codeController,
+                  validator: _codeValidator,
                 ),
                 const Gap(20),
                 GestureDetector(
@@ -80,7 +95,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     }
                   },
                   child: Container(
-                    width: MediaQuery.of(context).size.width * 0.25,
+                    width: double.infinity,
                     padding: const EdgeInsets.symmetric(vertical: 12.5),
                     decoration: BoxDecoration(
                       color:
@@ -117,7 +132,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  String? _validator(value) {
+  String? _emailValidator(value) {
     if (value == null || value.isEmpty) {
       return '이메일을 입력해주세요.';
     }
@@ -126,6 +141,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
     if (!emailRegex.hasMatch(value)) {
       return '유효한 이메일 주소를 입력해주세요.';
+    }
+    return null;
+  }
+
+  String? _codeValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return '인증번호를 입력해주세요.';
+    }
+    if (value.length != 6 || !RegExp(r'^[0-9]+$').hasMatch(value)) {
+      return '6자리 숫자를 입력해주세요.';
     }
     return null;
   }

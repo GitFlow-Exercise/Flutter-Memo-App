@@ -9,6 +9,7 @@ abstract class SignUpState with _$SignUpState {
     @Default(false) bool isEmailCompleted,
     @Default(false) bool isTermsOfUseChecked,
     required TextEditingController emailController,
+    required TextEditingController codeController,
     required TextEditingController passwordController,
     required TextEditingController passwordConfirmController,
   }) = _SignUpState;

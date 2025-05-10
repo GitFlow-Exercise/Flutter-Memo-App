@@ -134,6 +134,74 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
+  Future<Result<void, AppException>> resetPassword(String password) async {
+    try {
+      if (!isAuthenticated) {
+        return Result.error(
+          AppException.unAuthorized(
+            message: '인증되지 않은 사용자입니다.',
+            error: null,
+            stackTrace: StackTrace.current,
+          ),
+        );
+      }
+
+      final userResponse = await _authDataSource.resetPassword(password);
+      if (userResponse.user == null) {
+        return Result.error(
+          AppException.unknown(
+            message: '비밀번호 설정에 실패하였습니다.',
+            error: null,
+            stackTrace: StackTrace.current,
+          ),
+        );
+      }
+      return const Result.success(null);
+    } catch (e) {
+      return Result.error(
+        AppException.unknown(
+          message: '알 수 없는 오류입니다.',
+          error: e,
+          stackTrace: StackTrace.current,
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Result<void, AppException>> sendOtp(String email) async {
+    try {
+      await _authDataSource.sendOtp(email);
+      return const Result.success(null);
+    } catch (e) {
+      return Result.error(
+        AppException.unknown(
+          message: '인증번호 전송을 실패하였습니다.',
+          error: e,
+          stackTrace: StackTrace.current,
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Result<void, AppException>> verifyOtp(String email, String otp) async {
+    try {
+      await _authDataSource.verifyOtp(email, otp);
+
+      return const Result.success(null);
+    } catch (e) {
+      return Result.error(
+        AppException.unknown(
+          message: '인증번호가 일치하지 않습니다.',
+          error: e,
+          stackTrace: StackTrace.current,
+        ),
+      );
+    }
+  }
+
+  @override
   bool get isAuthenticated {
     return _authDataSource.isAuthenticated();
   }

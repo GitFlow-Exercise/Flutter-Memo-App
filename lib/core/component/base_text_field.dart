@@ -6,6 +6,7 @@ class BaseTextField extends StatelessWidget {
   final TextEditingController? controller;
   final void Function(String)? onChanged;
   final bool isObscure;
+  final Widget? suffix;
 
   const BaseTextField({
     super.key,
@@ -14,6 +15,7 @@ class BaseTextField extends StatelessWidget {
     this.controller,
     this.isObscure = false,
     this.onChanged,
+    this.suffix,
   });
 
   @override
@@ -22,6 +24,7 @@ class BaseTextField extends StatelessWidget {
       onChanged: onChanged,
       controller: controller,
       decoration: InputDecoration(
+        suffixIcon: suffix,
         hintText: hintText,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
