@@ -23,7 +23,6 @@ class _PdfPreviewScreenRootState extends ConsumerState<PdfPreviewScreenRoot> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      print("widget.pdfBytes: ${widget.pdfBytes}");
       final viewModel = ref.watch(pdfPreViewViewModelProvider.notifier);
       _handleAction(PdfPreViewActions.setPdfData(widget.pdfBytes));
       _subscription = viewModel.eventStream.listen(_handleEvent);

@@ -325,6 +325,7 @@ class PdfGenerator {
     pw.TextStyle? baseStyle, {
     required pw.Font font,
   }) {
+    print('font: $font');
     return pw.TextStyle(
       fontSize: baseStyle?.fontSize ?? 24,
       fontWeight: pw.FontWeight.bold,
