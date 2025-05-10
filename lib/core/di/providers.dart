@@ -98,7 +98,10 @@ final folderRepositoryProvider = Provider<FolderRepository>((ref) {
 });
 
 final getFoldersByCurrentTeamIdProvider = FutureProvider
-    .family<Result<List<Folder>, AppException>, int>((ref, teamId) async {
+    .family<Result<List<Folder>, AppException>, int?>((ref, teamId) async {
+  if (teamId == null) {
+    return const Result.success(<Folder>[]);
+  }
   final repository = ref.watch(folderRepositoryProvider);
   return repository.getFoldersByCurrentTeamId(teamId);
 });
