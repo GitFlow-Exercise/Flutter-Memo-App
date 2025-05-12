@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/result/result.dart';
+import 'package:mongo_ai/core/state/current_team_id_state.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/dashboard/domain/model/team.dart';
 
@@ -18,6 +19,7 @@ class TeamListWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final teamListAsync = ref.watch(getTeamsByCurrentUserProvider);
+    final currentTeamNotifier = ref.read(currentTeamIdStateProvider.notifier);
     return teamListAsync.when(
       data: (result) {
         // 성공적으로 로드한 팀 목록
@@ -36,8 +38,8 @@ class TeamListWidget extends ConsumerWidget {
           child: DropdownButton<int>(
             value: value,
             hint: const Text('선택된 팀이 없습니다', style: TextStyle(color: AppColor.black),),
-            onChanged: (int? id) {
-              if (id != null) onClickTeam(id);
+            onChanged: (int? teamId) {
+              if (teamId != null) onClickTeam(teamId);
             },
             underline: const SizedBox(), // 밑줄 안그리기
             isExpanded: true,

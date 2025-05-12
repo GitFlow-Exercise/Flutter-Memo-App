@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/result/result.dart';
+import 'package:mongo_ai/core/state/current_folder_id_state.dart';
+import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/dashboard/domain/model/folder.dart';
 
 class FolderListWidget extends ConsumerWidget {
-  final void Function(List<Folder> path) onClickFolder;
+  final void Function(int folderId) onClickFolder;
   final void Function() onClickExpand;
 
   const FolderListWidget({
@@ -18,6 +20,7 @@ class FolderListWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Todo : arguments 리팩토링 고민하기
     final folderList = ref.watch(getFoldersByCurrentTeamIdProvider);
+    final currentFolderId = ref.watch(currentFolderIdStateProvider);
     return folderList.when(
       data: (result) {
         return switch (result) {
@@ -29,8 +32,14 @@ class FolderListWidget extends ConsumerWidget {
                 final folder = data[index];
                 return ListTile(
                   title: Text(folder.folderName),
+                  leading: Icon(
+                    Icons.folder,
+                    color: folder.folderId == currentFolderId
+                        ? AppColor.primary
+                        : AppColor.black
+                  ),
                   onTap: () {
-                    onClickFolder([folder]);
+                    onClickFolder(folder.folderId);
                   },
                 );
               },
