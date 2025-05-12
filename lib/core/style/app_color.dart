@@ -16,6 +16,7 @@ abstract class AppColor {
   // Background Colors
   static const Color lightBlue = Color(0xFFF6F7FB); // 패널, 태그 배경
   static const Color paleBlue = Color(0xFFF0F1F7); // 선택된 항목 배경
+  static const Color textfieldGrey = Color(0xFFFAFAFA); // 선택된 항목 배경
 
   // Border / Other Colors
   static const Color lightGrayBorder = Color(0xFFE6E8F0); // 카드 테두리, 구분선
