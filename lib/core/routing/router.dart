@@ -8,6 +8,7 @@ import 'package:mongo_ai/auth/presentation/sign_up/screen/sign_up_screen_root.da
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/routing/redirect.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
+import 'package:mongo_ai/create/domain/model/create_workbook_params.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 import 'package:mongo_ai/create/presentation/create/screen/upload_raw_screen_root.dart';
 import 'package:mongo_ai/create/presentation/create_problem/screen/create_problem_screen_root.dart';
@@ -129,11 +130,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.createTemplate,
         builder: (context, state) {
-          final extra = state.extra as OpenAiResponse;
-          return CreateTemplateScreenRoot(response: extra);
+          final extra = state.extra as CreateTemplateParams;
+          return CreateTemplateScreenRoot(params: extra);
         },
         redirect: (context, state) {
-          return AppRedirect.createProblemRedirect(state.extra);
+          return AppRedirect.createTemplateRedirect(state.extra);
         },
       ),
     ],

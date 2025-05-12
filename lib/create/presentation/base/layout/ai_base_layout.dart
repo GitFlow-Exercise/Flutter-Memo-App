@@ -6,19 +6,21 @@ import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/create/presentation/base/widgets/ai_base_container.dart';
 import 'package:mongo_ai/create/presentation/base/widgets/bottom_navigate_button.dart';
 
+// AI 생성할 때 기본으로 구성되는 레이아웃
 class AiBaseLayout extends StatelessWidget {
   final String title; // 헤더 텍스트
   final String subTitle; // 서브 텍스트
   final int step; // 현재 단계
   final Widget child; // 내부 위젯
   final double maxWidth; // 최대 너비
+  final double maxHeight; // 최대 높이
   // 취소 눌렀을 때의 실행 함수
   // 기본값은 대시보드로 이동
   final VoidCallback? cancelTap;
   // 뒤로가기 눌렀을 때의 실행 함수
   // 기본값은 context.pop
   final VoidCallback? popTap;
-  final VoidCallback nextTap; // 다음단계 눌렀을 때의 실행 함수
+  final VoidCallback? nextTap; // 다음단계 눌렀을 때의 실행 함수
   final bool isPopTap; // 뒤로가기 버튼 여부
   const AiBaseLayout({
     super.key,
@@ -27,9 +29,10 @@ class AiBaseLayout extends StatelessWidget {
     required this.step,
     required this.child,
     required this.maxWidth,
+    required this.maxHeight,
     this.cancelTap,
     this.popTap,
-    required this.nextTap,
+    this.nextTap,
     required this.isPopTap,
   });
 
@@ -42,6 +45,7 @@ class AiBaseLayout extends StatelessWidget {
         subTitle: subTitle,
         step: step,
         maxWidth: maxWidth,
+        maxHeight: maxHeight,
         child: child,
       ),
       bottomNavigationBar: Container(
@@ -77,29 +81,32 @@ class AiBaseLayout extends StatelessWidget {
             ),
 
             if (isPopTap)
-              BottomNavigateButton(
-                onTap:
-                    popTap ??
-                    () {
-                      context.pop();
-                    },
-                border: Border.all(color: AppColor.lightGrayBorder),
-                bgColor: AppColor.white,
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.arrow_back,
-                      color: AppColor.lightGray,
-                      size: 16,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      '이전 단계',
-                      style: AppTextStyle.bodyRegular.copyWith(
+              Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: BottomNavigateButton(
+                  onTap:
+                      popTap ??
+                      () {
+                        context.pop();
+                      },
+                  border: Border.all(color: AppColor.lightGrayBorder),
+                  bgColor: AppColor.white,
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.arrow_back,
                         color: AppColor.lightGray,
+                        size: 16,
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 8),
+                      Text(
+                        '이전 단계',
+                        style: AppTextStyle.bodyRegular.copyWith(
+                          color: AppColor.lightGray,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             const SizedBox(width: 16),

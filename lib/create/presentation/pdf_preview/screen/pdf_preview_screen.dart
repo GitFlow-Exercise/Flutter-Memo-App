@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:mongo_ai/create/presentation/pdf_preview/controller/pdf_preview_action.dart';
 import 'package:mongo_ai/create/presentation/pdf_preview/controller/pdf_preview_state.dart';
 import 'package:printing/printing.dart';
@@ -24,9 +25,9 @@ class PdfPreviewScreen extends StatelessWidget {
               SingleChildScrollView(
                 child: Column(
                   children: [
-                    const SizedBox(height: 10),
+                    const Gap(10),
                     Text('선택된 PDF: ${state.fileName}'),
-                    const SizedBox(height: 10),
+                    const Gap(10),
                     Container(
                       height: 800,
                       width: 400,
@@ -46,7 +47,7 @@ class PdfPreviewScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(width: 40),
+              const Gap(40),
               InkWell(
                 onTap: () {
                   onAction(PdfPreViewActions.downloadPdf(value));

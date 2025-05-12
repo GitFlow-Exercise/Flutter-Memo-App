@@ -4,6 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
+import 'package:mongo_ai/create/presentation/base/layout/ai_base_layout.dart';
+import 'package:mongo_ai/create/presentation/base/widgets/ai_error_view.dart';
+import 'package:mongo_ai/create/presentation/base/widgets/ai_loading_view.dart';
 import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_action.dart';
 import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_event.dart';
 import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_view_model.dart';
@@ -60,9 +63,25 @@ class _CreateProblemScreenRootState
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(createProblemViewModelProvider(widget.response));
-
-    return Scaffold(
-      body: CreateProblemScreen(state: state, onAction: _handleAction),
+    // 기본 레이아웃으로 UI가 묶이는 현상이 발생해서
+    // Root 파일에서 로딩/에러/데이터 화면의 처리를 진행하도록 수정하였습니다.
+    return state.when(
+      data: (value) {
+        return AiBaseLayout(
+          title: '문제집 생성',
+          subTitle: '문제 유형 선택',
+          step: 2,
+          maxWidth: 750,
+          maxHeight: 800,
+          nextTap: () {
+            _handleAction(const CreateProblemAction.createProblem());
+          },
+          isPopTap: true,
+          child: CreateProblemScreen(state: value, onAction: _handleAction),
+        );
+      },
+      error: (error, stackTrace) => const AiErrorView(),
+      loading: () => const AiLoadingView(),
     );
   }
 
