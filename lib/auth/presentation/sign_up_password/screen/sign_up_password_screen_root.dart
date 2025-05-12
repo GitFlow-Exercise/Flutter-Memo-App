@@ -8,9 +8,9 @@ import 'package:mongo_ai/auth/presentation/sign_up_password/controller/sign_up_p
 import 'package:mongo_ai/auth/presentation/sign_up_password/screen/sign_up_password_screen.dart';
 
 class SignUpPasswordScreenRoot extends ConsumerStatefulWidget {
-  final SignUpPasswordViewModel viewModel;
+  final String email;
 
-  const SignUpPasswordScreenRoot({super.key, required this.viewModel});
+  const SignUpPasswordScreenRoot({super.key, required this.email});
 
   @override
   ConsumerState<SignUpPasswordScreenRoot> createState() =>
@@ -25,7 +25,7 @@ class _SignUpPasswordScreenRootState
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final viewModel = ref.watch(signUpPasswordViewModelProvider.notifier);
+      final viewModel = ref.watch(signUpPasswordViewModelProvider(widget.email).notifier);
 
       _subscription = viewModel.eventStream.listen(_handleEvent);
     });
@@ -48,7 +48,7 @@ class _SignUpPasswordScreenRootState
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(signUpPasswordViewModelProvider);
+    final state = ref.watch(signUpPasswordViewModelProvider(widget.email));
 
     return Scaffold(
       body: SignUpPasswordScreen(state: state, onAction: _handleAction),

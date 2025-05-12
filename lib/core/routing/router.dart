@@ -6,6 +6,7 @@ import 'package:mongo_ai/auth/presentation/check_otp/screen/check_top_screen_roo
 import 'package:mongo_ai/auth/presentation/sign_in/screen/sign_in_screen_root.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/screen/sign_up_complete_screen.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/screen/sign_up_screen_root.dart';
+import 'package:mongo_ai/auth/presentation/sign_up_password/screen/sign_up_password_screen_root.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/routing/redirect.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
@@ -70,7 +71,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: Routes.checkOtp,
         builder: (context, state) {
           final email = state.extra as String;
-          return CheckOtpScreenRoot(email: email);
+          return SignUpPasswordScreenRoot(email: email);
         },
       ),
       GoRoute(

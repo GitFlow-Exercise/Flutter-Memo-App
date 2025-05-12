@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mongo_ai/auth/presentation/sign_up_password/controller/sign_up_password_event.dart';
 import 'package:mongo_ai/auth/presentation/sign_up_password/controller/sign_up_password_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -12,11 +14,20 @@ class SignUpPasswordViewModel extends _$SignUpPasswordViewModel {
   Stream<SignUpPasswordEvent> get eventStream => _eventController.stream;
 
   @override
-  SignUpPasswordState build() {
+  Future<SignUpPasswordState> build(String email) async {
+    final passwordController = TextEditingController();
+    final confirmPasswordController = TextEditingController();
+
     ref.onDispose(() {
       _eventController.close();
+      passwordController.dispose();
+      confirmPasswordController.dispose();
     });
 
-    return const SignUpPasswordState();
+    return SignUpPasswordState(
+      email: email,
+      passwordController: passwordController,
+      confirmPasswordController: confirmPasswordController,
+    );
   }
 }
