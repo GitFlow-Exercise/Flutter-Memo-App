@@ -49,6 +49,7 @@ class SignUpViewModel extends _$SignUpViewModel {
     }
   }
 
+  @deprecated
   Future<bool> signUp() async {
     final authRepository = ref.read(authRepositoryProvider);
     final result = await authRepository.signUp(
@@ -65,6 +66,7 @@ class SignUpViewModel extends _$SignUpViewModel {
     }
   }
 
+  @deprecated
   Future<bool> saveUser() async {
     final authRepository = ref.read(authRepositoryProvider);
     final result = await authRepository.saveUser();
@@ -77,12 +79,14 @@ class SignUpViewModel extends _$SignUpViewModel {
     }
   }
 
+  @deprecated
   Future<void> sendOtp() async {
     final authRepository = ref.read(authRepositoryProvider);
     final result = await authRepository.sendOtp(state.emailController.text);
 
     switch (result) {
       case Success<void, AppException>():
+        //TODO: nav
         _eventController.add(const SignUpEvent.showSnackBar('인증번호가 발송되었습니다.'));
         return;
       case Error<void, AppException>():
@@ -91,6 +95,7 @@ class SignUpViewModel extends _$SignUpViewModel {
     }
   }
 
+  @deprecated
   Future<bool> verifyOtp() async {
     final authRepository = ref.read(authRepositoryProvider);
     final result = await authRepository.verifyOtp(
@@ -107,6 +112,7 @@ class SignUpViewModel extends _$SignUpViewModel {
     }
   }
 
+  @deprecated
   Future<bool> resetPassword() async {
     final authRepository = ref.read(authRepositoryProvider);
     final result = await authRepository.resetPassword(

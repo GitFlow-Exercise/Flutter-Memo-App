@@ -43,6 +43,8 @@ class _SignUpScreenRootState extends ConsumerState<SignUpScreenRoot> {
           context,
         ).showSnackBar(SnackBar(content: Text(message)));
         break;
+      case SuccessSendOtp():
+
     }
   }
 
@@ -78,6 +80,7 @@ class _SignUpScreenRootState extends ConsumerState<SignUpScreenRoot> {
         if (await viewModel.checkEmail()) {
           viewModel.sendOtp();
         }
+
     }
   }
 }
