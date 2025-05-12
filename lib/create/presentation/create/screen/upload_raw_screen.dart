@@ -5,7 +5,7 @@ import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/create/presentation/create/controller/upload_raw_action.dart';
 import 'package:mongo_ai/create/presentation/create/controller/upload_raw_state.dart';
-import 'package:mongo_ai/create/presentation/create/widgets/upload_raw_text_field.dart';
+import 'package:mongo_ai/create/presentation/create/widgets/upload_input_widgets.dart';
 import 'package:printing/printing.dart';
 
 class UploadRawScreen extends StatefulWidget {
@@ -86,14 +86,7 @@ class _UploadRawScreenState extends State<UploadRawScreen> {
               const SizedBox(height: 30),
 
               if (widget.state.selectedUploadType == AiConstant.inputText) ...[
-                Text(
-                  '텍스트 입력',
-                  style: AppTextStyle.bodyMedium.copyWith(
-                    color: AppColor.mediumGray,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                UploadRawTextField(
+                UploadInputText(
                   onChanged: (_) {
                     setState(() {});
                   },
@@ -110,28 +103,13 @@ class _UploadRawScreenState extends State<UploadRawScreen> {
                 ),
                 widget.state.pickFile.when(
                   data: (file) {
-                    if (file != null) {
-                      return Column(
-                        children: [
-                          const SizedBox(height: 10),
-                          Text('선택된 이미지: ${file.fileName}'),
-                          const SizedBox(height: 10),
-                          Container(
-                            height: 500,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey),
-                            ),
-                            child: Center(
-                              child: Image.memory(
-                                file.bytes,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
+                    return UploadInputImage(
+                      file: file,
+                      onTap:
+                          () => widget.onAction(
+                            const UploadRawAction.pickImage(),
                           ),
-                        ],
-                      );
-                    }
-                    return const SizedBox.shrink();
+                    );
                   },
                   loading: () {
                     final file = widget.state.pickFile.value;
