@@ -77,29 +77,32 @@ class AiBaseLayout extends StatelessWidget {
             ),
 
             if (isPopTap)
-              BottomNavigateButton(
-                onTap:
-                    popTap ??
-                    () {
-                      context.pop();
-                    },
-                border: Border.all(color: AppColor.lightGrayBorder),
-                bgColor: AppColor.white,
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.arrow_back,
-                      color: AppColor.lightGray,
-                      size: 16,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      '이전 단계',
-                      style: AppTextStyle.bodyRegular.copyWith(
+              Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: BottomNavigateButton(
+                  onTap:
+                      popTap ??
+                      () {
+                        context.pop();
+                      },
+                  border: Border.all(color: AppColor.lightGrayBorder),
+                  bgColor: AppColor.white,
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.arrow_back,
                         color: AppColor.lightGray,
+                        size: 16,
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 8),
+                      Text(
+                        '이전 단계',
+                        style: AppTextStyle.bodyRegular.copyWith(
+                          color: AppColor.lightGray,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             const SizedBox(width: 16),

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
+import 'package:mongo_ai/create/presentation/base/layout/ai_base_layout.dart';
 import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_action.dart';
 import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_event.dart';
 import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_view_model.dart';
@@ -61,8 +62,16 @@ class _CreateProblemScreenRootState
   Widget build(BuildContext context) {
     final state = ref.watch(createProblemViewModelProvider(widget.response));
 
-    return Scaffold(
-      body: CreateProblemScreen(state: state, onAction: _handleAction),
+    return AiBaseLayout(
+      title: '문제집 생성',
+      subTitle: '문제 유형 선택',
+      step: 2,
+      maxWidth: 750,
+      nextTap: () {
+        _handleAction(const CreateProblemAction.createProblem());
+      },
+      isPopTap: true,
+      child: CreateProblemScreen(state: state, onAction: _handleAction),
     );
   }
 
