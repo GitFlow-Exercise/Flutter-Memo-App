@@ -6,5 +6,5 @@ part 'sign_up_event.freezed.dart';
 sealed class SignUpEvent with _$SignUpEvent {
   const factory SignUpEvent.showSnackBar(String message) = ShowSnackBar;
 
-  const factory SignUpEvent.successSendOtp() = SuccessSendOtp;
+  const factory SignUpEvent.generateTempUserId(String tempUserId) = GenerateTempUserId;
 }

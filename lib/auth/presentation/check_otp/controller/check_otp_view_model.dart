@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:mongo_ai/auth/domain/model/temp_user.dart';
 import 'package:mongo_ai/auth/presentation/check_otp/controller/check_otp_event.dart';
 import 'package:mongo_ai/auth/presentation/check_otp/controller/check_otp_state.dart';
 import 'package:mongo_ai/core/di/providers.dart';
@@ -17,7 +18,7 @@ class CheckOtpViewModel extends _$CheckOtpViewModel {
   Stream<CheckOtpEvent> get eventStream => _eventController.stream;
 
   @override
-  Future<CheckOtpState> build(String email) async {
+  Future<CheckOtpState> build(String tempUserId) async {
     final codeController = TextEditingController();
 
     ref.onDispose(() {
@@ -25,17 +26,30 @@ class CheckOtpViewModel extends _$CheckOtpViewModel {
       codeController.dispose();
     });
 
-    return CheckOtpState(email: email, codeController: codeController);
+    return CheckOtpState(tempUserId: tempUserId, codeController: codeController);
   }
 
   Future<bool> verifyOtp() async {
+    final tempStorageRepository = ref.read(tempStorageRepositoryProvider);
+    final tempStoreResult = tempStorageRepository.retrieveData(state.value?.tempUserId ?? '');
+
+    TempUser tempUser;
+
+    switch (tempStoreResult) {
+      case Success<TempUser, AppException>():
+        tempUser = tempStoreResult.data;
+      case Error<TempUser, AppException>():
+        _eventController.add(CheckOtpEvent.showSnackBar(tempStoreResult.error.message));
+        return false;
+    }
+
     final authRepository = ref.read(authRepositoryProvider);
-    final email = state.value?.email ?? '';
     final code = state.value?.codeController.text ?? '';
-    final result = await authRepository.verifyOtp(email, code);
+    final result = await authRepository.verifyOtp(tempUser.email, code);
 
     switch (result) {
       case Success<void, AppException>():
+        // TODO: 회원가입 요청 필요
         return true;
       case Error<void, AppException>():
         _eventController.add(CheckOtpEvent.showSnackBar(result.error.message));

@@ -70,8 +70,15 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.signUpPassword,
         builder: (context, state) {
-          final email = state.extra as String;
-          return SignUpPasswordScreenRoot(email: email);
+          final tempUserId = state.extra as String;
+          return SignUpPasswordScreenRoot(tempUserId: tempUserId,);
+        },
+      ),
+      GoRoute(
+        path: Routes.checkOtp,
+        builder: (context, state) {
+          final tempUserId = state.extra as String;
+          return CheckOtpScreenRoot(tempUserId: tempUserId);
         },
       ),
       GoRoute(

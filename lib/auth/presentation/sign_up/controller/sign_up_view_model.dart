@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
+import 'package:mongo_ai/auth/domain/model/temp_user.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/controller/sign_up_event.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/controller/sign_up_state.dart';
 import 'package:mongo_ai/core/di/providers.dart';
@@ -35,7 +36,7 @@ class SignUpViewModel extends _$SignUpViewModel {
     state = state.copyWith(isTermsOfUseChecked: !state.isTermsOfUseChecked);
   }
 
-  Future<bool> checkEmail() async {
+  void checkEmail() async {
     final authRepository = ref.read(authRepositoryProvider);
     final result = await authRepository.isEmailExist(
       state.emailController.text,
@@ -43,10 +44,17 @@ class SignUpViewModel extends _$SignUpViewModel {
 
     switch (result) {
       case Success<bool, AppException>():
-        return true;
+
+        final tempStorageRepository = ref.read(tempStorageRepositoryProvider);
+
+        final tempUser = TempUser(email: state.emailController.text, password: '');
+
+        final tempStoreId = tempStorageRepository.storeData(tempUser);
+
+      _eventController.add(SignUpEvent.generateTempUserId(tempStoreId));
+
       case Error<bool, AppException>():
         _eventController.add(SignUpEvent.showSnackBar(result.error.message));
-        return false;
     }
   }
 

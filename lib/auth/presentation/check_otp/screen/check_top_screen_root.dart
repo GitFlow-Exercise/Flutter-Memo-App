@@ -8,9 +8,9 @@ import 'package:mongo_ai/auth/presentation/check_otp/controller/check_otp_view_m
 import 'package:mongo_ai/auth/presentation/check_otp/screen/check_otp_screen.dart';
 
 class CheckOtpScreenRoot extends ConsumerStatefulWidget {
-  final String email;
+  final String tempUserId;
 
-  const CheckOtpScreenRoot({super.key, required this.email});
+  const CheckOtpScreenRoot({super.key, required this.tempUserId});
 
   @override
   ConsumerState<CheckOtpScreenRoot> createState() => _CheckOtpScreenRootState();
@@ -24,7 +24,7 @@ class _CheckOtpScreenRootState extends ConsumerState<CheckOtpScreenRoot> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final viewModel = ref.watch(
-        checkOtpViewModelProvider(widget.email).notifier,
+        checkOtpViewModelProvider(widget.tempUserId).notifier,
       );
 
       _subscription = viewModel.eventStream.listen(_handleEvent);
@@ -48,7 +48,7 @@ class _CheckOtpScreenRootState extends ConsumerState<CheckOtpScreenRoot> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(checkOtpViewModelProvider(widget.email));
+    final state = ref.watch(checkOtpViewModelProvider(widget.tempUserId));
 
     return Scaffold(
       body: CheckOtpScreen(state: state, onAction: _handleAction),

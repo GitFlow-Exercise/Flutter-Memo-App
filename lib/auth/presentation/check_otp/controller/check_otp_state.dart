@@ -6,7 +6,7 @@ part 'check_otp_state.freezed.dart';
 @freezed
 abstract class CheckOtpState with _$CheckOtpState {
   const factory CheckOtpState({
-    required String email,
+    required String tempUserId,
     required TextEditingController codeController,
   }) = _CheckOtpState;
 }

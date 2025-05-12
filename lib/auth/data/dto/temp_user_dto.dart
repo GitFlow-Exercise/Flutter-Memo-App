@@ -6,9 +6,8 @@ part 'temp_user_dto.g.dart';
 class TempUserDto {
   String? email;
   String? password;
-  String? otp;
 
-  TempUserDto({this.email, this.password, this.otp});
+  TempUserDto({this.email, this.password});
 
   factory TempUserDto.fromJson(Map<String, dynamic> json) => _$TempUserDtoFromJson(json);
 

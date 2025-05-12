@@ -7,6 +7,5 @@ abstract class TempUser with _$TempUser {
   const factory TempUser({
     required String email,
     required String password,
-    required String otp,
   }) = _TempUser;
 }

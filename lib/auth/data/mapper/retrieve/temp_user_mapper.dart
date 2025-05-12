@@ -6,7 +6,6 @@ extension TempUserMapper on TempUserDto {
     return TempUser(
       email: email ?? '',
       password: password ?? '',
-      otp: otp ?? '',
     );
   }
 }
