@@ -45,6 +45,14 @@ class CheckOtpViewModel extends _$CheckOtpViewModel {
 
     final authRepository = ref.read(authRepositoryProvider);
     final code = state.value?.codeController.text ?? '';
+
+    if (code.trim().isEmpty) {
+      _eventController.add(
+        const CheckOtpEvent.showSnackBar('인증 코드를 입력해 주세요.'),
+      );
+      return false;
+    }
+
     final result = await authRepository.verifyOtp(tempUser.email, code);
 
     switch (result) {
