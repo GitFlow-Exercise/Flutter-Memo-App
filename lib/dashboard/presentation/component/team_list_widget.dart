@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
+import 'package:mongo_ai/dashboard/domain/model/team.dart';
 
 class TeamListWidget extends ConsumerWidget {
   final void Function(int teamId) onClickTeam;
@@ -16,38 +17,54 @@ class TeamListWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final teamList = ref.watch(getTeamsByCurrentUserProvider);
-    return Container(
-      color: AppColor.white,
-      child: teamList.when(
-        data: (result) {
-          return switch (result) {
-            Success(data: final data) => SizedBox(
-              height: 200,
-              child: ListView.builder(
-                itemCount: data.length,
-                itemBuilder: (context, index) {
-                  final team = data[index];
-                  return ListTile(
-                    title: Text(
-                      team.teamName,
-                      style: TextStyle(
-                        color: currentTeamId == team.teamId
-                            ? Colors.cyan
-                            : AppColor.black,
-                      ),
-                    ),
-                    onTap: () => onClickTeam(team.teamId),
-                  );
-                },
-              ),
-            ),
-            Error() => const SizedBox.shrink(),
-          };
-        },
-        loading: () => const SizedBox.shrink(),
-        error: (e, _) => const SizedBox.shrink(),
-      ),
+    final teamListAsync = ref.watch(getTeamsByCurrentUserProvider);
+    return teamListAsync.when(
+      data: (result) {
+        // 성공적으로 로드한 팀 목록
+        final teamList = switch (result) {
+          Success(data: final data) => data,
+          Error() => <Team>[],
+        };
+        final int? value = currentTeamId;
+
+        return Container(
+          decoration: BoxDecoration(
+            color: AppColor.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: DropdownButton<int>(
+            value: value,
+            hint: const Text('선택된 팀이 없습니다', style: TextStyle(color: AppColor.black),),
+            onChanged: (int? id) {
+              if (id != null) onClickTeam(id);
+            },
+            underline: const SizedBox(), // 밑줄 안그리기
+            isExpanded: true,
+            style: const TextStyle(color: AppColor.black),
+            dropdownColor: AppColor.white,
+            icon: const Icon(Icons.keyboard_arrow_down, color: AppColor.black),
+
+            // 드롭다운 텍스트
+            items: teamList.map((team) {
+              return DropdownMenuItem<int>(
+                value: team.teamId,
+                child: Text(team.teamName),
+              );
+            }).toList(),
+            selectedItemBuilder: (context) {
+              return teamList.map((team) {
+                return Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(team.teamName),
+                );
+              }).toList();
+            },
+          ),
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
     );
   }
 }
