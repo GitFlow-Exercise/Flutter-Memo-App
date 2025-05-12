@@ -15,11 +15,6 @@ class FolderScreen extends ConsumerWidget {
       color: AppColor.white,
       child: Column(
         children: [
-          Row(
-            children: [
-              ElevatedButton(onPressed: () {}, child: const Text('시간순 정렬')),
-            ],
-          ),
           Expanded(
             child: state.workbookList.when(
               data: (data) {
