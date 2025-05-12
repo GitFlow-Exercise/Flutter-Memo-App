@@ -22,7 +22,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
   Stream<UploadRawEvent> get eventStream => _eventController.stream;
 
   @override
-  UploadRawState build() {
+  Future<UploadRawState> build() async {
     final textController = TextEditingController();
 
     ref.onDispose(() {
@@ -35,14 +35,18 @@ class UploadRawViewModel extends _$UploadRawViewModel {
 
   void handleSelectUploadType(String type) {
     final isTextType = type == AiConstant.inputText;
-
-    state = state.copyWith(
-      selectedUploadType: type,
-      pickFile: isTextType ? state.pickFile : null,
-    );
+    state = state.whenData((cb) {
+      return cb.copyWith(
+        selectedUploadType: type,
+        pickFile: isTextType ? cb.pickFile : null,
+      );
+    });
 
     if (!isTextType) {
-      state.textController.clear();
+      state = state.whenData((cb) {
+        cb.textController.clear();
+        return cb;
+      });
     }
   }
 
@@ -52,7 +56,9 @@ class UploadRawViewModel extends _$UploadRawViewModel {
 
     switch (result) {
       case Success():
-        state = state.copyWith(pickFile: result.data);
+        state = state.whenData((cb) {
+          return cb.copyWith(pickFile: result.data);
+        });
         break;
       case Error(:final error):
         _readyForSnackBar(error.userFriendlyMessage);
@@ -67,7 +73,9 @@ class UploadRawViewModel extends _$UploadRawViewModel {
 
     switch (result) {
       case Success():
-        state = state.copyWith(pickFile: result.data);
+        state = state.whenData((cb) {
+          return cb.copyWith(pickFile: result.data);
+        });
         break;
       case Error(:final error):
         _readyForSnackBar(error.userFriendlyMessage);
@@ -77,8 +85,13 @@ class UploadRawViewModel extends _$UploadRawViewModel {
   }
 
   Future<void> handleSubmitForm(BuildContext context) async {
-    if (state.selectedUploadType == AiConstant.inputText) {
-      final text = state.textController.text.trim();
+    final pState = state.value;
+    if (pState == null) {
+      _readyForSnackBar('에러가 발생하였습니다. 다시 시도해주세요.');
+      return;
+    }
+    if (pState.selectedUploadType == AiConstant.inputText) {
+      final text = pState.textController.text.trim();
       if (text.isEmpty) {
         _readyForSnackBar('텍스트를 입력해주세요.');
         return;
@@ -87,25 +100,15 @@ class UploadRawViewModel extends _$UploadRawViewModel {
       debugPrint(text);
       _eventController.add(
         UploadRawEvent.successOCR(
-          OpenAiResponse.justText(
-            contents: '''
-Urban delivery vehicles can be adapted to better suit the density of urban distribution, which often involves smaller vehicles such as vans, including bicycles. The latter have the potential to become a preferred 'last-mile' vehicle, particularly in high-density and congested areas. In locations where bicycle use is high, such as the Netherlands, delivery bicycles are also used to carry personal cargo (e.g. groceries). Due to their low acquisition and maintenance costs, cargo bicycles convey much potential in developed and developing countries alike, such as the becak (a three-wheeled bicycle) in Indonesia.
-Services using electrically assisted delivery tricycles have been successfully implemented in France and are gradually being adopted across Europe for services as varied as parcel and catering deliveries. Using bicycles as cargo vehicles is particularly encouraged when combined with policies that restrict motor vehicle access to specific areas of a city, such as downtown or commercial districts, or with the extension of dedicated bike lanes.
-① 도시에서 자전거는 효율적인 배송 수단으로 사용될 수 있다.
-② 자전거는 출퇴근 시간을 줄이기 위한 대안으로 선호되고 있다.
-③ 자전거는 배송 수단으로의 경제적 장단점을 모두 가질 수 있다.
-④ 수요자의 요구에 부합하는 다양한 용도의 자전거가 개발되고 있다.
-⑤ 세계 각국에서는 전기 자전거 사용을 장려하는 정책을 추진하고 있다.
-''',
-          ),
+          OpenAiResponse.justText(contents: pState.textController.text),
         ),
       );
       return;
     }
 
-    final file = state.pickFile;
+    final file = pState.pickFile;
     if (file == null) {
-      if (state.selectedUploadType == AiConstant.inputImage) {
+      if (pState.selectedUploadType == AiConstant.inputImage) {
         _readyForSnackBar('이미지를 선택해주세요.');
       } else {
         _readyForSnackBar('PDF 파일을 선택해주세요.');
@@ -113,10 +116,10 @@ Services using electrically assisted delivery tricycles have been successfully i
       return;
     }
 
-    state = state.copyWith(result: const AsyncValue.loading());
+    state = const AsyncValue.loading();
 
     InputContent inputContent;
-    if (state.selectedUploadType == AiConstant.inputImage) {
+    if (pState.selectedUploadType == AiConstant.inputImage) {
       inputContent = InputContent.image(
         imageExtension: file.fileExtension,
         base64: base64Encode(file.bytes),
@@ -140,15 +143,13 @@ Services using electrically assisted delivery tricycles have been successfully i
     switch (result) {
       case Success<OpenAiResponse, AppException>():
         debugPrint(result.data.toString());
-        state = state.copyWith(result: AsyncValue.data(result.data));
+        state = AsyncValue.data(pState.copyWith(result: result.data));
         _eventController.add(UploadRawEvent.successOCR(result.data));
       case Error<OpenAiResponse, AppException>():
         _readyForSnackBar(result.error.userFriendlyMessage);
-        state = state.copyWith(
-          result: AsyncValue.error(
-            result.error,
-            result.error.stackTrace ?? StackTrace.empty,
-          ),
+        state = AsyncValue.error(
+          result.error,
+          result.error.stackTrace ?? StackTrace.empty,
         );
     }
   }

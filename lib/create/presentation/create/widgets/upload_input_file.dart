@@ -25,14 +25,14 @@ class UploadInputFile extends StatelessWidget {
         const Gap(8),
         if (file != null)
           Container(
-            height: 250,
+            height: 300,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
               borderRadius: BorderRadius.circular(8),
             ),
             child: PdfPreview(
               build: (format) => file!.bytes,
-              maxPageWidth: 400,
+              maxPageWidth: 500,
               allowPrinting: false,
               allowSharing: false,
               canChangePageFormat: false,

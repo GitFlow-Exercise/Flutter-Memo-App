@@ -6,13 +6,8 @@ import 'package:mongo_ai/create/presentation/create/widgets/upload_raw_text_fiel
 
 // 텍스트 입력 화면
 class UploadInputText extends StatelessWidget {
-  final void Function(String) onChanged;
   final TextEditingController controller;
-  const UploadInputText({
-    super.key,
-    required this.onChanged,
-    required this.controller,
-  });
+  const UploadInputText({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +19,7 @@ class UploadInputText extends StatelessWidget {
           style: AppTextStyle.bodyMedium.copyWith(color: AppColor.mediumGray),
         ),
         const Gap(10),
-        UploadRawTextField(onChanged: onChanged, controller: controller),
+        UploadRawTextField(controller: controller),
       ],
     );
   }

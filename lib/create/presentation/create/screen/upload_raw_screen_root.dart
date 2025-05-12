@@ -8,6 +8,8 @@ import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 import 'package:mongo_ai/create/presentation/base/layout/ai_base_layout.dart';
+import 'package:mongo_ai/create/presentation/base/widgets/ai_error_view.dart';
+import 'package:mongo_ai/create/presentation/base/widgets/ai_loading_view.dart';
 import 'package:mongo_ai/create/presentation/create/controller/upload_raw_action.dart';
 import 'package:mongo_ai/create/presentation/create/controller/upload_raw_event.dart';
 import 'package:mongo_ai/create/presentation/create/controller/upload_raw_view_model.dart';
@@ -79,20 +81,30 @@ class _UploadRawScreenRootState extends ConsumerState<UploadRawScreenRoot> {
   Widget build(BuildContext context) {
     final state = ref.watch(uploadRawViewModelProvider);
     final viewModel = ref.watch(uploadRawViewModelProvider.notifier);
-    return AiBaseLayout(
-      title: '문제집 생성',
-      subTitle: '콘텐츠 소스 선택',
-      step: 1,
-      maxWidth: 850,
-      maxHeight: 850,
-      nextTap: () {
-        _handleAction(const UploadRawAction.submitForm(), context, viewModel);
+    return state.when(
+      data: (value) {
+        return AiBaseLayout(
+          title: '문제집 생성',
+          subTitle: '콘텐츠 소스 선택',
+          step: 1,
+          maxWidth: 850,
+          maxHeight: 850,
+          nextTap: () {
+            _handleAction(
+              const UploadRawAction.submitForm(),
+              context,
+              viewModel,
+            );
+          },
+          isPopTap: false,
+          child: UploadRawScreen(
+            state: value,
+            onAction: (action) => _handleAction(action, context, viewModel),
+          ),
+        );
       },
-      isPopTap: false,
-      child: UploadRawScreen(
-        state: state,
-        onAction: (action) => _handleAction(action, context, viewModel),
-      ),
+      error: (obj, stackTrace) => const AiErrorView(),
+      loading: () => const AiLoadingView(),
     );
   }
 
