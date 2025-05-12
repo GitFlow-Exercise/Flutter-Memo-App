@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// 앱 전역에서 사용되는 색상 정의
+// 앱 전역에서 사용되는 색상 정의
 abstract class AppColor {
   // Brand Colors
   static const Color primary = Color(0xFF6C63FF); // 메인 강조색, 버튼, 'Mongo AI' 로고
