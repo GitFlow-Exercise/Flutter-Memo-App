@@ -84,6 +84,7 @@ class _UploadRawScreenRootState extends ConsumerState<UploadRawScreenRoot> {
       subTitle: '콘텐츠 소스 선택',
       step: 1,
       maxWidth: 850,
+      maxHeight: 850,
       nextTap: () {
         _handleAction(const UploadRawAction.submitForm(), context, viewModel);
       },

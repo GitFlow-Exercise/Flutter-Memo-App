@@ -8,6 +8,7 @@ class AiBaseContainer extends StatelessWidget {
   final int step; // 현재 단계
   final Widget child; // 내부 위젯
   final double maxWidth; // 최대 너비
+  final double maxHeight; // 최대 높이
   const AiBaseContainer({
     super.key,
     required this.title,
@@ -15,13 +16,14 @@ class AiBaseContainer extends StatelessWidget {
     required this.step,
     required this.child,
     required this.maxWidth,
+    required this.maxHeight,
   });
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        constraints: BoxConstraints(maxWidth: maxWidth),
+        constraints: BoxConstraints(maxWidth: maxWidth, maxHeight: maxHeight),
         color: AppColor.white,
         padding: const EdgeInsets.all(32),
         child: SingleChildScrollView(

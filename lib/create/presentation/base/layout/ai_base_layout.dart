@@ -12,6 +12,7 @@ class AiBaseLayout extends StatelessWidget {
   final int step; // 현재 단계
   final Widget child; // 내부 위젯
   final double maxWidth; // 최대 너비
+  final double maxHeight; // 최대 높이
   // 취소 눌렀을 때의 실행 함수
   // 기본값은 대시보드로 이동
   final VoidCallback? cancelTap;
@@ -27,6 +28,7 @@ class AiBaseLayout extends StatelessWidget {
     required this.step,
     required this.child,
     required this.maxWidth,
+    required this.maxHeight,
     this.cancelTap,
     this.popTap,
     this.nextTap,
@@ -42,6 +44,7 @@ class AiBaseLayout extends StatelessWidget {
         subTitle: subTitle,
         step: step,
         maxWidth: maxWidth,
+        maxHeight: maxHeight,
         child: child,
       ),
       bottomNavigationBar: Container(
