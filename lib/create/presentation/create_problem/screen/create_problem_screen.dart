@@ -49,7 +49,7 @@ class CreateProblemScreen extends StatelessWidget {
                         prompt != value.problemType
                             ? AppColor.lightGrayBorder
                             : AppColor.primary,
-                    width: prompt != value.problemType ? 1 : 2,
+                    width: 2,
                   ),
                 ),
                 child: Column(
@@ -93,7 +93,7 @@ class CreateProblemScreen extends StatelessWidget {
                     ),
                     const Gap(20),
                     Container(
-                      height: 100,
+                      height: 80,
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         color:
@@ -105,7 +105,13 @@ class CreateProblemScreen extends StatelessWidget {
                                   : AppColor.white,
                         ),
                       ),
-                      child: Text(prompt.detail),
+                      child: Text(
+                        prompt.detail,
+                        style: AppTextStyle.captionRegular.copyWith(
+                          color: AppColor.lightGray,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),
