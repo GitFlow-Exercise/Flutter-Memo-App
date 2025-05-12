@@ -18,6 +18,7 @@ class SignUpViewModel extends _$SignUpViewModel {
 
   @override
   SignUpState build() {
+    //TODO: dispose
     return SignUpState(
       emailController: TextEditingController(),
       codeController: TextEditingController(),
@@ -86,7 +87,6 @@ class SignUpViewModel extends _$SignUpViewModel {
 
     switch (result) {
       case Success<void, AppException>():
-        //TODO: nav
         _eventController.add(const SignUpEvent.showSnackBar('인증번호가 발송되었습니다.'));
         return;
       case Error<void, AppException>():

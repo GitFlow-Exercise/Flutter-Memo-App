@@ -8,7 +8,9 @@ import 'package:mongo_ai/auth/presentation/check_otp/controller/check_otp_view_m
 import 'package:mongo_ai/auth/presentation/check_otp/screen/check_otp_screen.dart';
 
 class CheckOtpScreenRoot extends ConsumerStatefulWidget {
-  const CheckOtpScreenRoot({super.key});
+  final String email;
+
+  const CheckOtpScreenRoot({super.key, required this.email});
 
   @override
   ConsumerState<CheckOtpScreenRoot> createState() => _CheckOtpScreenRootState();
@@ -21,7 +23,9 @@ class _CheckOtpScreenRootState extends ConsumerState<CheckOtpScreenRoot> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final viewModel = ref.watch(checkOtpViewModelProvider.notifier,);
+      final viewModel = ref.watch(
+        checkOtpViewModelProvider(widget.email).notifier,
+      );
 
       _subscription = viewModel.eventStream.listen(_handleEvent);
     });
@@ -36,15 +40,15 @@ class _CheckOtpScreenRootState extends ConsumerState<CheckOtpScreenRoot> {
   void _handleEvent(CheckOtpEvent event) {
     switch (event) {
       case ShowSnackBar(message: final message):
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(message))
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(message)));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(checkOtpViewModelProvider);
+    final state = ref.watch(checkOtpViewModelProvider(widget.email));
 
     return Scaffold(
       body: CheckOtpScreen(state: state, onAction: _handleAction),
