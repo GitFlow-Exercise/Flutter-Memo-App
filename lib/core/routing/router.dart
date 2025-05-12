@@ -68,11 +68,16 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: Routes.checkOtp,
-        builder: (context, state) => const CheckOtpScreenRoot(),
+        builder: (context, state) {
+          final email = state.extra as String;
+          return CheckOtpScreenRoot(email: email);
+        },
       ),
       GoRoute(
         path: Routes.completeSignUp,
-        builder: (context, state) => SignUpCompleteScreen(onTapHome: () => context.go(Routes.home)),
+        builder:
+            (context, state) =>
+                SignUpCompleteScreen(onTapHome: () => context.go(Routes.home)),
       ),
       StatefulShellRoute.indexedStack(
         builder:
