@@ -23,16 +23,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   void initState() {
     super.initState();
-    widget.state.emailController.addListener(() {
-      setState(() {});
-    });
+    widget.state.emailController.addListener(_emailListener);
   }
 
   @override
   void dispose() {
-    widget.state.emailController.removeListener(() {
-      setState(() {});
-    });
+    widget.state.emailController.removeListener(_emailListener);
     super.dispose();
   }
 
@@ -278,5 +274,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       return '유효한 이메일 주소를 입력해주세요.';
     }
     return null;
+  }
+
+  void _emailListener() {
+    setState(() {});
   }
 }
