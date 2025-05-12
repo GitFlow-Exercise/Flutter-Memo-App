@@ -1,10 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/result/result.dart';
-import 'package:mongo_ai/core/state/current_folder_path_state.dart';
+import 'package:mongo_ai/core/state/current_folder_id_state.dart';
 import 'package:mongo_ai/core/state/current_team_id_state.dart';
-import 'package:mongo_ai/dashboard/domain/model/folder.dart';
-import 'package:mongo_ai/dashboard/domain/model/team.dart';
+import 'package:mongo_ai/core/state/workbook_sort_option_state.dart';
 import 'package:mongo_ai/dashboard/domain/model/user_profile.dart';
 import 'package:mongo_ai/dashboard/presentation/controller/dashboard_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -34,15 +32,6 @@ class DashboardViewModel extends _$DashboardViewModel {
       Error() => const UserProfile(userId: '', userName: ''),
     };
   }
-  //
-  // Future<List<Team>> _fetchTeamList() async {
-  //   // 팀 데이터도 바뀌면 리빌드 되도록 watch 설정
-  //   final result = await ref.watch(getTeamsByCurrentUserProvider.future);
-  //   return switch (result) {
-  //     Success(data: final data) => data,
-  //     Error() => <Team>[],
-  //   };
-  // }
 
   Future<void> refreshTeamList() async {
     await ref.refresh(getTeamsByCurrentUserProvider.future);
@@ -52,8 +41,16 @@ class DashboardViewModel extends _$DashboardViewModel {
     await ref.refresh(getFoldersByCurrentTeamIdProvider.future);
   }
 
-  Future<void> selectFolder(List<Folder> path) async {
-    ref.read(currentFolderPathStateProvider.notifier).setPath(path);
+  Future<void> selectFolder(int folderId) async {
+    ref.read(currentFolderIdStateProvider.notifier).set(folderId);
+  }
+
+  Future<void> clearFolder() async {
+    ref.read(currentFolderIdStateProvider.notifier).clear();
+  }
+
+  Future<void> changeSortOption(WorkbookSortOption option) async {
+    ref.read(workbookSortOptionStateProvider.notifier).setOption(option);
   }
 
   /// 팀 선택 시 currentTeamIdStateProvider 변하면서 자동 리빌드 됨.
