@@ -119,7 +119,7 @@ class SignUpPasswordViewModel extends _$SignUpPasswordViewModel {
   }
 
   // 임시 사용자 관련 로직
-  Future<bool> successSendOtp() async {
+  Future<void> sendOtp() async {
     final tempStoreId = state.value?.tempStoreId ?? '';
     final password = state.value?.passwordController.text;
 
@@ -129,7 +129,7 @@ class SignUpPasswordViewModel extends _$SignUpPasswordViewModel {
       _eventController.add(
         const SignUpPasswordEvent.showSnackBar('알 수 없는 오류가 발생했습니다.'),
       );
-      return false;
+      return;
     }
 
     // 임시 사용자 비밀번호 업데이트
@@ -138,14 +138,14 @@ class SignUpPasswordViewModel extends _$SignUpPasswordViewModel {
       _eventController.add(
         const SignUpPasswordEvent.showSnackBar('알 수 없는 오류가 발생했습니다.'),
       );
-      return false;
+      return;
     }
 
     // OTP 전송 시도
-    return _sendOtpToUser(tempUser.email, newTempStoreId);
+    await _sendOtpToUser(tempUser.email, newTempStoreId);
   }
 
-  Future<bool> _sendOtpToUser(String email, String tempStoreId) async {
+  Future<void> _sendOtpToUser(String email, String tempStoreId) async {
     state = state.whenData((value) => value.copyWith(isLoading: true));
 
     final authRepository = ref.read(authRepositoryProvider);
@@ -160,13 +160,13 @@ class SignUpPasswordViewModel extends _$SignUpPasswordViewModel {
         _eventController.add(
           SignUpPasswordEvent.navigateToVerifyOtp(tempStoreId),
         );
-        return true;
+        return;
       case Error<void, AppException>():
         state = state.whenData((value) => value.copyWith(isLoading: false));
         _eventController.add(
           SignUpPasswordEvent.showSnackBar(result.error.message),
         );
-        return false;
+        return;
     }
   }
 

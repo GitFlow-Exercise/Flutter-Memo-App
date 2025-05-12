@@ -69,9 +69,7 @@ class _SignUpPasswordScreenRootState
 
     switch (action) {
       case OnTapSendOtp():
-        if (await viewModel.successSendOtp() && mounted) {
-          context.go(Routes.checkOtp);
-        }
+        await viewModel.sendOtp();
         break;
       case OnTapCheckPrivacyPolicy():
         viewModel.togglePrivacyPolicy();
