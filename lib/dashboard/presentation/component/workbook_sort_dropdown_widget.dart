@@ -9,7 +9,7 @@ class WorkbookSortDropdownWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final sortOption = ref.read(workbookSortOptionStateProvider);
+    final sortOption = ref.watch(workbookSortOptionStateProvider);
     return DropdownButton<WorkbookSortOption>(
       value: sortOption,
       underline: const SizedBox(),            // 밑줄 제거
