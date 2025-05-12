@@ -62,8 +62,10 @@ class _UploadRawScreenRootState extends ConsumerState<UploadRawScreenRoot> {
                     BaseAppButton(onTap: () => context.pop(), text: '취소'),
                     BaseAppButton(
                       onTap:
-                          () =>
-                              context.go(Routes.createProblem, extra: response),
+                          () => context.push(
+                            Routes.createProblem,
+                            extra: response,
+                          ),
                       text: '확인',
                     ),
                   ],
