@@ -56,10 +56,12 @@ class _SignInScreenState extends State<SignInScreen> {
                       color: AppColor.primary,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
-                      Icons.book,
-                      color: AppColor.white,
-                      size: 30,
+                    child: Center(
+                      child: Image.asset(
+                        'images/mongo_ai_logo.png',
+                        width: 24,
+                        height: 24,
+                      ),
                     ),
                   ),
                   const Gap(12),
@@ -120,7 +122,9 @@ class _SignInScreenState extends State<SignInScreen> {
                     Center(
                       child: Text(
                         '계정에 로그인하여 Mongo AI를 시작하세요',
-                        style: AppTextStyle.bodyMedium.copyWith(color: AppColor.lightGray)
+                        style: AppTextStyle.bodyMedium.copyWith(
+                          color: AppColor.lightGray,
+                        ),
                       ),
                     ),
                     const Gap(32),
@@ -128,15 +132,23 @@ class _SignInScreenState extends State<SignInScreen> {
                     // 이메일 입력
                     Text(
                       '이메일',
-                      style: AppTextStyle.labelMedium.copyWith(color: AppColor.lightGray)
+                      style: AppTextStyle.labelMedium.copyWith(
+                        color: AppColor.lightGray,
+                      ),
                     ),
                     const Gap(8),
                     TextFormField(
                       controller: widget.state.emailController,
                       decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.email, size: 16, color: AppColor.paleGray,),
+                        prefixIcon: const Icon(
+                          Icons.email,
+                          size: 16,
+                          color: AppColor.paleGray,
+                        ),
                         hintText: 'name@example.com',
-                        hintStyle: AppTextStyle.labelMedium.copyWith(color: AppColor.paleGray),
+                        hintStyle: AppTextStyle.labelMedium.copyWith(
+                          color: AppColor.paleGray,
+                        ),
                         fillColor: AppColor.lightBlue,
                         filled: true,
                         border: OutlineInputBorder(
@@ -157,34 +169,46 @@ class _SignInScreenState extends State<SignInScreen> {
                         ),
                         errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(color: AppColor.destructive),
+                          borderSide: const BorderSide(
+                            color: AppColor.destructive,
+                          ),
                         ),
                         focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(color: AppColor.destructive),
+                          borderSide: const BorderSide(
+                            color: AppColor.destructive,
+                          ),
                         ),
                         contentPadding: const EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 14,
                         ),
                       ),
-                      validator: _validateEmail,
+                        validator: _validateEmail
                     ),
                     const Gap(24),
 
                     // 비밀번호 입력
                     Text(
                       '비밀번호',
-                        style: AppTextStyle.labelMedium.copyWith(color: AppColor.lightGray)
+                      style: AppTextStyle.labelMedium.copyWith(
+                        color: AppColor.lightGray,
+                      ),
                     ),
                     const Gap(8),
                     TextFormField(
                       controller: widget.state.passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.lock, size: 16, color: AppColor.paleGray,),
+                        prefixIcon: const Icon(
+                          Icons.lock,
+                          size: 16,
+                          color: AppColor.paleGray,
+                        ),
                         hintText: '••••••••',
-                        hintStyle: AppTextStyle.labelMedium.copyWith(color: AppColor.paleGray),
+                        hintStyle: AppTextStyle.labelMedium.copyWith(
+                          color: AppColor.paleGray,
+                        ),
                         fillColor: AppColor.lightBlue,
                         filled: true,
                         border: OutlineInputBorder(
@@ -205,31 +229,42 @@ class _SignInScreenState extends State<SignInScreen> {
                         ),
                         errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(color: AppColor.destructive),
+                          borderSide: const BorderSide(
+                            color: AppColor.destructive,
+                          ),
                         ),
                         focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(color: AppColor.destructive),
+                          borderSide: const BorderSide(
+                            color: AppColor.destructive,
+                          ),
                         ),
                         contentPadding: const EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 14,
                         ),
                       ),
-                      validator: _validatePassword,
+                      validator: _validatePassword
                     ),
                     const Gap(16),
 
                     // 비밀번호 찾기
-                    GestureDetector(
-                      onTap:
-                          () => widget.onAction(
-                            const SignInAction.onTapForgotPassword(),
+                    Row(
+                      children: [
+                        Spacer(),
+                        GestureDetector(
+                          onTap:
+                              () => widget.onAction(
+                                const SignInAction.onTapForgotPassword(),
+                              ),
+                          child: Text(
+                            '비밀번호를 잊으셨나요?',
+                            style: AppTextStyle.labelMedium.copyWith(
+                              color: AppColor.primary,
+                            ),
                           ),
-                      child: Text(
-                        '비밀번호를 잊으셨나요?',
-                        style: AppTextStyle.labelMedium.copyWith(color: AppColor.primary)
-                      ),
+                        ),
+                      ],
                     ),
                     const Gap(24),
 
@@ -238,7 +273,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       onPressed:
                           widget.state.isFormValid
                               ? () {
-                                if (_formKey.currentState!.validate()) {
+                                if (_formKey.currentState?.validate() == true) {
                                   widget.onAction(
                                     const SignInAction.onTapLogin(),
                                   );
@@ -251,20 +286,20 @@ class _SignInScreenState extends State<SignInScreen> {
                                 ? AppColor.primary
                                 : AppColor.paleGray,
                         disabledBackgroundColor: AppColor.lighterGray,
-                        foregroundColor: Colors.white,
+                        foregroundColor: AppColor.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                        Text(
-                            '로그인',
-                            style: AppTextStyle.bodyMedium
-                        ),
-                        Gap(8),
-                        Icon(Icons.arrow_forward, size: 16),
-                      ],)
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('로그인', style: AppTextStyle.bodyMedium),
+                          Gap(8),
+                          Icon(Icons.arrow_forward, size: 16),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -277,14 +312,18 @@ class _SignInScreenState extends State<SignInScreen> {
                 children: [
                   Text(
                     '계정이 없으신가요? ',
-                    style: AppTextStyle.captionRegular.copyWith(color: AppColor.paleGray),
+                    style: AppTextStyle.captionRegular.copyWith(
+                      color: AppColor.paleGray,
+                    ),
                   ),
                   GestureDetector(
                     onTap:
                         () => widget.onAction(const SignInAction.onTapSignUp()),
                     child: Text(
                       '회원가입',
-                      style: AppTextStyle.captionRegular.copyWith(color: AppColor.primary)
+                      style: AppTextStyle.captionRegular.copyWith(
+                        color: AppColor.primary,
+                      ),
                     ),
                   ),
                 ],
