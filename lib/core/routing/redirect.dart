@@ -25,7 +25,7 @@ abstract class AppRedirect {
     // 현재 화면이 로그인 화면이거나 회원가입 화면이라면
     // 강제로 홈 화면으로 이동
     if (nowPath == Routes.signIn || nowPath == Routes.signUp) {
-      return Routes.home;
+      return Routes.myFiles;
     }
     // 원래 가려던 방향 null
     return null;

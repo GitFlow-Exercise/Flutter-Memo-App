@@ -1,5 +1,5 @@
 abstract class Routes {
-  static const home = '/home';
+  static const myFiles = '/my-files';
   static const recentFiles = '/recent-files';
   static const folder = '/folder';
   static const detail = 'detail';
