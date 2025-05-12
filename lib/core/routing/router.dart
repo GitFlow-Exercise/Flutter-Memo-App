@@ -29,9 +29,11 @@ final routerProvider = Provider<GoRouter>((ref) {
     refreshListenable: auth,
     redirect: (context, state) {
       final path = state.fullPath;
+      final extra = state.extra;
       return AppRedirect.authRedirect(
         isAuthenticated: auth.isAuthenticated,
         nowPath: path,
+        extra: extra,
       );
     },
     routes: [
@@ -71,7 +73,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: Routes.signUpPassword,
         builder: (context, state) {
           final tempUserId = state.extra as String;
-          return SignUpPasswordScreenRoot(tempUserId: tempUserId,);
+          return SignUpPasswordScreenRoot(tempUserId: tempUserId);
         },
       ),
       GoRoute(
