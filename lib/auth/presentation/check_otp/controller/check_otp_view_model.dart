@@ -26,12 +26,17 @@ class CheckOtpViewModel extends _$CheckOtpViewModel {
       codeController.dispose();
     });
 
-    return CheckOtpState(tempUserId: tempUserId, codeController: codeController);
+    return CheckOtpState(
+      tempUserId: tempUserId,
+      codeController: codeController,
+    );
   }
 
   Future<bool> verifyOtp() async {
     final tempStorageRepository = ref.read(tempStorageRepositoryProvider);
-    final tempStoreResult = tempStorageRepository.retrieveData(state.value?.tempUserId ?? '');
+    final tempStoreResult = tempStorageRepository.retrieveData(
+      state.value?.tempUserId ?? '',
+    );
 
     TempUser tempUser;
 
@@ -39,7 +44,9 @@ class CheckOtpViewModel extends _$CheckOtpViewModel {
       case Success<TempUser, AppException>():
         tempUser = tempStoreResult.data;
       case Error<TempUser, AppException>():
-        _eventController.add(CheckOtpEvent.showSnackBar(tempStoreResult.error.message));
+        _eventController.add(
+          CheckOtpEvent.showSnackBar(tempStoreResult.error.message),
+        );
         return false;
     }
 
@@ -47,9 +54,7 @@ class CheckOtpViewModel extends _$CheckOtpViewModel {
     final code = state.value?.codeController.text ?? '';
 
     if (code.trim().isEmpty) {
-      _eventController.add(
-        const CheckOtpEvent.showSnackBar('인증 코드를 입력해 주세요.'),
-      );
+      _eventController.add(const CheckOtpEvent.showSnackBar('인증 코드를 입력해 주세요.'));
       return false;
     }
 

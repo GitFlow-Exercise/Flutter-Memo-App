@@ -57,7 +57,7 @@ class SignUpViewModel extends _$SignUpViewModel {
     }
   }
 
-  @deprecated
+  //TODO(ok): 추후 화면 구현 시 이동 예정
   Future<bool> signUp() async {
     final authRepository = ref.read(authRepositoryProvider);
     final result = await authRepository.signUp(
@@ -74,7 +74,7 @@ class SignUpViewModel extends _$SignUpViewModel {
     }
   }
 
-  @deprecated
+  //TODO(ok): 추후 화면 구현 시 이동 예정
   Future<bool> saveUser() async {
     final authRepository = ref.read(authRepositoryProvider);
     final result = await authRepository.saveUser();
@@ -87,7 +87,7 @@ class SignUpViewModel extends _$SignUpViewModel {
     }
   }
 
-  @deprecated
+  //TODO(ok): 추후 화면 구현 시 이동 예정
   Future<void> sendOtp() async {
     final authRepository = ref.read(authRepositoryProvider);
     final result = await authRepository.sendOtp(state.emailController.text);
@@ -102,7 +102,7 @@ class SignUpViewModel extends _$SignUpViewModel {
     }
   }
 
-  @deprecated
+  //TODO(ok): 추후 화면 구현 시 이동 예정
   Future<bool> verifyOtp() async {
     final authRepository = ref.read(authRepositoryProvider);
     final result = await authRepository.verifyOtp(
@@ -119,7 +119,7 @@ class SignUpViewModel extends _$SignUpViewModel {
     }
   }
 
-  @deprecated
+  //TODO(ok): 추후 화면 구현 시 이동 예정
   Future<bool> resetPassword() async {
     final authRepository = ref.read(authRepositoryProvider);
     final result = await authRepository.resetPassword(
