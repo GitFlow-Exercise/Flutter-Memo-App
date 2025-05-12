@@ -139,6 +139,9 @@ class _SignInScreenState extends State<SignInScreen> {
                     const Gap(8),
                     TextFormField(
                       controller: widget.state.emailController,
+                      onFieldSubmitted: (_) {
+                        _submitForm();
+                      },
                       decoration: InputDecoration(
                         prefixIcon: const Icon(
                           Icons.email,
@@ -184,7 +187,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           vertical: 14,
                         ),
                       ),
-                        validator: _validateEmail
+                      validator: _validateEmail,
                     ),
                     const Gap(24),
 
@@ -198,6 +201,9 @@ class _SignInScreenState extends State<SignInScreen> {
                     const Gap(8),
                     TextFormField(
                       controller: widget.state.passwordController,
+                      onFieldSubmitted: (_) {
+                        _submitForm();
+                      },
                       obscureText: true,
                       decoration: InputDecoration(
                         prefixIcon: const Icon(
@@ -244,7 +250,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           vertical: 14,
                         ),
                       ),
-                      validator: _validatePassword
+                      validator: _validatePassword,
                     ),
                     const Gap(16),
 
@@ -270,16 +276,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
                     // 로그인 버튼
                     ElevatedButton(
-                      onPressed:
-                          widget.state.isFormValid
-                              ? () {
-                                if (_formKey.currentState?.validate() == true) {
-                                  widget.onAction(
-                                    const SignInAction.onTapLogin(),
-                                  );
-                                }
-                              }
-                              : null,
+                      onPressed: _submitForm,
                       style: ElevatedButton.styleFrom(
                         backgroundColor:
                             widget.state.isFormValid
@@ -353,5 +350,11 @@ class _SignInScreenState extends State<SignInScreen> {
       return '유효한 이메일 주소를 입력해주세요.';
     }
     return null;
+  }
+
+  void _submitForm() {
+    if (widget.state.isFormValid && _formKey.currentState?.validate() == true) {
+      widget.onAction(const SignInAction.onTapLogin());
+    }
   }
 }
