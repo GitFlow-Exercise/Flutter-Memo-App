@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_action.dart';
 import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_event.dart';
@@ -24,7 +26,9 @@ class _CreateProblemScreenRootState
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final viewModel = ref.watch(createProblemViewModelProvider.notifier);
+      final viewModel = ref.watch(
+        createProblemViewModelProvider(widget.response).notifier,
+      );
       _handleAction(const CreateProblemAction.getPrompts());
 
       _subscription = viewModel.eventStream.listen(_handleEvent);
@@ -40,6 +44,10 @@ class _CreateProblemScreenRootState
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(message)));
+      case SuccessOpenAIRequest(:final response):
+        if (mounted) {
+          context.go(Routes.createTemplate, extra: response);
+        }
     }
   }
 
@@ -51,7 +59,7 @@ class _CreateProblemScreenRootState
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(createProblemViewModelProvider);
+    final state = ref.watch(createProblemViewModelProvider(widget.response));
 
     return Scaffold(
       body: CreateProblemScreen(state: state, onAction: _handleAction),
@@ -59,12 +67,14 @@ class _CreateProblemScreenRootState
   }
 
   Future<void> _handleAction(CreateProblemAction action) async {
-    final viewModel = ref.read(createProblemViewModelProvider.notifier);
+    final viewModel = ref.read(
+      createProblemViewModelProvider(widget.response).notifier,
+    );
     switch (action) {
       case ChangeType(type: final type):
         viewModel.changeProblemType(type);
-      case CreateProblem(body: final body):
-        viewModel.createProblem(body);
+      case CreateProblem():
+        viewModel.createProblem();
       case SetResponse(response: final response):
         viewModel.setResponse(response);
       case GetPrompts():
