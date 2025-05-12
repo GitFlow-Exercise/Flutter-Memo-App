@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
+import 'package:mongo_ai/core/state/workbook_sort_option_state.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
-import 'package:mongo_ai/dashboard/domain/model/folder.dart';
+import 'package:mongo_ai/dashboard/presentation/component/button_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/folder_list_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/team_list_widget.dart';
+import 'package:mongo_ai/dashboard/presentation/component/workbook_sort_dropdown_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/controller/dashboard_view_model.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
@@ -19,6 +21,8 @@ class DashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
+  int _selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(dashboardViewModelProvider);
@@ -68,16 +72,30 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                     viewModel.selectTeam(teamId);
                                   },
                                 ),
-                                const Divider(height: 32, thickness: 1),
-                                ElevatedButton(
-                                  onPressed: () => _onTap(context, 0),
-                                  child: const Text('Home'),
+                                const Divider(height: 32, thickness: 1, color: AppColor.lightGrayBorder),
+                                ListTile(
+                                  title: const Text('내 항목'),
+                                  leading: Icon(
+                                    Icons.person,
+                                    color: _selectedIndex == 0 ? AppColor.primary : AppColor.black,
+                                  ),
+                                  onTap: () {
+                                    viewModel.clearFolder();
+                                    _onTap(context, 0);
+                                  }
                                 ),
-                                ElevatedButton(
-                                  onPressed: () => _onTap(context, 1),
-                                  child: const Text('Recent Files'),
+                                ListTile(
+                                  title: const Text('최근 항목'),
+                                  leading: Icon(
+                                    Icons.timelapse,
+                                    color: _selectedIndex == 1 ? AppColor.primary : AppColor.black,
+                                  ),
+                                  onTap: () {
+                                    viewModel.clearFolder();
+                                    _onTap(context, 1);
+                                  }
                                 ),
-                                const Divider(height: 32, thickness: 1),
+                                const Divider(height: 32, thickness: 1, color: AppColor.lightGrayBorder),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
@@ -91,8 +109,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   ],
                                 ),
                                 FolderListWidget(
-                                  onClickFolder: (List<Folder> path) {
-                                    viewModel.selectFolder(path);
+                                  onClickFolder: (int folderId) {
+                                    viewModel.selectFolder(folderId);
                                     _onTap(context, 2);
                                   },
                                   onClickExpand: () {
@@ -119,21 +137,29 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           ),
                           child: Row(
                             children: [
-                              Text(dashboard.userProfile.userName, style: AppTextStyle.headingMedium.copyWith()),
+                              Text(dashboard.userProfile.userName, style: AppTextStyle.headingMedium.copyWith(fontWeight: FontWeight.bold)),
+                              Text(' 님 환영합니다', style: AppTextStyle.headingMedium),
                               const Spacer(),
-                              ElevatedButton(
-                                onPressed: () {
+                              ButtonWidget(
+                                buttonText: '새로 만들기',
+                                icon: const Icon(Icons.auto_awesome, color: AppColor.white),
+                                onClick: () {
                                   context.push(Routes.create);
-                                },
-                                child: const Text('새로 만들기'),
+                                }
                               ),
-                              ElevatedButton(
-                                onPressed: () {
-                                },
-                                child: const Text('문서 병합하기'),
-                              )
+                              const SizedBox(width: 10),
+                              ButtonWidget(
+                                  buttonText: '문서 병합하기',
+                                  icon: const Icon(Icons.layers, color: AppColor.white),
+                                  onClick: () {}
+                              ),
                             ],
                           ),
+                        ),
+                        WorkbookSortDropdownWidget(
+                          onChanged: (WorkbookSortOption option) {
+                            viewModel.changeSortOption(option);
+                          },
                         ),
                         Expanded(
                           child: widget.navigationShell
@@ -152,6 +178,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 
   void _onTap(BuildContext context, int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
     widget.navigationShell.goBranch(index);
   }
 }
