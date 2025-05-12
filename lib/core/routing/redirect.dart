@@ -12,9 +12,9 @@ abstract class AppRedirect {
   }) {
     // 인증이 없다면 로그인 화면으로 강제 이동
     if (!isAuthenticated) {
-      // 만약 sign-up 등의 세션 만료, 새로고침 등으로 extra가 손실되었다면
+      // 만약 sign-up 등의 중간 단계에서 세션 만료, 새로고침 등으로 extra가 손실되었다면
       // 로그인 화면으로 다시 이동
-      if (extra == null) {
+      if (nowPath != Routes.signUp && extra == null) {
         return Routes.signIn;
       }
       // 만약 인증이 되지 않은 상태이지만,

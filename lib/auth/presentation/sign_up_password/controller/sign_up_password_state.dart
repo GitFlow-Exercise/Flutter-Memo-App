@@ -6,6 +6,7 @@ part 'sign_up_password_state.freezed.dart';
 @freezed
 abstract class SignUpPasswordState with _$SignUpPasswordState {
   const factory SignUpPasswordState({
+    @Default(false) bool isLoading,
     required String tempStoreId,
     required TextEditingController passwordController,
     required TextEditingController confirmPasswordController,
