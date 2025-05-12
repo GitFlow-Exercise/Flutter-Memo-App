@@ -47,13 +47,13 @@ class UploadInputImage extends StatelessWidget {
         ),
         if (file != null)
           SizedBox(
-            height: 300,
+            height: 250,
             width: double.infinity,
             child: Image.memory(file!.bytes, fit: BoxFit.cover),
           ),
         if (file == null)
           Container(
-            height: 300,
+            height: 250,
             width: double.infinity,
             decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
             child: Column(
@@ -88,7 +88,10 @@ class UploadInputImage extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.file_download),
+                        const Icon(
+                          Icons.folder_open_outlined,
+                          color: AppColor.white,
+                        ),
                         const SizedBox(width: 8),
                         Text(
                           '파일 찾기',

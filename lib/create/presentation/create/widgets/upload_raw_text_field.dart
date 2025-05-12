@@ -14,7 +14,7 @@ class UploadRawTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 300,
+      height: 200,
       child: TextField(
         expands: true,
         maxLines: null,

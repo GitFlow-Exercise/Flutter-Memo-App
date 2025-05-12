@@ -18,7 +18,7 @@ class AiBaseLayout extends StatelessWidget {
   // 뒤로가기 눌렀을 때의 실행 함수
   // 기본값은 context.pop
   final VoidCallback? popTap;
-  final VoidCallback nextTap; // 다음단계 눌렀을 때의 실행 함수
+  final VoidCallback? nextTap; // 다음단계 눌렀을 때의 실행 함수
   final bool isPopTap; // 뒤로가기 버튼 여부
   const AiBaseLayout({
     super.key,
@@ -29,7 +29,7 @@ class AiBaseLayout extends StatelessWidget {
     required this.maxWidth,
     this.cancelTap,
     this.popTap,
-    required this.nextTap,
+    this.nextTap,
     required this.isPopTap,
   });
 

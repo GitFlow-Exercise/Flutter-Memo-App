@@ -7,6 +7,7 @@ import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/create/presentation/base/layout/ai_base_layout.dart';
 import 'package:mongo_ai/create/presentation/create/controller/upload_raw_action.dart';
 import 'package:mongo_ai/create/presentation/create/controller/upload_raw_event.dart';
+import 'package:mongo_ai/create/presentation/create/controller/upload_raw_state.dart';
 import 'package:mongo_ai/create/presentation/create/controller/upload_raw_view_model.dart';
 
 import 'upload_raw_screen.dart';
@@ -60,8 +61,17 @@ class _UploadRawScreenRootState extends ConsumerState<UploadRawScreenRoot> {
       title: '문제집 생성',
       subTitle: '콘텐츠 소스 선택',
       step: 1,
-      maxWidth: 900,
-      nextTap: () {},
+      maxWidth: 850,
+      nextTap:
+          state.isSubmitEnabled
+              ? () {
+                _handleAction(
+                  const UploadRawAction.submitForm(),
+                  context,
+                  viewModel,
+                );
+              }
+              : null,
       isPopTap: false,
       child: UploadRawScreen(
         state: state,
