@@ -17,7 +17,7 @@ abstract class UploadRawState with _$UploadRawState {
       AiConstant.inputFile,
     ])
     List<String> uploadTypes,
-    @Default(AsyncValue.data(null)) AsyncValue<PickFile?> pickFile,
+    @Default(null) PickFile? pickFile,
     @Default(AsyncValue.data(null)) AsyncValue<OpenAiResponse?> result,
     required TextEditingController textController,
   }) = _UploadRawState;
@@ -28,17 +28,9 @@ extension UploadRawStateExtension on UploadRawState {
     if (selectedUploadType == AiConstant.inputText) {
       return textController.text.trim().isNotEmpty;
     } else if (selectedUploadType == AiConstant.inputImage) {
-      return pickFile.when(
-        data: (file) => file != null,
-        loading: () => false,
-        error: (_, __) => false,
-      );
+      return pickFile != null;
     } else if (selectedUploadType == AiConstant.inputFile) {
-      return pickFile.when(
-        data: (file) => file != null,
-        loading: () => false,
-        error: (_, __) => false,
-      );
+      return pickFile != null;
     }
     return false;
   }

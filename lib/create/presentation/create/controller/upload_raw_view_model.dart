@@ -38,7 +38,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
 
     state = state.copyWith(
       selectedUploadType: type,
-      pickFile: isTextType ? state.pickFile : const AsyncValue.data(null),
+      pickFile: isTextType ? state.pickFile : null,
     );
 
     if (!isTextType) {
@@ -47,47 +47,31 @@ class UploadRawViewModel extends _$UploadRawViewModel {
   }
 
   Future<void> handlePickImage(BuildContext context) async {
-    state = state.copyWith(pickFile: const AsyncValue.loading());
-
     final useCase = ref.read(imagePickFileUseCaseProvider);
     final result = await useCase.execute();
 
     switch (result) {
       case Success():
-        state = state.copyWith(pickFile: AsyncValue.data(result.data));
+        state = state.copyWith(pickFile: result.data);
         break;
       case Error(:final error):
         _readyForSnackBar(error.userFriendlyMessage);
         debugPrint(error.stackTrace.toString());
-        state = state.copyWith(
-          pickFile: AsyncValue.error(
-            error,
-            error.stackTrace ?? StackTrace.empty,
-          ),
-        );
         break;
     }
   }
 
   Future<void> handlePickPdf(BuildContext context) async {
-    state = state.copyWith(pickFile: const AsyncValue.loading());
-
     final useCase = ref.read(pdfPickFileUseCaseProvider);
     final result = await useCase.execute();
 
     switch (result) {
       case Success():
-        state = state.copyWith(pickFile: AsyncValue.data(result.data));
+        state = state.copyWith(pickFile: result.data);
         break;
       case Error(:final error):
         _readyForSnackBar(error.userFriendlyMessage);
         debugPrint(error.stackTrace.toString());
-        state = state.copyWith(
-          pickFile: AsyncValue.error(
-            error,
-            error.stackTrace ?? StackTrace.empty,
-          ),
-        );
         break;
     }
   }
@@ -107,7 +91,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
       return;
     }
 
-    final file = state.pickFile.value;
+    final file = state.pickFile;
     if (file == null) {
       if (state.selectedUploadType == AiConstant.inputImage) {
         _readyForSnackBar('이미지를 선택해주세요.');

@@ -93,128 +93,15 @@ class _UploadRawScreenState extends State<UploadRawScreen> {
               ),
             ] else if (widget.state.selectedUploadType ==
                 AiConstant.inputImage) ...[
-              widget.state.pickFile.when(
-                data: (file) {
-                  return UploadInputImage(
-                    file: file,
-                    onTap:
-                        () =>
-                            widget.onAction(const UploadRawAction.pickImage()),
-                  );
-                },
-                loading: () {
-                  final file = widget.state.pickFile.value;
-                  if (file != null) {
-                    return Column(
-                      children: [
-                        const SizedBox(height: 10),
-                        Text('선택된 이미지: ${file.fileName}'),
-                        const SizedBox(height: 10),
-                        Container(
-                          height: 500,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                          ),
-                          child: Stack(
-                            children: [
-                              Center(
-                                child: Image.memory(
-                                  file.bytes,
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                              Container(
-                                color: Colors.black.withValues(alpha: 0.5),
-                                child: const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
-                error: (error, stackTrace) => Text('에러: $error'),
+              UploadInputImage(
+                file: widget.state.pickFile,
+                onTap: () => widget.onAction(const UploadRawAction.pickImage()),
               ),
             ] else if (widget.state.selectedUploadType ==
                 AiConstant.inputFile) ...[
-              const Text('PDF 업로드:'),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed:
-                    () => widget.onAction(const UploadRawAction.pickPdf()),
-                child: const Text('PDF 선택'),
-              ),
-              widget.state.pickFile.when(
-                data: (file) {
-                  if (file != null) {
-                    return Column(
-                      children: [
-                        const SizedBox(height: 10),
-                        Text('선택된 PDF: ${file.fileName}'),
-                        const SizedBox(height: 10),
-                        Container(
-                          height: 500,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                          ),
-                          child: PdfPreview(
-                            build: (format) => file.bytes,
-                            maxPageWidth: 400,
-                            allowPrinting: false,
-                            allowSharing: false,
-                            canChangePageFormat: false,
-                            canChangeOrientation: false,
-                            canDebug: false,
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
-                loading: () {
-                  final file = widget.state.pickFile.value;
-                  if (file != null) {
-                    return Column(
-                      children: [
-                        const SizedBox(height: 10),
-                        Text('선택된 PDF: ${file.fileName}'),
-                        const SizedBox(height: 10),
-                        Container(
-                          height: 500,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                          ),
-                          child: Stack(
-                            children: [
-                              PdfPreview(
-                                build: (format) => file.bytes,
-                                maxPageWidth: 400,
-                                allowPrinting: false,
-                                allowSharing: false,
-                                canChangePageFormat: false,
-                                canChangeOrientation: false,
-                                canDebug: false,
-                              ),
-                              Container(
-                                color: Colors.black.withValues(alpha: 0.5),
-                                child: const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
-                error: (error, stackTrace) => Text('에러: $error'),
+              UploadInputFile(
+                file: widget.state.pickFile,
+                onTap: () => widget.onAction(const UploadRawAction.pickPdf()),
               ),
             ],
           ],
