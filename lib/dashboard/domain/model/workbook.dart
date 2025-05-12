@@ -6,13 +6,15 @@ part 'workbook.freezed.dart';
 abstract class Workbook with _$Workbook {
   const factory Workbook({
     required int workbookId,
-    String? userId,
     required String workbookName,
-    String? workbookLabel,
+    String? userId,
+    String? userName,
     required bool bookmark,
     int? level,
     int? folderId,
-    required int? teamId,
+    String? folderName,
+    required int teamId,
+    required String teamName,
     required DateTime createdAt,
     DateTime? lastOpen,
     DateTime? deletedAt,

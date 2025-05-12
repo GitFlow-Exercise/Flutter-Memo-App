@@ -12,7 +12,7 @@ class WorkbookDataSourceImpl implements WorkbookDataSource {
   @override
   Future<List<WorkbookDto>> getWorkbooksByCurrentTeamId(int teamId) async {
     final data = await _client
-        .from('workbook')
+        .from('workbook_with_keyword_view')
         .select()
         .eq('team_id', teamId);
 
