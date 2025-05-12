@@ -38,65 +38,59 @@ class _UploadRawScreenState extends State<UploadRawScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              // TabBar(tabs: [tabs])
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    onPressed:
-                        () => widget.onAction(
-                          const UploadRawAction.selectUploadType(
-                            AiConstant.inputText,
-                          ),
-                        ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          widget.state.selectedUploadType ==
-                                  AiConstant.inputText
-                              ? Colors.blue
-                              : Colors.white70,
-                    ),
-                    child: const Text('텍스트'),
+              Container(
+                decoration: const BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: AppColor.lightGrayBorder),
                   ),
-                  ElevatedButton(
-                    onPressed:
-                        () => widget.onAction(
-                          const UploadRawAction.selectUploadType(
-                            AiConstant.inputImage,
-                          ),
-                        ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          widget.state.selectedUploadType ==
-                                  AiConstant.inputImage
-                              ? Colors.blue
-                              : Colors.white70,
-                    ),
-                    child: const Text('이미지'),
-                  ),
-                  ElevatedButton(
-                    onPressed:
-                        () => widget.onAction(
-                          const UploadRawAction.selectUploadType(
-                            AiConstant.inputFile,
-                          ),
-                        ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          widget.state.selectedUploadType ==
-                                  AiConstant.inputFile
-                              ? Colors.blue
-                              : Colors.white70,
-                    ),
-                    child: const Text('PDF'),
-                  ),
-                ],
+                ),
+                child: Row(
+                  children:
+                      widget.state.uploadTypes
+                          .map(
+                            (e) => InkWell(
+                              onTap:
+                                  () => widget.onAction(
+                                    UploadRawAction.selectUploadType(e),
+                                  ),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                  horizontal: 16,
+                                ),
+                                decoration: BoxDecoration(
+                                  border:
+                                      widget.state.selectedUploadType == e
+                                          ? const Border(
+                                            bottom: BorderSide(
+                                              color: AppColor.primary,
+                                              width: 2,
+                                            ),
+                                          )
+                                          : null,
+                                ),
+                                child: Text(
+                                  e,
+                                  style: AppTextStyle.bodyMedium.copyWith(
+                                    color: AppColor.primary,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                ),
               ),
 
               const SizedBox(height: 30),
 
               if (widget.state.selectedUploadType == AiConstant.inputText) ...[
-                const Text('텍스트 입력:'),
+                Text(
+                  '텍스트 입력',
+                  style: AppTextStyle.bodyMedium.copyWith(
+                    color: AppColor.mediumGray,
+                  ),
+                ),
                 const SizedBox(height: 10),
                 TextField(
                   onChanged: (_) {
@@ -106,7 +100,7 @@ class _UploadRawScreenState extends State<UploadRawScreen> {
                   maxLines: 12,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: '텍스트를 입력하세요...',
+                    hintText: '여기에 텍스트를 붙여넣거나 입력하세요. 문단 구분을 위해 빈 줄을 사용하세요.',
                   ),
                 ),
               ] else if (widget.state.selectedUploadType ==
@@ -261,19 +255,17 @@ class _UploadRawScreenState extends State<UploadRawScreen> {
 
               const SizedBox(height: 30),
 
-              if (widget.state.selectedUploadType != null)
-                ElevatedButton(
-                  onPressed:
-                      widget.state.isSubmitEnabled
-                          ? () => widget.onAction(
-                            const UploadRawAction.submitForm(),
-                          )
-                          : null,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                  ),
-                  child: const Text('제출하기'),
+              ElevatedButton(
+                onPressed:
+                    widget.state.isSubmitEnabled
+                        ? () =>
+                            widget.onAction(const UploadRawAction.submitForm())
+                        : null,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 15),
                 ),
+                child: const Text('제출하기'),
+              ),
             ],
           ),
         ),
