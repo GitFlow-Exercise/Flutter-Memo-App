@@ -104,8 +104,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                           const Gap(8),
                           TextFormField(
+                            onFieldSubmitted: (_) {
+                              _submitEmail();
+                            },
                             controller: widget.state.emailController,
                             decoration: InputDecoration(
+                              prefixIcon: const Icon(
+                                Icons.email,
+                                size: 16,
+                                color: AppColor.paleGray,
+                              ),
                               hintText: 'name@example.com',
                               hintStyle: AppTextStyle.bodyRegular.copyWith(
                                 color: AppColor.lighterGray,
@@ -150,21 +158,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         width: double.infinity,
                         height: 48,
                         child: ElevatedButton(
-                          onPressed:
-                              _isFormValid
-                                  ? () {
-                                    if (formKey.currentState!.validate()) {
-                                      widget.onAction(
-                                        const SignUpAction.onTapOtpSend(),
-                                      );
-                                    }
-                                  }
-                                  : null,
+                          onPressed: _submitEmail,
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
                                 _isFormValid
                                     ? AppColor.primary
-                                    : AppColor.primary.withValues(alpha: 0.5),
+                                    : AppColor.lighterGray,
                             foregroundColor: AppColor.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
@@ -222,6 +221,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       ),
     );
+  }
+
+  void _submitEmail() {
+    if (_isFormValid && formKey.currentState!.validate()) {
+      widget.onAction(const SignUpAction.onTapOtpSend());
+    }
   }
 
   Widget _buildLogoSection() {
