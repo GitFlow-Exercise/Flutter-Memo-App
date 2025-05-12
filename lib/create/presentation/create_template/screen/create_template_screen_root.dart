@@ -6,15 +6,16 @@ import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 import 'package:mongo_ai/create/presentation/base/layout/ai_base_layout.dart';
+import 'package:mongo_ai/create/domain/model/create_workbook_params.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_action.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_event.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_view_model.dart';
 import 'package:mongo_ai/create/presentation/create_template/screen/create_template_screen.dart';
 
 class CreateTemplateScreenRoot extends ConsumerStatefulWidget {
-  final OpenAiResponse response;
+  final CreateTemplateParams params;
 
-  const CreateTemplateScreenRoot({super.key, required this.response});
+  const CreateTemplateScreenRoot({super.key, required this.params});
 
   @override
   ConsumerState<CreateTemplateScreenRoot> createState() =>
@@ -33,7 +34,7 @@ class _CreateTemplateScreenRootState
 
       _subscription = viewModel.eventStream.listen(_handleEvent);
 
-      viewModel.setProblem(problem: widget.response);
+      viewModel.setProblem(problem: widget.params.response);
     });
   }
 

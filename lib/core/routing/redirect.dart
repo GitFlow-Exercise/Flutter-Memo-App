@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:mongo_ai/core/routing/routes.dart';
+import 'package:mongo_ai/create/domain/model/create_workbook_params.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 
 abstract class AppRedirect {
@@ -44,6 +45,15 @@ abstract class AppRedirect {
     // 만약 화면 이동간 필요한 데이터가 타입과 일치하지 않는다면,
     // 강제로 문제 생성 처음 화면으로 이동시킵니다.
     if (extra is! Uint8List) {
+      return Routes.create;
+    }
+    return null;
+  }
+
+  static String? createTemplateRedirect(Object? extra) {
+    // 만약 화면 이동간 필요한 데이터가 타입과 일치하지 않는다면,
+    // 강제로 문제 생성 처음 화면으로 이동시킵니다.
+    if (extra is! CreateTemplateParams) {
       return Routes.create;
     }
     return null;

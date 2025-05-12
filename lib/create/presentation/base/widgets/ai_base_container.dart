@@ -26,62 +26,67 @@ class AiBaseContainer extends StatelessWidget {
         constraints: BoxConstraints(maxWidth: maxWidth, maxHeight: maxHeight),
         color: AppColor.white,
         padding: const EdgeInsets.all(32),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(title, style: AppTextStyle.titleBold),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Step $step: $subTitle',
-                  style: AppTextStyle.bodyRegular.copyWith(
-                    color: AppColor.lightGray,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(title, style: AppTextStyle.titleBold),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Step $step: $subTitle',
+                    style: AppTextStyle.bodyRegular.copyWith(
+                      color: AppColor.lightGray,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 50,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        shrinkWrap: true,
-                        itemCount: 4,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return Container(
-                            padding: circlePadding(
-                              index: index + 1,
-                              step: step,
-                            ),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: circleColor(index: index + 1, step: step),
-                            ),
-                            child: circleWidget(index: index + 1, step: step),
-                          );
-                        },
-                        separatorBuilder: (context, index) {
-                          return const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Icon(
-                              Icons.arrow_forward,
-                              size: 16,
-                              color: AppColor.lighterGray,
-                            ),
-                          );
-                        },
-                      ),
-                    ],
+                  SizedBox(
+                    height: 50,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          itemCount: 4,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return Container(
+                              padding: circlePadding(
+                                index: index + 1,
+                                step: step,
+                              ),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: circleColor(
+                                  index: index + 1,
+                                  step: step,
+                                ),
+                              ),
+                              child: circleWidget(index: index + 1, step: step),
+                            );
+                          },
+                          separatorBuilder: (context, index) {
+                            return const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              child: Icon(
+                                Icons.arrow_forward,
+                                size: 16,
+                                color: AppColor.lighterGray,
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-            child,
-          ],
+                ],
+              ),
+              child,
+            ],
+          ),
         ),
       ),
     );
