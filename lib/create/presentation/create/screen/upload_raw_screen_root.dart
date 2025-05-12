@@ -7,6 +7,7 @@ import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/create/presentation/base/layout/ai_base_layout.dart';
 import 'package:mongo_ai/create/presentation/create/controller/upload_raw_action.dart';
 import 'package:mongo_ai/create/presentation/create/controller/upload_raw_event.dart';
+import 'package:mongo_ai/create/presentation/create/controller/upload_raw_state.dart';
 import 'package:mongo_ai/create/presentation/create/controller/upload_raw_view_model.dart';
 
 import 'upload_raw_screen.dart';
@@ -62,7 +63,16 @@ class _UploadRawScreenRootState extends ConsumerState<UploadRawScreenRoot> {
       step: 1,
       maxWidth: 850,
       maxHeight: 850,
-      nextTap: () {},
+      nextTap:
+          state.isSubmitEnabled
+              ? () {
+                _handleAction(
+                  const UploadRawAction.submitForm(),
+                  context,
+                  viewModel,
+                );
+              }
+              : null,
       isPopTap: false,
       child: UploadRawScreen(
         state: state,
