@@ -4,7 +4,9 @@ import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/create/presentation/create/controller/upload_raw_action.dart';
 import 'package:mongo_ai/create/presentation/create/controller/upload_raw_state.dart';
-import 'package:mongo_ai/create/presentation/create/widgets/upload_input_widgets.dart';
+import 'package:mongo_ai/create/presentation/create/widgets/upload_input_file.dart';
+import 'package:mongo_ai/create/presentation/create/widgets/upload_input_image.dart';
+import 'package:mongo_ai/create/presentation/create/widgets/upload_input_text.dart';
 
 class UploadRawScreen extends StatefulWidget {
   final UploadRawState state;
