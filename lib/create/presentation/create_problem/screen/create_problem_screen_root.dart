@@ -63,6 +63,8 @@ class _CreateProblemScreenRootState
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(createProblemViewModelProvider(widget.response));
+    // 기본 레이아웃으로 UI가 묶이는 현상이 발생해서
+    // Root 파일에서 로딩/에러/데이터 화면의 처리를 진행하도록 수정하였습니다.
     return state.when(
       data: (value) {
         return AiBaseLayout(

@@ -1,1 +1,1 @@
-enum AllowedExtensionType { png, pdf, jpg }
+enum AllowedExtensionType { png, pdf, jpg, jpeg }

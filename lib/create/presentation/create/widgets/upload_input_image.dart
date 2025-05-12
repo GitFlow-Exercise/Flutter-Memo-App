@@ -28,6 +28,7 @@ class UploadInputImage extends StatelessWidget {
             child: Image.memory(file!.bytes, fit: BoxFit.cover),
           ),
         if (file == null)
+          // 점선을 나태내주는 패키지 이용
           DottedBorder(
             color: AppColor.lightGrayBorder,
             radius: const Radius.circular(8),

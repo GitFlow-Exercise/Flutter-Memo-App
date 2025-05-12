@@ -34,6 +34,7 @@ class UploadRawTextField extends StatelessWidget {
     );
   }
 
+  // 기본 베이스 Border Style
   OutlineInputBorder get _baseBorder => OutlineInputBorder(
     borderRadius: BorderRadius.circular(8),
     borderSide: const BorderSide(color: AppColor.lightGrayBorder),

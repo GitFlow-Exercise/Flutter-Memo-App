@@ -6,6 +6,7 @@ import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/create/presentation/base/widgets/ai_base_container.dart';
 import 'package:mongo_ai/create/presentation/base/widgets/bottom_navigate_button.dart';
 
+// AI 생성할 때 기본으로 구성되는 레이아웃
 class AiBaseLayout extends StatelessWidget {
   final String title; // 헤더 텍스트
   final String subTitle; // 서브 텍스트

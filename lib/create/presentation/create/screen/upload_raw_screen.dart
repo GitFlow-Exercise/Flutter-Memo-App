@@ -34,6 +34,7 @@ class _UploadRawScreenState extends State<UploadRawScreen> {
           style: AppTextStyle.bodyRegular.copyWith(color: AppColor.lightGray),
         ),
         const SizedBox(height: 20),
+        // 타입 설정하는 커스텀 탭바
         Container(
           decoration: const BoxDecoration(
             border: Border(bottom: BorderSide(color: AppColor.lightGrayBorder)),
@@ -78,6 +79,8 @@ class _UploadRawScreenState extends State<UploadRawScreen> {
 
         const SizedBox(height: 30),
 
+        // 텍스트/이미지/파일 별로
+        // 위젯이 다르게 나오도록 구성 및 각 위젯 컴포넌트화
         if (widget.state.selectedUploadType == AiConstant.inputText) ...[
           UploadInputText(controller: widget.state.textController),
         ] else if (widget.state.selectedUploadType ==
@@ -96,6 +99,7 @@ class _UploadRawScreenState extends State<UploadRawScreen> {
     );
   }
 
+  // 현재 타입에 따라 탭바에 알맞게 텍스트 출력
   String inputText(String text) {
     if (text == 'input_text') {
       return '텍스트 입력';
