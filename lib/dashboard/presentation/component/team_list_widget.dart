@@ -19,7 +19,6 @@ class TeamListWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final teamListAsync = ref.watch(getTeamsByCurrentUserProvider);
-    final currentTeamNotifier = ref.read(currentTeamIdStateProvider.notifier);
     return teamListAsync.when(
       data: (result) {
         // 성공적으로 로드한 팀 목록
@@ -54,14 +53,6 @@ class TeamListWidget extends ConsumerWidget {
                 child: Text(team.teamName),
               );
             }).toList(),
-            selectedItemBuilder: (context) {
-              return teamList.map((team) {
-                return Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(team.teamName),
-                );
-              }).toList();
-            },
           ),
         );
       },
