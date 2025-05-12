@@ -27,6 +27,7 @@ class _UploadRawScreenState extends State<UploadRawScreen> {
       title: '문제집 생성',
       subTitle: '콘텐츠 소스 선택',
       step: 1,
+      maxWidth: 800,
       child: Stack(
         children: [
           SingleChildScrollView(
