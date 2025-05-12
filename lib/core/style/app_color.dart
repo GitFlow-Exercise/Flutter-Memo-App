@@ -12,6 +12,7 @@ abstract class AppColor {
   static const Color lightGray = Color(0xFF717171); // 태그 텍스트
   static const Color paleGray = Color(0xFF9DA3B3); // 아이콘, 부가 텍스트
   static const Color lighterGray = Color(0xFFBDC1CC); // 비활성화된 아이콘
+  static const Color hintTextGrey = Color(0xFFADAEBC); // 비활성화된 아이콘
 
   // Background Colors
   static const Color lightBlue = Color(0xFFF6F7FB); // 패널, 태그 배경

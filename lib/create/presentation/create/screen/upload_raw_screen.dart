@@ -5,6 +5,7 @@ import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/create/presentation/create/controller/upload_raw_action.dart';
 import 'package:mongo_ai/create/presentation/create/controller/upload_raw_state.dart';
+import 'package:mongo_ai/create/presentation/create/widgets/upload_raw_text_field.dart';
 import 'package:printing/printing.dart';
 
 class UploadRawScreen extends StatefulWidget {
@@ -92,16 +93,11 @@ class _UploadRawScreenState extends State<UploadRawScreen> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                TextField(
+                UploadRawTextField(
                   onChanged: (_) {
                     setState(() {});
                   },
                   controller: widget.state.textController,
-                  maxLines: 12,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: '여기에 텍스트를 붙여넣거나 입력하세요. 문단 구분을 위해 빈 줄을 사용하세요.',
-                  ),
                 ),
               ] else if (widget.state.selectedUploadType ==
                   AiConstant.inputImage) ...[
