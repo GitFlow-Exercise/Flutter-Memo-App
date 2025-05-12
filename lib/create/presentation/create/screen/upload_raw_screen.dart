@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mongo_ai/core/constants/ai_constant.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/create/presentation/create/controller/upload_raw_action.dart';
 import 'package:mongo_ai/create/presentation/create/controller/upload_raw_state.dart';
 import 'package:mongo_ai/create/presentation/create/widgets/upload_input_widgets.dart';
-import 'package:printing/printing.dart';
 
 class UploadRawScreen extends StatefulWidget {
   final UploadRawState state;

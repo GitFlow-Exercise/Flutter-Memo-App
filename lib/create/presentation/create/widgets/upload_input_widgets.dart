@@ -26,7 +26,7 @@ class UploadInputText extends StatelessWidget {
           '텍스트 입력',
           style: AppTextStyle.bodyMedium.copyWith(color: AppColor.mediumGray),
         ),
-        const SizedBox(height: 10),
+        const Gap(10),
         UploadRawTextField(onChanged: onChanged, controller: controller),
       ],
     );
@@ -106,7 +106,7 @@ class UploadInputImage extends StatelessWidget {
                               Icons.folder_open_outlined,
                               color: AppColor.white,
                             ),
-                            const SizedBox(width: 8),
+                            const Gap(8),
                             Text(
                               '파일 찾기',
                               style: AppTextStyle.bodyRegular.copyWith(
