@@ -59,12 +59,14 @@ class _UploadRawScreenRootState extends ConsumerState<UploadRawScreenRoot> {
                   title: const Text(
                     '아래 텍스트가 추출된 내용입니다.\n확인 후 이상 없으면 ‘확인’하고 다음 단계로 이동해주세요.',
                   ),
-                  content: Text(response.getContent()),
+                  content: SingleChildScrollView(
+                    child: Text(response.getContent()),
+                  ),
                   actions: [
                     BaseAppButton(onTap: () => context.pop(), text: '취소'),
                     BaseAppButton(
                       onTap: () {
-                        context.pop();
+                        ctx.pop();
                         context.push(Routes.createProblem, extra: response);
                       },
                       text: '확인',
