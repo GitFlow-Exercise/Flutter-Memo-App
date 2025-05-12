@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// 1,2단계에서 사용되는 기본 로딩 화면
 class AiLoadingView extends StatelessWidget {
   const AiLoadingView({super.key});
 

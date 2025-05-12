@@ -15,6 +15,7 @@ class FilePickerDataSourceImpl implements FilePickerDataSource {
         allowedExtensions: [
           AllowedExtensionType.png.name,
           AllowedExtensionType.jpg.name,
+          AllowedExtensionType.jpeg.name,
         ],
       );
 

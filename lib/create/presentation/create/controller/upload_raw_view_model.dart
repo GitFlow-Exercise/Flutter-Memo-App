@@ -33,6 +33,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
     return UploadRawState(textController: textController);
   }
 
+  // 업로드 타입 선택
   void handleSelectUploadType(String type) {
     final isTextType = type == AiConstant.inputText;
     state = state.whenData((cb) {
@@ -50,6 +51,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
     }
   }
 
+  // 이미지 파일 선택(png, jpg, jpeg)
   Future<void> handlePickImage(BuildContext context) async {
     final useCase = ref.read(imagePickFileUseCaseProvider);
     final result = await useCase.execute();
@@ -67,6 +69,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
     }
   }
 
+  // PDF 파일 선택
   Future<void> handlePickPdf(BuildContext context) async {
     final useCase = ref.read(pdfPickFileUseCaseProvider);
     final result = await useCase.execute();
@@ -84,12 +87,14 @@ class UploadRawViewModel extends _$UploadRawViewModel {
     }
   }
 
+  // 설정된 타입으로 클린 텍스트 추출
   Future<void> handleSubmitForm(BuildContext context) async {
     final pState = state.value;
     if (pState == null) {
       _readyForSnackBar('에러가 발생하였습니다. 다시 시도해주세요.');
       return;
     }
+    // 텍스트 타입으로 추출
     if (pState.selectedUploadType == AiConstant.inputText) {
       final text = pState.textController.text.trim();
       if (text.isEmpty) {
@@ -106,6 +111,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
       return;
     }
 
+    // 이미지 & PDF 파일 타입으로 추출
     final file = pState.pickFile;
     if (file == null) {
       if (pState.selectedUploadType == AiConstant.inputImage) {
@@ -154,6 +160,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
     }
   }
 
+  // 하단 스낵바 출력
   void _readyForSnackBar(String message) {
     _eventController.add(UploadRawEvent.showSnackBar(message));
   }

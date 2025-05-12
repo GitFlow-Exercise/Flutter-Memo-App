@@ -6,6 +6,10 @@ import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 
 part 'upload_raw_state.freezed.dart';
 
+// 기존에 이미지, 파일별로 AsyncValue 할당해서 사용하던 형식에서
+// 타입을 AsyncValue가 아닌 실제 타입으로 설정한 후
+// 해당 viewmodel에서 UploadRawState 자체를 AsyncValue로
+// 사용하는 형식으로 변경하였습니다.
 @freezed
 abstract class UploadRawState with _$UploadRawState {
   const factory UploadRawState({
