@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mongo_ai/core/di/providers.dart';
-import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
+import 'package:mongo_ai/dashboard/domain/model/folder.dart';
+import 'package:mongo_ai/dashboard/presentation/component/folder_list_widget.dart';
+import 'package:mongo_ai/dashboard/presentation/component/team_list_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/controller/dashboard_view_model.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
@@ -18,11 +19,10 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
-    final dashboardAsync = ref.watch(dashboardViewModelProvider);
-    final dashboardNotifier = ref.read(dashboardViewModelProvider.notifier);
-    return dashboardAsync.when(
+    final state = ref.watch(dashboardViewModelProvider);
+    final viewModel = ref.read(dashboardViewModelProvider.notifier);
+    return state.when(
       data: (dashboard) {
-        final folderAsync = ref.watch(getFoldersByCurrentTeamIdProvider(dashboard.currentTeamId));
         return Scaffold(
             appBar: AppBar(
               title: const Text('Mongo AI'),
@@ -45,20 +45,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                   child: Column(
                     children: [
-                      SizedBox(
-                        height: 200,
-                        child: ListView.builder(
-                          itemCount: dashboard.teamList.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              title: Text(dashboard.teamList[index].teamName),
-                              tileColor: dashboard.currentTeamId == dashboard.teamList[index].teamId ? Colors.blue : Colors.white,
-                              onTap: () {
-                                dashboardNotifier.selectTeam(dashboard.teamList[index].teamId);
-                              },
-                            );
-                          },
-                        ),
+                      TeamListWidget(
+                        currentTeamId: dashboard.currentTeamId,
+                        onClickTeam: (int teamId) {
+                          viewModel.selectTeam(teamId);
+                        },
                       ),
                       const Divider(height: 32, thickness: 1),
                       ElevatedButton(
@@ -71,26 +62,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                       const Divider(height: 32, thickness: 1),
                       const Text('폴더'),
-                      folderAsync.when(
-                        data: (result) {
-                          return switch(result) {
-                            Success(data: final data) => SizedBox(
-                              height: 200,
-                              child: ListView.builder(
-                                itemCount: data.length,
-                                itemBuilder: (context, index) {
-                                  return ListTile(
-                                    title: Text(data[index].folderName),
-                                    onTap: () {},
-                                  );
-                                },
-                              ),
-                            ),
-                            Error() => const SizedBox.shrink(),
-                          };
+                      FolderListWidget(
+                        onClickFolder: (List<Folder> path) {
+                          viewModel.selectFolder(path);
+                          _onTap(context, 2);
                         },
-                        loading: () => const SizedBox.shrink(),
-                        error: (e, _) => const SizedBox.shrink(),
+                        onClickExpand: () {
+
+                        },
                       )
                     ],
                   ),
@@ -108,7 +87,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              dashboardNotifier.refreshFolderList(dashboard.currentTeamId);
+                              viewModel.refreshFolderList();
                             },
                             child: const Text('폴더 새로고침'),
                           )
