@@ -106,6 +106,7 @@ class CreateProblemScreen extends StatelessWidget {
                       color: AppColor.lightGray,
                     ),
                     overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
                   ),
                 ),
               ],
