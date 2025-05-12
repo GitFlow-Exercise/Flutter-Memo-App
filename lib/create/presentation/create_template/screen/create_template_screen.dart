@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gap/gap.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_action.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
+import 'package:mongo_ai/create/presentation/create_template/widget/create_problem_list_widget.dart';
+import 'package:mongo_ai/create/presentation/create_template/widget/create_problem_order_setting_box.dart';
+import 'package:mongo_ai/create/presentation/create_template/widget/pdf_template_layer_selector.dart';
 
 class CreateTemplateScreen extends StatefulWidget {
   final CreateTemplateState state;
@@ -40,171 +44,23 @@ class _CreateTemplateScreenState extends State<CreateTemplateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    Container(
-                      width: 120,
-                      height: 80,
-                      margin: const EdgeInsets.all(10),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          widget.onAction(
-                            const CreateTemplateAction.onTapColumnsTemplate(
-                              isSingleColumns: true,
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              widget.state.isSingleColumns
-                                  ? Colors.purple
-                                  : Colors.purple[100],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: const Text(
-                          'PDF 한 단',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 120,
-                      height: 80,
-                      margin: const EdgeInsets.all(10),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          widget.onAction(
-                            const CreateTemplateAction.onTapColumnsTemplate(
-                              isSingleColumns: false,
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              !widget.state.isSingleColumns
-                                  ? Colors.purple
-                                  : Colors.purple[100],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: const Text(
-                          'PDF 두 단',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-
-                // 교사용 정리 - 텍스트 편집창으로 변경
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 400,
-                      height: 300,
-                      margin: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.purple, width: 2),
-                      ),
-                      child: Column(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            width: double.infinity,
-                            decoration: const BoxDecoration(
-                              color: Colors.purple,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(8),
-                                topRight: Radius.circular(8),
-                              ),
-                            ),
-                            child: const Text(
-                              'AI 선생님',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextField(
-                                controller: widget.state.textEditingController,
-                                maxLines: null,
-                                // 여러 줄 입력 가능
-                                expands: true,
-                                // 전체 공간 차지
-                                textAlignVertical: TextAlignVertical.top,
-                                decoration: const InputDecoration(
-                                  hintText: '교사용 정리 내용을 입력하세요...',
-                                  border: InputBorder.none,
-                                ),
-                                onChanged: (value) {
-                                  widget.onAction(
-                                    CreateTemplateAction.onChangeContents(
-                                      contents: value,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-
-            SizedBox(
-              width: 120,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () {
-                  widget.onAction(
-                    CreateTemplateAction.createProblemForPdf(
-                      contents: widget.state.textEditingController.text,
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: const Text(
-                  '만들기',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          ],
+    return const Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 350,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              PdfTemplateLayoutSelector(),
+              Gap(24),
+              CreateProblemListWidget(),
+            ],
+          ),
         ),
-      ),
+        Gap(32),
+        CreateProblemOrderSettingBox(),
+      ],
     );
   }
 }
