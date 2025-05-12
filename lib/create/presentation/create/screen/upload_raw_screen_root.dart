@@ -43,7 +43,7 @@ class _UploadRawScreenRootState extends ConsumerState<UploadRawScreenRoot> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(message)));
-      case SuccessOCR(: final response):
+      case SuccessOCR(:final response):
         if (mounted) {
           context.go(Routes.createProblem, extra: response);
         }

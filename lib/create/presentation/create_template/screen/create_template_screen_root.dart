@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_action.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_event.dart';
@@ -46,6 +48,8 @@ class _CreateTemplateScreenRootState
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(message)));
+      case CreatePdfWithTemplate(:final bytes):
+        context.go(Routes.pdfPreview, extra: bytes);
     }
   }
 
