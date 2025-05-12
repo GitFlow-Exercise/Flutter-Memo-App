@@ -60,7 +60,7 @@ class _UploadRawScreenRootState extends ConsumerState<UploadRawScreenRoot> {
       title: '문제집 생성',
       subTitle: '콘텐츠 소스 선택',
       step: 1,
-      maxWidth: 800,
+      maxWidth: 900,
       nextTap: () {},
       isPopTap: false,
       child: UploadRawScreen(
