@@ -1,6 +1,7 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:mongo_ai/core/component/base_app_button.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/create/domain/model/pick_file.dart';
@@ -72,25 +73,7 @@ class UploadInputFile extends StatelessWidget {
                         ),
                       ),
                     ),
-                    InkWell(
-                      onTap: onTap,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 12,
-                          horizontal: 16,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColor.primary,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          '파일 선택하기',
-                          style: AppTextStyle.bodyRegular.copyWith(
-                            color: AppColor.white,
-                          ),
-                        ),
-                      ),
-                    ),
+                    BaseAppButton(onTap: onTap, text: '파일 선택하기'),
                   ],
                 ),
               ),
