@@ -63,6 +63,7 @@ class _CreateTemplateScreenRootState
       subTitle: 'PDF 템플릿 선택',
       step: 3,
       maxWidth: 1000,
+      maxHeight: 750,
       nextTap: () {},
       isPopTap: false,
       child: CreateTemplateScreen(state: state, onAction: _handleAction),
