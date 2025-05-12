@@ -3,77 +3,94 @@ import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 
 class AiBaseContainer extends StatelessWidget {
-  final String title;
-  final String subTitle;
-  final int step;
-  final Widget child;
+  final String title; // 헤더 텍스트
+  final String subTitle; // 서브 텍스트
+  final int step; // 현재 단계
+  final Widget child; // 내부 위젯
+  final double maxWidth; // 최대 너비
   const AiBaseContainer({
     super.key,
     required this.title,
     required this.subTitle,
     required this.step,
     required this.child,
+    required this.maxWidth,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppColor.white,
-      padding: const EdgeInsets.all(32),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(title, style: AppTextStyle.titleBold),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Step $step: $subTitle',
-                  style: AppTextStyle.bodyRegular.copyWith(
-                    color: AppColor.lightGray,
+    return Center(
+      child: Container(
+        constraints: BoxConstraints(maxWidth: maxWidth),
+        color: AppColor.white,
+        padding: const EdgeInsets.all(32),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(title, style: AppTextStyle.titleBold),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Step $step: $subTitle',
+                    style: AppTextStyle.bodyRegular.copyWith(
+                      color: AppColor.lightGray,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 50,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        shrinkWrap: true,
-                        itemCount: 4,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            margin: const EdgeInsets.only(right: 16),
-                            padding: circlePadding(
-                              index: index + 1,
-                              step: step,
-                            ),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: circleColor(index: index + 1, step: step),
-                            ),
-                            child: circleWidget(index: index + 1, step: step),
-                          );
-                        },
-                      ),
-                    ],
+                  SizedBox(
+                    height: 50,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          itemCount: 4,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return Container(
+                              padding: circlePadding(
+                                index: index + 1,
+                                step: step,
+                              ),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: circleColor(
+                                  index: index + 1,
+                                  step: step,
+                                ),
+                              ),
+                              child: circleWidget(index: index + 1, step: step),
+                            );
+                          },
+                          separatorBuilder: (context, index) {
+                            return const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              child: Icon(
+                                Icons.arrow_forward,
+                                size: 16,
+                                color: AppColor.lighterGray,
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-            child,
-          ],
+                ],
+              ),
+              child,
+            ],
+          ),
         ),
       ),
     );
   }
 
+  // step에 따라 달라지는 원 색상
   Color circleColor({required int index, required int step}) {
     if (index > step) {
       return AppColor.paleGrayBorder;
@@ -84,6 +101,7 @@ class AiBaseContainer extends StatelessWidget {
     }
   }
 
+  // step에 따라 달라지는 원 위젯
   Widget circleWidget({required int index, required int step}) {
     if (index >= step) {
       return Center(
@@ -98,6 +116,7 @@ class AiBaseContainer extends StatelessWidget {
     );
   }
 
+  // step에 따라 달라지는 원 패딩값
   EdgeInsets circlePadding({required int index, required int step}) {
     if (index >= step) {
       return const EdgeInsets.symmetric(vertical: 2, horizontal: 8);
