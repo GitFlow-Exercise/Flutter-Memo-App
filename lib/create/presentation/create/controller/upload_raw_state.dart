@@ -10,7 +10,13 @@ part 'upload_raw_state.freezed.dart';
 @freezed
 abstract class UploadRawState with _$UploadRawState {
   const factory UploadRawState({
-    @Default(AiConstant.inputText) selectedUploadType,
+    @Default(AiConstant.inputText) String selectedUploadType,
+    @Default([
+      AiConstant.inputText,
+      AiConstant.inputImage,
+      AiConstant.inputFile,
+    ])
+    List<String> uploadTypes,
     @Default(AsyncValue.data(null)) AsyncValue<PickFile?> pickFile,
     @Default(AsyncValue.data(null)) AsyncValue<OpenAiResponse?> result,
     required TextEditingController textController,
