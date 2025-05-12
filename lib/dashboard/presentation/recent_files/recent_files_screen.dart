@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
+import 'package:mongo_ai/dashboard/presentation/component/workbook_list_item.dart';
 import 'package:mongo_ai/dashboard/presentation/recent_files/controller/recent_files_view_model.dart';
 
 class RecentFilesScreen extends ConsumerWidget {
@@ -30,14 +31,18 @@ class RecentFilesScreen extends ConsumerWidget {
           Expanded(
             child: state.workbookList.when(
               data: (data) {
-                return ListView.builder(
+                return ListView.separated(
                     itemCount: data.length,
                     itemBuilder: (context, index) {
-                      return ListTile(
-                          title: Text(data[index].workbookName),
-                          onTap: () {}
+                      return WorkbookListItem(
+                        workbook: data[index],
+                        onClick: () {},
+                        onBookmark: () {},
                       );
-                    }
+                    },
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(height: 10);
+                  },
                 );
               },
               loading: () => const SizedBox.shrink(),
