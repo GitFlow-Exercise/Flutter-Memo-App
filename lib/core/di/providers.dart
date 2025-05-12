@@ -195,13 +195,13 @@ final authDataSourceProvider = Provider<AuthDataSource>((ref) {
   return AuthDataSourceImpl(client: client);
 });
 
+final tempStorageDataSourceProvider = Provider<TempStorageDataSource>((ref) {
+  return TempStorageDataSourceImpl();
+});
+
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final dataSource = ref.watch(authDataSourceProvider);
   return AuthRepositoryImpl(authDataSource: dataSource);
-});
-
-final tempStorageDataSourceProvider = Provider<TempStorageDataSource>((ref) {
-  return TempStorageDataSourceImpl();
 });
 
 final tempStorageRepositoryProvider = Provider<TempStorageRepository>((ref) {

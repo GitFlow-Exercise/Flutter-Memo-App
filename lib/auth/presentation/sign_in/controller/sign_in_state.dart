@@ -13,5 +13,5 @@ abstract class SignInState with _$SignInState {
 }
 
 extension SignInStateExtension on SignInState {
-  bool get isFormValid => emailController.text.isNotEmpty && passwordController.text.isNotEmpty;
+  bool get isFormValid => emailController.text.isNotEmpty && passwordController.text.length >= 8;
 }
