@@ -1,3 +1,4 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
@@ -55,58 +56,70 @@ class UploadInputImage extends StatelessWidget {
             child: Image.memory(file!.bytes, fit: BoxFit.cover),
           ),
         if (file == null)
-          Container(
-            height: 250,
-            width: double.infinity,
-            decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '이미지 파일을 끌어서 놓거나 클릭하여 업로드하세요',
-                  style: AppTextStyle.bodyMedium.copyWith(
-                    color: AppColor.mediumGray,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Text(
-                    '최대 파일 크기 5MB',
-                    style: AppTextStyle.captionRegular.copyWith(
-                      color: AppColor.lightGray,
-                    ),
-                  ),
-                ),
-                InkWell(
-                  onTap: onTap,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                      horizontal: 16,
-                    ),
-                    decoration: BoxDecoration(
+          DottedBorder(
+            color: AppColor.lightGrayBorder,
+            radius: const Radius.circular(8),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: SizedBox(
+                height: 250,
+                width: double.infinity,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.cloud_upload_outlined,
                       color: AppColor.primary,
-                      borderRadius: BorderRadius.circular(6),
+                      size: 40,
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.folder_open_outlined,
-                          color: AppColor.white,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          '파일 찾기',
-                          style: AppTextStyle.bodyRegular.copyWith(
-                            color: AppColor.white,
-                          ),
-                        ),
-                      ],
+                    const Gap(16),
+                    Text(
+                      '이미지 파일을 끌어서 놓거나 클릭하여 업로드하세요',
+                      style: AppTextStyle.bodyMedium.copyWith(
+                        color: AppColor.mediumGray,
+                      ),
                     ),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Text(
+                        '최대 파일 크기 5MB',
+                        style: AppTextStyle.captionRegular.copyWith(
+                          color: AppColor.lightGray,
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: onTap,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 16,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColor.primary,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.folder_open_outlined,
+                              color: AppColor.white,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              '파일 찾기',
+                              style: AppTextStyle.bodyRegular.copyWith(
+                                color: AppColor.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
       ],
@@ -133,7 +146,10 @@ class UploadInputFile extends StatelessWidget {
         if (file != null)
           Container(
             height: 250,
-            decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(8),
+            ),
             child: PdfPreview(
               build: (format) => file!.bytes,
               maxPageWidth: 400,
@@ -145,48 +161,60 @@ class UploadInputFile extends StatelessWidget {
             ),
           ),
         if (file == null)
-          Container(
-            height: 250,
-            width: double.infinity,
-            decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'PDF 파일을 끌어서 놓거나 클릭하여 업로드하세요',
-                  style: AppTextStyle.bodyMedium.copyWith(
-                    color: AppColor.mediumGray,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Text(
-                    '최대 파일 크기 5MB',
-                    style: AppTextStyle.captionRegular.copyWith(
-                      color: AppColor.lightGray,
-                    ),
-                  ),
-                ),
-                InkWell(
-                  onTap: onTap,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                      horizontal: 16,
-                    ),
-                    decoration: BoxDecoration(
+          DottedBorder(
+            color: AppColor.lightGrayBorder,
+            radius: const Radius.circular(8),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: SizedBox(
+                height: 250,
+                width: double.infinity,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.picture_as_pdf_outlined,
                       color: AppColor.primary,
-                      borderRadius: BorderRadius.circular(6),
+                      size: 40,
                     ),
-                    child: Text(
-                      '파일 선택하기',
-                      style: AppTextStyle.bodyRegular.copyWith(
-                        color: AppColor.white,
+                    const Gap(16),
+                    Text(
+                      'PDF 파일을 끌어서 놓거나 클릭하여 업로드하세요',
+                      style: AppTextStyle.bodyMedium.copyWith(
+                        color: AppColor.mediumGray,
                       ),
                     ),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Text(
+                        '최대 파일 크기 5MB',
+                        style: AppTextStyle.captionRegular.copyWith(
+                          color: AppColor.lightGray,
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: onTap,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 16,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColor.primary,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          '파일 선택하기',
+                          style: AppTextStyle.bodyRegular.copyWith(
+                            color: AppColor.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
       ],
