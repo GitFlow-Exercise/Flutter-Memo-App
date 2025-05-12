@@ -4,6 +4,7 @@ import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/create/presentation/base/widgets/ai_base_container.dart';
+import 'package:mongo_ai/create/presentation/base/widgets/bottom_navigate_button.dart';
 
 class AiBaseLayout extends StatelessWidget {
   final String title; // 헤더 텍스트
@@ -49,103 +50,78 @@ class AiBaseLayout extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            InkWell(
+            BottomNavigateButton(
               onTap:
                   cancelTap ??
                   () {
                     context.go(Routes.home);
                   },
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  border: Border.all(color: AppColor.lightGrayBorder),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.close_outlined,
+              border: Border.all(color: AppColor.lightGrayBorder),
+              bgColor: AppColor.white,
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.close_outlined,
+                    color: AppColor.lightGray,
+                    size: 16,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    '취소',
+                    style: AppTextStyle.bodyRegular.copyWith(
                       color: AppColor.lightGray,
-                      size: 16,
                     ),
-                    const SizedBox(width: 8),
-                    Text(
-                      '취소',
-                      style: AppTextStyle.bodyRegular.copyWith(
-                        color: AppColor.lightGray,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
+
             if (isPopTap)
-              InkWell(
+              BottomNavigateButton(
                 onTap:
                     popTap ??
                     () {
                       context.pop();
                     },
-                child: Container(
-                  margin: const EdgeInsets.only(left: 16),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: AppColor.lightGrayBorder),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.arrow_back,
-                        color: AppColor.lightGray,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        '이전 단계',
-                        style: AppTextStyle.bodyRegular.copyWith(
-                          color: AppColor.lightGray,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            const SizedBox(width: 16),
-            InkWell(
-              onTap: nextTap,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColor.primary,
-                  border: Border.all(color: AppColor.lightGrayBorder),
-                  borderRadius: BorderRadius.circular(6),
-                ),
+                border: Border.all(color: AppColor.lightGrayBorder),
+                bgColor: AppColor.white,
                 child: Row(
                   children: [
-                    Text(
-                      '다음단계',
-                      style: AppTextStyle.bodyRegular.copyWith(
-                        color: AppColor.white,
-                      ),
+                    const Icon(
+                      Icons.arrow_back,
+                      color: AppColor.lightGray,
+                      size: 16,
                     ),
                     const SizedBox(width: 8),
-                    const Icon(
-                      Icons.arrow_forward,
-                      color: AppColor.white,
-                      size: 16,
+                    Text(
+                      '이전 단계',
+                      style: AppTextStyle.bodyRegular.copyWith(
+                        color: AppColor.lightGray,
+                      ),
                     ),
                   ],
                 ),
+              ),
+            const SizedBox(width: 16),
+            BottomNavigateButton(
+              onTap: nextTap,
+              border: Border.all(color: AppColor.primary),
+              bgColor: AppColor.primary,
+              child: Row(
+                children: [
+                  Text(
+                    '다음단계',
+                    style: AppTextStyle.bodyRegular.copyWith(
+                      color: AppColor.white,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  const Icon(
+                    Icons.arrow_forward,
+                    color: AppColor.white,
+                    size: 16,
+                  ),
+                ],
               ),
             ),
           ],
