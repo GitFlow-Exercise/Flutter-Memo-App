@@ -70,9 +70,7 @@ flutter:
   uses-material-design: true
   assets:
     - .env
-    # pdf 파일을 위한 글꼴 추가
-    - assets/fonts/NanumGothicLight.ttf
-  
+
   fonts:
     - family: Pretendard
       fonts:

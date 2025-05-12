@@ -55,69 +55,72 @@ class PdfGenerator {
     bool useDoubleColumn = false,
     double columnSpacing = 10.0,
   }) async {
-    try {
-      // 0. pdf 한글 출력을 위한 폰트 설정
-      final font = await fontFromAssetBundle(
-        'assets/fonts/NanumGothicLight.ttf',
-      );
-      print('pdf font: $font');
+    final regularFont = await _loadFont('assets/fonts/Pretendard-Regular.ttf');
+    final boldFont = await _loadFont('assets/fonts/Pretendard-Bold.ttf');
 
-      // 1. 스타일 설정
-      final effectiveHeaderStyle = _createHeaderStyle(headerStyle, font: font);
-      final effectiveContentStyle = _createContentStyle(
-        contentsStyle,
-        font: font,
-      );
+    final effectiveHeaderStyle = _createHeaderStyle(headerStyle, boldFont);
+    final effectiveContentStyle = _createContentStyle(contentsStyle, regularFont);
 
-      // 2. 콘텐츠 처리
-      final contentLines = contentsText.split('\n');
+    final contentLines = contentsText.split('\n');
+    final pdf = pw.Document();
 
-      // 3. PDF 문서 생성
-      final pdf = pw.Document();
+    pdf.addPage(
+      pw.MultiPage(
+        pageFormat: pageFormat,
+        build: (pw.Context context) {
+          final widgets = _buildHeaderWidget(
+            headerText: headerText,
+            headerStyle: effectiveHeaderStyle,
+            headerHeight: headerHeight,
+          );
 
-      // 4. 페이지 추가
-      pdf.addPage(
-        pw.MultiPage(
-          pageFormat: pageFormat,
-          build: (pw.Context context) {
-            // 제목 및 콘텐츠 위젯 준비
-            final widgets = _buildHeaderWidget(
-              headerText: headerText,
-              headerStyle: effectiveHeaderStyle,
-              headerHeight: headerHeight,
+          if (useDoubleColumn) {
+            widgets.add(
+              _createDoubleColumnLayout(
+                contentLines: contentLines,
+                contentStyle: effectiveContentStyle,
+                pageFormat: pageFormat,
+                columnSpacing: columnSpacing,
+              ),
             );
+          } else {
+            widgets.addAll(
+              _createSingleColumnLayout(
+                contentLines: contentLines,
+                contentStyle: effectiveContentStyle,
+                headerStyle: effectiveHeaderStyle,
+              ),
+            );
+          }
 
-            // 레이아웃 유형에 따라 콘텐츠 구성
-            if (useDoubleColumn) {
-              widgets.add(
-                _createDoubleColumnLayout(
-                  contentLines: contentLines,
-                  contentStyle: effectiveContentStyle,
-                  pageFormat: pageFormat,
-                  columnSpacing: columnSpacing,
-                ),
-              );
-            } else {
-              widgets.addAll(
-                _createSingleColumnLayout(
-                  contentLines: contentLines,
-                  contentStyle: effectiveContentStyle,
-                  headerStyle: effectiveHeaderStyle,
-                ),
-              );
-            }
+          return widgets;
+        },
+      ),
+    );
 
-            return widgets;
-          },
-        ),
-      );
+    return pdf.save();
+  }
 
-      // 5. PDF 생성 완료
-      return pdf.save();
-    } catch (e) {
-      debugPrint('PDF 생성 중 오류 발생: $e');
-      rethrow;
-    }
+  pw.TextStyle _createHeaderStyle(pw.TextStyle? baseStyle, pw.Font font) {
+    return pw.TextStyle(
+      fontSize: baseStyle?.fontSize ?? 24,
+      fontWeight: pw.FontWeight.bold,
+      color: baseStyle?.color,
+      font: font,
+    );
+  }
+
+  pw.TextStyle _createContentStyle(pw.TextStyle? baseStyle, pw.Font font) {
+    return pw.TextStyle(
+      fontSize: baseStyle?.fontSize ?? 12,
+      color: baseStyle?.color,
+      font: font,
+    );
+  }
+
+  Future<pw.Font> _loadFont(String fontPath) async {
+    final fontData = await rootBundle.load(fontPath);
+    return pw.Font.ttf(fontData);
   }
 
   /// 제목 위젯을 구성합니다
@@ -317,32 +320,6 @@ class PdfGenerator {
       ),
     );
   }
-
-  /// 제목 스타일을 생성합니다
-  pw.TextStyle _createHeaderStyle(
-    pw.TextStyle? baseStyle, {
-    required pw.Font font,
-  }) {
-    print('font: $font');
-    return pw.TextStyle(
-      fontSize: baseStyle?.fontSize ?? 24,
-      fontWeight: pw.FontWeight.bold,
-      color: baseStyle?.color,
-      font: font,
-    );
-  }
-
-  /// 본문 스타일을 생성합니다
-  pw.TextStyle _createContentStyle(
-    pw.TextStyle? baseStyle, {
-    required pw.Font font,
-  }) {
-    return pw.TextStyle(
-      fontSize: baseStyle?.fontSize ?? 12,
-      color: baseStyle?.color,
-    );
-  }
-
   // -----
   // pdf 파일 다운로드
   void downloadPdf(Uint8List bytes, {String fileName = 'document.pdf'}) {
