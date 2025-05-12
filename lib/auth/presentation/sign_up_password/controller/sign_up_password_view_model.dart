@@ -14,6 +14,7 @@ part 'sign_up_password_view_model.g.dart';
 @riverpod
 class SignUpPasswordViewModel extends _$SignUpPasswordViewModel {
   final _eventController = StreamController<SignUpPasswordEvent>();
+
   Stream<SignUpPasswordEvent> get eventStream => _eventController.stream;
 
   @override
@@ -21,14 +22,14 @@ class SignUpPasswordViewModel extends _$SignUpPasswordViewModel {
     final passwordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
 
-    passwordController.addListener(() => _validatePassword());
-    confirmPasswordController.addListener(() => _validateForm());
-
     ref.onDispose(() {
       _eventController.close();
       passwordController.dispose();
       confirmPasswordController.dispose();
     });
+
+    passwordController.addListener(() => _validatePassword());
+    confirmPasswordController.addListener(() => _validateForm());
 
     return SignUpPasswordState(
       tempStoreId: tempStoreId,
@@ -37,116 +38,152 @@ class SignUpPasswordViewModel extends _$SignUpPasswordViewModel {
     );
   }
 
-  // 비밀번호 보기/숨기기 토글
+  // UI 관련 토글 함수들
   void togglePasswordVisibility() {
-    state = state.whenData((value) =>
-        value.copyWith(isPasswordVisible: !value.isPasswordVisible)
+    state = state.whenData(
+      (value) => value.copyWith(isPasswordVisible: !value.isPasswordVisible),
     );
   }
 
-  // 비밀번호 확인 보기/숨기기 토글
   void toggleConfirmPasswordVisibility() {
-    state = state.whenData((value) =>
-        value.copyWith(isConfirmPasswordVisible: !value.isConfirmPasswordVisible)
+    state = state.whenData(
+      (value) => value.copyWith(
+        isConfirmPasswordVisible: !value.isConfirmPasswordVisible,
+      ),
     );
   }
 
-  // 개인정보처리방침 및 이용약관 동의 토글
   void togglePrivacyPolicy() {
-    state = state.whenData((value) =>
-        value.copyWith(checkPrivacyPolicy: !value.checkPrivacyPolicy)
+    state = state.whenData(
+      (value) => value.copyWith(checkPrivacyPolicy: !value.checkPrivacyPolicy),
     );
     _validateForm();
   }
 
-  // 비밀번호 유효성 검사
+  // 유효성 검사 로직
   void _validatePassword() {
-    final pState = state.value;
-    if (pState == null) return;
+    final currentState = state.value;
+    if (currentState == null) return;
 
-    final password = pState.passwordController.text;
-    final Set<PasswordCriteria> criteria = {};
+    final password = currentState.passwordController.text;
+    final criteria = _evaluatePasswordStrength(password);
 
-    // 비밀번호 길이 검사 (8자 이상)
+    state = state.whenData(
+      (value) => value.copyWith(meetsPasswordCriteria: criteria),
+    );
+    _validateForm();
+  }
+
+  Set<PasswordCriteria> _evaluatePasswordStrength(String password) {
+    final criteria = <PasswordCriteria>{};
+
     if (password.length >= 8) {
       criteria.add(PasswordCriteria.minLength);
     }
 
-    // 대문자 포함 검사
     if (RegExp(r'[A-Z]').hasMatch(password)) {
       criteria.add(PasswordCriteria.includesUppercase);
     }
 
-    // 소문자 포함 검사
     if (RegExp(r'[a-z]').hasMatch(password)) {
       criteria.add(PasswordCriteria.includesLowercase);
     }
 
-    // 숫자 포함 검사
     if (RegExp(r'[0-9]').hasMatch(password)) {
       criteria.add(PasswordCriteria.includesNumber);
     }
 
-    state = state.whenData((value) =>
-        value.copyWith(meetsPasswordCriteria: criteria)
-    );
-    _validateForm();
+    return criteria;
   }
 
-  // 전체 폼 유효성 검사
   void _validateForm() {
-    final pState = state.value;
-    if (pState == null) return;
+    final currentState = state.value;
+    if (currentState == null) return;
 
-    final password = pState.passwordController.text;
-    final confirmPassword = pState.confirmPasswordController.text;
-    final hasMinLength = pState.meetsPasswordCriteria.contains(PasswordCriteria.minLength);
+    final isValid = _checkFormValidity(currentState);
+    state = state.whenData((value) => value.copyWith(isFormValid: isValid));
+  }
 
-    // 폼이 유효하려면:
-    // 1. 비밀번호는 최소 8자 이상 (필수 조건)
-    // 2. 비밀번호와 확인이 일치해야 함
-    // 3. 개인정보처리방침 및 이용약관에 동의해야 함
-    final isValid = hasMinLength &&
+  bool _checkFormValidity(SignUpPasswordState currentState) {
+    final password = currentState.passwordController.text;
+    final confirmPassword = currentState.confirmPasswordController.text;
+    final hasMinLength = currentState.meetsPasswordCriteria.contains(
+      PasswordCriteria.minLength,
+    );
+
+    return hasMinLength &&
         password == confirmPassword &&
         password.isNotEmpty &&
         confirmPassword.isNotEmpty &&
-        pState.checkPrivacyPolicy;
-
-    state = state.whenData((value) =>
-        value.copyWith(isFormValid: isValid)
-    );
+        currentState.checkPrivacyPolicy;
   }
 
-  // 회원가입 시도
-  //TODO: tempStorage 다 수정해야함
+  // 임시 사용자 관련 로직
   Future<bool> successSendOtp() async {
-    final authRepository = ref.read(authRepositoryProvider);
-    final tempStorageRepository = ref.read(tempStorageRepositoryProvider);
+    final tempStoreId = state.value?.tempStoreId ?? '';
+    final password = state.value?.passwordController.text;
 
-    final tempStoreResult = tempStorageRepository.retrieveData(state.value?.tempStoreId ?? '');
-
-    TempUser tempUser;
-
-    switch (tempStoreResult) {
-      case Success<TempUser, AppException>():
-        tempUser = tempStoreResult.data.copyWith(password: state.value?.passwordController.text ?? '');
-      case Error<TempUser, AppException>():
-        _eventController.add(SignUpPasswordEvent.showSnackBar(tempStoreResult.error.message));
-        return false;
+    // 임시 사용자 정보 확인
+    final tempUser = _getTempUser(tempStoreId);
+    if (tempUser == null || password == null) {
+      _eventController.add(
+        const SignUpPasswordEvent.showSnackBar('알 수 없는 오류가 발생했습니다.'),
+      );
+      return false;
     }
 
-    final tempStoreId = tempStorageRepository.storeData(tempUser);
+    // 임시 사용자 비밀번호 업데이트
+    final newTempStoreId = _updateTempUserPassword(tempStoreId, password);
+    if (newTempStoreId == null) {
+      _eventController.add(
+        const SignUpPasswordEvent.showSnackBar('알 수 없는 오류가 발생했습니다.'),
+      );
+      return false;
+    }
 
-    final result = await authRepository.sendOtp(tempUser.email);
+    // OTP 전송 시도
+    return _sendOtpToUser(tempUser.email, newTempStoreId);
+  }
+
+  Future<bool> _sendOtpToUser(String email, String tempStoreId) async {
+    final authRepository = ref.read(authRepositoryProvider);
+    final result = await authRepository.sendOtp(email);
 
     switch (result) {
       case Success<void, AppException>():
-        _eventController.add(const SignUpPasswordEvent.showSnackBar('인증번호가 발송되었습니다.'));
-        _eventController.add(SignUpPasswordEvent.navigateToVerifyOtp(tempStoreId));
+        _eventController.add(
+          const SignUpPasswordEvent.showSnackBar('인증번호가 발송되었습니다.'),
+        );
+        _eventController.add(
+          SignUpPasswordEvent.navigateToVerifyOtp(tempStoreId),
+        );
         return true;
       case Error<void, AppException>():
-        _eventController.add(SignUpPasswordEvent.showSnackBar(result.error.message));
+        _eventController.add(
+          SignUpPasswordEvent.showSnackBar(result.error.message),
+        );
         return false;
     }
+  }
+
+  String? _updateTempUserPassword(String id, String password) {
+    final repository = ref.read(tempStorageRepositoryProvider);
+    final result = repository.retrieveData(id);
+
+    if (result is Success<TempUser, AppException>) {
+      final updated = result.data.copyWith(password: password);
+      return repository.storeData(updated);
+    }
+    return null;
+  }
+
+  TempUser? _getTempUser(String id) {
+    final repository = ref.read(tempStorageRepositoryProvider);
+    final result = repository.retrieveData(id);
+
+    if (result is Success<TempUser, AppException>) {
+      return result.data;
+    }
+    return null;
   }
 }

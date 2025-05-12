@@ -36,6 +36,12 @@ class SignUpViewModel extends _$SignUpViewModel {
     state = state.copyWith(isTermsOfUseChecked: !state.isTermsOfUseChecked);
   }
 
+  // 임시 유저 생성 및 저장
+  String _createTempUser(String email) {
+    final tempUser = TempUser(email: email, password: '');
+    return ref.read(tempStorageRepositoryProvider).storeData(tempUser);
+  }
+
   void checkEmail() async {
     final authRepository = ref.read(authRepositoryProvider);
     final result = await authRepository.isEmailExist(
@@ -44,15 +50,8 @@ class SignUpViewModel extends _$SignUpViewModel {
 
     switch (result) {
       case Success<bool, AppException>():
-
-        final tempStorageRepository = ref.read(tempStorageRepositoryProvider);
-
-        final tempUser = TempUser(email: state.emailController.text, password: '');
-
-        final tempStoreId = tempStorageRepository.storeData(tempUser);
-
-      _eventController.add(SignUpEvent.generateTempUserId(tempStoreId));
-
+        final tempStoreId = _createTempUser(state.emailController.text);
+        _eventController.add(SignUpEvent.generateTempUserId(tempStoreId));
       case Error<bool, AppException>():
         _eventController.add(SignUpEvent.showSnackBar(result.error.message));
     }
