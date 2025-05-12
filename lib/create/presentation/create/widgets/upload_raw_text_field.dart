@@ -3,13 +3,8 @@ import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 
 class UploadRawTextField extends StatelessWidget {
-  final void Function(String) onChanged;
   final TextEditingController controller;
-  const UploadRawTextField({
-    super.key,
-    required this.onChanged,
-    required this.controller,
-  });
+  const UploadRawTextField({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +13,6 @@ class UploadRawTextField extends StatelessWidget {
       child: TextField(
         expands: true,
         maxLines: null,
-        onChanged: onChanged,
         controller: controller,
         style: AppTextStyle.bodyRegular,
         textAlignVertical: TextAlignVertical.top,

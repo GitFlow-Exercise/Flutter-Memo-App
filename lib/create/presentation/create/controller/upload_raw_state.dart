@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mongo_ai/core/constants/ai_constant.dart';
 import 'package:mongo_ai/create/domain/model/pick_file.dart';
@@ -18,7 +17,7 @@ abstract class UploadRawState with _$UploadRawState {
     ])
     List<String> uploadTypes,
     @Default(null) PickFile? pickFile,
-    @Default(AsyncValue.data(null)) AsyncValue<OpenAiResponse?> result,
+    @Default(null) OpenAiResponse? result,
     required TextEditingController textController,
   }) = _UploadRawState;
 }
