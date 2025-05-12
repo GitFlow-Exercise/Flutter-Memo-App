@@ -86,7 +86,19 @@ class UploadRawViewModel extends _$UploadRawViewModel {
 
       debugPrint(text);
       _eventController.add(
-        UploadRawEvent.successOCR(OpenAiResponse.justText(contents: text)),
+        UploadRawEvent.successOCR(
+          OpenAiResponse.justText(
+            contents: '''
+Urban delivery vehicles can be adapted to better suit the density of urban distribution, which often involves smaller vehicles such as vans, including bicycles. The latter have the potential to become a preferred 'last-mile' vehicle, particularly in high-density and congested areas. In locations where bicycle use is high, such as the Netherlands, delivery bicycles are also used to carry personal cargo (e.g. groceries). Due to their low acquisition and maintenance costs, cargo bicycles convey much potential in developed and developing countries alike, such as the becak (a three-wheeled bicycle) in Indonesia.
+Services using electrically assisted delivery tricycles have been successfully implemented in France and are gradually being adopted across Europe for services as varied as parcel and catering deliveries. Using bicycles as cargo vehicles is particularly encouraged when combined with policies that restrict motor vehicle access to specific areas of a city, such as downtown or commercial districts, or with the extension of dedicated bike lanes.
+① 도시에서 자전거는 효율적인 배송 수단으로 사용될 수 있다.
+② 자전거는 출퇴근 시간을 줄이기 위한 대안으로 선호되고 있다.
+③ 자전거는 배송 수단으로의 경제적 장단점을 모두 가질 수 있다.
+④ 수요자의 요구에 부합하는 다양한 용도의 자전거가 개발되고 있다.
+⑤ 세계 각국에서는 전기 자전거 사용을 장려하는 정책을 추진하고 있다.
+''',
+          ),
+        ),
       );
       return;
     }
