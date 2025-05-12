@@ -16,7 +16,8 @@ abstract class AppRedirect {
       // 정상적으로 이동하도록 설정
       // ------------
       // TODO: 추후 비밀번호 재설정화면도 추가해아합니다.
-      if (nowPath == Routes.signUp) {
+      // TODO(ok): extra 리다이렉트 로직 추가
+      if (nowPath == Routes.signUp || nowPath == Routes.signUpPassword) {
         return null;
       }
       return Routes.signIn;
@@ -24,7 +25,7 @@ abstract class AppRedirect {
     // 유저 정보가 존재하고,
     // 현재 화면이 로그인 화면이거나 회원가입 화면이라면
     // 강제로 홈 화면으로 이동
-    if (nowPath == Routes.signIn || nowPath == Routes.signUp) {
+    if (nowPath == Routes.signIn || nowPath == Routes.signUp || nowPath == Routes.signUpPassword) {
       return Routes.home;
     }
     // 원래 가려던 방향 null

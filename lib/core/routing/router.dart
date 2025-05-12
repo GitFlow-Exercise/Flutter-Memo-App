@@ -68,14 +68,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const SignUpScreenRoot(),
       ),
       GoRoute(
-        path: Routes.checkOtp,
+        path: Routes.signUpPassword,
         builder: (context, state) {
           final email = state.extra as String;
           return SignUpPasswordScreenRoot(email: email);
         },
       ),
       GoRoute(
-        path: Routes.completeSignUp,
+        path: Routes.signUpComplete,
         builder:
             (context, state) =>
                 SignUpCompleteScreen(onTapHome: () => context.go(Routes.home)),
