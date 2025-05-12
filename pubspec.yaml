@@ -55,6 +55,9 @@ dependencies:
   #PDF 생성
   pdf: ^3.11.3
 
+  # DateTime 포맷 변경
+  intl: ^0.20.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
