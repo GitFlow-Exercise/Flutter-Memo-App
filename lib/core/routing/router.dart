@@ -14,6 +14,7 @@ import 'package:mongo_ai/create/presentation/create_problem/screen/create_proble
 import 'package:mongo_ai/create/presentation/create_template/screen/create_template_screen_root.dart';
 import 'package:mongo_ai/create/presentation/pdf_preview/screen/pdf_preview_screen_root.dart';
 import 'package:mongo_ai/dashboard/presentation/dashboard_screen.dart';
+import 'package:mongo_ai/dashboard/presentation/folder/folder_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/home/home_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/recent_files/recent_files_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -91,19 +92,18 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: Routes.recentFiles,
-                builder: (context, state) => const RecentFilesScreen(),
+                builder: (context, state) => const RecentFilesScreen()
               ),
             ],
           ),
-          // StatefulShellBranch(routes: [
-          //   GoRoute(
-          //     path: '/folder/:id',
-          //     builder: (context, state) {
-          //       final folderId = state.pathParameters['id']!;
-          //       return FolderScreen(folderId: folderId);
-          //     },
-          //   ),
-          // ]),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.folder,
+                builder: (context, state) => const FolderScreen()
+              ),
+            ]
+          ),
         ],
       ),
       GoRoute(
