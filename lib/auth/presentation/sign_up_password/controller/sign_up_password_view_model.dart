@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:mongo_ai/auth/domain/model/password_criteria.dart';
 import 'package:mongo_ai/auth/presentation/sign_up_password/controller/sign_up_password_event.dart';
 import 'package:mongo_ai/auth/presentation/sign_up_password/controller/sign_up_password_state.dart';
+import 'package:mongo_ai/core/di/providers.dart';
+import 'package:mongo_ai/core/exception/app_exception.dart';
+import 'package:mongo_ai/core/result/result.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'sign_up_password_view_model.g.dart';
@@ -100,5 +103,86 @@ class SignUpPasswordViewModel extends _$SignUpPasswordViewModel {
         state.checkPrivacyPolicy;
   }
 
-  // 임시 사용자 관련 로직 전체 삭제
+  // 회원가입 로직 추가
+  Future<void> submitForm() async {
+    if (!state.isFormValid) {
+      _eventController.add(
+        const SignUpPasswordEvent.showSnackBar('입력 정보를 확인해주세요.'),
+      );
+      return;
+    }
+
+    // 로딩 상태로 변경
+    state = state.copyWith(
+      hasSignUpInfoBeenSent: const AsyncValue.loading(),
+    );
+
+    try {
+      // 현재 사용자 이메일 가져오기
+      final authRepository = ref.read(authRepositoryProvider);
+      final emailResult = await authRepository.getCurrentUserEmail();
+
+      switch (emailResult) {
+        case Success(data: final email):
+        // 회원가입 요청
+          final signUpResult = await authRepository.signUp(
+            email,
+            state.passwordController.text,
+          );
+
+          switch (signUpResult) {
+            case Success():
+            // 회원가입 성공 후 사용자 정보 저장
+              final saveUserResult = await authRepository.saveUser();
+
+              switch (saveUserResult) {
+                case Success():
+                // 사용자 정보 저장 성공, 완료 화면으로 이동
+                  state = state.copyWith(
+                    hasSignUpInfoBeenSent: const AsyncValue.data(true),
+                  );
+                  _eventController.add(
+                    const SignUpPasswordEvent.navigateToComplete(),
+                  );
+                  return;
+                case Error(error: final saveError):
+                // 사용자 정보 저장 실패
+                  state = state.copyWith(
+                    hasSignUpInfoBeenSent: const AsyncValue.data(false),
+                  );
+                  _eventController.add(
+                    SignUpPasswordEvent.showSnackBar(saveError.message),
+                  );
+                  return;
+              }
+            case Error(error: final error):
+            // 회원가입 실패 처리
+              state = state.copyWith(
+                hasSignUpInfoBeenSent: const AsyncValue.data(false),
+              );
+              _eventController.add(
+                SignUpPasswordEvent.showSnackBar(error.message),
+              );
+              return;
+          }
+        case Error(error: final error):
+        // 이메일 가져오기 실패 처리
+          state = state.copyWith(
+            hasSignUpInfoBeenSent: const AsyncValue.data(false),
+          );
+          _eventController.add(
+            SignUpPasswordEvent.showSnackBar(error.message),
+          );
+          return;
+      }
+    } catch (e) {
+      // 예외 처리
+      state = state.copyWith(
+        hasSignUpInfoBeenSent: const AsyncValue.data(false),
+      );
+      _eventController.add(
+        const SignUpPasswordEvent.showSnackBar('알 수 없는 오류가 발생했습니다.'),
+      );
+    }
+  }
 }

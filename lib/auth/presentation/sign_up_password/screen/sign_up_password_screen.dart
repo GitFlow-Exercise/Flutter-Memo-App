@@ -291,7 +291,7 @@ class _SignUpPasswordScreenState extends State<SignUpPasswordScreen> {
                             onPressed:
                                 widget.state.isFormValid
                                     ? () => widget.onAction(
-                                      const SignUpPasswordAction.onTapSendOtp(),
+                                      const SignUpPasswordAction.submitForm(),
                                     )
                                     : null,
                             style: ElevatedButton.styleFrom(
@@ -352,7 +352,7 @@ class _SignUpPasswordScreenState extends State<SignUpPasswordScreen> {
               ),
             ),
           ),
-          if (widget.state.hasOtpBeenSent.isLoading)
+          if (widget.state.hasSignUpInfoBeenSent.isLoading)
             Container(
               color: Colors.black.withValues(alpha: 0.5),
               width: double.infinity,

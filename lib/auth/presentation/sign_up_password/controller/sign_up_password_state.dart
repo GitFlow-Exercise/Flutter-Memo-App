@@ -15,6 +15,6 @@ abstract class SignUpPasswordState with _$SignUpPasswordState {
     @Default(false) bool isConfirmPasswordVisible,
     @Default({}) Set<PasswordCriteria> meetsPasswordCriteria,
     @Default(false) bool isFormValid,
-    @Default(AsyncValue.data(false)) AsyncValue<bool> hasOtpBeenSent,
+    @Default(AsyncValue.data(false)) AsyncValue<bool> hasSignUpInfoBeenSent,
   }) = _SignUpPasswordState;
 }

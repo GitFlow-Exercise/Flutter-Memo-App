@@ -44,9 +44,9 @@ class _SignUpPasswordScreenRootState
           context,
         ).showSnackBar(SnackBar(content: Text(message)));
         break;
-      case NavigateToVerifyOtp():
+      case NavigateToComplete():
         if (mounted) {
-          context.go(Routes.checkOtp);
+          context.go(Routes.signUpComplete);
         }
         break;
     }
@@ -77,9 +77,9 @@ class _SignUpPasswordScreenRootState
       case OnTapLogin():
         context.go(Routes.signIn);
         break;
-      case OnTapSendOtp():
-        // TODO: Handle this case.
-        throw UnimplementedError();
+      case SubmitForm():
+        viewModel.submitForm();
+        break;
     }
   }
 }

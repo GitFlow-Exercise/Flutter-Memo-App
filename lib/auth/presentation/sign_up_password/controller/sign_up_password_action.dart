@@ -4,7 +4,7 @@ part 'sign_up_password_action.freezed.dart';
 
 @freezed
 sealed class SignUpPasswordAction with _$SignUpPasswordAction {
-  const factory SignUpPasswordAction.onTapSendOtp() = OnTapSendOtp;
+  const factory SignUpPasswordAction.submitForm() = SubmitForm;
 
   const factory SignUpPasswordAction.onTapCheckPrivacyPolicy() =
       OnTapCheckPrivacyPolicy;

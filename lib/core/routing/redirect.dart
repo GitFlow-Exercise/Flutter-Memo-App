@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/create/domain/model/create_workbook_params.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
@@ -8,44 +9,59 @@ abstract class AppRedirect {
   // 인증 관련 redirect 로직입니다.
   static String? authRedirect({
     required bool isAuthenticated,
-    required bool isInitialSetupComplete,
+    required bool isInitialSetupUser,
     required String? nowPath,
-    required Object? extra
+    required Object? extra,
   }) {
-    // 인증이 없다면 로그인 화면으로 강제 이동
-    if (!isAuthenticated) {
-      // 만약 sign-up 등의 중간 단계에서 세션 만료, 새로고침 등으로 extra가 손실되었다면
-      // 로그인 화면으로 다시 이동
-      print([nowPath, extra, isAuthenticated, isInitialSetupComplete]);
-      if (nowPath != Routes.signUp && extra is! String) {
-        return Routes.signIn;
-      }
-      // 만약 인증이 되지 않은 상태이지만,
-      // 회원가입을 하려는 유저라면
-      // 정상적으로 이동하도록 설정
-      // ------------
-      // TODO: 추후 비밀번호 재설정화면도 추가해아합니다.
-      if (nowPath == Routes.signUp || nowPath == Routes.signUpPassword || nowPath == Routes.checkOtp) {
-        return null;
-      }
+    // 디버깅용 로그
+    print('Redirect Check: $nowPath, extra type: ${extra?.runtimeType}, isAuth: $isAuthenticated, isInitialSetup: $isInitialSetupUser');
+
+    // [수정점 1] - extra 손실 체크 로직
+    // 회원가입 관련 페이지가 아니고, extra가 String 타입이 아닌 경우에는 signIn으로 리다이렉트
+    // nowPath가 signUp도 아니고 extra도 없는 경우 로그인 화면으로 강제 이동
+    if (nowPath != Routes.signUp && extra is! String && !isAuthenticated) {
       return Routes.signIn;
     }
-    print([nowPath, extra, isAuthenticated, isInitialSetupComplete]);
-    // 만약 인증은 되었지만(OTP를 기입했지만)
-    // 패스워드 기입이 안됐을 경우 패스워드 입력 화면으로 이동
-    if (!isInitialSetupComplete) {
+
+    // 인증되지 않은 경우
+    if (!isAuthenticated) {
+      // 회원가입 관련 경로는 인증 없이도 접근 가능
+      if (nowPath == Routes.signUp ||
+          nowPath == Routes.signUpPassword ||
+          nowPath == Routes.checkOtp ||
+          nowPath == Routes.signUpComplete) {
+        return null; // 정상 진행
+      }
+
+      return Routes.signIn;
+    }
+
+    // [수정점 2] - 회원가입 완료 화면 특별 처리
+    // 회원가입 완료 화면은 예외적으로 항상 접근 허용
+    if (nowPath == Routes.signUpComplete) {
+      return null; // 회원가입 완료 화면은 그대로 진행
+    }
+
+    // [수정점 3] - 초기 설정 완료 여부 체크
+    // 초기 설정이 완료되지 않았다면 비밀번호 설정 화면으로 이동
+    if (!isInitialSetupUser) {
       return Routes.signUpPassword;
     }
 
-    // 유저 정보가 존재하고,
-    // 현재 화면이 로그인 화면이거나 회원가입 화면이라면
-    // 강제로 홈 화면으로 이동
-    if (nowPath == Routes.signIn || nowPath == Routes.signUp || nowPath == Routes.signUpPassword || nowPath == Routes.checkOtp) {
+    // 인증 완료 상태에서 회원가입 또는 로그인 관련 화면에 접근하려는 경우
+    // 메인 화면으로 리다이렉트
+    if (nowPath == Routes.signIn ||
+        nowPath == Routes.signUp ||
+        nowPath == Routes.signUpPassword ||
+        nowPath == Routes.checkOtp) {
       return Routes.myFiles;
     }
-    // 원래 가려던 방향 null
+
+    // 원래 가려던 방향 유지
     return null;
   }
+
+
 
   static String? createProblemRedirect(Object? extra) {
     // 만약 화면 이동간 필요한 데이터가 타입과 일치하지 않는다면,

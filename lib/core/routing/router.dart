@@ -6,6 +6,7 @@ import 'package:mongo_ai/auth/presentation/check_otp/screen/check_otp_screen_roo
 import 'package:mongo_ai/auth/presentation/sign_in/screen/sign_in_screen_root.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/screen/sign_up_complete_screen.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/screen/sign_up_screen_root.dart';
+import 'package:mongo_ai/auth/presentation/sign_up_complete/screen/sign_up_complete_screen_root.dart';
 import 'package:mongo_ai/auth/presentation/sign_up_password/screen/sign_up_password_screen_root.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/routing/redirect.dart';
@@ -34,7 +35,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       final extra = state.extra;
       return AppRedirect.authRedirect(
         isAuthenticated: auth.isAuthenticated,
-        isInitialSetupComplete: auth.isInitialSetupComplete,
+        isInitialSetupUser: auth.isInitialSetupUser,
         nowPath: path,
         extra: extra,
       );
@@ -88,9 +89,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.signUpComplete,
         builder:
-            (context, state) => SignUpCompleteScreen(
-              onTapHome: () => context.go(Routes.myFiles),
-            ),
+            (context, state) => const SignUpCompleteScreenRoot()
       ),
       StatefulShellRoute.indexedStack(
         builder:

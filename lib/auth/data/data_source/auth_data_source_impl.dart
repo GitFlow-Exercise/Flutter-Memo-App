@@ -22,7 +22,10 @@ class AuthDataSourceImpl implements AuthDataSource {
     final authResponse = await _client.auth.signUp(
       email: email,
       password: password,
-      data: {'password_setup_complete': true },
+    );
+
+    await _client.auth.updateUser(
+      UserAttributes(data: {'is_initial_setup_user': true}),
     );
 
     return authResponse;
@@ -85,8 +88,13 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
-  bool isInitialSetupComplete() {
-    return _client.auth.currentUser?.userMetadata?['password_setup_complete'] ==
+  Future<String?> getCurrentUserEmail() async {
+    return _client.auth.currentUser?.email;
+  }
+
+  @override
+  bool isInitialSetupUser() {
+    return _client.auth.currentUser?.userMetadata?['is_initial_setup_user'] ==
         true;
   }
 }
