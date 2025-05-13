@@ -142,7 +142,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
         MessageInput(content: [inputContent]),
       ],
       previousResponseId: null,
-      instructions: 'Just OCR Result Please',
+      instructions: AiConstant.cleanTextPrompt,
     );
     final result = await ref.read(createProblemUseCaseProvider).execute(body);
 
