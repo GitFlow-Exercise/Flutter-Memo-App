@@ -11,3 +11,7 @@ abstract class SignInState with _$SignInState {
     @Default(false) bool isLoginRejected,
   }) = _SignInState;
 }
+
+extension SignInStateExtension on SignInState {
+  bool get isFormValid => emailController.text.isNotEmpty && passwordController.text.length >= 8;
+}

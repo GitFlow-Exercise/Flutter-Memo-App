@@ -9,15 +9,21 @@ abstract class AppRedirect {
   static String? authRedirect({
     required bool isAuthenticated,
     required String? nowPath,
+    required Object? extra
   }) {
     // 인증이 없다면 로그인 화면으로 강제 이동
     if (!isAuthenticated) {
+      // 만약 sign-up 등의 중간 단계에서 세션 만료, 새로고침 등으로 extra가 손실되었다면
+      // 로그인 화면으로 다시 이동
+      if (nowPath != Routes.signUp && extra == null) {
+        return Routes.signIn;
+      }
       // 만약 인증이 되지 않은 상태이지만,
       // 회원가입을 하려는 유저라면
       // 정상적으로 이동하도록 설정
       // ------------
       // TODO: 추후 비밀번호 재설정화면도 추가해아합니다.
-      if (nowPath == Routes.signUp) {
+      if (nowPath == Routes.signUp || nowPath == Routes.signUpPassword || nowPath == Routes.checkOtp) {
         return null;
       }
       return Routes.signIn;
@@ -25,7 +31,7 @@ abstract class AppRedirect {
     // 유저 정보가 존재하고,
     // 현재 화면이 로그인 화면이거나 회원가입 화면이라면
     // 강제로 홈 화면으로 이동
-    if (nowPath == Routes.signIn || nowPath == Routes.signUp) {
+    if (nowPath == Routes.signIn || nowPath == Routes.signUp || nowPath == Routes.signUpPassword || nowPath == Routes.checkOtp) {
       return Routes.myFiles;
     }
     // 원래 가려던 방향 null

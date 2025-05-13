@@ -78,6 +78,12 @@ sealed class AppException with _$AppException implements Exception {
     StackTrace? stackTrace,
   }) = InvalidOtpException;
 
+  const factory AppException.tempStore({
+    required String message,
+    Object? error,
+    StackTrace? stackTrace,
+  }) = TempStoreException;
+
   String get userFriendlyMessage {
     switch (this) {
       case NetworkException():
@@ -103,6 +109,8 @@ sealed class AppException with _$AppException implements Exception {
         return '인증되지 않은 사용자입니다.';
       case InvalidOtpException():
         return '유효하지 않은 인증번호입니다.';
+      case TempStoreException():
+        return '오류가 발생했습니다. 다시 시도해주세요.';
     }
   }
 }

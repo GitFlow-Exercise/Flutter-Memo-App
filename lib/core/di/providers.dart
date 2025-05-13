@@ -1,4 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mongo_ai/auth/data/data_source/temp_storage_data_source.dart';
+import 'package:mongo_ai/auth/data/data_source/temp_storage_data_source_impl.dart';
+import 'package:mongo_ai/auth/data/repository/temp_storage_repository_impl.dart';
+import 'package:mongo_ai/auth/domain/repository/temp_storage_repository.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/core/state/current_team_id_state.dart';
@@ -203,7 +207,16 @@ final authDataSourceProvider = Provider<AuthDataSource>((ref) {
   return AuthDataSourceImpl(client: client);
 });
 
+final tempStorageDataSourceProvider = Provider<TempStorageDataSource>((ref) {
+  return TempStorageDataSourceImpl();
+});
+
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final dataSource = ref.watch(authDataSourceProvider);
   return AuthRepositoryImpl(authDataSource: dataSource);
+});
+
+final tempStorageRepositoryProvider = Provider<TempStorageRepository>((ref) {
+  final dataSource = ref.watch(tempStorageDataSourceProvider);
+  return TempStorageRepositoryImpl(dataSource: dataSource);
 });

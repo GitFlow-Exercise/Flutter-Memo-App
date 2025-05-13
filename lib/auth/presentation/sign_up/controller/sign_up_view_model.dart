@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
+import 'package:mongo_ai/auth/domain/model/temp_user.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/controller/sign_up_event.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/controller/sign_up_state.dart';
 import 'package:mongo_ai/core/di/providers.dart';
@@ -18,6 +19,7 @@ class SignUpViewModel extends _$SignUpViewModel {
 
   @override
   SignUpState build() {
+    //TODO: dispose
     return SignUpState(
       emailController: TextEditingController(),
       codeController: TextEditingController(),
@@ -34,7 +36,13 @@ class SignUpViewModel extends _$SignUpViewModel {
     state = state.copyWith(isTermsOfUseChecked: !state.isTermsOfUseChecked);
   }
 
-  Future<bool> checkEmail() async {
+  // 임시 유저 생성 및 저장
+  String _createTempUser(String email) {
+    final tempUser = TempUser(email: email, password: '');
+    return ref.read(tempStorageRepositoryProvider).storeData(tempUser);
+  }
+
+  void checkEmail() async {
     final authRepository = ref.read(authRepositoryProvider);
     final result = await authRepository.isEmailExist(
       state.emailController.text,
@@ -42,13 +50,14 @@ class SignUpViewModel extends _$SignUpViewModel {
 
     switch (result) {
       case Success<bool, AppException>():
-        return true;
+        final tempStoreId = _createTempUser(state.emailController.text);
+        _eventController.add(SignUpEvent.generateTempUserId(tempStoreId));
       case Error<bool, AppException>():
         _eventController.add(SignUpEvent.showSnackBar(result.error.message));
-        return false;
     }
   }
 
+  //TODO(ok): 추후 화면 구현 시 이동 예정
   Future<bool> signUp() async {
     final authRepository = ref.read(authRepositoryProvider);
     final result = await authRepository.signUp(
@@ -65,6 +74,7 @@ class SignUpViewModel extends _$SignUpViewModel {
     }
   }
 
+  //TODO(ok): 추후 화면 구현 시 이동 예정
   Future<bool> saveUser() async {
     final authRepository = ref.read(authRepositoryProvider);
     final result = await authRepository.saveUser();
@@ -77,6 +87,7 @@ class SignUpViewModel extends _$SignUpViewModel {
     }
   }
 
+  //TODO(ok): 추후 화면 구현 시 이동 예정
   Future<void> sendOtp() async {
     final authRepository = ref.read(authRepositoryProvider);
     final result = await authRepository.sendOtp(state.emailController.text);
@@ -91,6 +102,7 @@ class SignUpViewModel extends _$SignUpViewModel {
     }
   }
 
+  //TODO(ok): 추후 화면 구현 시 이동 예정
   Future<bool> verifyOtp() async {
     final authRepository = ref.read(authRepositoryProvider);
     final result = await authRepository.verifyOtp(
@@ -107,6 +119,7 @@ class SignUpViewModel extends _$SignUpViewModel {
     }
   }
 
+  //TODO(ok): 추후 화면 구현 시 이동 예정
   Future<bool> resetPassword() async {
     final authRepository = ref.read(authRepositoryProvider);
     final result = await authRepository.resetPassword(

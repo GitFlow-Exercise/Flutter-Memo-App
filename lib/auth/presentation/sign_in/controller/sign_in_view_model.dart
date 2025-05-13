@@ -18,6 +18,11 @@ class SignInViewModel extends _$SignInViewModel {
 
   @override
   SignInState build() {
+    final tempStorageRepository = ref.read(tempStorageRepositoryProvider);
+
+    // 임시 저장 데이터 삭제
+    tempStorageRepository.clearAll();
+
     return SignInState(
       emailController: TextEditingController(),
       passwordController: TextEditingController(),

@@ -2,9 +2,11 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mongo_ai/auth/presentation/check_otp/screen/check_top_screen_root.dart';
 import 'package:mongo_ai/auth/presentation/sign_in/screen/sign_in_screen_root.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/screen/sign_up_complete_screen.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/screen/sign_up_screen_root.dart';
+import 'package:mongo_ai/auth/presentation/sign_up_password/screen/sign_up_password_screen_root.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/routing/redirect.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
@@ -29,9 +31,11 @@ final routerProvider = Provider<GoRouter>((ref) {
     refreshListenable: auth,
     redirect: (context, state) {
       final path = state.fullPath;
+      final extra = state.extra;
       return AppRedirect.authRedirect(
         isAuthenticated: auth.isAuthenticated,
         nowPath: path,
+        extra: extra,
       );
     },
     routes: [
@@ -66,15 +70,26 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.signUp,
         builder: (context, state) => const SignUpScreenRoot(),
-        routes: [
-          GoRoute(
-            path: "/complete",
-            builder:
-                (context, state) => SignUpCompleteScreen(
-                  onTapHome: () => context.go(Routes.myFiles),
-                ),
-          ),
-        ],
+      ),
+      GoRoute(
+        path: Routes.signUpPassword,
+        builder: (context, state) {
+          final tempUserId = state.extra as String;
+          return SignUpPasswordScreenRoot(tempUserId: tempUserId);
+        },
+      ),
+      GoRoute(
+        path: Routes.checkOtp,
+        builder: (context, state) {
+          final tempUserId = state.extra as String;
+          return CheckOtpScreenRoot(tempUserId: tempUserId);
+        },
+      ),
+      GoRoute(
+        path: Routes.signUpComplete,
+        builder:
+            (context, state) =>
+                SignUpCompleteScreen(onTapHome: () => context.go(Routes.myFiles)),
       ),
       StatefulShellRoute.indexedStack(
         builder:
