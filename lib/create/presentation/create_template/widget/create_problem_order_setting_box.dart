@@ -6,7 +6,7 @@ import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
 import 'package:mongo_ai/create/presentation/create_template/widget/create_problem_list_widget.dart';
 
-class CreateProblemOrderSettingBox extends StatefulWidget {
+class CreateProblemOrderSettingBox extends StatelessWidget {
   final List<Problem> orderedProblemList;
   final void Function(Problem problem) onAcceptOrderedProblem;
   const CreateProblemOrderSettingBox({
@@ -15,13 +15,6 @@ class CreateProblemOrderSettingBox extends StatefulWidget {
     required this.onAcceptOrderedProblem,
   });
 
-  @override
-  State<CreateProblemOrderSettingBox> createState() =>
-      _CreateProblemOrderSettingBoxState();
-}
-
-class _CreateProblemOrderSettingBoxState
-    extends State<CreateProblemOrderSettingBox> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -56,7 +49,7 @@ class _CreateProblemOrderSettingBoxState
                             ),
                           ),
                           TextSpan(
-                            text: ' 3',
+                            text: ' ${orderedProblemList.length}',
                             style: AppTextStyle.labelMedium.copyWith(
                               color: AppColor.primary,
                             ),
@@ -89,7 +82,7 @@ class _CreateProblemOrderSettingBoxState
             const Gap(16),
             DragTarget<Problem>(
               onAcceptWithDetails:
-                  (details) => widget.onAcceptOrderedProblem(details.data),
+                  (details) => onAcceptOrderedProblem(details.data),
               builder: (context, candidateData, rejectedData) {
                 return DottedBorder(
                   borderType: BorderType.RRect,
@@ -117,21 +110,17 @@ class _CreateProblemOrderSettingBoxState
                         const Gap(22),
                         ListView.separated(
                           shrinkWrap: true,
-                          itemCount: widget.orderedProblemList.length,
+                          itemCount: orderedProblemList.length,
                           separatorBuilder: (context, index) => const Gap(24),
                           itemBuilder: (context, index) {
                             return Draggable<Problem>(
-                              data: widget.orderedProblemList[index],
+                              data: orderedProblemList[index],
                               feedback: Material(
                                 child: SizedBox(
                                   width: 300,
                                   child: ProblemCardWidget(
-                                    title:
-                                        widget.orderedProblemList[index].title,
-                                    content:
-                                        widget
-                                            .orderedProblemList[index]
-                                            .content,
+                                    title: orderedProblemList[index].title,
+                                    content: orderedProblemList[index].content,
                                     maxLines: 5,
                                   ),
                                 ),
@@ -139,16 +128,14 @@ class _CreateProblemOrderSettingBoxState
                               childWhenDragging: Opacity(
                                 opacity: 0.5,
                                 child: ProblemCardWidget(
-                                  title: widget.orderedProblemList[index].title,
-                                  content:
-                                      widget.orderedProblemList[index].content,
+                                  title: orderedProblemList[index].title,
+                                  content: orderedProblemList[index].content,
                                   maxLines: 5,
                                 ),
                               ),
                               child: ProblemCardWidget(
-                                title: widget.orderedProblemList[index].title,
-                                content:
-                                    widget.orderedProblemList[index].content,
+                                title: orderedProblemList[index].title,
+                                content: orderedProblemList[index].content,
                                 maxLines: 5,
                               ),
                             );

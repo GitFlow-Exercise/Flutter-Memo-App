@@ -5,7 +5,7 @@ import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
 
-class CreateProblemListWidget extends StatefulWidget {
+class CreateProblemListWidget extends StatelessWidget {
   final List<Problem> problemList;
   final void Function(Problem problem) onAcceptProblem;
   const CreateProblemListWidget({
@@ -14,12 +14,6 @@ class CreateProblemListWidget extends StatefulWidget {
     required this.onAcceptProblem,
   });
 
-  @override
-  State<CreateProblemListWidget> createState() =>
-      _CreateProblemListWidgetState();
-}
-
-class _CreateProblemListWidgetState extends State<CreateProblemListWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -44,35 +38,35 @@ class _CreateProblemListWidgetState extends State<CreateProblemListWidget> {
         ),
         const Gap(12),
         DragTarget<Problem>(
-          onAcceptWithDetails: (detail) => widget.onAcceptProblem(detail.data),
+          onAcceptWithDetails: (detail) => onAcceptProblem(detail.data),
           builder:
               (context, candidateData, rejectedData) => SizedBox(
                 height: 500,
                 child: ListView.separated(
-                  itemCount: widget.problemList.length,
+                  itemCount: problemList.length,
                   separatorBuilder: (context, index) => const Gap(12),
                   itemBuilder: (context, index) {
                     return Draggable<Problem>(
-                      data: widget.problemList[index],
+                      data: problemList[index],
                       feedback: Material(
                         child: SizedBox(
                           width: 500,
                           child: ProblemCardWidget(
-                            title: widget.problemList[index].title,
-                            content: widget.problemList[index].content,
+                            title: problemList[index].title,
+                            content: problemList[index].content,
                           ),
                         ),
                       ),
                       childWhenDragging: Opacity(
                         opacity: 0.5,
                         child: ProblemCardWidget(
-                          title: widget.problemList[index].title,
-                          content: widget.problemList[index].content,
+                          title: problemList[index].title,
+                          content: problemList[index].content,
                         ),
                       ),
                       child: ProblemCardWidget(
-                        title: widget.problemList[index].title,
-                        content: widget.problemList[index].content,
+                        title: problemList[index].title,
+                        content: problemList[index].content,
                       ),
                     );
                   },
