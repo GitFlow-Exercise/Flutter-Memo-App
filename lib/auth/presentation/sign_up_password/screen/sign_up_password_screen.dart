@@ -387,7 +387,7 @@ class _SignUpPasswordScreenState extends State<SignUpPasswordScreen> {
               ),
             ),
           ),
-          if (widget.state.value?.isLoading ?? false)
+          if (widget.state.value?.hasOtpBeenSent.isLoading ?? false)
             Container(
               color: Colors.black.withValues(alpha: 0.5),
               width: double.infinity,

@@ -146,14 +146,14 @@ class SignUpPasswordViewModel extends _$SignUpPasswordViewModel {
   }
 
   Future<void> _sendOtpToUser(String email, String tempStoreId) async {
-    state = state.whenData((value) => value.copyWith(isLoading: true));
+    state = state.whenData((value) => value.copyWith(hasOtpBeenSent: const AsyncLoading()));
 
     final authRepository = ref.read(authRepositoryProvider);
     final result = await authRepository.sendOtp(email);
 
     switch (result) {
       case Success<void, AppException>():
-        state = state.whenData((value) => value.copyWith(isLoading: false));
+        state = state.whenData((value) => value.copyWith(hasOtpBeenSent: const AsyncData(true)));
         _eventController.add(
           const SignUpPasswordEvent.showSnackBar('인증번호가 발송되었습니다.'),
         );
@@ -162,7 +162,7 @@ class SignUpPasswordViewModel extends _$SignUpPasswordViewModel {
         );
         return;
       case Error<void, AppException>():
-        state = state.whenData((value) => value.copyWith(isLoading: false));
+        state = state.whenData((value) => value.copyWith(hasOtpBeenSent: const AsyncData(false)));
         _eventController.add(
           SignUpPasswordEvent.showSnackBar(result.error.message),
         );

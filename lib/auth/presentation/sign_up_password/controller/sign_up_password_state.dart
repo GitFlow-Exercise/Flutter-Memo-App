@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'sign_up_password_state.freezed.dart';
@@ -6,7 +7,6 @@ part 'sign_up_password_state.freezed.dart';
 @freezed
 abstract class SignUpPasswordState with _$SignUpPasswordState {
   const factory SignUpPasswordState({
-    @Default(false) bool isLoading,
     required String tempStoreId,
     required TextEditingController passwordController,
     required TextEditingController confirmPasswordController,
@@ -15,6 +15,7 @@ abstract class SignUpPasswordState with _$SignUpPasswordState {
     @Default(false) bool isConfirmPasswordVisible,
     @Default({}) Set<PasswordCriteria> meetsPasswordCriteria,
     @Default(false) bool isFormValid,
+    @Default(AsyncValue.data(false)) AsyncValue<bool> hasOtpBeenSent,
   }) = _SignUpPasswordState;
 }
 
