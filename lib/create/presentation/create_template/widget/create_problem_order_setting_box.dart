@@ -108,38 +108,42 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
                           ),
                         ),
                         const Gap(22),
-                        ListView.separated(
-                          shrinkWrap: true,
-                          itemCount: orderedProblemList.length,
-                          separatorBuilder: (context, index) => const Gap(24),
-                          itemBuilder: (context, index) {
-                            return Draggable<Problem>(
-                              data: orderedProblemList[index],
-                              feedback: Material(
-                                child: SizedBox(
-                                  width: 300,
+                        Container(
+                          constraints: const BoxConstraints(minHeight: 500),
+                          child: ListView.separated(
+                            shrinkWrap: true,
+                            itemCount: orderedProblemList.length,
+                            separatorBuilder: (context, index) => const Gap(24),
+                            itemBuilder: (context, index) {
+                              return Draggable<Problem>(
+                                data: orderedProblemList[index],
+                                feedback: Material(
+                                  child: SizedBox(
+                                    width: 300,
+                                    child: ProblemCardWidget(
+                                      title: orderedProblemList[index].title,
+                                      content:
+                                          orderedProblemList[index].content,
+                                      maxLines: 5,
+                                    ),
+                                  ),
+                                ),
+                                childWhenDragging: Opacity(
+                                  opacity: 0.5,
                                   child: ProblemCardWidget(
                                     title: orderedProblemList[index].title,
                                     content: orderedProblemList[index].content,
                                     maxLines: 5,
                                   ),
                                 ),
-                              ),
-                              childWhenDragging: Opacity(
-                                opacity: 0.5,
                                 child: ProblemCardWidget(
                                   title: orderedProblemList[index].title,
                                   content: orderedProblemList[index].content,
                                   maxLines: 5,
                                 ),
-                              ),
-                              child: ProblemCardWidget(
-                                title: orderedProblemList[index].title,
-                                content: orderedProblemList[index].content,
-                                maxLines: 5,
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
                       ],
                     ),

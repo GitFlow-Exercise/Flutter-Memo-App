@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
+import 'package:mongo_ai/create/presentation/create_template/widget/problem_card_widget.dart';
 
 class CreateProblemListWidget extends StatelessWidget {
   final List<Problem> problemList;
@@ -29,7 +30,7 @@ class CreateProblemListWidget extends StatelessWidget {
               ),
             ),
             Text(
-              '총 8개 문제',
+              '총 ${problemList.length}개 문제',
               style: AppTextStyle.labelMedium.copyWith(
                 color: AppColor.paleGray,
               ),
@@ -40,9 +41,10 @@ class CreateProblemListWidget extends StatelessWidget {
         DragTarget<Problem>(
           onAcceptWithDetails: (detail) => onAcceptProblem(detail.data),
           builder:
-              (context, candidateData, rejectedData) => SizedBox(
-                height: 500,
+              (context, candidateData, rejectedData) => Container(
+                constraints: const BoxConstraints(minHeight: 300),
                 child: ListView.separated(
+                  shrinkWrap: true,
                   itemCount: problemList.length,
                   separatorBuilder: (context, index) => const Gap(12),
                   itemBuilder: (context, index) {
@@ -74,72 +76,6 @@ class CreateProblemListWidget extends StatelessWidget {
               ),
         ),
       ],
-    );
-  }
-}
-
-class ProblemCardWidget extends StatelessWidget {
-  final String title;
-  final String content;
-  final int? maxLines;
-  const ProblemCardWidget({
-    super.key,
-    required this.title,
-    required this.content,
-    this.maxLines = 2,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(14.0),
-      decoration: BoxDecoration(
-        color: AppColor.white,
-        border: Border.all(color: AppColor.lightGrayBorder),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 5,
-                  horizontal: 10,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColor.paleBlue,
-                  borderRadius: BorderRadius.circular(99),
-                ),
-                child: const Text('객관식', style: TextStyle(fontSize: 12)),
-              ),
-              const Icon(
-                Icons.drag_handle_outlined,
-                color: AppColor.lighterGray,
-              ),
-            ],
-          ),
-          const Gap(8),
-          Text(
-            title,
-            style: AppTextStyle.labelMedium.copyWith(
-              color: AppColor.mediumGray,
-            ),
-            overflow: TextOverflow.ellipsis,
-          ),
-          const Gap(8),
-          Text(
-            content,
-            style: AppTextStyle.labelMedium.copyWith(
-              color: AppColor.mediumGray,
-            ),
-            maxLines: maxLines,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ),
     );
   }
 }
