@@ -45,10 +45,6 @@ class _CheckOtpScreenState extends ConsumerState<CheckOtpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // 화면 크기에 맞게 적절한 가로 폭 설정
-    final screenWidth = MediaQuery.of(context).size.width;
-    final cardWidth = screenWidth < 600 ? screenWidth * 0.9 : 448;
-
     return widget.state.when(
       data: (state) {
         final viewModel = ref.watch(checkOtpViewModelProvider(state.tempUserId).notifier);
@@ -194,10 +190,6 @@ class _CheckOtpScreenState extends ConsumerState<CheckOtpScreen> {
                                   ),
                                 ),
                               ),
-                              onCompleted: (_) {
-                                // 6자리 입력 완료 시 자동 검증
-                                widget.onAction(const CheckOtpAction.onVerifyOtp());
-                              },
                             ),
 
                             if (state.errorMessage?.isNotEmpty ?? false)
@@ -241,18 +233,18 @@ class _CheckOtpScreenState extends ConsumerState<CheckOtpScreen> {
                               width: double.infinity,
                               height: 48,
                               child: ElevatedButton(
-                                onPressed: state.isVerifying
-                                    ? null
-                                    : () => widget.onAction(const CheckOtpAction.onVerifyOtp()),
+                                onPressed: state.codeController.text.length == 6
+                                    ? () => widget.onAction(const CheckOtpAction.onVerifyOtp())
+                                    : null,
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColor.primary,
                                   foregroundColor: AppColor.white,
-                                  disabledBackgroundColor: AppColor.primary.withOpacity(0.5),
+                                  disabledBackgroundColor: AppColor.primary.withValues(alpha: 0.5),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
-                                child: state.isVerifying
+                                child: state.isOtpVerified.isLoading
                                     ? const SizedBox(
                                   width: 20,
                                   height: 20,
@@ -279,9 +271,9 @@ class _CheckOtpScreenState extends ConsumerState<CheckOtpScreen> {
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: state.remainingSeconds == 0
+                                  onTap: state.remainingSeconds != 0
                                       ? () => widget.onAction(const CheckOtpAction.onResendOtp())
-                                      : null,
+                                      : () => widget.onAction(const CheckOtpAction.onResendOtp()),
                                   child: Text(
                                     '재전송',
                                     style: AppTextStyle.captionRegular.copyWith(
@@ -329,9 +321,9 @@ class _CheckOtpScreenState extends ConsumerState<CheckOtpScreen> {
               ),
 
               // 로딩 인디케이터 (전체 화면 가리기)
-              if (state.isVerifying)
+              if (state.isOtpVerified.isLoading)
                 Container(
-                  color: Colors.black.withValues(alpha: 0.3),
+                  color: Colors.black.withValues(alpha: 0.5),
                   width: double.infinity,
                   height: double.infinity,
                   child: const Center(

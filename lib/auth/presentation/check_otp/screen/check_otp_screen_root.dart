@@ -42,6 +42,7 @@ class _CheckOtpScreenRootState extends ConsumerState<CheckOtpScreenRoot> {
   void _handleEvent(CheckOtpEvent event) {
     switch (event) {
       case ShowSnackBar(message: final message):
+        print(message);
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(message)));

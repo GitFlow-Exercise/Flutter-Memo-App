@@ -48,7 +48,10 @@ class CheckOtpViewModel extends _$CheckOtpViewModel {
   // OTP 검증 함수
   Future<bool> verifyOtp() async {
     state = state.whenData(
-      (value) => value.copyWith(isVerifying: true, errorMessage: null),
+      (value) => value.copyWith(
+        isOtpVerified: const AsyncLoading(),
+        errorMessage: null,
+      ),
     );
 
     final tempUser = await _getCurrentTempUser();
@@ -80,11 +83,15 @@ class CheckOtpViewModel extends _$CheckOtpViewModel {
         _eventController.add(
           CheckOtpEvent.navigateToPasswordScreen(state.value!.tempUserId),
         );
-        state = state.whenData((value) => value.copyWith(isVerifying: false));
+        state = state.whenData(
+          (value) => value.copyWith(isOtpVerified: const AsyncData(true)),
+        );
         return true;
       case Error<void, AppException>():
         _setError(result.error.message);
-        state = state.whenData((value) => value.copyWith(isVerifying: false));
+        state = state.whenData(
+          (value) => value.copyWith(isOtpVerified: const AsyncData(false)),
+        );
         return false;
     }
   }
@@ -105,6 +112,7 @@ class CheckOtpViewModel extends _$CheckOtpViewModel {
     switch (result) {
       case Success<void, AppException>():
         _resetTimer();
+        _resetCodeField();
         _eventController.add(
           const CheckOtpEvent.showSnackBar('인증번호가 재전송되었습니다.'),
         );
@@ -113,6 +121,10 @@ class CheckOtpViewModel extends _$CheckOtpViewModel {
         _eventController.add(CheckOtpEvent.showSnackBar(result.error.message));
         break;
     }
+  }
+
+  void _resetCodeField() {
+    state.value?.codeController.text = '';
   }
 
   // 타이머 시작
@@ -176,7 +188,10 @@ class CheckOtpViewModel extends _$CheckOtpViewModel {
   // 에러 메시지 설정
   void _setError(String message) {
     state = state.whenData(
-      (value) => value.copyWith(errorMessage: message, isVerifying: false),
+      (value) => value.copyWith(
+        errorMessage: message,
+        isOtpVerified: const AsyncData(false),
+      ),
     );
     _eventController.add(CheckOtpEvent.showSnackBar(message));
   }
