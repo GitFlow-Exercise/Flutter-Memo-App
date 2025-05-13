@@ -240,13 +240,13 @@ class _SignUpPasswordScreenState extends State<SignUpPasswordScreen> {
                             ),
                             const Gap(8),
                             PasswordRequirementWidget(
-                              text: '대문자 포함',
+                              text: '소문자 포함',
                               isMet: widget.state.meetsPasswordCriteria
                                   .contains(PasswordCriteria.includesLowercase),
                             ),
                             const Gap(8),
                             PasswordRequirementWidget(
-                              text: '대문자 포함',
+                              text: '숫자 포함',
                               isMet: widget.state.meetsPasswordCriteria
                                   .contains(PasswordCriteria.includesNumber),
                             ),
