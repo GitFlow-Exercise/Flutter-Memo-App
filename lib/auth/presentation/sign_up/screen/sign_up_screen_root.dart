@@ -43,8 +43,8 @@ class _SignUpScreenRootState extends ConsumerState<SignUpScreenRoot> {
           context,
         ).showSnackBar(SnackBar(content: Text(message)));
         break;
-      case GenerateTempUserId(tempUserId: final tempUserId):
-        context.go(Routes.signUpPassword, extra: tempUserId);
+      case NavigateToOtpWithUserId(tempUserId: final tempUserId):
+        context.go(Routes.checkOtp, extra: tempUserId);
         break;
     }
   }
@@ -77,6 +77,7 @@ class _SignUpScreenRootState extends ConsumerState<SignUpScreenRoot> {
         }
       case OnTapSignIn():
         context.go(Routes.signIn);
+
       case OnTapOtpSend():
         viewModel.checkEmail();
     }

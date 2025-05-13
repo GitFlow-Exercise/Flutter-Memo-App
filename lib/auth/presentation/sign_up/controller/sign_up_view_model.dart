@@ -19,12 +19,24 @@ class SignUpViewModel extends _$SignUpViewModel {
 
   @override
   SignUpState build() {
-    //TODO: dispose
+    final emailController = TextEditingController();
+    final codeController = TextEditingController();
+    final passwordController = TextEditingController();
+    final passwordConfirmController = TextEditingController();
+
+    ref.onDispose(() {
+      _eventController.close();
+      emailController.dispose();
+      codeController.dispose();
+      passwordController.dispose();
+      passwordConfirmController.dispose();
+    });
+
     return SignUpState(
-      emailController: TextEditingController(),
-      codeController: TextEditingController(),
-      passwordController: TextEditingController(),
-      passwordConfirmController: TextEditingController(),
+      emailController: emailController,
+      codeController: codeController,
+      passwordController: passwordController,
+      passwordConfirmController: passwordConfirmController,
     );
   }
 
@@ -50,10 +62,29 @@ class SignUpViewModel extends _$SignUpViewModel {
 
     switch (result) {
       case Success<bool, AppException>():
-        final tempStoreId = _createTempUser(state.emailController.text);
-        _eventController.add(SignUpEvent.generateTempUserId(tempStoreId));
+        await sendOtp();
       case Error<bool, AppException>():
         _eventController.add(SignUpEvent.showSnackBar(result.error.message));
+    }
+  }
+
+  Future<void> sendOtp() async {
+    final authRepository = ref.read(authRepositoryProvider);
+    state = state.copyWith(hasOtpBeenSent: const AsyncLoading());
+    final result = await authRepository.sendOtp(state.emailController.text);
+
+    switch (result) {
+      case Success<void, AppException>():
+        state = state.copyWith(hasOtpBeenSent: const AsyncData(true));
+        _eventController.add(const SignUpEvent.showSnackBar('인증번호가 발송되었습니다.'));
+
+        final tempStoreId = _createTempUser(state.emailController.text);
+        _eventController.add(SignUpEvent.navigateToOtpWithUserId(tempStoreId));
+        return;
+      case Error<void, AppException>():
+        state = state.copyWith(hasOtpBeenSent: const AsyncData(false));
+        _eventController.add(SignUpEvent.showSnackBar(result.error.message));
+        return;
     }
   }
 
@@ -84,21 +115,6 @@ class SignUpViewModel extends _$SignUpViewModel {
       case Error<void, AppException>():
         _eventController.add(SignUpEvent.showSnackBar(result.error.message));
         return false;
-    }
-  }
-
-  //TODO(ok): 추후 화면 구현 시 이동 예정
-  Future<void> sendOtp() async {
-    final authRepository = ref.read(authRepositoryProvider);
-    final result = await authRepository.sendOtp(state.emailController.text);
-
-    switch (result) {
-      case Success<void, AppException>():
-        _eventController.add(const SignUpEvent.showSnackBar('인증번호가 발송되었습니다.'));
-        return;
-      case Error<void, AppException>():
-        _eventController.add(SignUpEvent.showSnackBar(result.error.message));
-        return;
     }
   }
 
