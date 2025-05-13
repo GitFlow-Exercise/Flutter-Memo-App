@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
-import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 import 'package:mongo_ai/create/presentation/base/layout/ai_base_layout.dart';
 import 'package:mongo_ai/create/domain/model/create_workbook_params.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_action.dart';
@@ -77,8 +76,7 @@ class _CreateTemplateScreenRootState
     switch (action) {
       case OnTapColumnsTemplate(isSingleColumns: final isSingleColumns):
         viewModel.toggleColumnsButton(isSingleColumns: isSingleColumns);
-      case OnChangeContents(contents: final contents):
-        viewModel.changedContents(contents: contents);
+
       case CreateProblemForPdf(contents: final contents):
         viewModel.generatePdf(contents: contents);
     }

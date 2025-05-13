@@ -26,13 +26,7 @@ class _CreateTemplateScreenState extends State<CreateTemplateScreen> {
   void didUpdateWidget(covariant CreateTemplateScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
     widget.state.problem.when(
-      data: (problem) {
-        if (problem?.output[0].content[0].text !=
-            widget.state.textEditingController.text) {
-          widget.state.textEditingController.text =
-              problem?.output[0].content[0].text ?? '';
-        }
-      },
+      data: (problem) {},
       error: (Object error, StackTrace stackTrace) {
         debugPrint('error: $error');
       },

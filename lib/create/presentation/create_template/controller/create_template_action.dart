@@ -8,10 +8,6 @@ sealed class CreateTemplateAction with _$CreateTemplateAction {
     required bool isSingleColumns,
   }) = OnTapColumnsTemplate;
 
-  const factory CreateTemplateAction.onChangeContents({
-    required String contents,
-  }) = OnChangeContents;
-
   const factory CreateTemplateAction.createProblemForPdf({
     required String contents,
   }) = CreateProblemForPdf;

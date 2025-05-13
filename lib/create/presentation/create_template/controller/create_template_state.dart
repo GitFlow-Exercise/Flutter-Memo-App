@@ -11,7 +11,14 @@ abstract class CreateTemplateState with _$CreateTemplateState {
   factory CreateTemplateState({
     @Default(AsyncValue.data(null)) AsyncValue<OpenAiResponse?> problem,
     @Default(true) bool isSingleColumns,
-    required TextEditingController textEditingController,
+    @Default([]) List<Problem> problemList,
+    @Default([]) List<Problem> orderedProblemList,
     required PdfGenerator pdfGenerator,
   }) = _CreateTemplateState;
+}
+
+// TODO(jh): UI 테스트용 모델. 추후 전달받은 값으로 모델 수정 예정
+@freezed
+abstract class Problem with _$Problem {
+  factory Problem({required String title, required String content}) = _Problem;
 }

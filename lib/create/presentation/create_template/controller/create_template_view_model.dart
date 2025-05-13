@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:flutter/material.dart';
 import 'package:mongo_ai/core/component/pdf_generator.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_event.dart';
@@ -17,32 +15,20 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
 
   @override
   CreateTemplateState build() {
-    final textEditingController = TextEditingController();
     final pdfGenerator = PdfGenerator();
 
     ref.onDispose(() {
       _eventController.close();
-      textEditingController.dispose();
     });
 
-    return CreateTemplateState(
-      textEditingController: textEditingController,
-      pdfGenerator: pdfGenerator,
-    );
+    return CreateTemplateState(pdfGenerator: pdfGenerator);
   }
 
   void toggleColumnsButton({required bool isSingleColumns}) {
     state = state.copyWith(isSingleColumns: isSingleColumns);
   }
 
-  void changedContents({required String contents}) {
-    state.textEditingController.text = contents;
-  }
-
   void setProblem({required OpenAiResponse problem}) {
-    changedContents(contents: problem.getContent());
-    print('------------------------');
-    print('problem: ${problem.getContent()}');
     state = state.copyWith(problem: AsyncValue.data(problem));
   }
 
