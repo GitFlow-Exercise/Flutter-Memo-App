@@ -3,8 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:mongo_ai/auth/presentation/check_otp/controller/check_otp_action.dart';
 import 'package:mongo_ai/auth/presentation/check_otp/controller/check_otp_state.dart';
-import 'package:mongo_ai/auth/presentation/check_otp/controller/check_otp_view_model.dart';
 import 'package:mongo_ai/core/component/auth_header_widget.dart';
+import 'package:mongo_ai/core/extension/int_extension.dart';
+import 'package:mongo_ai/core/extension/string_extension.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:pinput/pinput.dart';
@@ -47,8 +48,6 @@ class _CheckOtpScreenState extends ConsumerState<CheckOtpScreen> {
   Widget build(BuildContext context) {
     return widget.state.when(
       data: (state) {
-        final viewModel = ref.watch(checkOtpViewModelProvider(state.tempUserId).notifier);
-
         return Scaffold(
           backgroundColor: AppColor.lightBlue,
           body: Stack(
@@ -114,7 +113,7 @@ class _CheckOtpScreenState extends ConsumerState<CheckOtpScreen> {
 
                             // 설명 텍스트
                             Text(
-                              '${state.maskedEmail} 으로 전송된 인증 코드를 입력해주세요',
+                              '${widget.state.value?.email.maskedEmail} 으로 전송된 인증 코드를 입력해주세요',
                               textAlign: TextAlign.center,
                               style: AppTextStyle.bodyRegular.copyWith(
                                 color: AppColor.mediumGray,
@@ -217,7 +216,7 @@ class _CheckOtpScreenState extends ConsumerState<CheckOtpScreen> {
                                 ),
                                 const Gap(4),
                                 Text(
-                                  '유효시간: ${viewModel.formatRemainingTime()}',
+                                  '유효시간: ${widget.state.value?.remainingSeconds.formatRemainingTime()}',
                                   style: AppTextStyle.captionRegular.copyWith(
                                     color: AppColor.mediumGray,
                                     fontSize: 12,
@@ -233,27 +232,35 @@ class _CheckOtpScreenState extends ConsumerState<CheckOtpScreen> {
                               width: double.infinity,
                               height: 48,
                               child: ElevatedButton(
-                                onPressed: state.codeController.text.length == 6
-                                    ? () => widget.onAction(const CheckOtpAction.onVerifyOtp())
-                                    : null,
+                                onPressed:
+                                    state.codeController.text.length == 6
+                                        ? () => widget.onAction(
+                                          const CheckOtpAction.onVerifyOtp(),
+                                        )
+                                        : null,
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColor.primary,
                                   foregroundColor: AppColor.white,
-                                  disabledBackgroundColor: AppColor.primary.withValues(alpha: 0.5),
+                                  disabledBackgroundColor: AppColor.primary
+                                      .withValues(alpha: 0.5),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
-                                child: state.isOtpVerified.isLoading
-                                    ? const SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(AppColor.white),
-                                  ),
-                                )
-                                    : const Text('확인'),
+                                child:
+                                    state.isOtpVerified.isLoading
+                                        ? const SizedBox(
+                                          width: 20,
+                                          height: 20,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                  AppColor.white,
+                                                ),
+                                          ),
+                                        )
+                                        : const Text('확인'),
                               ),
                             ),
 
@@ -271,15 +278,21 @@ class _CheckOtpScreenState extends ConsumerState<CheckOtpScreen> {
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: state.remainingSeconds != 0
-                                      ? () => widget.onAction(const CheckOtpAction.onResendOtp())
-                                      : () => widget.onAction(const CheckOtpAction.onResendOtp()),
+                                  onTap:
+                                      state.remainingSeconds != 0
+                                          ? () => widget.onAction(
+                                            const CheckOtpAction.onResendOtp(),
+                                          )
+                                          : () => widget.onAction(
+                                            const CheckOtpAction.onResendOtp(),
+                                          ),
                                   child: Text(
                                     '재전송',
                                     style: AppTextStyle.captionRegular.copyWith(
-                                      color: state.remainingSeconds == 0
-                                          ? AppColor.primary
-                                          : AppColor.lighterGray,
+                                      color:
+                                          state.remainingSeconds == 0
+                                              ? AppColor.primary
+                                              : AppColor.lighterGray,
                                       fontSize: 12,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -295,7 +308,10 @@ class _CheckOtpScreenState extends ConsumerState<CheckOtpScreen> {
 
                       // 이전 단계로 돌아가기
                       GestureDetector(
-                        onTap: () => widget.onAction(const CheckOtpAction.onBackTap()),
+                        onTap:
+                            () => widget.onAction(
+                              const CheckOtpAction.onBackTap(),
+                            ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -328,7 +344,9 @@ class _CheckOtpScreenState extends ConsumerState<CheckOtpScreen> {
                   height: double.infinity,
                   child: const Center(
                     child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(AppColor.primary),
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        AppColor.primary,
+                      ),
                     ),
                   ),
                 ),
@@ -336,16 +354,12 @@ class _CheckOtpScreenState extends ConsumerState<CheckOtpScreen> {
           ),
         );
       },
-      loading: () => const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      ),
-      error: (error, stack) => Scaffold(
-        body: Center(
-          child: Text('에러가 발생했습니다: $error'),
-        ),
-      ),
+      loading:
+          () =>
+              const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error:
+          (error, stack) =>
+              Scaffold(body: Center(child: Text('에러가 발생했습니다: $error'))),
     );
   }
 }

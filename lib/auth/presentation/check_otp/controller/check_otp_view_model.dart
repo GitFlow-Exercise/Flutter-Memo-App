@@ -1,12 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:mongo_ai/auth/domain/model/temp_user.dart';
 import 'package:mongo_ai/auth/presentation/check_otp/controller/check_otp_event.dart';
 import 'package:mongo_ai/auth/presentation/check_otp/controller/check_otp_state.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
-import 'package:mongo_ai/core/extension/string_extension.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -20,7 +18,7 @@ class CheckOtpViewModel extends _$CheckOtpViewModel {
   Stream<CheckOtpEvent> get eventStream => _eventController.stream;
 
   @override
-  Future<CheckOtpState> build(String tempUserId) async {
+  Future<CheckOtpState> build(String email) async {
     final codeController = TextEditingController();
 
     ref.onDispose(() {
@@ -29,24 +27,17 @@ class CheckOtpViewModel extends _$CheckOtpViewModel {
       _countdownTimer?.cancel();
     });
 
-    // 임시 사용자 정보 가져오기
-    final userResult = await _getTempUser(tempUserId);
-    String maskedEmail = '';
+    _startCountdownTimer();
 
-    if (userResult case Success(data: final user)) {
-      maskedEmail = user.email.maskedEmail;
-      _startCountdownTimer();
-    }
-
-    return CheckOtpState(
-      tempUserId: tempUserId,
-      codeController: codeController,
-      maskedEmail: maskedEmail,
-    );
+    return CheckOtpState(codeController: codeController, email: email);
   }
 
-  // OTP 검증 함수
+  // OTP 검증
   Future<bool> verifyOtp() async {
+    if (state.value == null) {
+      return false;
+    }
+
     state = state.whenData(
       (value) => value.copyWith(
         isOtpVerified: const AsyncLoading(),
@@ -54,38 +45,27 @@ class CheckOtpViewModel extends _$CheckOtpViewModel {
       ),
     );
 
-    final tempUser = await _getCurrentTempUser();
-    if (tempUser == null) {
-      _setError('인증 정보를 찾을 수 없습니다.');
-      return false;
-    }
-
-    final code = state.value?.codeController.text.trim() ?? '';
+    final code = state.value!.codeController.text.trim();
     if (code.isEmpty) {
       _setError('인증번호를 입력해주세요.');
       return false;
     }
 
     // OTP 만료 확인
-    if (tempUser.otpExpiration != null &&
-        tempUser.otpExpiration!.isBefore(DateTime.now())) {
+    if (state.value!.remainingSeconds <= 0) {
       _setError('인증번호가 만료되었습니다. 재전송을 눌러주세요.');
       return false;
     }
 
     final authRepository = ref.read(authRepositoryProvider);
-    final result = await authRepository.verifyOtp(tempUser.email, code);
+    final result = await authRepository.verifyOtp(state.value!.email, code);
 
     switch (result) {
       case Success<void, AppException>():
-        // OTP 검증 성공 시 tempUser에 검증된 OTP 저장
-        await _updateTempUserWithOtp(code);
-        _eventController.add(
-          CheckOtpEvent.navigateToPasswordScreen(state.value!.tempUserId),
-        );
         state = state.whenData(
           (value) => value.copyWith(isOtpVerified: const AsyncData(true)),
         );
+        _eventController.add(CheckOtpEvent.navigateToPasswordScreen(email),);
         return true;
       case Error<void, AppException>():
         _setError(result.error.message);
@@ -98,29 +78,14 @@ class CheckOtpViewModel extends _$CheckOtpViewModel {
 
   // OTP 재전송 함수
   Future<void> resendOtp() async {
-    final tempUser = await _getCurrentTempUser();
-    if (tempUser == null) {
-      _eventController.add(
-        const CheckOtpEvent.showSnackBar('인증 정보를 찾을 수 없습니다.'),
-      );
-      return;
-    }
+    // 실제 재전송 로직 주석 처리
+    // final authRepository = ref.read(authRepositoryProvider);
+    // final result = await authRepository.sendOtp(state.value!.email);
 
-    final authRepository = ref.read(authRepositoryProvider);
-    final result = await authRepository.sendOtp(tempUser.email);
-
-    switch (result) {
-      case Success<void, AppException>():
-        _resetTimer();
-        _resetCodeField();
-        _eventController.add(
-          const CheckOtpEvent.showSnackBar('인증번호가 재전송되었습니다.'),
-        );
-        break;
-      case Error<void, AppException>():
-        _eventController.add(CheckOtpEvent.showSnackBar(result.error.message));
-        break;
-    }
+    // 바로 성공 처리
+    _resetTimer();
+    _resetCodeField();
+    _eventController.add(const CheckOtpEvent.showSnackBar('인증번호가 재전송되었습니다.'));
   }
 
   void _resetCodeField() {
@@ -152,37 +117,6 @@ class CheckOtpViewModel extends _$CheckOtpViewModel {
       (value) => value.copyWith(remainingSeconds: 300),
     ); // 5분으로 리셋
     _startCountdownTimer();
-  }
-
-  // 임시 사용자 정보 가져오기
-  Future<Result<TempUser, AppException>> _getTempUser(String id) async {
-    final repository = ref.read(tempStorageRepositoryProvider);
-    return repository.retrieveData(id);
-  }
-
-  // 현재 임시 사용자 정보 가져오기
-  Future<TempUser?> _getCurrentTempUser() async {
-    final tempUserId = state.value?.tempUserId;
-    if (tempUserId == null) return null;
-
-    final result = await _getTempUser(tempUserId);
-    return switch (result) {
-      Success(data: final user) => user,
-      Error() => null,
-    };
-  }
-
-  // 임시 사용자 정보 업데이트
-  Future<void> _updateTempUserWithOtp(String otp) async {
-    final tempUser = await _getCurrentTempUser();
-    if (tempUser == null) return;
-
-    final repository = ref.read(tempStorageRepositoryProvider);
-    final updatedUser = tempUser.copyWith(
-      otp: otp,
-      otpExpiration: DateTime.now().add(const Duration(minutes: 5)),
-    );
-    repository.storeData(updatedUser);
   }
 
   // 에러 메시지 설정

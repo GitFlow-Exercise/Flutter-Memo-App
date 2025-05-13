@@ -25,7 +25,7 @@ class _CheckOtpScreenRootState extends ConsumerState<CheckOtpScreenRoot> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final viewModel = ref.watch(checkOtpViewModelProvider.notifier);
+      final viewModel = ref.watch(checkOtpViewModelProvider(widget.email).notifier);
       _subscription = viewModel.eventStream.listen(_handleEvent);
     });
   }
@@ -39,14 +39,13 @@ class _CheckOtpScreenRootState extends ConsumerState<CheckOtpScreenRoot> {
   void _handleEvent(CheckOtpEvent event) {
     switch (event) {
       case ShowSnackBar(message: final message):
-        print(message);
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(message)));
         break;
-      case NavigateToPasswordScreen():
+      case NavigateToPasswordScreen(email: final email):
         if (mounted) {
-          context.go(Routes.signUpPassword);
+          context.go(Routes.signUpPassword, extra: email);
         }
         break;
     }
@@ -54,7 +53,7 @@ class _CheckOtpScreenRootState extends ConsumerState<CheckOtpScreenRoot> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(checkOtpViewModelProvider);
+    final state = ref.watch(checkOtpViewModelProvider(widget.email));
 
     return Scaffold(
       body: CheckOtpScreen(state: state, onAction: _handleAction),
@@ -62,7 +61,7 @@ class _CheckOtpScreenRootState extends ConsumerState<CheckOtpScreenRoot> {
   }
 
   void _handleAction(CheckOtpAction action) {
-    final viewModel = ref.read(checkOtpViewModelProvider.notifier);
+    final viewModel = ref.read(checkOtpViewModelProvider(widget.email).notifier);
 
     switch (action) {
       case OnVerifyOtp():

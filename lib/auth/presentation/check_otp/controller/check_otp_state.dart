@@ -7,10 +7,9 @@ part 'check_otp_state.freezed.dart';
 @freezed
 abstract class CheckOtpState with _$CheckOtpState {
   const factory CheckOtpState({
-    required String tempUserId,
     required TextEditingController codeController,
     @Default(AsyncValue.data(false)) AsyncValue<bool> isOtpVerified,
-    @Default('') String maskedEmail,
+    required String email,
     @Default(300) int remainingSeconds, // 5분(300초) 기본값
     String? errorMessage,
   }) = _CheckOtpState;

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:mongo_ai/auth/domain/model/temp_user.dart';
 import 'package:mongo_ai/auth/presentation/sign_up_password/controller/sign_up_password_event.dart';
 import 'package:mongo_ai/auth/presentation/sign_up_password/controller/sign_up_password_state.dart';
 import 'package:mongo_ai/core/di/providers.dart';
@@ -18,7 +17,7 @@ class SignUpPasswordViewModel extends _$SignUpPasswordViewModel {
   Stream<SignUpPasswordEvent> get eventStream => _eventController.stream;
 
   @override
-  Future<SignUpPasswordState> build(String tempStoreId) async {
+  Future<SignUpPasswordState> build() async {
     final passwordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
 
@@ -32,7 +31,6 @@ class SignUpPasswordViewModel extends _$SignUpPasswordViewModel {
     confirmPasswordController.addListener(() => _validateForm());
 
     return SignUpPasswordState(
-      tempStoreId: tempStoreId,
       passwordController: passwordController,
       confirmPasswordController: confirmPasswordController,
     );
@@ -118,76 +116,5 @@ class SignUpPasswordViewModel extends _$SignUpPasswordViewModel {
         currentState.checkPrivacyPolicy;
   }
 
-  // 임시 사용자 관련 로직
-  Future<void> sendOtp() async {
-    final tempStoreId = state.value?.tempStoreId ?? '';
-    final password = state.value?.passwordController.text;
-
-    // 임시 사용자 정보 확인
-    final tempUser = _getTempUser(tempStoreId);
-    if (tempUser == null || password == null) {
-      _eventController.add(
-        const SignUpPasswordEvent.showSnackBar('알 수 없는 오류가 발생했습니다.'),
-      );
-      return;
-    }
-
-    // 임시 사용자 비밀번호 업데이트
-    final newTempStoreId = _updateTempUserPassword(tempStoreId, password);
-    if (newTempStoreId == null) {
-      _eventController.add(
-        const SignUpPasswordEvent.showSnackBar('알 수 없는 오류가 발생했습니다.'),
-      );
-      return;
-    }
-
-    // OTP 전송 시도
-    await _sendOtpToUser(tempUser.email, newTempStoreId);
-  }
-
-  Future<void> _sendOtpToUser(String email, String tempStoreId) async {
-    state = state.whenData((value) => value.copyWith(hasOtpBeenSent: const AsyncLoading()));
-
-    final authRepository = ref.read(authRepositoryProvider);
-    final result = await authRepository.sendOtp(email);
-
-    switch (result) {
-      case Success<void, AppException>():
-        state = state.whenData((value) => value.copyWith(hasOtpBeenSent: const AsyncData(true)));
-        _eventController.add(
-          const SignUpPasswordEvent.showSnackBar('인증번호가 발송되었습니다.'),
-        );
-        _eventController.add(
-          SignUpPasswordEvent.navigateToVerifyOtp(tempStoreId),
-        );
-        return;
-      case Error<void, AppException>():
-        state = state.whenData((value) => value.copyWith(hasOtpBeenSent: const AsyncData(false)));
-        _eventController.add(
-          SignUpPasswordEvent.showSnackBar(result.error.message),
-        );
-        return;
-    }
-  }
-
-  String? _updateTempUserPassword(String id, String password) {
-    final repository = ref.read(tempStorageRepositoryProvider);
-    final result = repository.retrieveData(id);
-
-    if (result is Success<TempUser, AppException>) {
-      final updated = result.data.copyWith(password: password);
-      return repository.storeData(updated);
-    }
-    return null;
-  }
-
-  TempUser? _getTempUser(String id) {
-    final repository = ref.read(tempStorageRepositoryProvider);
-    final result = repository.retrieveData(id);
-
-    if (result is Success<TempUser, AppException>) {
-      return result.data;
-    }
-    return null;
-  }
+  // 임시 사용자 관련 로직 전체 삭제
 }

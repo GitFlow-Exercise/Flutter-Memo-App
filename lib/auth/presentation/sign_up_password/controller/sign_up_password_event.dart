@@ -6,5 +6,6 @@ part 'sign_up_password_event.freezed.dart';
 sealed class SignUpPasswordEvent with _$SignUpPasswordEvent {
   const factory SignUpPasswordEvent.showSnackBar(String message) = ShowSnackBar;
 
-  const factory SignUpPasswordEvent.navigateToVerifyOtp(String tempUserId) = NavigateToVerifyOtp;
+  const factory SignUpPasswordEvent.navigateToVerifyOtp(String tempUserId) =
+      NavigateToVerifyOtp;
 }
