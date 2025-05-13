@@ -64,6 +64,9 @@ dependencies:
   # OTP 인증 핀 입력
   pinput: ^3.0.1
 
+  # json 애니메이션
+  lottie: ^2.3.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

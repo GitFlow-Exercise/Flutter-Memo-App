@@ -71,7 +71,7 @@ class _SignUpScreenRootState extends ConsumerState<SignUpScreenRoot> {
         final isPasswordUpdated = await viewModel.resetPassword();
         if (isPasswordUpdated) {
           if (await viewModel.saveUser() && mounted) {
-            context.go(Routes.signUpComplete);
+            context.go(Routes.signUpComplete, extra: '');
           }
         }
       case OnTapSignIn():
