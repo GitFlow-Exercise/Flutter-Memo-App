@@ -58,7 +58,7 @@ class AiBaseLayout extends StatelessWidget {
               onTap:
                   cancelTap ??
                   () {
-                    context.go(Routes.home);
+                    context.go(Routes.myFiles);
                   },
               border: Border.all(color: AppColor.lightGrayBorder),
               bgColor: AppColor.white,
