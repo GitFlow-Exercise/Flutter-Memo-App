@@ -280,9 +280,7 @@ class _CheckOtpScreenState extends ConsumerState<CheckOtpScreen> {
                                 GestureDetector(
                                   onTap:
                                       state.remainingSeconds != 0
-                                          ? () => widget.onAction(
-                                            const CheckOtpAction.onResendOtp(),
-                                          )
+                                          ? null
                                           : () => widget.onAction(
                                             const CheckOtpAction.onResendOtp(),
                                           ),
