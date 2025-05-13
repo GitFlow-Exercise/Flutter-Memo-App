@@ -17,23 +17,21 @@ abstract class AppRedirect {
         return null;
       }
 
-      // Check OTP는 extra를 통한 접근 필요
-      if (nowPath == Routes.checkOtp && extra is! String ||
-          nowPath == Routes.signUpPassword && extra is! String ||
-          nowPath == Routes.signUpComplete && extra is! String) {
-        return Routes.signIn;
+      // otp확인은 extra 값이 있어야 함
+      if (nowPath == Routes.checkOtp && extra is String) {
+        return null;
       }
 
       // Check OTP가 extra와 함께 접근한 경우는 정상 진행
-      return null;
+      return Routes.signIn;
     }
 
     // 2. 인증은 됐지만 초기 설정이 안 된 경우 (isAuthenticated = true, isInitialSetupUser = false)
     if (!isInitialSetupUser) {
-      // 비밀번호 설정 화면과 완료 화면은 허용
+      // 비밀번호 설정, 완료 화면은 extra가 있어야 함
       if (nowPath == Routes.signUpPassword && extra is String ||
           nowPath == Routes.signUpComplete && extra is String) {
-        return null; // 정상 진행
+        return null;
       }
       // 그 외 모든 페이지는 비밀번호 설정으로 리다이렉트
       return Routes.signUpPassword;
@@ -41,11 +39,11 @@ abstract class AppRedirect {
 
     // 3. 완전히 인증된 사용자 (isAuthenticated = true, isInitialSetupUser = true)
     // 회원가입/로그인 관련 화면 접근 시도는 메인 화면으로 리다이렉트
+    // 완료 화면은 예외
     if (nowPath == Routes.signIn ||
         nowPath == Routes.signUp ||
         nowPath == Routes.checkOtp ||
-        nowPath == Routes.signUpPassword ||
-        nowPath == Routes.signUpComplete) {
+        nowPath == Routes.signUpPassword) {
       return Routes.myFiles;
     }
 
