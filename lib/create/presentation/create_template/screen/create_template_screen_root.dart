@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
+import 'package:mongo_ai/create/presentation/base/layout/ai_base_layout.dart';
 import 'package:mongo_ai/create/domain/model/create_workbook_params.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_action.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_event.dart';
@@ -57,8 +58,15 @@ class _CreateTemplateScreenRootState
   Widget build(BuildContext context) {
     final state = ref.watch(createTemplateViewModelProvider);
 
-    return Scaffold(
-      body: CreateTemplateScreen(state: state, onAction: _handleAction),
+    return AiBaseLayout(
+      title: '문제집 생성',
+      subTitle: 'PDF 템플릿 선택',
+      step: 3,
+      maxWidth: 1000,
+      maxHeight: 750,
+      nextTap: () {},
+      isPopTap: false,
+      child: CreateTemplateScreen(state: state, onAction: _handleAction),
     );
   }
 
@@ -68,10 +76,18 @@ class _CreateTemplateScreenRootState
     switch (action) {
       case OnTapColumnsTemplate(isSingleColumns: final isSingleColumns):
         viewModel.toggleColumnsButton(isSingleColumns: isSingleColumns);
-      case OnChangeContents(contents: final contents):
-        viewModel.changedContents(contents: contents);
+
       case CreateProblemForPdf(contents: final contents):
         viewModel.generatePdf(contents: contents);
+
+      case OnAcceptProblem():
+        viewModel.moveToOriginalList(action.problem);
+
+      case OnAcceptOrderedProblem():
+        viewModel.moveToOrderedList(action.problem);
+
+      case OnTapReset():
+        viewModel.resetOrderedList();
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
 
 part 'create_template_action.freezed.dart';
 
@@ -8,11 +9,15 @@ sealed class CreateTemplateAction with _$CreateTemplateAction {
     required bool isSingleColumns,
   }) = OnTapColumnsTemplate;
 
-  const factory CreateTemplateAction.onChangeContents({
-    required String contents,
-  }) = OnChangeContents;
-
   const factory CreateTemplateAction.createProblemForPdf({
     required String contents,
   }) = CreateProblemForPdf;
+
+  const factory CreateTemplateAction.onAcceptProblem(Problem problem) =
+      OnAcceptProblem;
+
+  const factory CreateTemplateAction.onAcceptOrderedProblem(Problem problem) =
+      OnAcceptOrderedProblem;
+
+  const factory CreateTemplateAction.onTapReset() = OnTapReset;
 }
