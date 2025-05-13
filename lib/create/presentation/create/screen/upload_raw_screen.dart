@@ -8,7 +8,7 @@ import 'package:mongo_ai/create/presentation/create/widgets/upload_input_file.da
 import 'package:mongo_ai/create/presentation/create/widgets/upload_input_image.dart';
 import 'package:mongo_ai/create/presentation/create/widgets/upload_input_text.dart';
 
-class UploadRawScreen extends StatefulWidget {
+class UploadRawScreen extends StatelessWidget {
   final UploadRawState state;
   final void Function(UploadRawAction action) onAction;
 
@@ -18,11 +18,6 @@ class UploadRawScreen extends StatefulWidget {
     required this.onAction,
   });
 
-  @override
-  State<UploadRawScreen> createState() => _UploadRawScreenState();
-}
-
-class _UploadRawScreenState extends State<UploadRawScreen> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -41,13 +36,11 @@ class _UploadRawScreenState extends State<UploadRawScreen> {
           ),
           child: Row(
             children:
-                widget.state.uploadTypes
+                state.uploadTypes
                     .map(
                       (e) => InkWell(
                         onTap:
-                            () => widget.onAction(
-                              UploadRawAction.selectUploadType(e),
-                            ),
+                            () => onAction(UploadRawAction.selectUploadType(e)),
                         child: Container(
                           padding: const EdgeInsets.symmetric(
                             vertical: 12,
@@ -55,7 +48,7 @@ class _UploadRawScreenState extends State<UploadRawScreen> {
                           ),
                           decoration: BoxDecoration(
                             border:
-                                widget.state.selectedUploadType == e
+                                state.selectedUploadType == e
                                     ? const Border(
                                       bottom: BorderSide(
                                         color: AppColor.primary,
@@ -81,18 +74,20 @@ class _UploadRawScreenState extends State<UploadRawScreen> {
 
         // 텍스트/이미지/파일 별로
         // 위젯이 다르게 나오도록 구성 및 각 위젯 컴포넌트화
-        if (widget.state.selectedUploadType == AiConstant.inputText) ...[
-          UploadInputText(controller: widget.state.textController),
-        ] else if (widget.state.selectedUploadType ==
-            AiConstant.inputImage) ...[
-          UploadInputImage(
-            file: widget.state.pickFile,
-            onTap: () => widget.onAction(const UploadRawAction.pickImage()),
+        if (state.selectedUploadType == AiConstant.inputText) ...[
+          UploadInputText(
+            controller: state.textController,
+            clearTap: () => onAction(const UploadRawAction.clearText()),
           ),
-        ] else if (widget.state.selectedUploadType == AiConstant.inputFile) ...[
+        ] else if (state.selectedUploadType == AiConstant.inputImage) ...[
+          UploadInputImage(
+            file: state.pickFile,
+            onTap: () => onAction(const UploadRawAction.pickImage()),
+          ),
+        ] else if (state.selectedUploadType == AiConstant.inputFile) ...[
           UploadInputFile(
-            file: widget.state.pickFile,
-            onTap: () => widget.onAction(const UploadRawAction.pickPdf()),
+            file: state.pickFile,
+            onTap: () => onAction(const UploadRawAction.pickPdf()),
           ),
         ],
       ],

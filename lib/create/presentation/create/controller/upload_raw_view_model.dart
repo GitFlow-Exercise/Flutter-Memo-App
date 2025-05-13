@@ -164,4 +164,9 @@ class UploadRawViewModel extends _$UploadRawViewModel {
   void _readyForSnackBar(String message) {
     _eventController.add(UploadRawEvent.showSnackBar(message));
   }
+
+  // 텍스트 지우기
+  void clearText() {
+    state.whenData((cb) => cb.textController.clear());
+  }
 }
