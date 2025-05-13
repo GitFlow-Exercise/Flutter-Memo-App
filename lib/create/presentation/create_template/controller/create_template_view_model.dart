@@ -126,6 +126,39 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
     );
   }
 
+  void resetOrderedList() {
+    // 1. 현재 orderedProblemList의 내용을 저장
+    final itemsToRestore = List<Problem>.from(state.orderedProblemList);
+
+    // 2. orderedProblemList 비우기
+    final orderedProblemList = <Problem>[];
+
+    // 3. problemList 복사
+    final problemList = List<Problem>.from(state.problemList);
+
+    // 4. orderedProblemList에 있던 항목들을 problemList에 추가 (중복 방지)
+    for (final problem in itemsToRestore) {
+      if (!problemList.any((p) => p.id == problem.id)) {
+        problemList.add(
+          Problem(
+            id: problem.id,
+            title: problem.title,
+            content: problem.content,
+          ),
+        );
+      }
+    }
+
+    // 5. problemList 정렬
+    problemList.sort((a, b) => a.id.compareTo(b.id));
+
+    // 6. 상태 업데이트
+    state = state.copyWith(
+      problemList: problemList,
+      orderedProblemList: orderedProblemList,
+    );
+  }
+
   void generatePdf({required String contents}) async {
     //TODO(ok): 추후 템플릿 확정 시 변경 예정, 다음 화면으로 Uint8List 전달
     // => 임시로 화면 이동하는 로직 추가하였습니다.(명우)

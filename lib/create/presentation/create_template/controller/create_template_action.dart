@@ -18,4 +18,6 @@ sealed class CreateTemplateAction with _$CreateTemplateAction {
 
   const factory CreateTemplateAction.onAcceptOrderedProblem(Problem problem) =
       OnAcceptOrderedProblem;
+
+  const factory CreateTemplateAction.onTapReset() = OnTapReset;
 }

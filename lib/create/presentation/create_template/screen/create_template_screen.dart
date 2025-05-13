@@ -56,6 +56,7 @@ class CreateTemplateScreen extends StatelessWidget {
               onAction(CreateTemplateAction.onAcceptOrderedProblem(problem));
             }
           },
+          onTapClear: () => onAction(const CreateTemplateAction.onTapReset()),
         ),
       ],
     );

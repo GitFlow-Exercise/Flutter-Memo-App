@@ -85,6 +85,9 @@ class _CreateTemplateScreenRootState
 
       case OnAcceptOrderedProblem():
         viewModel.moveToOrderedList(action.problem);
+
+      case OnTapReset():
+        viewModel.resetOrderedList();
     }
   }
 }

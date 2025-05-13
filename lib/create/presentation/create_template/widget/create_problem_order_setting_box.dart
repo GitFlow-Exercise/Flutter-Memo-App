@@ -9,10 +9,13 @@ import 'package:mongo_ai/create/presentation/create_template/widget/problem_card
 class CreateProblemOrderSettingBox extends StatelessWidget {
   final List<Problem> orderedProblemList;
   final void Function(Problem problem) onAcceptOrderedProblem;
+  final VoidCallback onTapClear;
+
   const CreateProblemOrderSettingBox({
     super.key,
     required this.orderedProblemList,
     required this.onAcceptOrderedProblem,
+    required this.onTapClear,
   });
 
   @override
@@ -64,16 +67,19 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
                       ),
                     ),
                     const Gap(5),
-                    Row(
-                      children: [
-                        const Icon(Icons.delete, color: AppColor.destructive),
-                        Text(
-                          '모두 지우기',
-                          style: AppTextStyle.labelMedium.copyWith(
-                            color: AppColor.destructive,
+                    GestureDetector(
+                      onTap: onTapClear,
+                      child: Row(
+                        children: [
+                          const Icon(Icons.delete, color: AppColor.destructive),
+                          Text(
+                            '모두 지우기',
+                            style: AppTextStyle.labelMedium.copyWith(
+                              color: AppColor.destructive,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ],
                 ),
