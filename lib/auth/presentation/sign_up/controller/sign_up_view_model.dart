@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
-import 'package:mongo_ai/auth/domain/model/temp_user.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/controller/sign_up_event.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/controller/sign_up_state.dart';
 import 'package:mongo_ai/core/di/providers.dart';
@@ -48,13 +47,7 @@ class SignUpViewModel extends _$SignUpViewModel {
     state = state.copyWith(isTermsOfUseChecked: !state.isTermsOfUseChecked);
   }
 
-  // 임시 유저 생성 및 저장
-  String _createTempUser(String email) {
-    final tempUser = TempUser(email: email, password: '');
-    return ref.read(tempStorageRepositoryProvider).storeData(tempUser);
-  }
-
-  void checkEmail() async {
+  Future<bool> checkEmail() async {
     final authRepository = ref.read(authRepositoryProvider);
     final result = await authRepository.isEmailExist(
       state.emailController.text,
@@ -62,9 +55,10 @@ class SignUpViewModel extends _$SignUpViewModel {
 
     switch (result) {
       case Success<bool, AppException>():
-        await sendOtp();
+        return true;
       case Error<bool, AppException>():
         _eventController.add(SignUpEvent.showSnackBar(result.error.message));
+        return false;
     }
   }
 
@@ -77,9 +71,7 @@ class SignUpViewModel extends _$SignUpViewModel {
       case Success<void, AppException>():
         state = state.copyWith(hasOtpBeenSent: const AsyncData(true));
         _eventController.add(const SignUpEvent.showSnackBar('인증번호가 발송되었습니다.'));
-
-        final tempStoreId = _createTempUser(state.emailController.text);
-        _eventController.add(SignUpEvent.navigateToOtpWithUserId(tempStoreId));
+        _eventController.add(SignUpEvent.navigateToCheckOtp(state.emailController.text));
         return;
       case Error<void, AppException>():
         state = state.copyWith(hasOtpBeenSent: const AsyncData(false));
