@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/result/result.dart';
+import 'package:mongo_ai/create/domain/model/create_workbook_params.dart';
 import 'package:mongo_ai/create/domain/model/prompt.dart';
 import 'package:mongo_ai/create/domain/model/request/input_content.dart';
 import 'package:mongo_ai/create/domain/model/request/message_input.dart';
@@ -55,8 +56,15 @@ class CreateProblemViewModel extends _$CreateProblemViewModel {
 
     switch (result) {
       case Success(data: final problem):
-        state = state.whenData((cb) => cb.copyWith(problem: problem));
-        _eventController.add(CreateProblemEvent.successOpenAIRequest(problem));
+        late CreateTemplateParams params;
+        state = state.whenData((cb) {
+          params = CreateTemplateParams(
+            response: problem,
+            prompt: cb.problemType!,
+          );
+          return cb.copyWith(problem: problem);
+        });
+        _eventController.add(CreateProblemEvent.successOpenAIRequest(params));
       case Error(error: final error):
         state = AsyncValue.error(error, error.stackTrace ?? StackTrace.empty);
     }

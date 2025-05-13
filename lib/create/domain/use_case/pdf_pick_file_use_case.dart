@@ -9,7 +9,7 @@ class PdfPickFileUseCase {
   const PdfPickFileUseCase({required FilePickerRepository filePickerRepository})
     : _filePickerRepository = filePickerRepository;
 
-  Future<Result<PickFile, AppException>> execute() async {
+  Future<Result<PickFile?, AppException>> execute() async {
     return await _filePickerRepository.selectPdf();
   }
 }

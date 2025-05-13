@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mongo_ai/core/constants/ai_constant.dart';
+import 'package:mongo_ai/core/style/app_color.dart';
+import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/create/presentation/create/controller/upload_raw_action.dart';
 import 'package:mongo_ai/create/presentation/create/controller/upload_raw_state.dart';
-import 'package:printing/printing.dart';
+import 'package:mongo_ai/create/presentation/create/widgets/upload_input_file.dart';
+import 'package:mongo_ai/create/presentation/create/widgets/upload_input_image.dart';
+import 'package:mongo_ai/create/presentation/create/widgets/upload_input_text.dart';
 
 class UploadRawScreen extends StatefulWidget {
   final UploadRawState state;
@@ -22,278 +25,88 @@ class UploadRawScreen extends StatefulWidget {
 class _UploadRawScreenState extends State<UploadRawScreen> {
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SingleChildScrollView(
-          child: Center(
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 500),
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Text(
-                    '업로드 유형 선택',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 20),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(
-                        onPressed:
+        const SizedBox(height: 24),
+        Text(
+          '문제를 생성할 콘텐츠 소스를 선택하세요. 텍스트를 직접 입력하거나, 이미지나 PDF 파일을 업로드할 수 있습니다.',
+          style: AppTextStyle.bodyRegular.copyWith(color: AppColor.lightGray),
+        ),
+        const SizedBox(height: 20),
+        // 타입 설정하는 커스텀 탭바
+        Container(
+          decoration: const BoxDecoration(
+            border: Border(bottom: BorderSide(color: AppColor.lightGrayBorder)),
+          ),
+          child: Row(
+            children:
+                widget.state.uploadTypes
+                    .map(
+                      (e) => InkWell(
+                        onTap:
                             () => widget.onAction(
-                              const UploadRawAction.selectUploadType(
-                                AiConstant.inputText,
-                              ),
+                              UploadRawAction.selectUploadType(e),
                             ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              widget.state.selectedUploadType ==
-                                      AiConstant.inputText
-                                  ? Colors.blue
-                                  : Colors.white70,
-                        ),
-                        child: const Text('텍스트'),
-                      ),
-                      ElevatedButton(
-                        onPressed:
-                            () => widget.onAction(
-                              const UploadRawAction.selectUploadType(
-                                AiConstant.inputImage,
-                              ),
-                            ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              widget.state.selectedUploadType ==
-                                      AiConstant.inputImage
-                                  ? Colors.blue
-                                  : Colors.white70,
-                        ),
-                        child: const Text('이미지'),
-                      ),
-                      ElevatedButton(
-                        onPressed:
-                            () => widget.onAction(
-                              const UploadRawAction.selectUploadType(
-                                AiConstant.inputFile,
-                              ),
-                            ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              widget.state.selectedUploadType ==
-                                      AiConstant.inputFile
-                                  ? Colors.blue
-                                  : Colors.white70,
-                        ),
-                        child: const Text('PDF'),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 30),
-
-                  if (widget.state.selectedUploadType ==
-                      AiConstant.inputText) ...[
-                    const Text('텍스트 입력:'),
-                    const SizedBox(height: 10),
-                    TextField(
-                      onChanged: (_) {
-                        setState(() {});
-                      },
-                      controller: widget.state.textController,
-                      maxLines: 12,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: '텍스트를 입력하세요...',
-                      ),
-                    ),
-                  ] else if (widget.state.selectedUploadType ==
-                      AiConstant.inputImage) ...[
-                    const Text('이미지 업로드:'),
-                    const SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed:
-                          () => widget.onAction(
-                            const UploadRawAction.pickImage(),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 12,
+                            horizontal: 16,
                           ),
-                      child: const Text('이미지 선택'),
-                    ),
-                    widget.state.pickFile.when(
-                      data: (file) {
-                        if (file != null) {
-                          return Column(
-                            children: [
-                              const SizedBox(height: 10),
-                              Text('선택된 이미지: ${file.fileName}'),
-                              const SizedBox(height: 10),
-                              Container(
-                                height: 500,
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey),
-                                ),
-                                child: Center(
-                                  child: Image.memory(
-                                    file.bytes,
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        }
-                        return const SizedBox.shrink();
-                      },
-                      loading: () {
-                        final file = widget.state.pickFile.value;
-                        if (file != null) {
-                          return Column(
-                            children: [
-                              const SizedBox(height: 10),
-                              Text('선택된 이미지: ${file.fileName}'),
-                              const SizedBox(height: 10),
-                              Container(
-                                height: 500,
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey),
-                                ),
-                                child: Stack(
-                                  children: [
-                                    Center(
-                                      child: Image.memory(
-                                        file.bytes,
-                                        fit: BoxFit.contain,
+                          decoration: BoxDecoration(
+                            border:
+                                widget.state.selectedUploadType == e
+                                    ? const Border(
+                                      bottom: BorderSide(
+                                        color: AppColor.primary,
+                                        width: 2,
                                       ),
-                                    ),
-                                    Container(
-                                      color: Colors.black.withValues(
-                                        alpha: 0.5,
-                                      ),
-                                      child: const Center(
-                                        child: CircularProgressIndicator(),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          );
-                        }
-                        return const SizedBox.shrink();
-                      },
-                      error: (error, stackTrace) => Text('에러: $error'),
-                    ),
-                  ] else if (widget.state.selectedUploadType ==
-                      AiConstant.inputFile) ...[
-                    const Text('PDF 업로드:'),
-                    const SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed:
-                          () =>
-                              widget.onAction(const UploadRawAction.pickPdf()),
-                      child: const Text('PDF 선택'),
-                    ),
-                    widget.state.pickFile.when(
-                      data: (file) {
-                        if (file != null) {
-                          return Column(
-                            children: [
-                              const SizedBox(height: 10),
-                              Text('선택된 PDF: ${file.fileName}'),
-                              const SizedBox(height: 10),
-                              Container(
-                                height: 500,
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey),
-                                ),
-                                child: PdfPreview(
-                                  build: (format) => file.bytes,
-                                  maxPageWidth: 400,
-                                  allowPrinting: false,
-                                  allowSharing: false,
-                                  canChangePageFormat: false,
-                                  canChangeOrientation: false,
-                                  canDebug: false,
-                                ),
-                              ),
-                            ],
-                          );
-                        }
-                        return const SizedBox.shrink();
-                      },
-                      loading: () {
-                        final file = widget.state.pickFile.value;
-                        if (file != null) {
-                          return Column(
-                            children: [
-                              const SizedBox(height: 10),
-                              Text('선택된 PDF: ${file.fileName}'),
-                              const SizedBox(height: 10),
-                              Container(
-                                height: 500,
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey),
-                                ),
-                                child: Stack(
-                                  children: [
-                                    PdfPreview(
-                                      build: (format) => file.bytes,
-                                      maxPageWidth: 400,
-                                      allowPrinting: false,
-                                      allowSharing: false,
-                                      canChangePageFormat: false,
-                                      canChangeOrientation: false,
-                                      canDebug: false,
-                                    ),
-                                    Container(
-                                      color: Colors.black.withValues(
-                                        alpha: 0.5,
-                                      ),
-                                      child: const Center(
-                                        child: CircularProgressIndicator(),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          );
-                        }
-                        return const SizedBox.shrink();
-                      },
-                      error: (error, stackTrace) => Text('에러: $error'),
-                    ),
-                  ],
-
-                  const SizedBox(height: 30),
-
-                  if (widget.state.selectedUploadType != null)
-                    ElevatedButton(
-                      onPressed:
-                          widget.state.isSubmitEnabled
-                              ? () => widget.onAction(
-                                const UploadRawAction.submitForm(),
-                              )
-                              : null,
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 15),
+                                    )
+                                    : null,
+                          ),
+                          child: Text(
+                            inputText(e),
+                            style: AppTextStyle.bodyMedium.copyWith(
+                              color: AppColor.primary,
+                            ),
+                          ),
+                        ),
                       ),
-                      child: const Text('제출하기'),
-                    ),
-                ],
-              ),
-            ),
+                    )
+                    .toList(),
           ),
         ),
-        if (widget.state.result.isLoading)
-          Container(
-            color: Colors.black.withValues(alpha: 0.5),
-            width: double.infinity,
-            height: double.infinity,
-            child: const Center(child: CircularProgressIndicator()),
+
+        const SizedBox(height: 30),
+
+        // 텍스트/이미지/파일 별로
+        // 위젯이 다르게 나오도록 구성 및 각 위젯 컴포넌트화
+        if (widget.state.selectedUploadType == AiConstant.inputText) ...[
+          UploadInputText(controller: widget.state.textController),
+        ] else if (widget.state.selectedUploadType ==
+            AiConstant.inputImage) ...[
+          UploadInputImage(
+            file: widget.state.pickFile,
+            onTap: () => widget.onAction(const UploadRawAction.pickImage()),
           ),
+        ] else if (widget.state.selectedUploadType == AiConstant.inputFile) ...[
+          UploadInputFile(
+            file: widget.state.pickFile,
+            onTap: () => widget.onAction(const UploadRawAction.pickPdf()),
+          ),
+        ],
       ],
     );
+  }
+
+  // 현재 타입에 따라 탭바에 알맞게 텍스트 출력
+  String inputText(String text) {
+    if (text == 'input_text') {
+      return '텍스트 입력';
+    } else if (text == 'input_image') {
+      return '이미지 업로드';
+    } else {
+      return 'PDF 업로드';
+    }
   }
 }
