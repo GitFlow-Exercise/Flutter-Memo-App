@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -6,9 +5,15 @@ import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
 
-class CreateProblemListWidget extends StatelessWidget {
+class CreateProblemListWidget extends StatefulWidget {
   const CreateProblemListWidget({super.key});
 
+  @override
+  State<CreateProblemListWidget> createState() =>
+      _CreateProblemListWidgetState();
+}
+
+class _CreateProblemListWidgetState extends State<CreateProblemListWidget> {
   @override
   Widget build(BuildContext context) {
     List<Problem> problemList = [
@@ -64,47 +69,62 @@ class CreateProblemListWidget extends StatelessWidget {
           ],
         ),
         const Gap(12),
-        SizedBox(
-          height: 300,
-          child: ListView.separated(
-            itemCount: problemList.length,
-            separatorBuilder: (context, index) => const Gap(12),
-            itemBuilder: (context, index) {
-              return Draggable<Problem>(
-                data: problemList[index],
-                feedback: Material(
-                  child: SizedBox(
-                    width: 500,
-                    child: _ProblemCardWidget(
+        DragTarget<Problem>(
+          onAcceptWithDetails: (detail) {
+            setState(() {
+              problemList.add(detail.data);
+            });
+          },
+          builder: (context, candidateData, rejectedData) {
+            return SizedBox(
+              height: 500,
+              child: ListView.separated(
+                itemCount: problemList.length,
+                separatorBuilder: (context, index) => const Gap(12),
+                itemBuilder: (context, index) {
+                  return Draggable<Problem>(
+                    data: problemList[index],
+                    feedback: Material(
+                      child: SizedBox(
+                        width: 500,
+                        child: ProblemCardWidget(
+                          title: problemList[index].title,
+                          content: problemList[index].content,
+                        ),
+                      ),
+                    ),
+                    childWhenDragging: Opacity(
+                      opacity: 0.5,
+                      child: ProblemCardWidget(
+                        title: problemList[index].title,
+                        content: problemList[index].content,
+                      ),
+                    ),
+                    child: ProblemCardWidget(
                       title: problemList[index].title,
                       content: problemList[index].content,
                     ),
-                  ),
-                ),
-                childWhenDragging: Opacity(
-                  opacity: 0.5,
-                  child: _ProblemCardWidget(
-                    title: problemList[index].title,
-                    content: problemList[index].content,
-                  ),
-                ),
-                child: _ProblemCardWidget(
-                  title: problemList[index].title,
-                  content: problemList[index].content,
-                ),
-              );
-            },
-          ),
+                  );
+                },
+              ),
+            );
+          },
         ),
       ],
     );
   }
 }
 
-class _ProblemCardWidget extends StatelessWidget {
+class ProblemCardWidget extends StatelessWidget {
   final String title;
   final String content;
-  const _ProblemCardWidget({required this.title, required this.content});
+  final int? maxLines;
+  const ProblemCardWidget({
+    super.key,
+    required this.title,
+    required this.content,
+    this.maxLines = 2,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +172,7 @@ class _ProblemCardWidget extends StatelessWidget {
             style: AppTextStyle.labelMedium.copyWith(
               color: AppColor.mediumGray,
             ),
-            maxLines: 2,
+            maxLines: maxLines,
             overflow: TextOverflow.ellipsis,
           ),
         ],
