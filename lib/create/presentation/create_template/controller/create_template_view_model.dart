@@ -73,19 +73,6 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
     state = state.copyWith(problem: AsyncValue.data(problem));
   }
 
-  void setProblemList(Problem problem) {
-    final problemList = state.problemList;
-    bool isExist = problemList.any((e) => e.id == problem.id);
-    if (isExist) {
-      problemList.removeWhere((e) => e.id == problem.id);
-    } else {
-      problemList.add(
-        Problem(id: problem.id, title: problem.title, content: problem.content),
-      );
-    }
-    state = state.copyWith(problemList: problemList);
-  }
-
   void moveToOrderedList(Problem problem) {
     // 1. 원본 리스트(problemList)에서 항목 제거
     final problemList = List<Problem>.from(state.problemList);
