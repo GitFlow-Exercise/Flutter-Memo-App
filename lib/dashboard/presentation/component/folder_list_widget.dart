@@ -5,9 +5,10 @@ import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/core/state/current_folder_id_state.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
+import 'package:mongo_ai/dashboard/domain/model/folder.dart';
 
 class FolderListWidget extends ConsumerWidget {
-  final void Function(int folderId) onClickFolder;
+  final void Function(Folder folder) onClickFolder;
   final void Function() onClickExpand;
 
   const FolderListWidget({
@@ -55,7 +56,7 @@ class FolderListWidget extends ConsumerWidget {
                             : AppColor.mediumGray,
                   ),
                   onTap: () {
-                    onClickFolder(folder.folderId);
+                    onClickFolder(folder);
                   },
                 );
               },

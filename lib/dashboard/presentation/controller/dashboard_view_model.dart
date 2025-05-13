@@ -3,6 +3,7 @@ import 'package:mongo_ai/core/enum/workbook_sort_option.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/core/state/current_folder_id_state.dart';
 import 'package:mongo_ai/core/state/current_team_id_state.dart';
+import 'package:mongo_ai/core/state/dashboard_path_state.dart';
 import 'package:mongo_ai/core/state/workbook_filter_state.dart';
 import 'package:mongo_ai/dashboard/domain/model/user_profile.dart';
 import 'package:mongo_ai/dashboard/presentation/controller/dashboard_state.dart';
@@ -62,6 +63,12 @@ class DashboardViewModel extends _$DashboardViewModel {
 
   Future<void> toggleFilterShowGridView() async {
     ref.read(workbookFilterStateProvider.notifier).toggleShowGridView();
+  }
+
+  // -----------------
+  // path 업데이트 메서드
+  Future<void> updatePath(List<String> path) async {
+    ref.read(dashboardPathStateProvider.notifier).set(path);
   }
 
   // -----------------

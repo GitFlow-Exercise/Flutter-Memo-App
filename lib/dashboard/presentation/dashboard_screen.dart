@@ -6,8 +6,10 @@ import 'package:mongo_ai/core/enum/workbook_sort_option.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
+import 'package:mongo_ai/dashboard/domain/model/folder.dart';
 import 'package:mongo_ai/dashboard/presentation/component/button_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/folder_list_widget.dart';
+import 'package:mongo_ai/dashboard/presentation/component/path_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/team_list_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/workbook_filter_bookmark_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/workbook_filter_sort_widget.dart';
@@ -36,84 +38,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           backgroundColor: AppColor.white,
           body: Row(
             children: [
-              Container(
-                width: 250,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Gap(20),
-                      SizedBox(
-                        height: 40,
-                        child: Center(
-                          child: Row(
-                            children: [
-                              Text(
-                                'Mongo AI',
-                                style: AppTextStyle.titleBold.copyWith(
-                                  color: AppColor.primary,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const Gap(10),
-                      SizedBox(
-                        height: 40,
-                        child: TeamListWidget(
-                          currentTeamId: dashboard.currentTeamId,
-                          onClickTeam: (int teamId) {
-                            viewModel.selectTeam(teamId);
-                          },
-                        ),
-                      ),
-                      const Gap(10),
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: AppColor.lightGrayBorder,
-                              width: 1,
-                            ),
-                            top: BorderSide(
-                              color: AppColor.lightGrayBorder,
-                              width: 1,
-                            ),
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            const Gap(10),
-                            _sideBarTile(0, '내 항목', Icons.person),
-                            const Gap(10),
-                            _sideBarTile(1, '최근 항목', Icons.timelapse),
-                            const Gap(10),
-                          ],
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text('폴더', style: AppTextStyle.bodyMedium),
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.add),
-                          ),
-                        ],
-                      ),
-                      FolderListWidget(
-                        onClickFolder: (int folderId) {
-                          viewModel.selectFolderId(folderId);
-                          _onTap(context, 2);
-                        },
-                        onClickExpand: () {},
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              _sideBar(),
               Expanded(
                 child: Column(
                   children: [
@@ -124,7 +49,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         height: 40,
                         child: Row(
                           children: [
-                            Icon(Icons.person, color: AppColor.deepBlack),
+                            const Icon(Icons.person, color: AppColor.deepBlack),
                             const Gap(10),
                             Text(
                               dashboard.userProfile.userName,
@@ -132,7 +57,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            Text('님 환영합니다', style: AppTextStyle.bodyMedium),
+                            const Text('님 환영합니다', style: AppTextStyle.bodyMedium),
                             const Spacer(),
                             ButtonWidget(
                               buttonText: '새로 만들기',
@@ -160,10 +85,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     const Gap(10),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 30),
-                      child: Container(
+                      child: SizedBox(
                         height: 40,
                         child: Row(
                           children: [
+                            const PathWidget(),
                             const Spacer(),
                             WorkbookFilterSortWidget(
                               changeSortOption: (WorkbookSortOption option) {
@@ -189,7 +115,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     const Gap(10),
                     Expanded(
                       child: Container(
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: AppColor.lightBlue,
                           border: Border(
                             top: BorderSide(
@@ -201,7 +127,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               width: 1,
                             ),
                           ),
-                          borderRadius: const BorderRadius.only(
+                          borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(20),
                           ),
                         ),
@@ -217,6 +143,88 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       },
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, _) => const Center(child: Text('페이지 로딩 실패')),
+    );
+  }
+
+  Widget _sideBar() {
+    final viewModel = ref.read(dashboardViewModelProvider.notifier);
+    return SizedBox(
+      width: 250,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Gap(20),
+            SizedBox(
+              height: 40,
+              child: Center(
+                child: Row(
+                  children: [
+                    Text(
+                      'Mongo AI',
+                      style: AppTextStyle.titleBold.copyWith(
+                        color: AppColor.primary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const Gap(10),
+            SizedBox(
+              height: 40,
+              child: TeamListWidget(
+                onClickTeam: (int teamId) {
+                  viewModel.selectTeam(teamId);
+                },
+              ),
+            ),
+            const Gap(10),
+            Container(
+              decoration: const BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: AppColor.lightGrayBorder,
+                    width: 1,
+                  ),
+                  top: BorderSide(
+                    color: AppColor.lightGrayBorder,
+                    width: 1,
+                  ),
+                ),
+              ),
+              child: Column(
+                children: [
+                  const Gap(10),
+                  _sideBarTile(0, '내 항목', Icons.person),
+                  const Gap(10),
+                  _sideBarTile(1, '최근 항목', Icons.timelapse),
+                  const Gap(10),
+                ],
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('폴더', style: AppTextStyle.bodyMedium),
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.add),
+                ),
+              ],
+            ),
+            FolderListWidget(
+              onClickFolder: (Folder folder) {
+                viewModel.selectFolderId(folder.folderId);
+                viewModel.updatePath([folder.folderName]);
+                _onTap(context, 2);
+              },
+              onClickExpand: () {},
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -248,6 +256,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       ),
       onTap: () {
         viewModel.clearFolderId();
+        viewModel.updatePath([title]);
         _onTap(context, index);
       },
     );
