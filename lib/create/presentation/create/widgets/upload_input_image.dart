@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/create/domain/model/pick_file.dart';
+import 'package:mongo_ai/create/presentation/create/widgets/upload_tip_box.dart';
 
 // 이미지 입력 화면
 class UploadInputImage extends StatelessWidget {
@@ -16,9 +17,22 @@ class UploadInputImage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          '이미지 업로드',
-          style: AppTextStyle.bodyMedium.copyWith(color: AppColor.mediumGray),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '이미지 업로드',
+              style: AppTextStyle.bodyMedium.copyWith(
+                color: AppColor.mediumGray,
+              ),
+            ),
+            Text(
+              '지원형식: PNG, JPG, JPEG',
+              style: AppTextStyle.captionRegular.copyWith(
+                color: AppColor.lightGray,
+              ),
+            ),
+          ],
         ),
         const Gap(8),
         if (file != null)
@@ -95,6 +109,23 @@ class UploadInputImage extends StatelessWidget {
               ),
             ),
           ),
+        const Gap(16),
+        const UploadTipBox(
+          '텍스트가 선명하고 읽기 쉬운 이미지를 업로드하세요. 이미지에서 텍스트를 추출하여 문제를 생성합니다. 교과서 페이지, 학습 자료, 논문 등의 이미지가 적합합니다.',
+        ),
+        const Gap(40),
+        Row(
+          children: [
+            const Icon(Icons.edit_outlined, color: AppColor.lightGray),
+            const Gap(4),
+            Text(
+              '이미지에서 자동으로 텍스트를 추출합니다.',
+              style: AppTextStyle.bodyRegular.copyWith(
+                color: AppColor.lightGray,
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }

@@ -25,7 +25,7 @@ class UploadInputFile extends StatelessWidget {
         const Gap(8),
         if (file != null)
           Container(
-            height: 300,
+            height: 400,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
               borderRadius: BorderRadius.circular(8),
@@ -48,7 +48,7 @@ class UploadInputFile extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: SizedBox(
-                height: 250,
+                height: 400,
                 width: double.infinity,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
