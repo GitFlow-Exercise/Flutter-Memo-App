@@ -94,26 +94,19 @@ class UploadRawViewModel extends _$UploadRawViewModel {
       _readyForSnackBar('에러가 발생하였습니다. 다시 시도해주세요.');
       return;
     }
-    // 텍스트 타입으로 추출
+    // 텍스트 타입인데 입력된 텍스트가 없다면 에러처리
     if (pState.selectedUploadType == AiConstant.inputText) {
       final text = pState.textController.text.trim();
       if (text.isEmpty) {
         _readyForSnackBar('텍스트를 입력해주세요.');
         return;
       }
-
-      debugPrint(text);
-      _eventController.add(
-        UploadRawEvent.successOCR(
-          OpenAiResponse.justText(contents: pState.textController.text),
-        ),
-      );
-      return;
     }
 
     // 이미지 & PDF 파일 타입으로 추출
     final file = pState.pickFile;
-    if (file == null) {
+    // 현재 데이터 타입이 텍스트가 아니고, file 데이터가 없다면 에러처리
+    if (file == null && pState.selectedUploadType != AiConstant.inputText) {
       if (pState.selectedUploadType == AiConstant.inputImage) {
         _readyForSnackBar('이미지를 선택해주세요.');
       } else {
@@ -125,14 +118,16 @@ class UploadRawViewModel extends _$UploadRawViewModel {
     state = const AsyncValue.loading();
 
     InputContent inputContent;
-    if (pState.selectedUploadType == AiConstant.inputImage) {
+    if (pState.selectedUploadType == AiConstant.inputText) {
+      inputContent = InputContent.text(text: pState.textController.text);
+    } else if (pState.selectedUploadType == AiConstant.inputImage) {
       inputContent = InputContent.image(
-        imageExtension: file.fileExtension,
+        imageExtension: file!.fileExtension,
         base64: base64Encode(file.bytes),
       );
     } else {
       inputContent = InputContent.file(
-        filename: file.fileName,
+        filename: file!.fileName,
         base64: base64Encode(file.bytes),
       );
     }

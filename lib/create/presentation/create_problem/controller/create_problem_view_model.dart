@@ -111,7 +111,7 @@ class CreateProblemViewModel extends _$CreateProblemViewModel {
   }
 
   // 문제 유형 설정
-  void doubleTap(Prompt prompt) {
+  void longPressed(Prompt prompt) {
     _eventController.add(CreateProblemEvent.showDetailDialog(prompt.detail));
   }
 }

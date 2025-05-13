@@ -109,6 +109,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: Routes.createProblem,
+        // builder: (context, state) {
+        //   // final extra = state.extra as CreateTemplateParams;
+        //   final extra = OpenAiResponse.justText(contents: 'contents');
+        //   return CreateProblemScreenRoot(extra);
+        // },
         builder: (context, state) {
           final extra = state.extra as OpenAiResponse;
           return CreateProblemScreenRoot(extra);

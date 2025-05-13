@@ -17,9 +17,14 @@ class CreateProblemScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const Text(
+          '길게 탭할시, 해당 유형의 자세한 내용을 확인하실 수 있습니다.',
+          style: AppTextStyle.captionRegular,
+        ),
+        const Gap(16),
         GridView.builder(
           shrinkWrap: true,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -35,8 +40,8 @@ class CreateProblemScreen extends StatelessWidget {
               onTap: () {
                 onAction(CreateProblemAction.changeType(prompt));
               },
-              onDoubleTap: () {
-                onAction(CreateProblemAction.doubleTap(prompt));
+              onLongPress: () {
+                onAction(CreateProblemAction.longPressed(prompt));
               },
               child: Container(
                 padding: const EdgeInsets.all(24),
@@ -122,19 +127,6 @@ class CreateProblemScreen extends StatelessWidget {
             );
           },
         ),
-        if (state.hoveredProblemType != null)
-          Positioned(
-            top: -800,
-            child: Container(
-              width: 1200,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppColor.lightBlue,
-                border: Border.all(),
-              ),
-              child: Text(state.hoveredProblemType!.detail),
-            ),
-          ),
       ],
     );
   }

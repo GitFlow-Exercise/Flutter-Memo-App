@@ -114,7 +114,7 @@ class _CreateProblemScreenRootState
       case GetPrompts():
         viewModel.getPrompts();
       case DoubleTap(:final type):
-        viewModel.doubleTap(type);
+        viewModel.longPressed(type);
     }
   }
 }
