@@ -2,7 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mongo_ai/core/component/base_app_button.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
+import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 import 'package:mongo_ai/create/presentation/base/layout/ai_base_layout.dart';
 import 'package:mongo_ai/create/presentation/base/widgets/ai_error_view.dart';
@@ -51,6 +53,19 @@ class _CreateProblemScreenRootState
         if (mounted) {
           context.go(Routes.createTemplate, extra: response);
         }
+      case ShowDetailDialog(:final detail):
+        showDialog(
+          context: context,
+          builder:
+              (ctx) => AlertDialog(
+                backgroundColor: AppColor.white,
+                title: const Text('내용'),
+                content: SingleChildScrollView(child: Text(detail)),
+                actions: [
+                  BaseAppButton(onTap: () => context.pop(), text: '확인'),
+                ],
+              ),
+        );
     }
   }
 
@@ -72,7 +87,7 @@ class _CreateProblemScreenRootState
           subTitle: '문제 유형 선택',
           step: 2,
           maxWidth: 750,
-          maxHeight: 800,
+          maxHeight: 650,
           nextTap: () {
             _handleAction(const CreateProblemAction.createProblem());
           },
@@ -98,6 +113,8 @@ class _CreateProblemScreenRootState
         viewModel.setResponse(response);
       case GetPrompts():
         viewModel.getPrompts();
+      case DoubleTap(:final type):
+        viewModel.longPressed(type);
     }
   }
 }

@@ -99,8 +99,8 @@ final routerProvider = Provider<GoRouter>((ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                  path: Routes.myFiles,
-                  builder: (context, state) => const MyFilesScreen()
+                path: Routes.myFiles,
+                builder: (context, state) => const MyFilesScreen(),
               ),
             ],
           ),
@@ -116,14 +116,19 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: Routes.folder,
-                builder: (context, state) => const FolderScreen()
+                builder: (context, state) => const FolderScreen(),
               ),
-            ]
+            ],
           ),
         ],
       ),
       GoRoute(
         path: Routes.createProblem,
+        // builder: (context, state) {
+        //   // final extra = state.extra as CreateTemplateParams;
+        //   final extra = OpenAiResponse.justText(contents: 'contents');
+        //   return CreateProblemScreenRoot(extra);
+        // },
         builder: (context, state) {
           final extra = state.extra as OpenAiResponse;
           return CreateProblemScreenRoot(extra);

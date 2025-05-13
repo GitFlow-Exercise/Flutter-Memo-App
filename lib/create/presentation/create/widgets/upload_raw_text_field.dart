@@ -4,13 +4,19 @@ import 'package:mongo_ai/core/style/app_text_style.dart';
 
 class UploadRawTextField extends StatelessWidget {
   final TextEditingController controller;
-  const UploadRawTextField({super.key, required this.controller});
+  final void Function(String) onChanged;
+  const UploadRawTextField({
+    super.key,
+    required this.controller,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 200,
       child: TextField(
+        onChanged: onChanged,
         expands: true,
         maxLines: null,
         controller: controller,
