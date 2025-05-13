@@ -72,7 +72,7 @@ class _CreateProblemScreenRootState
           subTitle: '문제 유형 선택',
           step: 2,
           maxWidth: 750,
-          maxHeight: 800,
+          maxHeight: 650,
           nextTap: () {
             _handleAction(const CreateProblemAction.createProblem());
           },
