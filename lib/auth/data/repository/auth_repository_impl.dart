@@ -191,6 +191,7 @@ class AuthRepositoryImpl extends AuthRepository {
 
       return const Result.success(null);
     } catch (e) {
+      print(e);
       return Result.error(
         AppException.unknown(
           message: '인증번호가 일치하지 않습니다.',
@@ -204,5 +205,10 @@ class AuthRepositoryImpl extends AuthRepository {
   @override
   bool get isAuthenticated {
     return _authDataSource.isAuthenticated();
+  }
+
+  @override
+  bool get isInitialSetupComplete {
+    return _authDataSource.isInitialSetupComplete();
   }
 }

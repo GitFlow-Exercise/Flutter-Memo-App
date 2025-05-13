@@ -26,7 +26,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 final routerProvider = Provider<GoRouter>((ref) {
   final auth = ref.watch(authRepositoryProvider);
   return GoRouter(
-    initialLocation: Routes.createTemplate,
+    initialLocation: Routes.folder,
     // auth 관찰해서 변화가 있다면,
     // 새로 reidrect 함수 실행
     refreshListenable: auth,
@@ -35,6 +35,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       final extra = state.extra;
       return AppRedirect.authRedirect(
         isAuthenticated: auth.isAuthenticated,
+        isInitialSetupComplete: auth.isInitialSetupComplete ,
         nowPath: path,
         extra: extra,
       );

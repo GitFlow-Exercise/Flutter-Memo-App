@@ -8,10 +8,10 @@ abstract class AppRedirect {
   // 인증 관련 redirect 로직입니다.
   static String? authRedirect({
     required bool isAuthenticated,
+    required bool isInitialSetupComplete,
     required String? nowPath,
     required Object? extra
   }) {
-    return Routes.checkOtp;
     // 인증이 없다면 로그인 화면으로 강제 이동
     if (!isAuthenticated) {
       // 만약 sign-up 등의 중간 단계에서 세션 만료, 새로고침 등으로 extra가 손실되었다면
@@ -29,6 +29,12 @@ abstract class AppRedirect {
       }
       return Routes.signIn;
     }
+    // 만약 인증은 되었지만(OTP를 기입했지만)
+    // 패스워드 기입이 안됐을 경우 패스워드 입력 화면으로 이동
+    if (isInitialSetupComplete == false) {
+      return Routes.signUpPassword;
+    }
+
     // 유저 정보가 존재하고,
     // 현재 화면이 로그인 화면이거나 회원가입 화면이라면
     // 강제로 홈 화면으로 이동

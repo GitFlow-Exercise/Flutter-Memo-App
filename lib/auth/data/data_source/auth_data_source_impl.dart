@@ -22,6 +22,7 @@ class AuthDataSourceImpl implements AuthDataSource {
     final authResponse = await _client.auth.signUp(
       email: email,
       password: password,
+      data: {'password_setup_complete': true },
     );
 
     return authResponse;
@@ -81,5 +82,11 @@ class AuthDataSourceImpl implements AuthDataSource {
       return false;
     }
     return true;
+  }
+
+  @override
+  bool isInitialSetupComplete() {
+    return _client.auth.currentUser?.userMetadata?['password_setup_complete'] ==
+        true;
   }
 }
