@@ -13,85 +13,99 @@ class WorkbookListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  workbook.workbookName,
-                  style: AppTextStyle.headingMedium,
-                ),
-              ),
-              IconButton(
-                icon: workbook.bookmark == true
-                    ? const Icon(Icons.star, color: AppColor.secondary)
-                    : const Icon(Icons.star_border),
-                onPressed: () => onBookmark(),
-              ),
-            ],
+      decoration: BoxDecoration(
+        color: AppColor.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.deepBlack.withAlpha(50),
+            blurRadius: 5,
+            offset: const Offset(0, 2),
           ),
-          Row(
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    const Icon(Icons.person, color: AppColor.lightGray),
-                    const SizedBox(width: 5),
-                    Text(
-                      workbook.userName ?? 'Unknown',
-                      style: AppTextStyle.bodyMedium.copyWith(
-                        color: AppColor.lightGray,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Row(
-                  children: [
-                    const Icon(Icons.groups, color: AppColor.lightGray),
-                    const SizedBox(width: 5),
-                    Text(
-                      workbook.teamName,
-                      style: AppTextStyle.bodyMedium.copyWith(
-                        color: AppColor.lightGray,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Row(
-                  children: [
-                    const Icon(Icons.folder, color: AppColor.lightGray),
-                    const SizedBox(width: 5),
-                    Text(
-                      workbook.folderName ?? 'Unknown',
-                      style: AppTextStyle.bodyMedium.copyWith(
-                        color: AppColor.lightGray,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Row(
-                  children: [
-                    const Icon(Icons.timer_sharp, color: AppColor.lightGray),
-                    const SizedBox(width: 5),
-                    Text(
-                      DateFormat('yyyy-MM-dd HH:mm').format(workbook.createdAt),
-                      style: AppTextStyle.bodyMedium.copyWith(
-                        color: AppColor.lightGray,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          )
         ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    workbook.workbookName,
+                    style: AppTextStyle.headingMedium,
+                  ),
+                ),
+                IconButton(
+                  icon: workbook.bookmark == true
+                      ? const Icon(Icons.star, color: AppColor.secondary)
+                      : const Icon(Icons.star_border),
+                  onPressed: () => onBookmark(),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      const Icon(Icons.person, color: AppColor.lightGray),
+                      const SizedBox(width: 5),
+                      Text(
+                        workbook.userName ?? 'Unknown',
+                        style: AppTextStyle.bodyMedium.copyWith(
+                          color: AppColor.lightGray,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Row(
+                    children: [
+                      const Icon(Icons.groups, color: AppColor.lightGray),
+                      const SizedBox(width: 5),
+                      Text(
+                        workbook.teamName,
+                        style: AppTextStyle.bodyMedium.copyWith(
+                          color: AppColor.lightGray,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Row(
+                    children: [
+                      const Icon(Icons.folder, color: AppColor.lightGray),
+                      const SizedBox(width: 5),
+                      Text(
+                        workbook.folderName ?? 'Unknown',
+                        style: AppTextStyle.bodyMedium.copyWith(
+                          color: AppColor.lightGray,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Row(
+                    children: [
+                      const Icon(Icons.timer_sharp, color: AppColor.lightGray),
+                      const SizedBox(width: 5),
+                      Text(
+                        DateFormat('yyyy-MM-dd HH:mm').format(workbook.createdAt),
+                        style: AppTextStyle.bodyMedium.copyWith(
+                          color: AppColor.lightGray,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
