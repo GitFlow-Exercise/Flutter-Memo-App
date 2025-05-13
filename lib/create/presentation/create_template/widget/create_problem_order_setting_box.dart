@@ -8,6 +8,7 @@ import 'package:mongo_ai/create/presentation/create_template/widget/problem_card
 
 class CreateProblemOrderSettingBox extends StatelessWidget {
   final List<Problem> orderedProblemList;
+  final int totalLength;
   final void Function(Problem problem) onAcceptOrderedProblem;
   final VoidCallback onTapClear;
 
@@ -16,6 +17,7 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
     required this.orderedProblemList,
     required this.onAcceptOrderedProblem,
     required this.onTapClear,
+    required this.totalLength,
   });
 
   @override
@@ -58,7 +60,7 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
                             ),
                           ),
                           TextSpan(
-                            text: '/8',
+                            text: '/$totalLength',
                             style: AppTextStyle.labelMedium.copyWith(
                               color: AppColor.lightGray,
                             ),
