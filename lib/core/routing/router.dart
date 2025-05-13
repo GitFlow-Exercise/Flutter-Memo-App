@@ -10,13 +10,15 @@ import 'package:mongo_ai/auth/presentation/sign_up_password/screen/sign_up_passw
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/routing/redirect.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
+import 'package:mongo_ai/create/domain/model/create_workbook_params.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 import 'package:mongo_ai/create/presentation/create/screen/upload_raw_screen_root.dart';
 import 'package:mongo_ai/create/presentation/create_problem/screen/create_problem_screen_root.dart';
 import 'package:mongo_ai/create/presentation/create_template/screen/create_template_screen_root.dart';
 import 'package:mongo_ai/create/presentation/pdf_preview/screen/pdf_preview_screen_root.dart';
 import 'package:mongo_ai/dashboard/presentation/dashboard_screen.dart';
-import 'package:mongo_ai/dashboard/presentation/home/home_screen.dart';
+import 'package:mongo_ai/dashboard/presentation/folder/folder_screen.dart';
+import 'package:mongo_ai/dashboard/presentation/my_files/my_files_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/recent_files/recent_files_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -87,7 +89,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: Routes.signUpComplete,
         builder:
             (context, state) =>
-                SignUpCompleteScreen(onTapHome: () => context.go(Routes.home)),
+                SignUpCompleteScreen(onTapHome: () => context.go(Routes.myFiles)),
       ),
       StatefulShellRoute.indexedStack(
         builder:
@@ -97,8 +99,8 @@ final routerProvider = Provider<GoRouter>((ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: Routes.home,
-                builder: (context, state) => const HomeScreen(),
+                  path: Routes.myFiles,
+                  builder: (context, state) => const MyFilesScreen()
               ),
             ],
           ),
@@ -110,15 +112,14 @@ final routerProvider = Provider<GoRouter>((ref) {
               ),
             ],
           ),
-          // StatefulShellBranch(routes: [
-          //   GoRoute(
-          //     path: '/folder/:id',
-          //     builder: (context, state) {
-          //       final folderId = state.pathParameters['id']!;
-          //       return FolderScreen(folderId: folderId);
-          //     },
-          //   ),
-          // ]),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.folder,
+                builder: (context, state) => const FolderScreen()
+              ),
+            ]
+          ),
         ],
       ),
       GoRoute(
@@ -144,11 +145,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.createTemplate,
         builder: (context, state) {
-          final extra = state.extra as OpenAiResponse;
-          return CreateTemplateScreenRoot(response: extra);
+          final extra = state.extra as CreateTemplateParams;
+          return CreateTemplateScreenRoot(params: extra);
         },
         redirect: (context, state) {
-          return AppRedirect.createProblemRedirect(state.extra);
+          return AppRedirect.createTemplateRedirect(state.extra);
         },
       ),
     ],

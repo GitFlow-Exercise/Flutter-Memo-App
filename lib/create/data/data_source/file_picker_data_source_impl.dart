@@ -8,15 +8,19 @@ import 'file_picker_data_source.dart';
 
 class FilePickerDataSourceImpl implements FilePickerDataSource {
   @override
-  Future<PickFileDto> selectImage() async {
+  Future<PickFileDto?> selectImage() async {
     try {
       final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
-        allowedExtensions: [AllowedExtensionType.png.name],
+        allowedExtensions: [
+          AllowedExtensionType.png.name,
+          AllowedExtensionType.jpg.name,
+          AllowedExtensionType.jpeg.name,
+        ],
       );
 
       if (result == null || result.files.isEmpty) {
-        throw const AppException.filePick(message: '이미지가 선택되지 않았습니다.');
+        return null;
       }
 
       return PickFileDto(
@@ -33,7 +37,7 @@ class FilePickerDataSourceImpl implements FilePickerDataSource {
   }
 
   @override
-  Future<PickFileDto> selectPdf() async {
+  Future<PickFileDto?> selectPdf() async {
     try {
       final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
@@ -41,7 +45,7 @@ class FilePickerDataSourceImpl implements FilePickerDataSource {
       );
 
       if (result == null || result.files.isEmpty) {
-        throw const AppException.filePick(message: 'PDF가 선택되지 않았습니다.');
+        return null;
       }
 
       return PickFileDto(

@@ -12,16 +12,19 @@ abstract class AppColor {
   static const Color lightGray = Color(0xFF717171); // 태그 텍스트
   static const Color paleGray = Color(0xFF9DA3B3); // 아이콘, 부가 텍스트
   static const Color lighterGray = Color(0xFFBDC1CC); // 비활성화된 아이콘
+  static const Color hintTextGrey = Color(0xFFADAEBC); // 비활성화된 아이콘
 
   // Background Colors
   static const Color lightBlue = Color(0xFFF6F7FB); // 패널, 태그 배경
   static const Color paleBlue = Color(0xFFF0F1F7); // 선택된 항목 배경
+  static const Color textfieldGrey = Color(0xFFFAFAFA); // 선택된 항목 배경
 
   // Border / Other Colors
   static const Color lightGrayBorder = Color(0xFFE6E8F0); // 카드 테두리, 구분선
   static const Color paleGrayBorder = Color(0xFFE5E7EB); // 일반 테두리
   static const Color mediumGrayBorder = Color(0xFFCED4DA); // 외부 테두리
   static const Color destructive = Color(0xFFFF6B6B); // Destructive actions
+  static const Color circle = Color(0xFF4ECDC4); // circle
 
   // Black & White
   static const Color white = Color(0xFFFFFFFF); // white

@@ -13,10 +13,10 @@ class FilePickerRepositoryImpl implements FilePickerRepository {
   }) : _filePickerDataSource = filePickerDataSource;
 
   @override
-  Future<Result<PickFile, AppException>> selectImage() async {
+  Future<Result<PickFile?, AppException>> selectImage() async {
     try {
       final pickFileDto = await _filePickerDataSource.selectImage();
-      return Result.success(pickFileDto.toPickFile());
+      return Result.success(pickFileDto?.toPickFile());
     } on AppException catch (e) {
       return Result.error(e);
     } catch (e) {
@@ -29,10 +29,10 @@ class FilePickerRepositoryImpl implements FilePickerRepository {
   }
 
   @override
-  Future<Result<PickFile, AppException>> selectPdf() async {
+  Future<Result<PickFile?, AppException>> selectPdf() async {
     try {
       final pickFileDto = await _filePickerDataSource.selectPdf();
-      return Result.success(pickFileDto.toPickFile());
+      return Result.success(pickFileDto?.toPickFile());
     } on AppException catch (e) {
       return Result.error(e);
     } catch (e) {

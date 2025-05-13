@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
-import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
+import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_state.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
 import '../controller/create_problem_action.dart';
 
 class CreateProblemScreen extends StatelessWidget {
-  final AsyncValue<CreateProblemState> state;
+  final CreateProblemState state;
   final void Function(CreateProblemAction) onAction;
 
   const CreateProblemScreen({
@@ -19,89 +17,103 @@ class CreateProblemScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColor.white,
-      body: state.when(
-        data: (value) {
-          // ------ Todo ------
-          // 다음 화면 라우팅 연결
-          // 값이 할당되었다면 프레임 빌드 후 다른 화면으로 이동
-          // WidgetsBinding.instance.addPostFrameCallback((_) {});
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(value.problemTypes.length, (index) {
-                  final prompt = value.problemTypes[index];
-                  final promptName = prompt.name;
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: InkWell(
-                      onTap: () {
-                        onAction(CreateProblemAction.changeType(prompt));
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        decoration: BoxDecoration(
-                          color:
-                              value.problemType == prompt
-                                  ? AppColor.black
-                                  : AppColor.white,
-                          border: Border.all(),
-                        ),
-                        child: Text(
-                          promptName,
-                          style: TextStyle(
-                            color:
-                                value.problemType == prompt
-                                    ? AppColor.white
-                                    : AppColor.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }),
+    return GridView.builder(
+      shrinkWrap: true,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 24,
+        crossAxisSpacing: 24,
+        childAspectRatio: 5 / 3,
+      ),
+      itemCount: state.problemTypes.length,
+      itemBuilder: (context, index) {
+        final prompt = state.problemTypes[index];
+        return InkWell(
+          onTap: () {
+            onAction(CreateProblemAction.changeType(prompt));
+          },
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color:
+                  prompt != state.problemType
+                      ? AppColor.white
+                      : AppColor.paleBlue,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color:
+                    prompt != state.problemType
+                        ? AppColor.lightGrayBorder
+                        : AppColor.primary,
+                width: 2,
               ),
-              const Gap(40),
-              SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+            ),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Clean Text'),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(border: Border.all()),
-                      width: MediaQuery.sizeOf(context).width / 3,
-                      child: Text(value.response?.getContent() ?? ''),
-                    ),
-                    const Gap(12),
-                    InkWell(
-                      onTap: () {
-                        onAction(const CreateProblemAction.createProblem());
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        decoration: BoxDecoration(border: Border.all()),
-                        child: const Text('문제 만들기'),
+                    Text(
+                      prompt.name,
+                      style: AppTextStyle.headingMedium.copyWith(
+                        color: AppColor.mediumGray,
                       ),
                     ),
+                    if (prompt != state.problemType)
+                      Container(
+                        width: 20,
+                        height: 20,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColor.white,
+                          border: Border.all(color: AppColor.lighterGray),
+                        ),
+                      ),
+                    if (prompt == state.problemType)
+                      Container(
+                        width: 20,
+                        height: 20,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColor.primary,
+                          border: Border.all(color: AppColor.primary),
+                        ),
+                        child: const Icon(
+                          Icons.check_outlined,
+                          color: AppColor.white,
+                          size: 16,
+                        ),
+                      ),
                   ],
                 ),
-              ),
-            ],
-          );
-        },
-        error: (error, stackTrace) => const Center(child: Text('에러가 발생하였습니다.')),
-        loading: () => const Center(child: CircularProgressIndicator()),
-      ),
+                const Gap(20),
+                Container(
+                  height: 80,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: prompt != state.problemType ? null : AppColor.white,
+                    border: Border.all(
+                      color:
+                          prompt != state.problemType
+                              ? AppColor.lightGrayBorder
+                              : AppColor.white,
+                    ),
+                  ),
+                  child: Text(
+                    prompt.detail,
+                    style: AppTextStyle.captionRegular.copyWith(
+                      color: AppColor.lightGray,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

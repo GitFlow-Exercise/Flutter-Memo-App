@@ -5,6 +5,7 @@ import 'package:mongo_ai/auth/data/repository/temp_storage_repository_impl.dart'
 import 'package:mongo_ai/auth/domain/repository/temp_storage_repository.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
+import 'package:mongo_ai/core/state/current_team_id_state.dart';
 import 'package:mongo_ai/create/data/data_source/file_picker_data_source.dart';
 import 'package:mongo_ai/create/data/data_source/file_picker_data_source_impl.dart';
 import 'package:mongo_ai/create/data/data_source/open_ai_data_source.dart';
@@ -101,8 +102,14 @@ final folderRepositoryProvider = Provider<FolderRepository>((ref) {
   return FolderRepositoryImpl(dataSource: dataSource);
 });
 
-final getFoldersByCurrentTeamIdProvider = FutureProvider
-    .family<Result<List<Folder>, AppException>, int>((ref, teamId) async {
+final getFoldersByCurrentTeamIdProvider = FutureProvider.autoDispose<
+    Result<List<Folder>, AppException>>((ref) async {
+  // 현재 팀 ID 구독. 팀 ID 변경 시 자동으로 autoDispose되고 다시 호출
+  final teamId = ref.watch(currentTeamIdStateProvider);
+  if (teamId == null) {
+    return const Result.success(<Folder>[]);
+  }
+
   final repository = ref.watch(folderRepositoryProvider);
   return repository.getFoldersByCurrentTeamId(teamId);
 });
@@ -119,12 +126,17 @@ final workbookRepositoryProvider = Provider<WorkbookRepository>((ref) {
   return WorkbookRepositoryImpl(dataSource: dataSource);
 });
 
-final getWorkbooksByCurrentTeamIdProvider = FutureProvider
-    .family<Result<List<Workbook>, AppException>, int>((ref, teamId) async {
+final getWorkbooksByCurrentTeamIdProvider = FutureProvider.autoDispose<
+    Result<List<Workbook>, AppException>>((ref) async {
+  // 현재 팀 ID 구독. 팀 ID 변경 시 자동으로 autoDispose되고 다시 호출
+  final teamId = ref.watch(currentTeamIdStateProvider);
+  if (teamId == null) {
+    return const Result.success(<Workbook>[]);
+  }
+
   final repository = ref.watch(workbookRepositoryProvider);
   return repository.getWorkbooksByCurrentTeamId(teamId);
 });
-
 
 // -----------------------------------
 // create
