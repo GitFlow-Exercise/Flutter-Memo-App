@@ -7,6 +7,9 @@ part 'create_problem_event.freezed.dart';
 sealed class CreateProblemEvent with _$CreateProblemEvent {
   const factory CreateProblemEvent.showSnackBar(String message) = ShowSnackBar;
 
+  const factory CreateProblemEvent.showDetailDialog(String detail) =
+      ShowDetailDialog;
+
   const factory CreateProblemEvent.successOpenAIRequest(
     CreateTemplateParams response,
   ) = SuccessOpenAIRequest;

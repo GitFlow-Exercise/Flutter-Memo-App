@@ -109,4 +109,9 @@ class CreateProblemViewModel extends _$CreateProblemViewModel {
   void changeProblemType(Prompt problemType) {
     state = state.whenData((cb) => cb.copyWith(problemType: problemType));
   }
+
+  // 문제 유형 설정
+  void doubleTap(Prompt prompt) {
+    _eventController.add(CreateProblemEvent.showDetailDialog(prompt.detail));
+  }
 }

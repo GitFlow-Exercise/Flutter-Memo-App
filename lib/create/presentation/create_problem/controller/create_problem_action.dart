@@ -14,4 +14,6 @@ sealed class CreateProblemAction with _$CreateProblemAction {
       SetResponse;
 
   const factory CreateProblemAction.getPrompts() = GetPrompts;
+
+  const factory CreateProblemAction.doubleTap(Prompt type) = DoubleTap;
 }
