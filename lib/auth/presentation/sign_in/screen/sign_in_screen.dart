@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:mongo_ai/auth/presentation/sign_in/controller/sign_in_action.dart';
 import 'package:mongo_ai/auth/presentation/sign_in/controller/sign_in_state.dart';
+import 'package:mongo_ai/core/component/auth_header_widget.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 
@@ -46,41 +47,8 @@ class _SignInScreenState extends State<SignInScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // 로고 영역
-              Column(
-                children: [
-                  Container(
-                    width: 60,
-                    height: 60,
-                    decoration: const BoxDecoration(
-                      color: AppColor.primary,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      child: Image.asset(
-                        'images/mongo_ai_logo.png',
-                        width: 24,
-                        height: 24,
-                      ),
-                    ),
-                  ),
-                  const Gap(12),
-                  Text(
-                    'Mongo AI',
-                    style: AppTextStyle.titleBold.copyWith(
-                      color: AppColor.deepBlack,
-                      fontSize: 30,
-                    ),
-                  ),
-                  const Gap(8),
-                  Text(
-                    '교사를 위한 AI 기반 문제집 생성 도구',
-                    style: AppTextStyle.bodyMedium.copyWith(
-                      color: AppColor.lightGray,
-                    ),
-                  ),
-                ],
-              ),
+              const AuthHeaderWidget(),
+
               const Gap(40),
 
               // 로그인 카드

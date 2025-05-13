@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:mongo_ai/auth/presentation/sign_up_password/controller/sign_up_password_action.dart';
 import 'package:mongo_ai/auth/presentation/sign_up_password/controller/sign_up_password_state.dart';
+import 'package:mongo_ai/core/component/auth_header_widget.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -41,41 +42,9 @@ class _SignUpPasswordScreenState extends State<SignUpPasswordScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Gap(60),
-                  // 로고 영역
-                  Column(
-                    children: [
-                      Container(
-                        width: 60,
-                        height: 60,
-                        decoration: const BoxDecoration(
-                          color: AppColor.primary,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                          child: Image.asset(
-                            'images/mongo_ai_logo.png',
-                            width: 24,
-                            height: 24,
-                          ),
-                        ),
-                      ),
-                      const Gap(12),
-                      Text(
-                        'Mongo AI',
-                        style: AppTextStyle.titleBold.copyWith(
-                          color: AppColor.deepBlack,
-                          fontSize: 30,
-                        ),
-                      ),
-                      const Gap(8),
-                      Text(
-                        '교사를 위한 AI 기반 문제집 생성 도구',
-                        style: AppTextStyle.bodyMedium.copyWith(
-                          color: AppColor.lightGray,
-                        ),
-                      ),
-                    ],
-                  ),
+
+                  const AuthHeaderWidget(),
+
                   const Gap(40),
                   // 비밀번호 설정 카드
                   Container(
