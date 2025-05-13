@@ -84,8 +84,8 @@ final routerProvider = Provider<GoRouter>((ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                  path: Routes.myFiles,
-                  builder: (context, state) => const MyFilesScreen()
+                path: Routes.myFiles,
+                builder: (context, state) => const MyFilesScreen(),
               ),
             ],
           ),
@@ -101,9 +101,9 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: Routes.folder,
-                builder: (context, state) => const FolderScreen()
+                builder: (context, state) => const FolderScreen(),
               ),
-            ]
+            ],
           ),
         ],
       ),
