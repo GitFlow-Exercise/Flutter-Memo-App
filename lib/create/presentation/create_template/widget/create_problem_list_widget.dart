@@ -6,7 +6,13 @@ import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
 
 class CreateProblemListWidget extends StatefulWidget {
-  const CreateProblemListWidget({super.key});
+  final List<Problem> problemList;
+  final void Function(Problem problem) onAcceptProblem;
+  const CreateProblemListWidget({
+    super.key,
+    required this.problemList,
+    required this.onAcceptProblem,
+  });
 
   @override
   State<CreateProblemListWidget> createState() =>
@@ -16,38 +22,6 @@ class CreateProblemListWidget extends StatefulWidget {
 class _CreateProblemListWidgetState extends State<CreateProblemListWidget> {
   @override
   Widget build(BuildContext context) {
-    List<Problem> problemList = [
-      Problem(
-        title: '1. 다음 중 가장 적절한 것은?',
-        content:
-            'As technology advances, people are becoming increasingly dependent on smart devices to perform everyday tasks. While this convenience is undeniable, it also raises concerns about the gradual decline in certain cognitive skills. For instance, people often rely on navigation apps rather than using their own sense of direction. As a result, their ability to read maps or remember routes is diminishing. In the same way, the use of grammar-checking software can affect one’s attention to language structure. Although these tools are helpful, __________.',
-      ),
-      Problem(
-        title: '2. 다음 중 가장 적절한 것은?',
-        content:
-            'As technology advances, people are becoming increasingly dependent on smart devices to perform everyday tasks. While this convenience is undeniable, it also raises concerns about the gradual decline in certain cognitive skills. For instance, people often rely on navigation apps rather than using their own sense of direction. As a result, their ability to read maps or remember routes is diminishing. In the same way, the use of grammar-checking software can affect one’s attention to language structure. Although these tools are helpful, __________.',
-      ),
-      Problem(
-        title: '3. 다음 중 가장 적절한 것은?',
-        content:
-            'As technology advances, people are becoming increasingly dependent on smart devices to perform everyday tasks. While this convenience is undeniable, it also raises concerns about the gradual decline in certain cognitive skills. For instance, people often rely on navigation apps rather than using their own sense of direction. As a result, their ability to read maps or remember routes is diminishing. In the same way, the use of grammar-checking software can affect one’s attention to language structure. Although these tools are helpful, __________.',
-      ),
-      Problem(
-        title: '4. 다음 중 가장 적절한 것은?',
-        content:
-            'As technology advances, people are becoming increasingly dependent on smart devices to perform everyday tasks. While this convenience is undeniable, it also raises concerns about the gradual decline in certain cognitive skills. For instance, people often rely on navigation apps rather than using their own sense of direction. As a result, their ability to read maps or remember routes is diminishing. In the same way, the use of grammar-checking software can affect one’s attention to language structure. Although these tools are helpful, __________.',
-      ),
-      Problem(
-        title: '5. 다음 중 가장 적절한 것은?',
-        content:
-            'As technology advances, people are becoming increasingly dependent on smart devices to perform everyday tasks. While this convenience is undeniable, it also raises concerns about the gradual decline in certain cognitive skills. For instance, people often rely on navigation apps rather than using their own sense of direction. As a result, their ability to read maps or remember routes is diminishing. In the same way, the use of grammar-checking software can affect one’s attention to language structure. Although these tools are helpful, __________.',
-      ),
-      Problem(
-        title: '6. 다음 중 가장 적절한 것은?',
-        content:
-            'As technology advances, people are becoming increasingly dependent on smart devices to perform everyday tasks. While this convenience is undeniable, it also raises concerns about the gradual decline in certain cognitive skills. For instance, people often rely on navigation apps rather than using their own sense of direction. As a result, their ability to read maps or remember routes is diminishing. In the same way, the use of grammar-checking software can affect one’s attention to language structure. Although these tools are helpful, __________.',
-      ),
-    ];
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -70,45 +44,40 @@ class _CreateProblemListWidgetState extends State<CreateProblemListWidget> {
         ),
         const Gap(12),
         DragTarget<Problem>(
-          onAcceptWithDetails: (detail) {
-            setState(() {
-              problemList.add(detail.data);
-            });
-          },
-          builder: (context, candidateData, rejectedData) {
-            return SizedBox(
-              height: 500,
-              child: ListView.separated(
-                itemCount: problemList.length,
-                separatorBuilder: (context, index) => const Gap(12),
-                itemBuilder: (context, index) {
-                  return Draggable<Problem>(
-                    data: problemList[index],
-                    feedback: Material(
-                      child: SizedBox(
-                        width: 500,
-                        child: ProblemCardWidget(
-                          title: problemList[index].title,
-                          content: problemList[index].content,
+          onAcceptWithDetails: (detail) => widget.onAcceptProblem(detail.data),
+          builder:
+              (context, candidateData, rejectedData) => SizedBox(
+                height: 500,
+                child: ListView.separated(
+                  itemCount: widget.problemList.length,
+                  separatorBuilder: (context, index) => const Gap(12),
+                  itemBuilder: (context, index) {
+                    return Draggable<Problem>(
+                      data: widget.problemList[index],
+                      feedback: Material(
+                        child: SizedBox(
+                          width: 500,
+                          child: ProblemCardWidget(
+                            title: widget.problemList[index].title,
+                            content: widget.problemList[index].content,
+                          ),
                         ),
                       ),
-                    ),
-                    childWhenDragging: Opacity(
-                      opacity: 0.5,
-                      child: ProblemCardWidget(
-                        title: problemList[index].title,
-                        content: problemList[index].content,
+                      childWhenDragging: Opacity(
+                        opacity: 0.5,
+                        child: ProblemCardWidget(
+                          title: widget.problemList[index].title,
+                          content: widget.problemList[index].content,
+                        ),
                       ),
-                    ),
-                    child: ProblemCardWidget(
-                      title: problemList[index].title,
-                      content: problemList[index].content,
-                    ),
-                  );
-                },
+                      child: ProblemCardWidget(
+                        title: widget.problemList[index].title,
+                        content: widget.problemList[index].content,
+                      ),
+                    );
+                  },
+                ),
               ),
-            );
-          },
         ),
       ],
     );

@@ -36,12 +36,27 @@ class CreateTemplateScreen extends StatelessWidget {
                     ),
               ),
               const Gap(24),
-              const CreateProblemListWidget(),
+              CreateProblemListWidget(
+                problemList: state.problemList,
+                onAcceptProblem: (problem) {
+                  if (!state.problemList.any((p) => p.id == problem.id)) {
+                    onAction(CreateTemplateAction.onAcceptProblem(problem));
+                  }
+                },
+              ),
             ],
           ),
         ),
         const Gap(32),
-        const CreateProblemOrderSettingBox(),
+        CreateProblemOrderSettingBox(
+          orderedProblemList: state.orderedProblemList,
+          onAcceptOrderedProblem: (problem) {
+            // 중복 방지 로직 추가
+            if (!state.orderedProblemList.any((p) => p.id == problem.id)) {
+              onAction(CreateTemplateAction.onAcceptOrderedProblem(problem));
+            }
+          },
+        ),
       ],
     );
   }

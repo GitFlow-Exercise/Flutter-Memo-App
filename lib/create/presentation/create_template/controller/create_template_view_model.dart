@@ -21,7 +21,48 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
       _eventController.close();
     });
 
-    return CreateTemplateState(pdfGenerator: pdfGenerator);
+    return CreateTemplateState(
+      // TODO(jh): UI 테스트용 데이터. 추후 삭제 예정
+      problemList: [
+        Problem(
+          id: 1,
+          title: '1. 다음 중 가장 적절한 것은?',
+          content:
+              'As technology advances, people are becoming increasingly dependent on smart devices to perform everyday tasks. While this convenience is undeniable, it also raises concerns about the gradual decline in certain cognitive skills. For instance, people often rely on navigation apps rather than using their own sense of direction. As a result, their ability to read maps or remember routes is diminishing. In the same way, the use of grammar-checking software can affect one’s attention to language structure. Although these tools are helpful, __________.',
+        ),
+        Problem(
+          id: 2,
+          title: '2. 다음 중 가장 적절한 것은?',
+          content:
+              'As technology advances, people are becoming increasingly dependent on smart devices to perform everyday tasks. While this convenience is undeniable, it also raises concerns about the gradual decline in certain cognitive skills. For instance, people often rely on navigation apps rather than using their own sense of direction. As a result, their ability to read maps or remember routes is diminishing. In the same way, the use of grammar-checking software can affect one’s attention to language structure. Although these tools are helpful, __________.',
+        ),
+        Problem(
+          id: 3,
+          title: '3. 다음 중 가장 적절한 것은?',
+          content:
+              'As technology advances, people are becoming increasingly dependent on smart devices to perform everyday tasks. While this convenience is undeniable, it also raises concerns about the gradual decline in certain cognitive skills. For instance, people often rely on navigation apps rather than using their own sense of direction. As a result, their ability to read maps or remember routes is diminishing. In the same way, the use of grammar-checking software can affect one’s attention to language structure. Although these tools are helpful, __________.',
+        ),
+        Problem(
+          id: 4,
+          title: '4. 다음 중 가장 적절한 것은?',
+          content:
+              'As technology advances, people are becoming increasingly dependent on smart devices to perform everyday tasks. While this convenience is undeniable, it also raises concerns about the gradual decline in certain cognitive skills. For instance, people often rely on navigation apps rather than using their own sense of direction. As a result, their ability to read maps or remember routes is diminishing. In the same way, the use of grammar-checking software can affect one’s attention to language structure. Although these tools are helpful, __________.',
+        ),
+        Problem(
+          id: 5,
+          title: '5. 다음 중 가장 적절한 것은?',
+          content:
+              'As technology advances, people are becoming increasingly dependent on smart devices to perform everyday tasks. While this convenience is undeniable, it also raises concerns about the gradual decline in certain cognitive skills. For instance, people often rely on navigation apps rather than using their own sense of direction. As a result, their ability to read maps or remember routes is diminishing. In the same way, the use of grammar-checking software can affect one’s attention to language structure. Although these tools are helpful, __________.',
+        ),
+        Problem(
+          id: 6,
+          title: '6. 다음 중 가장 적절한 것은?',
+          content:
+              'As technology advances, people are becoming increasingly dependent on smart devices to perform everyday tasks. While this convenience is undeniable, it also raises concerns about the gradual decline in certain cognitive skills. For instance, people often rely on navigation apps rather than using their own sense of direction. As a result, their ability to read maps or remember routes is diminishing. In the same way, the use of grammar-checking software can affect one’s attention to language structure. Although these tools are helpful, __________.',
+        ),
+      ],
+      pdfGenerator: pdfGenerator,
+    );
   }
 
   void toggleColumnsButton({required bool isSingleColumns}) {
@@ -30,6 +71,59 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
 
   void setProblem({required OpenAiResponse problem}) {
     state = state.copyWith(problem: AsyncValue.data(problem));
+  }
+
+  void setProblemList(Problem problem) {
+    final problemList = state.problemList;
+    bool isExist = problemList.any((e) => e.id == problem.id);
+    if (isExist) {
+      problemList.removeWhere((e) => e.id == problem.id);
+    } else {
+      problemList.add(
+        Problem(id: problem.id, title: problem.title, content: problem.content),
+      );
+    }
+    state = state.copyWith(problemList: problemList);
+  }
+
+  void moveToOrderedList(Problem problem) {
+    // 1. 원본 리스트(problemList)에서 항목 제거
+    final problemList = List<Problem>.from(state.problemList);
+    problemList.removeWhere((p) => p.id == problem.id);
+
+    // 2. 대상 리스트(orderedProblemList)에 추가 (중복 방지)
+    final orderedProblemList = List<Problem>.from(state.orderedProblemList);
+    if (!orderedProblemList.any((p) => p.id == problem.id)) {
+      orderedProblemList.add(
+        Problem(id: problem.id, title: problem.title, content: problem.content),
+      );
+    }
+
+    // 3. 상태 업데이트
+    state = state.copyWith(
+      problemList: problemList,
+      orderedProblemList: orderedProblemList,
+    );
+  }
+
+  void moveToOriginalList(Problem problem) {
+    // 1. 대상 리스트(orderedProblemList)에서 항목 제거
+    final orderedProblemList = List<Problem>.from(state.orderedProblemList);
+    orderedProblemList.removeWhere((p) => p.id == problem.id);
+
+    // 2. 원본 리스트(problemList)에 추가 (중복 방지)
+    final problemList = List<Problem>.from(state.problemList);
+    if (!problemList.any((p) => p.id == problem.id)) {
+      problemList.add(
+        Problem(id: problem.id, title: problem.title, content: problem.content),
+      );
+    }
+
+    // 3. 상태 업데이트
+    state = state.copyWith(
+      problemList: problemList,
+      orderedProblemList: orderedProblemList,
+    );
   }
 
   void generatePdf({required String contents}) async {

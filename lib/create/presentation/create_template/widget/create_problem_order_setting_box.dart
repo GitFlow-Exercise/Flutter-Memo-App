@@ -7,7 +7,13 @@ import 'package:mongo_ai/create/presentation/create_template/controller/create_t
 import 'package:mongo_ai/create/presentation/create_template/widget/create_problem_list_widget.dart';
 
 class CreateProblemOrderSettingBox extends StatefulWidget {
-  const CreateProblemOrderSettingBox({super.key});
+  final List<Problem> orderedProblemList;
+  final void Function(Problem problem) onAcceptOrderedProblem;
+  const CreateProblemOrderSettingBox({
+    super.key,
+    required this.orderedProblemList,
+    required this.onAcceptOrderedProblem,
+  });
 
   @override
   State<CreateProblemOrderSettingBox> createState() =>
@@ -16,8 +22,6 @@ class CreateProblemOrderSettingBox extends StatefulWidget {
 
 class _CreateProblemOrderSettingBoxState
     extends State<CreateProblemOrderSettingBox> {
-  List<Problem> problems = [];
-
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -84,11 +88,8 @@ class _CreateProblemOrderSettingBoxState
             ),
             const Gap(16),
             DragTarget<Problem>(
-              onAcceptWithDetails: (details) {
-                setState(() {
-                  problems.add(details.data);
-                });
-              },
+              onAcceptWithDetails:
+                  (details) => widget.onAcceptOrderedProblem(details.data),
               builder: (context, candidateData, rejectedData) {
                 return DottedBorder(
                   borderType: BorderType.RRect,
@@ -116,17 +117,21 @@ class _CreateProblemOrderSettingBoxState
                         const Gap(22),
                         ListView.separated(
                           shrinkWrap: true,
-                          itemCount: problems.length,
+                          itemCount: widget.orderedProblemList.length,
                           separatorBuilder: (context, index) => const Gap(24),
                           itemBuilder: (context, index) {
                             return Draggable<Problem>(
-                              data: problems[index],
+                              data: widget.orderedProblemList[index],
                               feedback: Material(
                                 child: SizedBox(
-                                  width: 500,
+                                  width: 300,
                                   child: ProblemCardWidget(
-                                    title: problems[index].title,
-                                    content: problems[index].content,
+                                    title:
+                                        widget.orderedProblemList[index].title,
+                                    content:
+                                        widget
+                                            .orderedProblemList[index]
+                                            .content,
                                     maxLines: 5,
                                   ),
                                 ),
@@ -134,14 +139,16 @@ class _CreateProblemOrderSettingBoxState
                               childWhenDragging: Opacity(
                                 opacity: 0.5,
                                 child: ProblemCardWidget(
-                                  title: problems[index].title,
-                                  content: problems[index].content,
+                                  title: widget.orderedProblemList[index].title,
+                                  content:
+                                      widget.orderedProblemList[index].content,
                                   maxLines: 5,
                                 ),
                               ),
                               child: ProblemCardWidget(
-                                title: problems[index].title,
-                                content: problems[index].content,
+                                title: widget.orderedProblemList[index].title,
+                                content:
+                                    widget.orderedProblemList[index].content,
                                 maxLines: 5,
                               ),
                             );

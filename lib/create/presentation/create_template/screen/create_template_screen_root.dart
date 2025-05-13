@@ -79,6 +79,12 @@ class _CreateTemplateScreenRootState
 
       case CreateProblemForPdf(contents: final contents):
         viewModel.generatePdf(contents: contents);
+
+      case OnAcceptProblem():
+        viewModel.moveToOriginalList(action.problem);
+
+      case OnAcceptOrderedProblem():
+        viewModel.moveToOrderedList(action.problem);
     }
   }
 }

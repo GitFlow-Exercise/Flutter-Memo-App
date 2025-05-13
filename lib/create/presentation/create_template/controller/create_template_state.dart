@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mongo_ai/core/component/pdf_generator.dart';
@@ -20,5 +19,9 @@ abstract class CreateTemplateState with _$CreateTemplateState {
 // TODO(jh): UI 테스트용 모델. 추후 전달받은 값으로 모델 수정 예정
 @freezed
 abstract class Problem with _$Problem {
-  factory Problem({required String title, required String content}) = _Problem;
+  factory Problem({
+    required int id,
+    required String title,
+    required String content,
+  }) = _Problem;
 }
