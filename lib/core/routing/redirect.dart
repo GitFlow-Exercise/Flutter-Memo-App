@@ -16,7 +16,7 @@ abstract class AppRedirect {
     if (!isAuthenticated) {
       // 만약 sign-up 등의 중간 단계에서 세션 만료, 새로고침 등으로 extra가 손실되었다면
       // 로그인 화면으로 다시 이동
-      if (nowPath != Routes.signUp && extra == null) {
+      if (nowPath != Routes.signUp && extra is! String) {
         return Routes.signIn;
       }
       // 만약 인증이 되지 않은 상태이지만,
@@ -31,7 +31,7 @@ abstract class AppRedirect {
     }
     // 만약 인증은 되었지만(OTP를 기입했지만)
     // 패스워드 기입이 안됐을 경우 패스워드 입력 화면으로 이동
-    if (isInitialSetupComplete == false) {
+    if (!isInitialSetupComplete) {
       return Routes.signUpPassword;
     }
 
