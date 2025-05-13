@@ -11,6 +11,7 @@ abstract class AppRedirect {
     required String? nowPath,
     required Object? extra
   }) {
+    return Routes.checkOtp;
     // 인증이 없다면 로그인 화면으로 강제 이동
     if (!isAuthenticated) {
       // 만약 sign-up 등의 중간 단계에서 세션 만료, 새로고침 등으로 extra가 손실되었다면

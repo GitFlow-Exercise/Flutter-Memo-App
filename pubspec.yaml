@@ -61,6 +61,9 @@ dependencies:
   # DateTime 포맷 변경
   intl: ^0.20.2
 
+  # OTP 인증 핀 입력
+  pinput: ^3.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

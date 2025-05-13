@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/auth/presentation/check_otp/controller/check_otp_action.dart';
 import 'package:mongo_ai/auth/presentation/check_otp/controller/check_otp_event.dart';
 import 'package:mongo_ai/auth/presentation/check_otp/controller/check_otp_view_model.dart';
 import 'package:mongo_ai/auth/presentation/check_otp/screen/check_otp_screen.dart';
+import 'package:mongo_ai/core/routing/routes.dart';
 
 class CheckOtpScreenRoot extends ConsumerStatefulWidget {
   final String tempUserId;
@@ -43,6 +45,10 @@ class _CheckOtpScreenRootState extends ConsumerState<CheckOtpScreenRoot> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(message)));
+      case NavigateToPasswordScreen(tempUserId: final tempUserId):
+        if (mounted) {
+          context.go(Routes.signUpPassword, extra: tempUserId);
+        }
     }
   }
 
@@ -56,9 +62,17 @@ class _CheckOtpScreenRootState extends ConsumerState<CheckOtpScreenRoot> {
   }
 
   void _handleAction(CheckOtpAction action) {
+    final viewModel = ref.read(
+      checkOtpViewModelProvider(widget.tempUserId).notifier,
+    );
+
     switch (action) {
-      case OnTap():
-        debugPrint('tapped onTap');
+      case OnVerifyOtp():
+        viewModel.verifyOtp();
+      case OnResendOtp():
+        viewModel.resendOtp();
+      case OnBackTap():
+        context.go(Routes.signUp);
     }
   }
 }

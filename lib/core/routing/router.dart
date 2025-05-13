@@ -2,7 +2,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mongo_ai/auth/presentation/check_otp/screen/check_top_screen_root.dart';
+import 'package:mongo_ai/auth/domain/model/temp_user.dart';
+import 'package:mongo_ai/auth/presentation/check_otp/screen/check_otp_screen_root.dart';
 import 'package:mongo_ai/auth/presentation/sign_in/screen/sign_in_screen_root.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/screen/sign_up_complete_screen.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/screen/sign_up_screen_root.dart';
@@ -81,7 +82,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.checkOtp,
         builder: (context, state) {
-          final tempUserId = state.extra as String;
+          // final tempUserId = state.extra as String;
+          final repo = ref.read(tempStorageRepositoryProvider);
+          final tempUserId = repo.storeData(TempUser(email: 'milkoi101@naver.com', password: '123'));
           return CheckOtpScreenRoot(tempUserId: tempUserId);
         },
       ),

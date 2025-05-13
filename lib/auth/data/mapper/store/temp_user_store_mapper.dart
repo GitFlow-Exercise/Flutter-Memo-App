@@ -6,6 +6,8 @@ extension TempUserStoreMapper on TempUser {
     return TempUserDto(
       email: email,
       password: password,
+      otp: otp,
+      otpExpiration: otpExpiration,
     );
   }
 }
