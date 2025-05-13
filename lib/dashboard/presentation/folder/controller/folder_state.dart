@@ -8,5 +8,6 @@ part 'folder_state.freezed.dart';
 abstract class FolderState with _$FolderState {
   const factory FolderState({
     required AsyncValue<List<Workbook>> workbookList,
+    required bool showGridView,
   }) = _FolderState;
 }
