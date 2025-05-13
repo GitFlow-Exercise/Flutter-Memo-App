@@ -55,12 +55,11 @@ dependencies:
   #PDF 생성
   pdf: ^3.11.3
 
-  # DateTime 포맷 변경
-  intl: ^0.20.2
-
   # 점선 그리기
   dotted_border: ^2.1.0
 
+  # DateTime 포맷 변경
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
