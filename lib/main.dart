@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -22,6 +23,12 @@ Future<void> main() async {
     anonKey: supabaseAnonKey,
     authOptions: const FlutterAuthClientOptions(autoRefreshToken: true),
   );
+
+  final loader = FontLoader('Pretendard');
+  loader.addFont(rootBundle.load('assets/fonts/Pretendard-Bold.ttf'));
+  loader.addFont(rootBundle.load('assets/fonts/Pretendard-Medium.ttf'));
+  loader.addFont(rootBundle.load('assets/fonts/Pretendard-Regular.ttf'));
+  await loader.load();
 
   runApp(const ProviderScope(child: PracticeApp()));
 }

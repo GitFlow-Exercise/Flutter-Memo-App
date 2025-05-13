@@ -7,11 +7,14 @@ class WorkbookDto {
   @JsonKey(name: 'workbook_id')
   num? workbookId;
 
+  @JsonKey(name: 'workbook_name')
+  String? workbookName;
+
   @JsonKey(name: 'user_id')
   String? userId;
 
-  @JsonKey(name: 'workbook_name')
-  String? workbookName;
+  @JsonKey(name: 'user_name')
+  String? userName;
 
   @JsonKey(name: 'bookmark')
   bool? bookmark;
@@ -22,8 +25,14 @@ class WorkbookDto {
   @JsonKey(name: 'folder_id')
   num? folderId;
 
+  @JsonKey(name: 'folder_name')
+  String? folderName;
+
   @JsonKey(name: 'team_id')
   num? teamId;
+
+  @JsonKey(name: 'team_name')
+  String? teamName;
 
   @JsonKey(name: 'created_at')
   String? createdAt;
