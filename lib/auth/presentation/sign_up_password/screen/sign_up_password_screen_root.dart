@@ -10,9 +10,7 @@ import 'package:mongo_ai/auth/presentation/sign_up_password/screen/sign_up_passw
 import 'package:mongo_ai/core/routing/routes.dart';
 
 class SignUpPasswordScreenRoot extends ConsumerStatefulWidget {
-  final String email;
-
-  const SignUpPasswordScreenRoot({super.key, required this.email});
+  const SignUpPasswordScreenRoot({super.key});
 
   @override
   ConsumerState<SignUpPasswordScreenRoot> createState() =>

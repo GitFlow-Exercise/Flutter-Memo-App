@@ -1,11 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:mongo_ai/auth/domain/model/password_criteria.dart';
 import 'package:mongo_ai/auth/presentation/sign_up_password/controller/sign_up_password_event.dart';
 import 'package:mongo_ai/auth/presentation/sign_up_password/controller/sign_up_password_state.dart';
-import 'package:mongo_ai/core/di/providers.dart';
-import 'package:mongo_ai/core/exception/app_exception.dart';
-import 'package:mongo_ai/core/result/result.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'sign_up_password_view_model.g.dart';
@@ -17,7 +15,7 @@ class SignUpPasswordViewModel extends _$SignUpPasswordViewModel {
   Stream<SignUpPasswordEvent> get eventStream => _eventController.stream;
 
   @override
-  Future<SignUpPasswordState> build() async {
+  SignUpPasswordState build() {
     final passwordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
 
@@ -38,37 +36,26 @@ class SignUpPasswordViewModel extends _$SignUpPasswordViewModel {
 
   // UI 관련 토글 함수들
   void togglePasswordVisibility() {
-    state = state.whenData(
-      (value) => value.copyWith(isPasswordVisible: !value.isPasswordVisible),
-    );
+    state = state.copyWith(isPasswordVisible: !state.isPasswordVisible);
   }
 
   void toggleConfirmPasswordVisibility() {
-    state = state.whenData(
-      (value) => value.copyWith(
-        isConfirmPasswordVisible: !value.isConfirmPasswordVisible,
-      ),
+    state = state.copyWith(
+      isConfirmPasswordVisible: !state.isConfirmPasswordVisible,
     );
   }
 
   void togglePrivacyPolicy() {
-    state = state.whenData(
-      (value) => value.copyWith(checkPrivacyPolicy: !value.checkPrivacyPolicy),
-    );
+    state = state.copyWith(checkPrivacyPolicy: !state.checkPrivacyPolicy);
     _validateForm();
   }
 
   // 유효성 검사 로직
   void _validatePassword() {
-    final currentState = state.value;
-    if (currentState == null) return;
-
-    final password = currentState.passwordController.text;
+    final password = state.passwordController.text;
     final criteria = _evaluatePasswordStrength(password);
 
-    state = state.whenData(
-      (value) => value.copyWith(meetsPasswordCriteria: criteria),
-    );
+    state = state.copyWith(meetsPasswordCriteria: criteria);
     _validateForm();
   }
 
@@ -95,17 +82,14 @@ class SignUpPasswordViewModel extends _$SignUpPasswordViewModel {
   }
 
   void _validateForm() {
-    final currentState = state.value;
-    if (currentState == null) return;
-
-    final isValid = _checkFormValidity(currentState);
-    state = state.whenData((value) => value.copyWith(isFormValid: isValid));
+    final isValid = _checkFormValidity();
+    state = state.copyWith(isFormValid: isValid);
   }
 
-  bool _checkFormValidity(SignUpPasswordState currentState) {
-    final password = currentState.passwordController.text;
-    final confirmPassword = currentState.confirmPasswordController.text;
-    final hasMinLength = currentState.meetsPasswordCriteria.contains(
+  bool _checkFormValidity() {
+    final password = state.passwordController.text;
+    final confirmPassword = state.confirmPasswordController.text;
+    final hasMinLength = state.meetsPasswordCriteria.contains(
       PasswordCriteria.minLength,
     );
 
@@ -113,7 +97,7 @@ class SignUpPasswordViewModel extends _$SignUpPasswordViewModel {
         password == confirmPassword &&
         password.isNotEmpty &&
         confirmPassword.isNotEmpty &&
-        currentState.checkPrivacyPolicy;
+        state.checkPrivacyPolicy;
   }
 
   // 임시 사용자 관련 로직 전체 삭제

@@ -75,8 +75,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.signUpPassword,
         builder: (context, state) {
-          final email = state.extra as String;
-          return SignUpPasswordScreenRoot(email: email);
+          return const SignUpPasswordScreenRoot();
         },
       ),
       GoRoute(

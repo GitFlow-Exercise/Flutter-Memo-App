@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:mongo_ai/auth/domain/model/password_criteria.dart';
 
 part 'sign_up_password_state.freezed.dart';
 
@@ -16,11 +17,4 @@ abstract class SignUpPasswordState with _$SignUpPasswordState {
     @Default(false) bool isFormValid,
     @Default(AsyncValue.data(false)) AsyncValue<bool> hasOtpBeenSent,
   }) = _SignUpPasswordState;
-}
-
-enum PasswordCriteria {
-  minLength, // 최소 8자 이상
-  includesUppercase, // 대문자 포함
-  includesLowercase, // 소문자 포함
-  includesNumber, // 숫자 포함
 }
