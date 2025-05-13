@@ -10,9 +10,9 @@ import 'package:mongo_ai/auth/presentation/check_otp/screen/check_otp_screen.dar
 import 'package:mongo_ai/core/routing/routes.dart';
 
 class CheckOtpScreenRoot extends ConsumerStatefulWidget {
-  final String tempUserId;
+  final String email;
 
-  const CheckOtpScreenRoot({super.key, required this.tempUserId});
+  const CheckOtpScreenRoot({super.key, required this.email});
 
   @override
   ConsumerState<CheckOtpScreenRoot> createState() => _CheckOtpScreenRootState();
@@ -25,10 +25,7 @@ class _CheckOtpScreenRootState extends ConsumerState<CheckOtpScreenRoot> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final viewModel = ref.watch(
-        checkOtpViewModelProvider(widget.tempUserId).notifier,
-      );
-
+      final viewModel = ref.watch(checkOtpViewModelProvider.notifier);
       _subscription = viewModel.eventStream.listen(_handleEvent);
     });
   }
@@ -46,16 +43,18 @@ class _CheckOtpScreenRootState extends ConsumerState<CheckOtpScreenRoot> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(message)));
-      case NavigateToPasswordScreen(tempUserId: final tempUserId):
+        break;
+      case NavigateToPasswordScreen():
         if (mounted) {
-          context.go(Routes.signUpPassword, extra: tempUserId);
+          context.go(Routes.signUpPassword);
         }
+        break;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(checkOtpViewModelProvider(widget.tempUserId));
+    final state = ref.watch(checkOtpViewModelProvider);
 
     return Scaffold(
       body: CheckOtpScreen(state: state, onAction: _handleAction),
@@ -63,17 +62,18 @@ class _CheckOtpScreenRootState extends ConsumerState<CheckOtpScreenRoot> {
   }
 
   void _handleAction(CheckOtpAction action) {
-    final viewModel = ref.read(
-      checkOtpViewModelProvider(widget.tempUserId).notifier,
-    );
+    final viewModel = ref.read(checkOtpViewModelProvider.notifier);
 
     switch (action) {
       case OnVerifyOtp():
         viewModel.verifyOtp();
+        break;
       case OnResendOtp():
         viewModel.resendOtp();
+        break;
       case OnBackTap():
         context.go(Routes.signUp);
+        break;
     }
   }
 }

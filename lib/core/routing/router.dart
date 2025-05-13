@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mongo_ai/auth/domain/model/temp_user.dart';
 import 'package:mongo_ai/auth/presentation/check_otp/screen/check_otp_screen_root.dart';
 import 'package:mongo_ai/auth/presentation/sign_in/screen/sign_in_screen_root.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/screen/sign_up_complete_screen.dart';
@@ -35,7 +34,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       final extra = state.extra;
       return AppRedirect.authRedirect(
         isAuthenticated: auth.isAuthenticated,
-        isInitialSetupComplete: auth.isInitialSetupComplete ,
+        isInitialSetupComplete: auth.isInitialSetupComplete,
         nowPath: path,
         extra: extra,
       );
@@ -75,25 +74,21 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: Routes.signUpPassword,
-        builder: (context, state) {
-          final tempUserId = state.extra as String;
-          return SignUpPasswordScreenRoot(tempUserId: tempUserId);
-        },
+        builder: (context, state) => const SignUpPasswordScreenRoot(),
       ),
       GoRoute(
         path: Routes.checkOtp,
         builder: (context, state) {
-          // final tempUserId = state.extra as String;
-          final repo = ref.read(tempStorageRepositoryProvider);
-          final tempUserId = repo.storeData(TempUser(email: 'milkoi101@naver.com', password: '123'));
-          return CheckOtpScreenRoot(tempUserId: tempUserId);
+          final extra = state.extra as String;
+          return CheckOtpScreenRoot(email: extra);
         },
       ),
       GoRoute(
         path: Routes.signUpComplete,
         builder:
-            (context, state) =>
-                SignUpCompleteScreen(onTapHome: () => context.go(Routes.myFiles)),
+            (context, state) => SignUpCompleteScreen(
+              onTapHome: () => context.go(Routes.myFiles),
+            ),
       ),
       StatefulShellRoute.indexedStack(
         builder:
@@ -103,8 +98,8 @@ final routerProvider = Provider<GoRouter>((ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                  path: Routes.myFiles,
-                  builder: (context, state) => const MyFilesScreen()
+                path: Routes.myFiles,
+                builder: (context, state) => const MyFilesScreen(),
               ),
             ],
           ),
@@ -120,9 +115,9 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: Routes.folder,
-                builder: (context, state) => const FolderScreen()
+                builder: (context, state) => const FolderScreen(),
               ),
-            ]
+            ],
           ),
         ],
       ),
