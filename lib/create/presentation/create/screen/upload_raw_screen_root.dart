@@ -96,16 +96,12 @@ class _UploadRawScreenRootState extends ConsumerState<UploadRawScreenRoot> {
           maxWidth: 900,
           maxHeight: 850,
           nextTap: () {
-            _handleAction(
-              const UploadRawAction.submitForm(),
-              context,
-              viewModel,
-            );
+            _handleAction(const UploadRawAction.submitForm(), viewModel);
           },
           isPopTap: false,
           child: UploadRawScreen(
             state: value,
-            onAction: (action) => _handleAction(action, context, viewModel),
+            onAction: (action) => _handleAction(action, viewModel),
           ),
         );
       },
@@ -114,20 +110,16 @@ class _UploadRawScreenRootState extends ConsumerState<UploadRawScreenRoot> {
     );
   }
 
-  void _handleAction(
-    UploadRawAction action,
-    BuildContext context,
-    UploadRawViewModel viewModel,
-  ) {
+  void _handleAction(UploadRawAction action, UploadRawViewModel viewModel) {
     switch (action) {
       case SelectUploadType(:final type):
         viewModel.handleSelectUploadType(type);
       case PickImage():
-        viewModel.handlePickImage(context);
+        viewModel.handlePickImage();
       case PickPdf():
-        viewModel.handlePickPdf(context);
+        viewModel.handlePickPdf();
       case SubmitForm():
-        viewModel.handleSubmitForm(context);
+        viewModel.handleSubmitForm();
       case ClearText():
         viewModel.clearText();
     }
