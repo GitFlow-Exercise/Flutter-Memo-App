@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/result/result.dart';
-import 'package:mongo_ai/core/state/current_team_id_state.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
+import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/dashboard/domain/model/team.dart';
 
 class TeamListWidget extends ConsumerWidget {
@@ -31,7 +31,6 @@ class TeamListWidget extends ConsumerWidget {
         return Container(
           decoration: BoxDecoration(
             color: AppColor.white,
-            borderRadius: BorderRadius.circular(10),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: DropdownButton<int>(
@@ -42,7 +41,7 @@ class TeamListWidget extends ConsumerWidget {
             },
             underline: const SizedBox(), // 밑줄 안그리기
             isExpanded: true,
-            style: const TextStyle(color: AppColor.black),
+            style: AppTextStyle.bodyMedium,
             dropdownColor: AppColor.white,
             icon: const Icon(Icons.keyboard_arrow_down, color: AppColor.black),
 
@@ -50,7 +49,7 @@ class TeamListWidget extends ConsumerWidget {
             items: teamList.map((team) {
               return DropdownMenuItem<int>(
                 value: team.teamId,
-                child: Text(team.teamName),
+                child: Text(team.teamName, style: AppTextStyle.bodyMedium),
               );
             }).toList(),
           ),
