@@ -4,7 +4,14 @@ import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 
 class PdfTemplateLayoutSelector extends StatelessWidget {
-  const PdfTemplateLayoutSelector({super.key});
+  final bool isSingleColumns;
+  final void Function(bool isSingle) onTapLayout;
+
+  const PdfTemplateLayoutSelector({
+    super.key,
+    required this.isSingleColumns,
+    required this.onTapLayout,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,96 +28,118 @@ class PdfTemplateLayoutSelector extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(14.0),
-                decoration: BoxDecoration(
-                  color: AppColor.white,
-                  border: Border.all(color: AppColor.lightGrayBorder),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      height: 95,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 8,
-                        horizontal: 18,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColor.white,
-                        border: Border.all(color: AppColor.lightGrayBorder),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Container(
+              child: GestureDetector(
+                onTap: () => onTapLayout(true),
+                child: Container(
+                  padding: const EdgeInsets.all(14.0),
+                  decoration: BoxDecoration(
+                    color: AppColor.white,
+                    border: Border.all(
+                      color:
+                          isSingleColumns
+                              ? AppColor.primary
+                              : AppColor.lightGrayBorder,
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 95,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8,
+                          horizontal: 18,
+                        ),
                         decoration: BoxDecoration(
-                          color: AppColor.paleBlue,
+                          color: AppColor.white,
+                          border: Border.all(color: AppColor.lightGrayBorder),
                           borderRadius: BorderRadius.circular(4),
                         ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColor.paleBlue,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
                       ),
-                    ),
-                    const Gap(8),
-                    Text(
-                      '한 단 레이아웃',
-                      style: AppTextStyle.captionRegular.copyWith(
-                        color: AppColor.lightGray,
+                      const Gap(8),
+                      Text(
+                        '한 단 레이아웃',
+                        style: AppTextStyle.captionRegular.copyWith(
+                          color:
+                              isSingleColumns
+                                  ? AppColor.primary
+                                  : AppColor.lightGray,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
             const Gap(12),
             Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(14.0),
-                decoration: BoxDecoration(
-                  color: AppColor.white,
-                  border: Border.all(color: AppColor.lightGrayBorder),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      height: 95,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 8,
-                        horizontal: 18,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColor.white,
-                        border: Border.all(color: AppColor.lightGrayBorder),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: AppColor.paleBlue,
-                                borderRadius: BorderRadius.circular(4),
+              child: GestureDetector(
+                onTap: () => onTapLayout(false),
+                child: Container(
+                  padding: const EdgeInsets.all(14.0),
+                  decoration: BoxDecoration(
+                    color: AppColor.white,
+                    border: Border.all(
+                      color:
+                          !isSingleColumns
+                              ? AppColor.primary
+                              : AppColor.lightGrayBorder,
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 95,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8,
+                          horizontal: 18,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColor.white,
+                          border: Border.all(color: AppColor.lightGrayBorder),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: AppColor.paleBlue,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
                               ),
                             ),
-                          ),
-                          const Gap(4),
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: AppColor.paleBlue,
-                                borderRadius: BorderRadius.circular(4),
+                            const Gap(4),
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: AppColor.paleBlue,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    const Gap(8),
-                    Text(
-                      '두 단 레이아웃',
-                      style: AppTextStyle.captionRegular.copyWith(
-                        color: AppColor.lightGray,
+                      const Gap(8),
+                      Text(
+                        '두 단 레이아웃',
+                        style: AppTextStyle.captionRegular.copyWith(
+                          color:
+                              !isSingleColumns
+                                  ? AppColor.primary
+                                  : AppColor.lightGray,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
