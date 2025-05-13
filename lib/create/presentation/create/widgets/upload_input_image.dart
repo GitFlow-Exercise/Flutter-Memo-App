@@ -48,7 +48,8 @@ class UploadInputImage extends StatelessWidget {
             radius: const Radius.circular(8),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: SizedBox(
+              child: Container(
+                color: AppColor.textfieldGrey,
                 height: 250,
                 width: double.infinity,
                 child: Column(
