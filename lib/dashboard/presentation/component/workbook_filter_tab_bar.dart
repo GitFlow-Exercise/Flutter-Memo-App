@@ -4,7 +4,7 @@ import 'package:mongo_ai/core/state/workbook_filter_state.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 
 class WorkbookFilterTabBar extends ConsumerWidget {
-  final void Function() toggleGridView;
+  final void Function(bool showGridView) toggleGridView;
 
   const WorkbookFilterTabBar({super.key, required this.toggleGridView});
 
@@ -23,7 +23,7 @@ class WorkbookFilterTabBar extends ConsumerWidget {
         ),
         child: TabBar(
           onTap: (index) {
-            toggleGridView();
+            toggleGridView(index == 0 ? true : false);
           },
           overlayColor: WidgetStateProperty.all(Colors.transparent),
           indicator: BoxDecoration(

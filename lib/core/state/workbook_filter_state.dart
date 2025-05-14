@@ -45,8 +45,8 @@ class WorkbookFilterState extends _$WorkbookFilterState {
     state = state.copyWith(showBookmark: !state.showBookmark);
   }
 
-  void toggleShowGridView() {
-    state = state.copyWith(showGridView: !state.showGridView);
+  void toggleShowGridView(bool showGridView) {
+    state = state.copyWith(showGridView: showGridView);
   }
 
   static List<Workbook> applyWorkbookViewOption(
