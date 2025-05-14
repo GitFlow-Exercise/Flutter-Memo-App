@@ -27,8 +27,10 @@ class _SelectGroupScreenRootState extends ConsumerState<SelectTeamScreenRoot> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final viewModel = ref.read(selectTeamViewModelProvider.notifier);
 
+      // 팀 목록 로드
       viewModel.loadTeams();
 
+      // 이벤트 리스너 등록
       _subscription = viewModel.eventStream.listen(_handleEvent);
     });
   }
@@ -42,13 +44,17 @@ class _SelectGroupScreenRootState extends ConsumerState<SelectTeamScreenRoot> {
   void _handleEvent(SelectTeamEvent event) {
     switch (event) {
       case ShowSnackBar(message: final message):
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(message))
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(message)));
+        }
         break;
       case ConfirmSuccess():
-      // 홈 화면으로 이동
-        context.go(Routes.myFiles);
+        // 홈 화면으로 이동
+        if (mounted) {
+          context.go(Routes.myFiles);
+        }
         break;
     }
   }
@@ -74,9 +80,6 @@ class _SelectGroupScreenRootState extends ConsumerState<SelectTeamScreenRoot> {
         break;
       case OnConfirm():
         viewModel.confirmTeamSelection();
-        break;
-      case OnChangeTeamName(name: final name):
-        viewModel.updateTeamName(name);
         break;
       case OnToggleCreateNewTeam():
         viewModel.toggleCreateNewTeam();

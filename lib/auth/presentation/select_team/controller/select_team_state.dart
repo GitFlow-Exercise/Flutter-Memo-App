@@ -9,9 +9,9 @@ part 'select_team_state.freezed.dart';
 abstract class SelectTeamState with _$SelectTeamState {
   const factory SelectTeamState({
     @Default(AsyncValue.data([])) AsyncValue<List<Team>> teams,
-    @Default('') String newTeamName,
     @Default(null) Team? selectedTeam,
     @Default(false) bool isCreatingNewTeam,
+    @Default(null) String? userId,
     required TextEditingController teamNameController,
-  }) = _SelectGroupState;
+  }) = _SelectTeamState;
 }

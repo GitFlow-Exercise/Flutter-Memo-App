@@ -71,10 +71,9 @@ class TeamRepositoryImpl implements TeamRepository {
   Future<Result<void, AppException>> assignUserToTeam(
     String userId,
     int teamId,
-    String role,
   ) async {
     try {
-      await _dataSource.assignUserToTeam(userId, teamId, role);
+      await _dataSource.assignUserToTeam(userId, teamId);
       return const Result.success(null);
     } catch (e) {
       return Result.error(

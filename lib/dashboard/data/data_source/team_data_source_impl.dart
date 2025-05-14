@@ -45,11 +45,10 @@ class TeamDataSourceImpl implements TeamDataSource {
   }
 
   @override
-  Future<void> assignUserToTeam(String userId, int teamId, String role) async {
+  Future<void> assignUserToTeam(String userId, int teamId) async {
     await _client.from('team_users').insert({
       'user_id': userId,
       'team_id': teamId,
-      'role': role,
     });
   }
 }

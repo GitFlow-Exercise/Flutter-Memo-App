@@ -14,4 +14,5 @@ abstract interface class AuthDataSource {
   bool isAuthenticated();
   bool isInitialSetupUser();
   bool isSelectTeam();
+  String? userId();
 }

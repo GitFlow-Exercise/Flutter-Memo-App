@@ -8,6 +8,5 @@ sealed class SelectTeamAction with _$SelectTeamAction {
   const factory SelectTeamAction.onSelectTeam(Team team) = OnSelectTeam;
   const factory SelectTeamAction.onCreateTeam() = OnCreateTeam;
   const factory SelectTeamAction.onConfirm() = OnConfirm;
-  const factory SelectTeamAction.onChangeTeamName(String name) = OnChangeTeamName;
   const factory SelectTeamAction.onToggleCreateNewTeam() = OnToggleCreateNewTeam;
 }

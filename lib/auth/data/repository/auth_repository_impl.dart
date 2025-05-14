@@ -247,4 +247,9 @@ class AuthRepositoryImpl extends AuthRepository {
   bool get isSelectTeam {
     return _authDataSource.isSelectTeam();
   }
+
+  @override
+  String? get userId {
+    return _authDataSource.userId();
+  }
 }

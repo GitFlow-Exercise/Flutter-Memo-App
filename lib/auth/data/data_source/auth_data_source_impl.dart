@@ -106,4 +106,9 @@ class AuthDataSourceImpl implements AuthDataSource {
     return _client.auth.currentUser?.userMetadata?['is_select_team'] ==
         true;
   }
+
+  @override
+  String? userId() {
+    return _client.auth.currentUser?.id;
+  }
 }

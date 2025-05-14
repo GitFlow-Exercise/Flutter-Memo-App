@@ -207,9 +207,6 @@ class MainContentPanel extends StatelessWidget {
                       ),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     ),
-                    onChanged: (value) {
-                      onAction(SelectTeamAction.onChangeTeamName(value));
-                    },
                   ),
                   const Gap(8),
                   InkWell(

@@ -15,6 +15,5 @@ abstract interface class TeamRepository {
   Future<Result<void, AppException>> assignUserToTeam(
     String userId,
     int teamId,
-    String role,
   );
 }
