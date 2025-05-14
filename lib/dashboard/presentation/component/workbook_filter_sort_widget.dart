@@ -19,6 +19,7 @@ class WorkbookFilterSortWidget extends ConsumerWidget {
       child: DropdownButton<WorkbookSortOption>(
         value: sortOption,
         underline: const SizedBox(),            // 밑줄 제거
+        dropdownColor: AppColor.white,
         icon: const Icon(Icons.keyboard_arrow_down),
         onChanged: (changedOption) {
           if (changedOption != null) {

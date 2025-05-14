@@ -7,7 +7,7 @@ import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/dashboard/domain/model/folder.dart';
-import 'package:mongo_ai/dashboard/presentation/component/button_widget.dart';
+import 'package:mongo_ai/dashboard/presentation/component/select_mode_button_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/folder_list_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/path_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/team_list_widget.dart';
@@ -114,42 +114,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             const Gap(10),
                             SizedBox(
                               height: 40,
-                              child: ElevatedButton(
-                                onPressed: () {
+                              child: SelectModeButtonWidget(
+                                onClick: () {
                                   viewModel.toggleSelectMode();
                                 },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: dashboard.isSelectMode
-                                      ? AppColor.paleBlue
-                                      : AppColor.primary,
-                                  side: dashboard.isSelectMode
-                                      ? const BorderSide(color: AppColor.primary, width: 2)
-                                      : BorderSide.none,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                                child: dashboard.isSelectMode
-                                    ? const Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.cancel_outlined,
-                                        color: AppColor.primary),
-                                    Gap(8),
-                                    Text('병합 취소하기', style: TextStyle(
-                                        color: AppColor.primary)),
-                                  ],
-                                )
-                                    : const Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.layers,
-                                        color: AppColor.white),
-                                    Gap(8),
-                                    Text('문서 병합하기', style: TextStyle(
-                                        color: AppColor.white)),
-                                  ],
-                                ),
                               ),
                             )
                           ],

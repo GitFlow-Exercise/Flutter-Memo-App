@@ -75,12 +75,7 @@ class DashboardViewModel extends _$DashboardViewModel {
   // -----------------
   // workbook 병합 모드 메서드
   Future<void> toggleSelectMode() async {
-    state = state.whenData((e) {
-      if(e.isSelectMode) {
-        ref.read(selectedWorkbookStateProvider.notifier).clear();
-      }
-      return e.copyWith(isSelectMode: !e.isSelectMode);
-    });
+    ref.read(selectedWorkbookStateProvider.notifier).toggleSelectMode();
   }
 
   // -----------------
