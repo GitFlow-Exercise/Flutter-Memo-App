@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mongo_ai/create/presentation/base/layout/ai_base_layout.dart';
 import 'package:mongo_ai/create/presentation/pdf_preview/controller/pdf_preview_action.dart';
 import 'package:mongo_ai/create/presentation/pdf_preview/controller/pdf_preview_event.dart';
 import 'package:mongo_ai/create/presentation/pdf_preview/controller/pdf_preview_view_model.dart';
@@ -47,8 +48,14 @@ class _PdfPreviewScreenRootState extends ConsumerState<PdfPreviewScreenRoot> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(pdfPreViewViewModelProvider);
-    return Scaffold(
-      body: PdfPreviewScreen(state: state, onAction: _handleAction),
+    return AiBaseLayout(
+      title: '문제집 생성',
+      subTitle: '생성된 문제집 확인',
+      step: 4,
+      maxWidth: 850,
+      maxHeight: 750,
+      isPopTap: true,
+      child: PdfPreviewScreen(state: state, onAction: _handleAction),
     );
   }
 
