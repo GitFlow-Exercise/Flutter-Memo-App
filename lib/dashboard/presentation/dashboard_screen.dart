@@ -49,6 +49,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         height: 40,
                         child: Row(
                           children: [
+                            const PathWidget(),
+                            const Spacer(),
                             const Icon(Icons.person, color: AppColor.deepBlack),
                             const Gap(10),
                             Text(
@@ -56,27 +58,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               style: AppTextStyle.bodyMedium.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
-                            ),
-                            const Text('님 환영합니다', style: AppTextStyle.bodyMedium),
-                            const Spacer(),
-                            ButtonWidget(
-                              buttonText: '새로 만들기',
-                              icon: const Icon(
-                                Icons.auto_awesome,
-                                color: AppColor.white,
-                              ),
-                              onClick: () {
-                                context.push(Routes.create);
-                              },
-                            ),
-                            const Gap(10),
-                            ButtonWidget(
-                              buttonText: '문서 병합하기',
-                              icon: const Icon(
-                                Icons.layers,
-                                color: AppColor.white,
-                              ),
-                              onClick: () {},
                             ),
                           ],
                         ),
@@ -89,8 +70,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         height: 40,
                         child: Row(
                           children: [
-                            const PathWidget(),
-                            const Spacer(),
                             WorkbookFilterSortWidget(
                               changeSortOption: (WorkbookSortOption option) {
                                 viewModel.changeFilterSortOption(option);
@@ -108,6 +87,71 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 viewModel.toggleFilterShowGridView();
                               },
                             ),
+                            const Spacer(),
+                            SizedBox(
+                              height: 40,
+                              child: ElevatedButton(
+                                  onPressed: () {
+                                    context.push(Routes.create);
+                                  },
+                                  style : ElevatedButton.styleFrom(
+                                    backgroundColor: AppColor.primary,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  child: const Row(
+                                    children: [
+                                      Icon(Icons.auto_awesome,
+                                          color: AppColor.white),
+                                      Gap(8),
+                                      Text('새로 만들기', style: TextStyle(
+                                          color: AppColor.white)),
+                                    ],
+                                  )
+                              ),
+                            ),
+                            const Gap(10),
+                            SizedBox(
+                              height: 40,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  viewModel.toggleSelectMode();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: dashboard.isSelectMode
+                                      ? AppColor.paleBlue
+                                      : AppColor.primary,
+                                  side: dashboard.isSelectMode
+                                      ? const BorderSide(color: AppColor.primary, width: 2)
+                                      : BorderSide.none,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                child: dashboard.isSelectMode
+                                    ? const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.cancel_outlined,
+                                        color: AppColor.primary),
+                                    Gap(8),
+                                    Text('병합 취소하기', style: TextStyle(
+                                        color: AppColor.primary)),
+                                  ],
+                                )
+                                    : const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.layers,
+                                        color: AppColor.white),
+                                    Gap(8),
+                                    Text('문서 병합하기', style: TextStyle(
+                                        color: AppColor.white)),
+                                  ],
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ),

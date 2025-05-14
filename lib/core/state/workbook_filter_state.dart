@@ -33,7 +33,7 @@ class WorkbookFilterState extends _$WorkbookFilterState {
   @override
   WorkbookFilter build() {
     // 기본값
-    ref.keepAlive();
+    // keepAlive 필요 없음. 다른 페이지가면 리빌드 됨.
     return const WorkbookFilter();
   }
 

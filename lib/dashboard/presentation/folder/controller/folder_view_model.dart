@@ -1,6 +1,7 @@
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/core/state/current_folder_id_state.dart';
+import 'package:mongo_ai/core/state/selected_workbook_state.dart';
 import 'package:mongo_ai/core/state/workbook_filter_state.dart';
 import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
 import 'package:mongo_ai/dashboard/presentation/folder/controller/folder_state.dart';
@@ -32,6 +33,10 @@ class FolderViewModel extends _$FolderViewModel {
       workbookList: workbookList,
       showGridView: filter.showGridView,
     );
+  }
+
+  Future<void> selectWorkbook(Workbook workbook) async {
+    ref.read(selectedWorkbookStateProvider.notifier).selectWorkbook(workbook);
   }
 
   Future<void> refreshWorkbookList() async {
