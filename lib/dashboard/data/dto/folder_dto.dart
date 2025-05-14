@@ -16,7 +16,13 @@ class FolderDto {
   @JsonKey(name: 'created_at')
   String? createdAt;
 
-  FolderDto(this.folderId, this.folderName, this.teamId, this.createdAt);
+  FolderDto({
+    this.folderId,
+    this.folderName,
+    this.teamId,
+    this.createdAt,
+  });
+
 
   factory FolderDto.fromJson(Map<String, dynamic> json) =>
       _$FolderDtoFromJson(json);
