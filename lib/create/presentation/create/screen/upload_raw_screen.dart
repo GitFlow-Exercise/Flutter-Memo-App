@@ -84,12 +84,21 @@ class UploadRawScreen extends StatelessWidget {
             file: state.pickFile,
             pickImage: () => onAction(const UploadRawAction.pickImage()),
             deleteFile: () => onAction(const UploadRawAction.deleteFile()),
+            setDropController:
+                (controller) =>
+                    onAction(UploadRawAction.setDropController(controller)),
+            onDropFile:
+                (event) => onAction(UploadRawAction.dropImageFile(event)),
           ),
         ] else if (state.selectedUploadType == AiConstant.inputFile) ...[
           UploadInputFile(
             file: state.pickFile,
             pickPdf: () => onAction(const UploadRawAction.pickPdf()),
             deleteFile: () => onAction(const UploadRawAction.deleteFile()),
+            setDropController:
+                (controller) =>
+                    onAction(UploadRawAction.setDropController(controller)),
+            onDropFile: (event) => onAction(UploadRawAction.dropPdfFile(event)),
           ),
         ],
       ],

@@ -124,6 +124,12 @@ class _UploadRawScreenRootState extends ConsumerState<UploadRawScreenRoot> {
         viewModel.clearText();
       case DeleteFile():
         viewModel.deleteFile();
+      case SetDropController(:final controller):
+        viewModel.setDropController(controller);
+      case DropImageFile(:final event):
+        viewModel.dropImageFile(event);
+      case DropPdfFile(:final event):
+        viewModel.dropPdfFile(event);
     }
   }
 }

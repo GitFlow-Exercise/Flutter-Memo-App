@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mongo_ai/core/constants/ai_constant.dart';
 import 'package:mongo_ai/create/domain/model/pick_file.dart';
@@ -20,6 +21,7 @@ abstract class UploadRawState with _$UploadRawState {
       AiConstant.inputFile,
     ])
     List<String> uploadTypes,
+    @Default(null) DropzoneViewController? dropController,
     @Default(null) PickFile? pickFile,
     @Default(null) OpenAiResponse? result,
     required TextEditingController textController,

@@ -1,5 +1,7 @@
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:gap/gap.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
@@ -11,11 +13,15 @@ class UploadInputImage extends StatelessWidget {
   final PickFile? file;
   final VoidCallback pickImage;
   final VoidCallback deleteFile;
+  final void Function(DropzoneFileInterface event) onDropFile;
+  final void Function(DropzoneViewController controller) setDropController;
   const UploadInputImage({
     super.key,
     required this.file,
     required this.pickImage,
     required this.deleteFile,
+    required this.onDropFile,
+    required this.setDropController,
   });
 
   @override
@@ -60,73 +66,92 @@ class UploadInputImage extends StatelessWidget {
             ],
           ),
         if (file == null)
-          // 점선을 나태내주는 패키지 이용
-          DottedBorder(
-            color: AppColor.lightGrayBorder,
-            radius: const Radius.circular(8),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Container(
-                color: AppColor.textfieldGrey,
-                height: 250,
-                width: double.infinity,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.cloud_upload_outlined,
-                      color: AppColor.primary,
-                      size: 40,
-                    ),
-                    const Gap(16),
-                    Text(
-                      '이미지 파일을 끌어서 놓거나 클릭하여 업로드하세요',
-                      style: AppTextStyle.bodyMedium.copyWith(
-                        color: AppColor.mediumGray,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      child: Text(
-                        '최대 파일 크기 5MB',
-                        style: AppTextStyle.captionRegular.copyWith(
-                          color: AppColor.lightGray,
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: pickImage,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 12,
-                          horizontal: 16,
-                        ),
-                        decoration: BoxDecoration(
+          Stack(
+            children: [
+              // 점선을 나태내주는 패키지 이용
+              DottedBorder(
+                color: AppColor.lightGrayBorder,
+                radius: const Radius.circular(8),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    color: AppColor.textfieldGrey,
+                    height: 250,
+                    width: double.infinity,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.cloud_upload_outlined,
                           color: AppColor.primary,
-                          borderRadius: BorderRadius.circular(6),
+                          size: 40,
                         ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(
-                              Icons.folder_open_outlined,
-                              color: AppColor.white,
-                            ),
-                            const Gap(8),
-                            Text(
-                              '파일 찾기',
-                              style: AppTextStyle.bodyRegular.copyWith(
-                                color: AppColor.white,
-                              ),
-                            ),
-                          ],
+                        const Gap(16),
+                        Text(
+                          '이미지 파일을 끌어서 놓거나 클릭하여 업로드하세요',
+                          style: AppTextStyle.bodyMedium.copyWith(
+                            color: AppColor.mediumGray,
+                          ),
                         ),
-                      ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          child: Text(
+                            '최대 파일 크기 5MB',
+                            style: AppTextStyle.captionRegular.copyWith(
+                              color: AppColor.lightGray,
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: pickImage,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 12,
+                              horizontal: 16,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColor.primary,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.folder_open_outlined,
+                                  color: AppColor.white,
+                                ),
+                                const Gap(8),
+                                Text(
+                                  '파일 찾기',
+                                  style: AppTextStyle.bodyRegular.copyWith(
+                                    color: AppColor.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+              // 웹일때만 drag&drop이 가능하도록 설정
+              if (kIsWeb)
+                Positioned.fill(
+                  child: DropzoneView(
+                    onCreated: setDropController,
+                    onLoaded: () {},
+                    onError: (ev) {},
+                    onHover: () {},
+                    onLeave: () {},
+                    onDropFile: onDropFile,
+                    onDropFiles: (value) {
+                      print('multi drop');
+                    },
+                  ),
+                ),
+            ],
           ),
         const Gap(16),
         const UploadTipBox(

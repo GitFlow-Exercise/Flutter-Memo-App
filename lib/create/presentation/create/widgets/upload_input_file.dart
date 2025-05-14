@@ -1,5 +1,7 @@
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:gap/gap.dart';
 import 'package:mongo_ai/core/component/base_app_button.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
@@ -12,11 +14,15 @@ class UploadInputFile extends StatelessWidget {
   final PickFile? file;
   final VoidCallback pickPdf;
   final VoidCallback deleteFile;
+  final void Function(DropzoneFileInterface event) onDropFile;
+  final void Function(DropzoneViewController controller) setDropController;
   const UploadInputFile({
     super.key,
     required this.file,
     required this.pickPdf,
     required this.deleteFile,
+    required this.onDropFile,
+    required this.setDropController,
   });
 
   @override
@@ -59,45 +65,60 @@ class UploadInputFile extends StatelessWidget {
             ],
           ),
         if (file == null)
-          // 점선을 나태내주는 패키지 이용
-          DottedBorder(
-            color: AppColor.lightGrayBorder,
-            radius: const Radius.circular(8),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Container(
-                color: AppColor.textfieldGrey,
-                height: 400,
-                width: double.infinity,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.picture_as_pdf_outlined,
-                      color: AppColor.primary,
-                      size: 40,
-                    ),
-                    const Gap(16),
-                    Text(
-                      'PDF 파일을 끌어서 놓거나 클릭하여 업로드하세요',
-                      style: AppTextStyle.bodyMedium.copyWith(
-                        color: AppColor.mediumGray,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      child: Text(
-                        '최대 파일 크기 5MB',
-                        style: AppTextStyle.captionRegular.copyWith(
-                          color: AppColor.lightGray,
+          Stack(
+            children: [
+              // 점선을 나태내주는 패키지 이용
+              DottedBorder(
+                color: AppColor.lightGrayBorder,
+                radius: const Radius.circular(8),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    color: AppColor.textfieldGrey,
+                    height: 400,
+                    width: double.infinity,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.picture_as_pdf_outlined,
+                          color: AppColor.primary,
+                          size: 40,
                         ),
-                      ),
+                        const Gap(16),
+                        Text(
+                          'PDF 파일을 끌어서 놓거나 클릭하여 업로드하세요',
+                          style: AppTextStyle.bodyMedium.copyWith(
+                            color: AppColor.mediumGray,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          child: Text(
+                            '최대 파일 크기 5MB',
+                            style: AppTextStyle.captionRegular.copyWith(
+                              color: AppColor.lightGray,
+                            ),
+                          ),
+                        ),
+                        BaseAppButton(onTap: pickPdf, text: '파일 선택하기'),
+                      ],
                     ),
-                    BaseAppButton(onTap: pickPdf, text: '파일 선택하기'),
-                  ],
+                  ),
                 ),
-              ),
-            ),
+              ), // 웹일때만 drag&drop이 가능하도록 설정
+              if (kIsWeb)
+                Positioned.fill(
+                  child: DropzoneView(
+                    onCreated: setDropController,
+                    onLoaded: () {},
+                    onError: (ev) {},
+                    onHover: () {},
+                    onLeave: () {},
+                    onDropFile: onDropFile,
+                  ),
+                ),
+            ],
           ),
       ],
     );
