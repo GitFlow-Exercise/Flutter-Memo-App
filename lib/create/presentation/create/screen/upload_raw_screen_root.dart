@@ -122,6 +122,8 @@ class _UploadRawScreenRootState extends ConsumerState<UploadRawScreenRoot> {
         viewModel.handleSubmitForm();
       case ClearText():
         viewModel.clearText();
+      case DeleteFile():
+        viewModel.deleteFile();
     }
   }
 }

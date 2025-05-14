@@ -164,4 +164,9 @@ class UploadRawViewModel extends _$UploadRawViewModel {
   void clearText() {
     state.whenData((cb) => cb.textController.clear());
   }
+
+  // 파일 데이터 지우기
+  void deleteFile() {
+    state = state.whenData((cb) => cb.copyWith(pickFile: null));
+  }
 }

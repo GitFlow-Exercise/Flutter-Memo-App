@@ -10,8 +10,14 @@ import 'package:printing/printing.dart';
 // 파일 입력 화면
 class UploadInputFile extends StatelessWidget {
   final PickFile? file;
-  final VoidCallback onTap;
-  const UploadInputFile({super.key, required this.file, required this.onTap});
+  final VoidCallback pickPdf;
+  final VoidCallback deleteFile;
+  const UploadInputFile({
+    super.key,
+    required this.file,
+    required this.pickPdf,
+    required this.deleteFile,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,21 +30,33 @@ class UploadInputFile extends StatelessWidget {
         ),
         const Gap(8),
         if (file != null)
-          Container(
-            height: 400,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: PdfPreview(
-              build: (format) => file!.bytes,
-              maxPageWidth: 500,
-              allowPrinting: false,
-              allowSharing: false,
-              canChangePageFormat: false,
-              canChangeOrientation: false,
-              canDebug: false,
-            ),
+          Stack(
+            children: [
+              Container(
+                height: 400,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: PdfPreview(
+                  build: (format) => file!.bytes,
+                  maxPageWidth: 500,
+                  allowPrinting: false,
+                  allowSharing: false,
+                  canChangePageFormat: false,
+                  canChangeOrientation: false,
+                  canDebug: false,
+                ),
+              ),
+              Positioned(
+                right: 16,
+                top: 4,
+                child: IconButton(
+                  onPressed: deleteFile,
+                  icon: const Icon(Icons.close),
+                ),
+              ),
+            ],
           ),
         if (file == null)
           // 점선을 나태내주는 패키지 이용
@@ -75,7 +93,7 @@ class UploadInputFile extends StatelessWidget {
                         ),
                       ),
                     ),
-                    BaseAppButton(onTap: onTap, text: '파일 선택하기'),
+                    BaseAppButton(onTap: pickPdf, text: '파일 선택하기'),
                   ],
                 ),
               ),

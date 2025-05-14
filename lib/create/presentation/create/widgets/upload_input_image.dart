@@ -9,8 +9,14 @@ import 'package:mongo_ai/create/presentation/create/widgets/upload_tip_box.dart'
 // 이미지 입력 화면
 class UploadInputImage extends StatelessWidget {
   final PickFile? file;
-  final VoidCallback onTap;
-  const UploadInputImage({super.key, required this.file, required this.onTap});
+  final VoidCallback pickImage;
+  final VoidCallback deleteFile;
+  const UploadInputImage({
+    super.key,
+    required this.file,
+    required this.pickImage,
+    required this.deleteFile,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +42,22 @@ class UploadInputImage extends StatelessWidget {
         ),
         const Gap(8),
         if (file != null)
-          SizedBox(
-            height: 250,
-            width: double.infinity,
-            child: Image.memory(file!.bytes, fit: BoxFit.cover),
+          Stack(
+            children: [
+              SizedBox(
+                height: 250,
+                width: double.infinity,
+                child: Image.memory(file!.bytes, fit: BoxFit.cover),
+              ),
+              Positioned(
+                right: 16,
+                top: 4,
+                child: IconButton(
+                  onPressed: deleteFile,
+                  icon: const Icon(Icons.close),
+                ),
+              ),
+            ],
           ),
         if (file == null)
           // 점선을 나태내주는 패키지 이용
@@ -77,7 +95,7 @@ class UploadInputImage extends StatelessWidget {
                       ),
                     ),
                     InkWell(
-                      onTap: onTap,
+                      onTap: pickImage,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                           vertical: 12,

@@ -14,4 +14,6 @@ sealed class UploadRawAction with _$UploadRawAction {
   const factory UploadRawAction.submitForm() = SubmitForm;
 
   const factory UploadRawAction.clearText() = ClearText;
+
+  const factory UploadRawAction.deleteFile() = DeleteFile;
 }
