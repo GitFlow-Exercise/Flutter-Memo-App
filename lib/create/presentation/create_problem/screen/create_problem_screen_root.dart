@@ -57,8 +57,17 @@ class _CreateProblemScreenRootState
                 (ctx) => AlertDialog(
                   backgroundColor: AppColor.white,
                   // title: Text(response.prompt.toString()),
-                  content: SingleChildScrollView(
-                    child: Text(response.response.getContent()),
+                  content: Row(
+                    children:
+                        response.response
+                            .map(
+                              (e) => Expanded(
+                                child: SingleChildScrollView(
+                                  child: Text(e.getContent()),
+                                ),
+                              ),
+                            )
+                            .toList(),
                   ),
                   actions: [
                     BaseAppButton(onTap: () => context.pop(), text: '취소'),

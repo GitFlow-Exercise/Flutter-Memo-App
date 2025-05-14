@@ -122,11 +122,18 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: Routes.createProblem,
-        // builder: (context, state) {
-        //   // final extra = state.extra as CreateTemplateParams;
-        //   final extra = OpenAiResponse.justText(contents: 'contents');
-        //   return CreateProblemScreenRoot(extra);
-        // },
+        //         builder: (context, state) {
+        //           // final extra = state.extra as CreateTemplateParams;
+        //           final extra = OpenAiResponse.justText(
+        //             contents:
+        //                 '''Urban delivery vehicles can be adapted to better suit the density of urban distribution, which often involves smaller vehicles such as vans, including bicycles. The latter have the potential to become a preferred 'last-mile' vehicle, particularly in high-density and congested areas. In locations where bicycle use is high, such as the Netherlands, delivery bicycles are also used to carry personal cargo (e.g. groceries). Due to their low acquisition and maintenance costs, cargo bicycles convey much potential in developed and developing countries alike, such as the becak (a three-wheeled bicycle) in Indonesia.
+        // Services using electrically assisted delivery tricycles have been successfully implemented in France and are gradually being adopted across Europe for services as varied as parcel and catering deliveries. Using bicycles as cargo vehicles is particularly encouraged when combined with policies that restrict motor vehicle access to specific areas of a city, such as downtown or commercial districts, or with the extension of dedicated bike lanes. ~^^~ I'm sorry. To show you this, I've focused your attention. Isn't it amazing how Naruto and Sasuke fight?
+        // It is really a champion fight. Is that stupid Naruto right?
+        // Really Naruto is legendary. I've seen Naruto every day from the past, and I'm thrilled to see Naruto who became the world's greatest hero who became Hokage. From Naruto's song to the scene, my heart is magnificent as the scenes that ring my heart rub in my mind. In the movie, Sasuke suddenly appears and crushes a giant meteorite flying in front of Kakashi. And Sasuke said,
+        // "Without Naruto, the only person who can protect this village is me." If you have seen Naruto from episode 1, you will be in tears. I am really thrilled. I'm sorry to know Naruto recently. I'm watching Naruto episode 20 now, and I have a feeling that I don't know how it all grew.''',
+        //           );
+        //           return CreateProblemScreenRoot(extra);
+        //         },
         builder: (context, state) {
           final extra = state.extra as OpenAiResponse;
           return CreateProblemScreenRoot(extra);

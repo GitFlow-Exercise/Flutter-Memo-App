@@ -17,6 +17,8 @@ abstract class AiConstant {
   // status
   static const String completed = 'completed';
 
+  static const String splitEmoji = '~^^~';
+
   static const String cleanTextPrompt = '''
 **Clean Text 생성 규칙**
    - 문제의 요지나 정답을 출력하지 말고, 반드시 아래 규칙에 따라 지문만 정제하세요.
