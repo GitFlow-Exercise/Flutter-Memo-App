@@ -51,37 +51,7 @@ class _CreateProblemScreenRootState
         ).showSnackBar(SnackBar(content: Text(message)));
       case SuccessOpenAIRequest(:final response):
         if (mounted) {
-          showDialog(
-            context: context,
-            builder:
-                (ctx) => AlertDialog(
-                  backgroundColor: AppColor.white,
-                  // title: Text(response.prompt.toString()),
-                  content: Row(
-                    children:
-                        response.response
-                            .map(
-                              (e) => Expanded(
-                                child: SingleChildScrollView(
-                                  child: Text(e.getContent()),
-                                ),
-                              ),
-                            )
-                            .toList(),
-                  ),
-                  actions: [
-                    BaseAppButton(onTap: () => context.pop(), text: '취소'),
-                    BaseAppButton(
-                      onTap: () {
-                        ctx.pop();
-                        context.push(Routes.createProblem, extra: response);
-                      },
-                      text: '확인',
-                    ),
-                  ],
-                ),
-          );
-          // context.go(Routes.createTemplate, extra: response);
+          context.go(Routes.createTemplate, extra: response);
         }
       case ShowDetailDialog(:final detail):
         showDialog(
