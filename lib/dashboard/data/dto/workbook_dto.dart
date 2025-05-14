@@ -43,7 +43,7 @@ class WorkbookDto {
   @JsonKey(name: 'deleted_at')
   String? deletedAt;
 
-  WorkbookDto(
+  WorkbookDto({
     this.workbookId,
     this.userId,
     this.workbookName,
@@ -53,8 +53,8 @@ class WorkbookDto {
     this.teamId,
     this.createdAt,
     this.lastOpen,
-    this.deletedAt,
-  );
+    this.deletedAt
+  });
 
   factory WorkbookDto.fromJson(Map<String, dynamic> json) =>
       _$WorkbookDtoFromJson(json);
