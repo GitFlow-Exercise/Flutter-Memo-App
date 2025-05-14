@@ -2,10 +2,10 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mongo_ai/auth/presentation/check_otp/screen/check_top_screen_root.dart';
+import 'package:mongo_ai/auth/presentation/check_otp/screen/check_otp_screen_root.dart';
 import 'package:mongo_ai/auth/presentation/sign_in/screen/sign_in_screen_root.dart';
-import 'package:mongo_ai/auth/presentation/sign_up/screen/sign_up_complete_screen.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/screen/sign_up_screen_root.dart';
+import 'package:mongo_ai/auth/presentation/sign_up_complete/screen/sign_up_complete_screen_root.dart';
 import 'package:mongo_ai/auth/presentation/sign_up_password/screen/sign_up_password_screen_root.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/routing/redirect.dart';
@@ -25,7 +25,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 final routerProvider = Provider<GoRouter>((ref) {
   final auth = ref.watch(authRepositoryProvider);
   return GoRouter(
-    initialLocation: Routes.createTemplate,
+    initialLocation: Routes.folder,
     // auth 관찰해서 변화가 있다면,
     // 새로 reidrect 함수 실행
     refreshListenable: auth,
@@ -34,6 +34,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       final extra = state.extra;
       return AppRedirect.authRedirect(
         isAuthenticated: auth.isAuthenticated,
+        isInitialSetupUser: auth.isInitialSetupUser,
         nowPath: path,
         extra: extra,
       );
@@ -74,22 +75,19 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.signUpPassword,
         builder: (context, state) {
-          final tempUserId = state.extra as String;
-          return SignUpPasswordScreenRoot(tempUserId: tempUserId);
+          return const SignUpPasswordScreenRoot();
         },
       ),
       GoRoute(
         path: Routes.checkOtp,
         builder: (context, state) {
-          final tempUserId = state.extra as String;
-          return CheckOtpScreenRoot(tempUserId: tempUserId);
+          final extra = state.extra as String;
+          return CheckOtpScreenRoot(email: extra);
         },
       ),
       GoRoute(
         path: Routes.signUpComplete,
-        builder:
-            (context, state) =>
-                SignUpCompleteScreen(onTapHome: () => context.go(Routes.myFiles)),
+        builder: (context, state) => const SignUpCompleteScreenRoot(),
       ),
       StatefulShellRoute.indexedStack(
         builder:

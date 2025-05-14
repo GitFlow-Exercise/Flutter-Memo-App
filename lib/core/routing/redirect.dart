@@ -1,40 +1,53 @@
-import 'dart:typed_data';
-
+import 'package:flutter/foundation.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/create/domain/model/create_workbook_params.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 
 abstract class AppRedirect {
-  // 인증 관련 redirect 로직입니다.
   static String? authRedirect({
     required bool isAuthenticated,
+    required bool isInitialSetupUser,
     required String? nowPath,
-    required Object? extra
+    required Object? extra,
   }) {
-    // 인증이 없다면 로그인 화면으로 강제 이동
+    // 1. 미인증 사용자 처리 (isAuthenticated = false)
     if (!isAuthenticated) {
-      // 만약 sign-up 등의 중간 단계에서 세션 만료, 새로고침 등으로 extra가 손실되었다면
-      // 로그인 화면으로 다시 이동
-      if (nowPath != Routes.signUp && extra == null) {
-        return Routes.signIn;
-      }
-      // 만약 인증이 되지 않은 상태이지만,
-      // 회원가입을 하려는 유저라면
-      // 정상적으로 이동하도록 설정
-      // ------------
-      // TODO: 추후 비밀번호 재설정화면도 추가해아합니다.
-      if (nowPath == Routes.signUp || nowPath == Routes.signUpPassword || nowPath == Routes.checkOtp) {
+      // Sign In과 Sign Up은 항상 접근 가능
+      if (nowPath == Routes.signIn || nowPath == Routes.signUp) {
         return null;
       }
+
+      // otp확인은 extra 값이 있어야 함
+      if (nowPath == Routes.checkOtp && extra is String) {
+        return null;
+      }
+
+      // Check OTP가 extra와 함께 접근한 경우는 정상 진행
       return Routes.signIn;
     }
-    // 유저 정보가 존재하고,
-    // 현재 화면이 로그인 화면이거나 회원가입 화면이라면
-    // 강제로 홈 화면으로 이동
-    if (nowPath == Routes.signIn || nowPath == Routes.signUp || nowPath == Routes.signUpPassword || nowPath == Routes.checkOtp) {
+
+    // 2. 인증은 됐지만 초기 설정이 안 된 경우 (isAuthenticated = true, isInitialSetupUser = false)
+    if (!isInitialSetupUser) {
+      // 비밀번호 설정, 완료 화면은 extra가 있어야 함
+      if (nowPath == Routes.signUpPassword && extra is String ||
+          nowPath == Routes.signUpComplete && extra is String) {
+        return null;
+      }
+      // 그 외 모든 페이지는 비밀번호 설정으로 리다이렉트
+      return Routes.signUpPassword;
+    }
+
+    // 3. 완전히 인증된 사용자 (isAuthenticated = true, isInitialSetupUser = true)
+    // 회원가입/로그인 관련 화면 접근 시도는 메인 화면으로 리다이렉트
+    // 완료 화면은 예외
+    if (nowPath == Routes.signIn ||
+        nowPath == Routes.signUp ||
+        nowPath == Routes.checkOtp ||
+        nowPath == Routes.signUpPassword) {
       return Routes.myFiles;
     }
-    // 원래 가려던 방향 null
+
+    // 그 외 모든 경우는 원래 가려던 경로 유지
     return null;
   }
 

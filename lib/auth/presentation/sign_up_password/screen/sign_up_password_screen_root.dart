@@ -10,9 +10,7 @@ import 'package:mongo_ai/auth/presentation/sign_up_password/screen/sign_up_passw
 import 'package:mongo_ai/core/routing/routes.dart';
 
 class SignUpPasswordScreenRoot extends ConsumerStatefulWidget {
-  final String tempUserId;
-
-  const SignUpPasswordScreenRoot({super.key, required this.tempUserId});
+  const SignUpPasswordScreenRoot({super.key});
 
   @override
   ConsumerState<SignUpPasswordScreenRoot> createState() =>
@@ -27,9 +25,7 @@ class _SignUpPasswordScreenRootState
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final viewModel = ref.watch(
-        signUpPasswordViewModelProvider(widget.tempUserId).notifier,
-      );
+      final viewModel = ref.watch(signUpPasswordViewModelProvider.notifier);
 
       _subscription = viewModel.eventStream.listen(_handleEvent);
     });
@@ -48,9 +44,9 @@ class _SignUpPasswordScreenRootState
           context,
         ).showSnackBar(SnackBar(content: Text(message)));
         break;
-      case NavigateToVerifyOtp(tempUserId: final tempUserId):
+      case NavigateToComplete():
         if (mounted) {
-          context.go(Routes.checkOtp, extra: tempUserId);
+          context.go(Routes.signUpComplete);
         }
         break;
     }
@@ -58,7 +54,7 @@ class _SignUpPasswordScreenRootState
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(signUpPasswordViewModelProvider(widget.tempUserId));
+    final state = ref.watch(signUpPasswordViewModelProvider);
 
     return Scaffold(
       body: SignUpPasswordScreen(state: state, onAction: _handleAction),
@@ -66,14 +62,9 @@ class _SignUpPasswordScreenRootState
   }
 
   void _handleAction(SignUpPasswordAction action) async {
-    final viewModel = ref.read(
-      signUpPasswordViewModelProvider(widget.tempUserId).notifier,
-    );
+    final viewModel = ref.read(signUpPasswordViewModelProvider.notifier);
 
     switch (action) {
-      case OnTapSendOtp():
-        await viewModel.sendOtp();
-        break;
       case OnTapCheckPrivacyPolicy():
         viewModel.togglePrivacyPolicy();
         break;
@@ -85,6 +76,9 @@ class _SignUpPasswordScreenRootState
         break;
       case OnTapLogin():
         context.go(Routes.signIn);
+        break;
+      case SubmitForm():
+        viewModel.submitForm();
         break;
     }
   }

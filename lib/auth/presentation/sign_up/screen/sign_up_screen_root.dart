@@ -43,9 +43,8 @@ class _SignUpScreenRootState extends ConsumerState<SignUpScreenRoot> {
           context,
         ).showSnackBar(SnackBar(content: Text(message)));
         break;
-      case GenerateTempUserId(tempUserId: final tempUserId):
-        context.go(Routes.signUpPassword, extra: tempUserId);
-        break;
+      case NavigateToCheckOtp(email: final email):
+        context.go(Routes.checkOtp, extra: email);
     }
   }
 
@@ -72,13 +71,15 @@ class _SignUpScreenRootState extends ConsumerState<SignUpScreenRoot> {
         final isPasswordUpdated = await viewModel.resetPassword();
         if (isPasswordUpdated) {
           if (await viewModel.saveUser() && mounted) {
-            context.go(Routes.signUpComplete);
+            context.go(Routes.signUpComplete, extra: '');
           }
         }
       case OnTapSignIn():
         context.go(Routes.signIn);
       case OnTapOtpSend():
-        viewModel.checkEmail();
+        if (await viewModel.checkEmail()) {
+          await viewModel.sendOtp();
+        }
     }
   }
 }

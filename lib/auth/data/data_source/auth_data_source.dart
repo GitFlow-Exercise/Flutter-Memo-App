@@ -9,5 +9,7 @@ abstract interface class AuthDataSource {
   Future<void> sendOtp(String email);
   Future<AuthResponse> verifyOtp(String email, String otp);
   Future<UserResponse> resetPassword(String email);
+  Future<String?> getCurrentUserEmail();
   bool isAuthenticated();
+  bool isInitialSetupUser();
 }

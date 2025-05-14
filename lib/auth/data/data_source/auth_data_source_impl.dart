@@ -24,6 +24,10 @@ class AuthDataSourceImpl implements AuthDataSource {
       password: password,
     );
 
+    await _client.auth.updateUser(
+      UserAttributes(data: {'is_initial_setup_user': true}),
+    );
+
     return authResponse;
   }
 
@@ -81,5 +85,16 @@ class AuthDataSourceImpl implements AuthDataSource {
       return false;
     }
     return true;
+  }
+
+  @override
+  Future<String?> getCurrentUserEmail() async {
+    return _client.auth.currentUser?.email;
+  }
+
+  @override
+  bool isInitialSetupUser() {
+    return _client.auth.currentUser?.userMetadata?['is_initial_setup_user'] ==
+        true;
   }
 }

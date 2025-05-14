@@ -1,8 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mongo_ai/auth/data/data_source/temp_storage_data_source.dart';
-import 'package:mongo_ai/auth/data/data_source/temp_storage_data_source_impl.dart';
-import 'package:mongo_ai/auth/data/repository/temp_storage_repository_impl.dart';
-import 'package:mongo_ai/auth/domain/repository/temp_storage_repository.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/core/state/current_team_id_state.dart';
@@ -68,10 +64,11 @@ final userProfileRepositoryProvider = Provider<UserProfileRepository>((ref) {
   return UserProfileRepositoryImpl(dataSource: dataSource);
 });
 
-final getCurrentUserProfileProvider = FutureProvider<Result<UserProfile, AppException>>((ref) async {
-  final repository = ref.watch(userProfileRepositoryProvider);
-  return repository.getCurrentUserProfile();
-});
+final getCurrentUserProfileProvider =
+    FutureProvider<Result<UserProfile, AppException>>((ref) async {
+      final repository = ref.watch(userProfileRepositoryProvider);
+      return repository.getCurrentUserProfile();
+    });
 
 // -----------------------------------
 // team data 가져오기
@@ -85,10 +82,11 @@ final teamRepositoryProvider = Provider<TeamRepository>((ref) {
   return TeamRepositoryImpl(dataSource: dataSource);
 });
 
-final getTeamsByCurrentUserProvider = FutureProvider<Result<List<Team>, AppException>>((ref) async {
-  final repository = ref.watch(teamRepositoryProvider);
-  return repository.getTeamsByCurrentUser();
-});
+final getTeamsByCurrentUserProvider =
+    FutureProvider<Result<List<Team>, AppException>>((ref) async {
+      final repository = ref.watch(teamRepositoryProvider);
+      return repository.getTeamsByCurrentUser();
+    });
 
 // -----------------------------------
 // folder 가져오기
@@ -102,17 +100,17 @@ final folderRepositoryProvider = Provider<FolderRepository>((ref) {
   return FolderRepositoryImpl(dataSource: dataSource);
 });
 
-final getFoldersByCurrentTeamIdProvider = FutureProvider.autoDispose<
-    Result<List<Folder>, AppException>>((ref) async {
-  // 현재 팀 ID 구독. 팀 ID 변경 시 자동으로 autoDispose되고 다시 호출
-  final teamId = ref.watch(currentTeamIdStateProvider);
-  if (teamId == null) {
-    return const Result.success(<Folder>[]);
-  }
+final getFoldersByCurrentTeamIdProvider =
+    FutureProvider.autoDispose<Result<List<Folder>, AppException>>((ref) async {
+      // 현재 팀 ID 구독. 팀 ID 변경 시 자동으로 autoDispose되고 다시 호출
+      final teamId = ref.watch(currentTeamIdStateProvider);
+      if (teamId == null) {
+        return const Result.success(<Folder>[]);
+      }
 
-  final repository = ref.watch(folderRepositoryProvider);
-  return repository.getFoldersByCurrentTeamId(teamId);
-});
+      final repository = ref.watch(folderRepositoryProvider);
+      return repository.getFoldersByCurrentTeamId(teamId);
+    });
 
 // -----------------------------------
 // workbook 가져오기
@@ -126,17 +124,19 @@ final workbookRepositoryProvider = Provider<WorkbookRepository>((ref) {
   return WorkbookRepositoryImpl(dataSource: dataSource);
 });
 
-final getWorkbooksByCurrentTeamIdProvider = FutureProvider.autoDispose<
-    Result<List<Workbook>, AppException>>((ref) async {
-  // 현재 팀 ID 구독. 팀 ID 변경 시 자동으로 autoDispose되고 다시 호출
-  final teamId = ref.watch(currentTeamIdStateProvider);
-  if (teamId == null) {
-    return const Result.success(<Workbook>[]);
-  }
+final getWorkbooksByCurrentTeamIdProvider =
+    FutureProvider.autoDispose<Result<List<Workbook>, AppException>>((
+      ref,
+    ) async {
+      // 현재 팀 ID 구독. 팀 ID 변경 시 자동으로 autoDispose되고 다시 호출
+      final teamId = ref.watch(currentTeamIdStateProvider);
+      if (teamId == null) {
+        return const Result.success(<Workbook>[]);
+      }
 
-  final repository = ref.watch(workbookRepositoryProvider);
-  return repository.getWorkbooksByCurrentTeamId(teamId);
-});
+      final repository = ref.watch(workbookRepositoryProvider);
+      return repository.getWorkbooksByCurrentTeamId(teamId);
+    });
 
 // -----------------------------------
 // create
@@ -207,16 +207,7 @@ final authDataSourceProvider = Provider<AuthDataSource>((ref) {
   return AuthDataSourceImpl(client: client);
 });
 
-final tempStorageDataSourceProvider = Provider<TempStorageDataSource>((ref) {
-  return TempStorageDataSourceImpl();
-});
-
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final dataSource = ref.watch(authDataSourceProvider);
   return AuthRepositoryImpl(authDataSource: dataSource);
-});
-
-final tempStorageRepositoryProvider = Provider<TempStorageRepository>((ref) {
-  final dataSource = ref.watch(tempStorageDataSourceProvider);
-  return TempStorageRepositoryImpl(dataSource: dataSource);
 });

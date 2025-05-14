@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:mongo_ai/auth/domain/model/password_criteria.dart';
 import 'package:mongo_ai/auth/presentation/sign_up_password/controller/sign_up_password_action.dart';
 import 'package:mongo_ai/auth/presentation/sign_up_password/controller/sign_up_password_state.dart';
 import 'package:mongo_ai/core/component/auth_header_widget.dart';
+import 'package:mongo_ai/core/component/password_requirement_widget.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class SignUpPasswordScreen extends StatefulWidget {
-  final AsyncValue<SignUpPasswordState> state;
+  final SignUpPasswordState state;
   final void Function(SignUpPasswordAction action) onAction;
 
   const SignUpPasswordScreen({
@@ -24,14 +25,6 @@ class SignUpPasswordScreen extends StatefulWidget {
 class _SignUpPasswordScreenState extends State<SignUpPasswordScreen> {
   @override
   Widget build(BuildContext context) {
-    return widget.state.when(
-      data: (state) => _buildContent(context, state),
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(child: Text('오류가 발생했습니다: $error')),
-    );
-  }
-
-  Widget _buildContent(BuildContext context, SignUpPasswordState state) {
     return Scaffold(
       backgroundColor: AppColor.white,
       body: Stack(
@@ -93,8 +86,8 @@ class _SignUpPasswordScreenState extends State<SignUpPasswordScreen> {
                         ),
                         const Gap(8),
                         TextField(
-                          controller: state.passwordController,
-                          obscureText: !state.isPasswordVisible,
+                          controller: widget.state.passwordController,
+                          obscureText: !widget.state.isPasswordVisible,
                           decoration: InputDecoration(
                             prefixIcon: const Icon(
                               Icons.lock,
@@ -129,7 +122,7 @@ class _SignUpPasswordScreenState extends State<SignUpPasswordScreen> {
                             ),
                             suffixIcon: IconButton(
                               icon: Icon(
-                                state.isPasswordVisible
+                                widget.state.isPasswordVisible
                                     ? Icons.visibility_off
                                     : Icons.visibility,
                                 color: AppColor.paleGray,
@@ -153,8 +146,8 @@ class _SignUpPasswordScreenState extends State<SignUpPasswordScreen> {
                         ),
                         const Gap(8),
                         TextField(
-                          controller: state.confirmPasswordController,
-                          obscureText: !state.isConfirmPasswordVisible,
+                          controller: widget.state.confirmPasswordController,
+                          obscureText: !widget.state.isConfirmPasswordVisible,
                           decoration: InputDecoration(
                             prefixIcon: const Icon(
                               Icons.lock,
@@ -189,7 +182,7 @@ class _SignUpPasswordScreenState extends State<SignUpPasswordScreen> {
                             ),
                             suffixIcon: IconButton(
                               icon: Icon(
-                                state.isConfirmPasswordVisible
+                                widget.state.isConfirmPasswordVisible
                                     ? Icons.visibility_off
                                     : Icons.visibility,
                                 color: AppColor.paleGray,
@@ -218,7 +211,10 @@ class _SignUpPasswordScreenState extends State<SignUpPasswordScreen> {
                                   height: 4,
                                   margin: const EdgeInsets.only(right: 4),
                                   decoration: BoxDecoration(
-                                    color: _getPasswordStrengthColor(state, i),
+                                    color: _getPasswordStrengthColor(
+                                      widget.state,
+                                      i,
+                                    ),
                                     borderRadius: BorderRadius.circular(2),
                                   ),
                                 ),
@@ -231,28 +227,28 @@ class _SignUpPasswordScreenState extends State<SignUpPasswordScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildPasswordRequirement(
-                              state,
-                              '최소 8자 이상(필수)',
-                              PasswordCriteria.minLength,
+                            PasswordRequirementWidget(
+                              text: '최소 8자 이상(필수)',
+                              isMet: widget.state.meetsPasswordCriteria
+                                  .contains(PasswordCriteria.minLength),
                             ),
                             const Gap(8),
-                            _buildPasswordRequirement(
-                              state,
-                              '대문자 포함',
-                              PasswordCriteria.includesUppercase,
+                            PasswordRequirementWidget(
+                              text: '대문자 포함',
+                              isMet: widget.state.meetsPasswordCriteria
+                                  .contains(PasswordCriteria.includesUppercase),
                             ),
                             const Gap(8),
-                            _buildPasswordRequirement(
-                              state,
-                              '소문자 포함',
-                              PasswordCriteria.includesLowercase,
+                            PasswordRequirementWidget(
+                              text: '소문자 포함',
+                              isMet: widget.state.meetsPasswordCriteria
+                                  .contains(PasswordCriteria.includesLowercase),
                             ),
                             const Gap(8),
-                            _buildPasswordRequirement(
-                              state,
-                              '숫자 포함',
-                              PasswordCriteria.includesNumber,
+                            PasswordRequirementWidget(
+                              text: '숫자 포함',
+                              isMet: widget.state.meetsPasswordCriteria
+                                  .contains(PasswordCriteria.includesNumber),
                             ),
                           ],
                         ),
@@ -262,7 +258,7 @@ class _SignUpPasswordScreenState extends State<SignUpPasswordScreen> {
                         Row(
                           children: [
                             Checkbox(
-                              value: state.checkPrivacyPolicy,
+                              value: widget.state.checkPrivacyPolicy,
                               activeColor: AppColor.primary,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(4),
@@ -293,14 +289,14 @@ class _SignUpPasswordScreenState extends State<SignUpPasswordScreen> {
                           height: 48,
                           child: ElevatedButton(
                             onPressed:
-                                state.isFormValid
+                                widget.state.isFormValid
                                     ? () => widget.onAction(
-                                      const SignUpPasswordAction.onTapSendOtp(),
+                                      const SignUpPasswordAction.submitForm(),
                                     )
                                     : null,
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
-                                  state.isFormValid
+                                  widget.state.isFormValid
                                       ? AppColor.primary
                                       : AppColor.lighterGray,
                               foregroundColor: AppColor.white,
@@ -356,7 +352,7 @@ class _SignUpPasswordScreenState extends State<SignUpPasswordScreen> {
               ),
             ),
           ),
-          if (widget.state.value?.hasOtpBeenSent.isLoading ?? false)
+          if (widget.state.hasSignUpInfoBeenSent.isLoading)
             Container(
               color: Colors.black.withValues(alpha: 0.5),
               width: double.infinity,
@@ -365,41 +361,6 @@ class _SignUpPasswordScreenState extends State<SignUpPasswordScreen> {
             ),
         ],
       ),
-    );
-  }
-
-  // 비밀번호 요구사항 항목 위젯
-  Widget _buildPasswordRequirement(
-    SignUpPasswordState state,
-    String text,
-    PasswordCriteria criteria,
-  ) {
-    final isMet = state.meetsPasswordCriteria.contains(criteria);
-    return Row(
-      children: [
-        Container(
-          width: 12,
-          height: 12,
-          decoration: BoxDecoration(
-            color: isMet ? AppColor.primary : AppColor.lightGrayBorder,
-            shape: BoxShape.circle,
-          ),
-          child:
-              isMet
-                  ? const Icon(Icons.check, size: 10, color: AppColor.white)
-                  : null,
-        ),
-        const Gap(8),
-        Text(
-          text,
-          style: TextStyle(
-            fontFamily: AppTextStyle.fontFamily,
-            fontSize: 12,
-            fontWeight: FontWeight.w400,
-            color: isMet ? AppColor.primary : AppColor.paleGray,
-          ),
-        ),
-      ],
     );
   }
 

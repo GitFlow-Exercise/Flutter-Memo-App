@@ -191,6 +191,7 @@ class AuthRepositoryImpl extends AuthRepository {
 
       return const Result.success(null);
     } catch (e) {
+      print(e);
       return Result.error(
         AppException.unknown(
           message: '인증번호가 일치하지 않습니다.',
@@ -202,7 +203,28 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
+  Future<Result<String, AppException>> getCurrentUserEmail() async {
+    final user = await _authDataSource.getCurrentUserEmail();
+
+    if (user != null) {
+      return Result.success(user);
+    } else {
+      return Result.error(
+        AppException.unknownUser(
+          message: '사용자 이메일을 불러오던 중 오류가 발생했습니다.',
+          stackTrace: StackTrace.current,
+        ),
+      );
+    }
+  }
+
+  @override
   bool get isAuthenticated {
     return _authDataSource.isAuthenticated();
+  }
+
+  @override
+  bool get isInitialSetupUser {
+    return _authDataSource.isInitialSetupUser();
   }
 }

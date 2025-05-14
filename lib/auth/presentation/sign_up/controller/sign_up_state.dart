@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'sign_up_state.freezed.dart';
@@ -12,5 +13,6 @@ abstract class SignUpState with _$SignUpState {
     required TextEditingController codeController,
     required TextEditingController passwordController,
     required TextEditingController passwordConfirmController,
+    @Default(AsyncValue.data(false)) AsyncValue<bool> hasOtpBeenSent,
   }) = _SignUpState;
 }

@@ -84,6 +84,12 @@ sealed class AppException with _$AppException implements Exception {
     StackTrace? stackTrace,
   }) = TempStoreException;
 
+  const factory AppException.unknownUser({
+    required String message,
+    Object? error,
+    StackTrace? stackTrace,
+  }) = UnknownUserException;
+
   String get userFriendlyMessage {
     switch (this) {
       case NetworkException():
@@ -111,6 +117,8 @@ sealed class AppException with _$AppException implements Exception {
         return '유효하지 않은 인증번호입니다.';
       case TempStoreException():
         return '오류가 발생했습니다. 다시 시도해주세요.';
+      case UnknownUserException():
+        return '사용자를 불러올 수 없습니다.';
     }
   }
 }
