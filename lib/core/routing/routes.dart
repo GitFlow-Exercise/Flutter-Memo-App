@@ -8,7 +8,7 @@ abstract class Routes {
   static const signUpPassword = '/sign-up-password';
   static const checkOtp = '/sign-up-check-otp';
   static const signUpComplete = '/sign-up-complete';
-  static const selectGroup = '/select-group';
+  static const selectTeam = '/select-team';
 
 
   static const create = '/create';

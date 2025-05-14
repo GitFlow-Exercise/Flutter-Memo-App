@@ -24,9 +24,7 @@ class AuthDataSourceImpl implements AuthDataSource {
       password: password,
     );
 
-    await _client.auth.updateUser(
-      UserAttributes(data: {'is_initial_setup_user': true}),
-    );
+    await updateUserMetadata('is_initial_setup_user');
 
     return authResponse;
   }
@@ -88,6 +86,11 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
+  Future<void> updateUserMetadata(String key) async {
+    await _client.auth.updateUser(UserAttributes(data: {key: true}));
+  }
+
+  @override
   Future<String?> getCurrentUserEmail() async {
     return _client.auth.currentUser?.email;
   }
@@ -95,6 +98,12 @@ class AuthDataSourceImpl implements AuthDataSource {
   @override
   bool isInitialSetupUser() {
     return _client.auth.currentUser?.userMetadata?['is_initial_setup_user'] ==
+        true;
+  }
+
+  @override
+  bool isSelectTeam() {
+    return _client.auth.currentUser?.userMetadata?['is_select_team'] ==
         true;
   }
 }

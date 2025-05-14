@@ -8,13 +8,13 @@ class AuthRepositoryImpl extends AuthRepository {
   final AuthDataSource _authDataSource;
 
   AuthRepositoryImpl({required AuthDataSource authDataSource})
-    : _authDataSource = authDataSource;
+      : _authDataSource = authDataSource;
 
   @override
   Future<Result<void, AppException>> signIn(
-    String email,
-    String password,
-  ) async {
+      String email,
+      String password,
+      ) async {
     try {
       await _authDataSource.login(email, password);
       // 로그인 성공
@@ -60,9 +60,9 @@ class AuthRepositoryImpl extends AuthRepository {
 
   @override
   Future<Result<void, AppException>> signUp(
-    String email,
-    String password,
-  ) async {
+      String email,
+      String password,
+      ) async {
     try {
       await _authDataSource.signUp(email, password);
 
@@ -191,7 +191,6 @@ class AuthRepositoryImpl extends AuthRepository {
 
       return const Result.success(null);
     } catch (e) {
-      print(e);
       return Result.error(
         AppException.unknown(
           message: '인증번호가 일치하지 않습니다.',
@@ -219,6 +218,22 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
+  Future<Result<void, AppException>> setSelectTeamMetadata() async {
+    try {
+      await _authDataSource.updateUserMetadata('is_select_team');
+      return const Result.success(null);
+    } catch (e) {
+      return Result.error(
+        AppException.unknown(
+          message: '인증번호 전송을 실패하였습니다.',
+          error: e,
+          stackTrace: StackTrace.current,
+        ),
+      );
+    }
+  }
+
+  @override
   bool get isAuthenticated {
     return _authDataSource.isAuthenticated();
   }
@@ -226,5 +241,10 @@ class AuthRepositoryImpl extends AuthRepository {
   @override
   bool get isInitialSetupUser {
     return _authDataSource.isInitialSetupUser();
+  }
+
+  @override
+  bool get isSelectTeam {
+    return _authDataSource.isSelectTeam();
   }
 }

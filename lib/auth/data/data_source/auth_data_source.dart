@@ -10,6 +10,8 @@ abstract interface class AuthDataSource {
   Future<AuthResponse> verifyOtp(String email, String otp);
   Future<UserResponse> resetPassword(String email);
   Future<String?> getCurrentUserEmail();
+  Future<void> updateUserMetadata(String key);
   bool isAuthenticated();
   bool isInitialSetupUser();
+  bool isSelectTeam();
 }

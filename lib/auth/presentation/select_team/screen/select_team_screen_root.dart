@@ -23,8 +23,11 @@ class _SelectGroupScreenRootState extends ConsumerState<SelectTeamScreenRoot> {
   @override
   void initState() {
     super.initState();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final viewModel = ref.watch(selectTeamViewModelProvider.notifier);
+      final viewModel = ref.read(selectTeamViewModelProvider.notifier);
+
+      viewModel.loadTeams();
 
       _subscription = viewModel.eventStream.listen(_handleEvent);
     });

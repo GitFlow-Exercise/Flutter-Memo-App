@@ -36,6 +36,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       return AppRedirect.authRedirect(
         isAuthenticated: auth.isAuthenticated,
         isInitialSetupUser: auth.isInitialSetupUser,
+        isSelectTeam: auth.isSelectTeam,
         nowPath: path,
         extra: extra,
       );
@@ -87,7 +88,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
-        path: Routes.selectGroup,
+        path: Routes.selectTeam,
         builder: (context, state) {
           return const SelectTeamScreenRoot();
         },

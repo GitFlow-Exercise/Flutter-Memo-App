@@ -7,11 +7,11 @@ abstract class AppRedirect {
   static String? authRedirect({
     required bool isAuthenticated,
     required bool isInitialSetupUser,
+    required bool isSelectTeam,
     required String? nowPath,
     required Object? extra,
   }) {
-    //TODO: 팀 선택 상태 추가
-    return Routes.selectGroup;
+    return Routes.selectTeam;
     // 1. 미인증 사용자 처리 (isAuthenticated = false)
     if (!isAuthenticated) {
       // Sign In과 Sign Up은 항상 접근 가능
@@ -39,13 +39,19 @@ abstract class AppRedirect {
       return Routes.signUpPassword;
     }
 
-    // 3. 완전히 인증된 사용자 (isAuthenticated = true, isInitialSetupUser = true)
+    // 3. 인증은 됐고 초기설정은 됐지만 팀 설정이 안됐을 경우
+    if (!isSelectTeam) {
+      return Routes.selectTeam;
+    }
+
+    // 4. 완전히 인증된 사용자 (isAuthenticated = true, isInitialSetupUser = true)
     // 회원가입/로그인 관련 화면 접근 시도는 메인 화면으로 리다이렉트
     // 완료 화면은 예외
     if (nowPath == Routes.signIn ||
         nowPath == Routes.signUp ||
         nowPath == Routes.checkOtp ||
-        nowPath == Routes.signUpPassword) {
+        nowPath == Routes.signUpPassword ||
+        nowPath == Routes.selectTeam) {
       return Routes.myFiles;
     }
 
