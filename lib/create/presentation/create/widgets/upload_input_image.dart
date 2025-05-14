@@ -61,7 +61,7 @@ class UploadInputImage extends StatelessWidget {
               SizedBox(
                 height: 250,
                 width: double.infinity,
-                child: Image.memory(file!.bytes, fit: BoxFit.cover),
+                child: Image.memory(file!.bytes, fit: BoxFit.contain),
               ),
               Positioned(
                 right: 16,
