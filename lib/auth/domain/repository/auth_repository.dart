@@ -23,7 +23,9 @@ abstract class AuthRepository extends ChangeNotifier {
 
   Future<Result<void, AppException>> sendOtp(String email);
 
-  Future<Result<void, AppException>> verifyOtp(String email, String otp);
+  Future<Result<void, AppException>> verifyEmailOtp(String email, String otp);
+
+  Future<Result<void, AppException>> verifyMagicLinkOtp(String email, String otp);
 
   Future<Result<void, AppException>> resetPassword(String password);
 

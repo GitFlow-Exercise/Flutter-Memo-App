@@ -33,9 +33,9 @@ class CheckOtpViewModel extends _$CheckOtpViewModel {
   }
 
   // OTP 검증
-  Future<bool> verifyOtp() async {
+  Future<void> verifyEmailOtp() async {
     if (state.value == null) {
-      return false;
+      return;
     }
 
     state = state.whenData(
@@ -48,17 +48,17 @@ class CheckOtpViewModel extends _$CheckOtpViewModel {
     final code = state.value!.codeController.text.trim();
     if (code.isEmpty) {
       _setError('인증번호를 입력해주세요.');
-      return false;
+      return;
     }
 
     // OTP 만료 확인
     if (state.value!.remainingSeconds <= 0) {
       _setError('인증번호가 만료되었습니다. 재전송을 눌러주세요.');
-      return false;
+      return;
     }
 
     final authRepository = ref.read(authRepositoryProvider);
-    final result = await authRepository.verifyOtp(state.value!.email, code);
+    final result = await authRepository.verifyEmailOtp(state.value!.email, code);
 
     switch (result) {
       case Success<void, AppException>():
@@ -66,11 +66,32 @@ class CheckOtpViewModel extends _$CheckOtpViewModel {
           (value) => value.copyWith(isOtpVerified: const AsyncData(true)),
         );
         _eventController.add(CheckOtpEvent.navigateToPasswordScreen(email),);
+        return;
+      case Error<void, AppException>():
+        // 이전에 OTP 기록이 있으므로 매직링크 체크
+        await verifyMagicLinkOtp();
+        return;
+    }
+  }
+
+  // OTP 검증(매직링크)
+  // 사용자가 OTP 검증 이후 화면에서 나간다면 매직링크로 인증 후 비밀번호 설정
+  Future<bool> verifyMagicLinkOtp() async {
+    final code = state.value!.codeController.text.trim();
+    final authRepository = ref.read(authRepositoryProvider);
+    final result = await authRepository.verifyEmailOtp(state.value!.email, code);
+
+    switch (result) {
+      case Success<void, AppException>():
+        state = state.whenData(
+              (value) => value.copyWith(isOtpVerified: const AsyncData(true)),
+        );
+        _eventController.add(CheckOtpEvent.navigateToPasswordScreen(email),);
         return true;
       case Error<void, AppException>():
         _setError(result.error.message);
         state = state.whenData(
-          (value) => value.copyWith(isOtpVerified: const AsyncData(false)),
+              (value) => value.copyWith(isOtpVerified: const AsyncData(false)),
         );
         return false;
     }

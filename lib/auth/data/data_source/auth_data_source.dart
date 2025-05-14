@@ -13,7 +13,9 @@ abstract interface class AuthDataSource {
 
   Future<void> sendOtp(String email);
 
-  Future<AuthResponse> verifyOtp(String email, String otp);
+  Future<AuthResponse> verifyEmailOtp(String email, String otp);
+
+  Future<AuthResponse> verifyMagicLinkOtp(String email, String otp);
 
   Future<UserResponse> resetPassword(String email);
 

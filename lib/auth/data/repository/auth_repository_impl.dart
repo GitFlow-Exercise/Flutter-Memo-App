@@ -185,9 +185,26 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
-  Future<Result<void, AppException>> verifyOtp(String email, String otp) async {
+  Future<Result<void, AppException>> verifyEmailOtp(String email, String otp) async {
     try {
-      await _authDataSource.verifyOtp(email, otp);
+      await _authDataSource.verifyEmailOtp(email, otp);
+
+      return const Result.success(null);
+    } catch (e) {
+      return Result.error(
+        AppException.unknown(
+          message: '인증번호가 일치하지 않습니다.',
+          error: e,
+          stackTrace: StackTrace.current,
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Result<void, AppException>> verifyMagicLinkOtp(String email, String otp) async {
+    try {
+      await _authDataSource.verifyMagicLinkOtp(email, otp);
 
       return const Result.success(null);
     } catch (e) {

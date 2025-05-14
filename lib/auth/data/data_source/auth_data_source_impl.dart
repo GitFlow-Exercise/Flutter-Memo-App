@@ -66,11 +66,22 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
-  Future<AuthResponse> verifyOtp(String email, String otp) async {
+  Future<AuthResponse> verifyEmailOtp(String email, String otp) async {
     final response = await _client.auth.verifyOTP(
       email: email,
       token: otp,
       type: OtpType.email,
+    );
+
+    return response;
+  }
+
+  @override
+  Future<AuthResponse> verifyMagicLinkOtp(String email, String otp) async {
+    final response = await _client.auth.verifyOTP(
+      email: email,
+      token: otp,
+      type: OtpType.magiclink,
     );
 
     return response;
