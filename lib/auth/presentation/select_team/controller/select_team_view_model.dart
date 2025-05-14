@@ -148,9 +148,6 @@ class SelectTeamViewModel extends _$SelectTeamViewModel {
 
         switch (metadataResult) {
           case Success():
-            debugPrint(
-              '초기 팀 설정 완료: 팀 ID ${selectedTeam.teamId}, 팀 이름 ${selectedTeam.teamName}',
-            );
             _eventController.add(const SelectTeamEvent.confirmSuccess());
           case Error(error: final error):
             _eventController.add(

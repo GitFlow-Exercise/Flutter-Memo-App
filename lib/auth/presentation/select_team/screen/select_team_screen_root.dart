@@ -30,6 +30,7 @@ class _SelectGroupScreenRootState extends ConsumerState<SelectTeamScreenRoot> {
       // 팀 목록 로드
       viewModel.loadTeams();
 
+      // 유저 아이디 불러오기
       viewModel.fetchUserId();
 
       // 이벤트 리스너 등록
