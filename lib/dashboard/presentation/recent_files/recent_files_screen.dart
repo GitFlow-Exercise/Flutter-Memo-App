@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
+import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
+import 'package:mongo_ai/dashboard/presentation/component/workbook_grid_item.dart';
 import 'package:mongo_ai/dashboard/presentation/component/workbook_list_item.dart';
 import 'package:mongo_ai/dashboard/presentation/recent_files/controller/recent_files_view_model.dart';
+import 'package:responsive_grid_list/responsive_grid_list.dart';
 
 class RecentFilesScreen extends ConsumerWidget {
 
@@ -12,45 +15,49 @@ class RecentFilesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(recentFilesViewModelProvider);
     final viewModel = ref.read(recentFilesViewModelProvider.notifier);
-    return Container(
-      color: AppColor.white,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: IconButton(
-                icon: const Icon(Icons.refresh),
-                onPressed: () {
-                  viewModel.refreshWorkbookList();
-                },
-              ),
-            ),
+    return Padding(
+      padding: const EdgeInsets.all(30),
+      child: state.workbookList.when(
+        data: (data) {
+          return state.showGridView
+              ? _buildGridView(ref, data)
+              : _buildListView(ref, data);
+        },
+        loading: () => const SizedBox.shrink(),
+        error: (e, _) => const SizedBox.shrink(),
+      ),
+    );
+  }
+
+  Widget _buildGridView(WidgetRef ref, List<Workbook> workbookList) {
+    return ResponsiveGridList(
+      minItemWidth: 280, // 원하는 아이템 최소 너비
+      children: workbookList.map((workbook) {
+        return AspectRatio(
+          aspectRatio: 1, // 비율 유지
+          child: WorkbookGridItem(
+            workbook: workbook,
+            onClick: () {},
+            onBookmark: () {},
           ),
-          Expanded(
-            child: state.workbookList.when(
-              data: (data) {
-                return ListView.separated(
-                    itemCount: data.length,
-                    itemBuilder: (context, index) {
-                      return WorkbookListItem(
-                        workbook: data[index],
-                        onClick: () {},
-                        onBookmark: () {},
-                      );
-                    },
-                  separatorBuilder: (context, index) {
-                    return const SizedBox(height: 10);
-                  },
-                );
-              },
-              loading: () => const SizedBox.shrink(),
-              error: (e, _) => const SizedBox.shrink(),
-            ),
-          )
-        ],
-      )
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildListView(WidgetRef ref, List<Workbook> workbookList) {
+    return ListView.separated(
+      itemCount: workbookList.length,
+      itemBuilder: (context, index) {
+        return WorkbookListItem(
+          workbook: workbookList[index],
+          onClick: () {},
+          onBookmark: () {},
+        );
+      },
+      separatorBuilder: (context, index) {
+        return const SizedBox(height: 10);
+      },
     );
   }
 }

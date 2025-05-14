@@ -4,10 +4,11 @@ import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/core/state/current_folder_id_state.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
+import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/dashboard/domain/model/folder.dart';
 
 class FolderListWidget extends ConsumerWidget {
-  final void Function(int folderId) onClickFolder;
+  final void Function(Folder folder) onClickFolder;
   final void Function() onClickExpand;
 
   const FolderListWidget({
@@ -31,15 +32,31 @@ class FolderListWidget extends ConsumerWidget {
               itemBuilder: (context, index) {
                 final folder = data[index];
                 return ListTile(
-                  title: Text(folder.folderName),
+                  title: Text(
+                    folder.folderName,
+                    style: AppTextStyle.bodyRegular.copyWith(
+                      color:
+                          folder.folderId == currentFolderId
+                              ? AppColor.primary
+                              : AppColor.mediumGray,
+                    ),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  tileColor:
+                      folder.folderId == currentFolderId
+                          ? AppColor.paleBlue
+                          : AppColor.white,
                   leading: Icon(
                     Icons.folder,
-                    color: folder.folderId == currentFolderId
-                        ? AppColor.primary
-                        : AppColor.black
+                    color:
+                        folder.folderId == currentFolderId
+                            ? AppColor.primary
+                            : AppColor.mediumGray,
                   ),
                   onTap: () {
-                    onClickFolder(folder.folderId);
+                    onClickFolder(folder);
                   },
                 );
               },

@@ -8,6 +8,7 @@ part 'dashboard_state.freezed.dart';
 abstract class DashboardState with _$DashboardState {
   const factory DashboardState({
     required UserProfile userProfile,
+    @Default(false) bool isSelectMode,
     int? currentTeamId,
   }) = _DashboardState;
 }
