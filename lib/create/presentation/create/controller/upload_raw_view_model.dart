@@ -52,7 +52,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
   }
 
   // 이미지 파일 선택(png, jpg, jpeg)
-  Future<void> handlePickImage(BuildContext context) async {
+  Future<void> handlePickImage() async {
     final useCase = ref.read(imagePickFileUseCaseProvider);
     final result = await useCase.execute();
 
@@ -70,7 +70,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
   }
 
   // PDF 파일 선택
-  Future<void> handlePickPdf(BuildContext context) async {
+  Future<void> handlePickPdf() async {
     final useCase = ref.read(pdfPickFileUseCaseProvider);
     final result = await useCase.execute();
 
@@ -88,32 +88,25 @@ class UploadRawViewModel extends _$UploadRawViewModel {
   }
 
   // 설정된 타입으로 클린 텍스트 추출
-  Future<void> handleSubmitForm(BuildContext context) async {
+  Future<void> handleSubmitForm() async {
     final pState = state.value;
     if (pState == null) {
       _readyForSnackBar('에러가 발생하였습니다. 다시 시도해주세요.');
       return;
     }
-    // 텍스트 타입으로 추출
+    // 텍스트 타입인데 입력된 텍스트가 없다면 에러처리
     if (pState.selectedUploadType == AiConstant.inputText) {
       final text = pState.textController.text.trim();
       if (text.isEmpty) {
         _readyForSnackBar('텍스트를 입력해주세요.');
         return;
       }
-
-      debugPrint(text);
-      _eventController.add(
-        UploadRawEvent.successOCR(
-          OpenAiResponse.justText(contents: pState.textController.text),
-        ),
-      );
-      return;
     }
 
     // 이미지 & PDF 파일 타입으로 추출
     final file = pState.pickFile;
-    if (file == null) {
+    // 현재 데이터 타입이 텍스트가 아니고, file 데이터가 없다면 에러처리
+    if (file == null && pState.selectedUploadType != AiConstant.inputText) {
       if (pState.selectedUploadType == AiConstant.inputImage) {
         _readyForSnackBar('이미지를 선택해주세요.');
       } else {
@@ -125,14 +118,16 @@ class UploadRawViewModel extends _$UploadRawViewModel {
     state = const AsyncValue.loading();
 
     InputContent inputContent;
-    if (pState.selectedUploadType == AiConstant.inputImage) {
+    if (pState.selectedUploadType == AiConstant.inputText) {
+      inputContent = InputContent.text(text: pState.textController.text);
+    } else if (pState.selectedUploadType == AiConstant.inputImage) {
       inputContent = InputContent.image(
-        imageExtension: file.fileExtension,
+        imageExtension: file!.fileExtension,
         base64: base64Encode(file.bytes),
       );
     } else {
       inputContent = InputContent.file(
-        filename: file.fileName,
+        filename: file!.fileName,
         base64: base64Encode(file.bytes),
       );
     }
@@ -142,7 +137,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
         MessageInput(content: [inputContent]),
       ],
       previousResponseId: null,
-      instructions: 'Just OCR Result Please',
+      instructions: AiConstant.cleanTextPrompt,
     );
     final result = await ref.read(createProblemUseCaseProvider).execute(body);
 
@@ -163,5 +158,10 @@ class UploadRawViewModel extends _$UploadRawViewModel {
   // 하단 스낵바 출력
   void _readyForSnackBar(String message) {
     _eventController.add(UploadRawEvent.showSnackBar(message));
+  }
+
+  // 텍스트 지우기
+  void clearText() {
+    state.whenData((cb) => cb.textController.clear());
   }
 }

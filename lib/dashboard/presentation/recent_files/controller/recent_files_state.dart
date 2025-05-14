@@ -8,5 +8,6 @@ part 'recent_files_state.freezed.dart';
 abstract class RecentFilesState with _$RecentFilesState {
   const factory RecentFilesState({
     required AsyncValue<List<Workbook>> workbookList,
+    required bool showGridView,
   }) = _RecentFilesState;
 }

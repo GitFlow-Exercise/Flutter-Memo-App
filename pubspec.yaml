@@ -67,6 +67,9 @@ dependencies:
   # json 애니메이션
   lottie: ^2.3.0
 
+  # 반응형 그리드뷰 그리기
+  responsive_grid_list: ^1.4.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
