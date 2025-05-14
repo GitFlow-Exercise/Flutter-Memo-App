@@ -26,9 +26,6 @@ class SelectTeamViewModel extends _$SelectTeamViewModel {
       teamNameController.dispose();
     });
 
-    // 초기 로딩 시 사용자 ID 가져오기
-    _fetchUserId();
-
     return SelectTeamState(
       teamNameController: teamNameController,
       userId: null,
@@ -36,7 +33,7 @@ class SelectTeamViewModel extends _$SelectTeamViewModel {
   }
 
   // 사용자 ID 가져오기
-  Future<void> _fetchUserId() async {
+  Future<void> fetchUserId() async {
     final authRepository = ref.read(authRepositoryProvider);
     final userId = authRepository.userId;
 
@@ -146,7 +143,6 @@ class SelectTeamViewModel extends _$SelectTeamViewModel {
       // 현재 선택된 팀 ID 설정
         ref.read(currentTeamIdStateProvider.notifier).set(selectedTeam.teamId);
 
-        // 초기 설정 완료 메타데이터 저장
         final authRepository = ref.read(authRepositoryProvider);
         final metadataResult = await authRepository.setSelectTeamMetadata();
 
@@ -155,7 +151,6 @@ class SelectTeamViewModel extends _$SelectTeamViewModel {
             debugPrint(
               '초기 팀 설정 완료: 팀 ID ${selectedTeam.teamId}, 팀 이름 ${selectedTeam.teamName}',
             );
-            // 이벤트 발행 - "confirmSuccess" 이벤트를 추가
             _eventController.add(const SelectTeamEvent.confirmSuccess());
           case Error(error: final error):
             _eventController.add(

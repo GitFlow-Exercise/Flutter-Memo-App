@@ -30,6 +30,8 @@ class _SelectGroupScreenRootState extends ConsumerState<SelectTeamScreenRoot> {
       // 팀 목록 로드
       viewModel.loadTeams();
 
+      viewModel.fetchUserId();
+
       // 이벤트 리스너 등록
       _subscription = viewModel.eventStream.listen(_handleEvent);
     });
@@ -51,7 +53,6 @@ class _SelectGroupScreenRootState extends ConsumerState<SelectTeamScreenRoot> {
         }
         break;
       case ConfirmSuccess():
-        // 홈 화면으로 이동
         if (mounted) {
           context.go(Routes.myFiles);
         }

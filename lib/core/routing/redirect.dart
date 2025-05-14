@@ -11,7 +11,6 @@ abstract class AppRedirect {
     required String? nowPath,
     required Object? extra,
   }) {
-    return Routes.selectTeam;
     // 1. 미인증 사용자 처리 (isAuthenticated = false)
     if (!isAuthenticated) {
       // Sign In과 Sign Up은 항상 접근 가능
@@ -37,6 +36,11 @@ abstract class AppRedirect {
       }
       // 그 외 모든 페이지는 비밀번호 설정으로 리다이렉트
       return Routes.signUpPassword;
+    }
+
+    // 이 조건 사이의 complete 화면은 예외
+    if (nowPath == Routes.signUpComplete) {
+      return null;
     }
 
     // 3. 인증은 됐고 초기설정은 됐지만 팀 설정이 안됐을 경우
