@@ -56,14 +56,10 @@ class CreateProblemViewModel extends _$CreateProblemViewModel {
 
     switch (result) {
       case Success(data: final problem):
-        late CreateTemplateParams params;
-        state = state.whenData((cb) {
-          params = CreateTemplateParams(
-            response: problem,
-            prompt: cb.problemType!,
-          );
-          return cb.copyWith(problem: problem);
-        });
+        final params = CreateTemplateParams(
+          response: problem,
+          prompt: pState.problemType!,
+        );
         _eventController.add(CreateProblemEvent.successOpenAIRequest(params));
       case Error(error: final error):
         state = AsyncValue.error(error, error.stackTrace ?? StackTrace.empty);
