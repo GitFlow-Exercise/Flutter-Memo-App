@@ -6,7 +6,7 @@ part 'selected_workbook_state.freezed.dart';
 part 'selected_workbook_state.g.dart';
 
 @freezed
-class SelectedWorkbookStateModel with _$SelectedWorkbookStateModel {
+abstract class SelectedWorkbookStateModel with _$SelectedWorkbookStateModel {
   const factory SelectedWorkbookStateModel({
     @Default(<Workbook>[]) List<Workbook> selectedWorkbooks,
     @Default(false) bool isSelectMode,
@@ -25,9 +25,10 @@ class SelectedWorkbookState extends _$SelectedWorkbookState {
 
   void selectWorkbook(Workbook workbook) {
     final current = state;
-    final updatedList = current.selectedWorkbooks.contains(workbook)
-        ? current.selectedWorkbooks.where((w) => w != workbook).toList()
-        : [...current.selectedWorkbooks, workbook];
+    final updatedList =
+        current.selectedWorkbooks.contains(workbook)
+            ? current.selectedWorkbooks.where((w) => w != workbook).toList()
+            : [...current.selectedWorkbooks, workbook];
     state = current.copyWith(selectedWorkbooks: updatedList);
   }
 
@@ -38,7 +39,7 @@ class SelectedWorkbookState extends _$SelectedWorkbookState {
 
   /// Select 모드 토글
   void toggleSelectMode() {
-    if(state.isSelectMode) {
+    if (state.isSelectMode) {
       state = state.copyWith(isSelectMode: false);
       clear();
     } else {
