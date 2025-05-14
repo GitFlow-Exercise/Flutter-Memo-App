@@ -10,6 +10,8 @@ abstract class AppRedirect {
     required String? nowPath,
     required Object? extra,
   }) {
+    //TODO: 팀 선택 상태 추가
+    return Routes.selectGroup;
     // 1. 미인증 사용자 처리 (isAuthenticated = false)
     if (!isAuthenticated) {
       // Sign In과 Sign Up은 항상 접근 가능

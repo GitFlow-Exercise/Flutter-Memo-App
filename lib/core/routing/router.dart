@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/auth/presentation/check_otp/screen/check_otp_screen_root.dart';
+import 'package:mongo_ai/auth/presentation/select_team/screen/select_team_screen_root.dart';
 import 'package:mongo_ai/auth/presentation/sign_in/screen/sign_in_screen_root.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/screen/sign_up_screen_root.dart';
 import 'package:mongo_ai/auth/presentation/sign_up_complete/screen/sign_up_complete_screen_root.dart';
@@ -83,6 +84,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final extra = state.extra as String;
           return CheckOtpScreenRoot(email: extra);
+        },
+      ),
+      GoRoute(
+        path: Routes.selectGroup,
+        builder: (context, state) {
+          return const SelectTeamScreenRoot();
         },
       ),
       GoRoute(
