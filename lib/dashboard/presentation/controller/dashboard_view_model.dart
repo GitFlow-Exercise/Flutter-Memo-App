@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/enum/workbook_sort_option.dart';
 import 'package:mongo_ai/core/result/result.dart';
@@ -6,6 +7,8 @@ import 'package:mongo_ai/core/state/current_team_id_state.dart';
 import 'package:mongo_ai/core/state/dashboard_path_state.dart';
 import 'package:mongo_ai/core/state/selected_workbook_state.dart';
 import 'package:mongo_ai/core/state/workbook_filter_state.dart';
+import 'package:mongo_ai/dashboard/data/dto/folder_dto.dart';
+import 'package:mongo_ai/dashboard/domain/model/folder.dart';
 import 'package:mongo_ai/dashboard/domain/model/user_profile.dart';
 import 'package:mongo_ai/dashboard/presentation/controller/dashboard_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -34,22 +37,80 @@ class DashboardViewModel extends _$DashboardViewModel {
     };
   }
 
+  // -----------------
+  // Team 관련 메서드
   Future<void> refreshTeamList() async {
     await ref.refresh(getTeamsByCurrentUserProvider.future);
   }
 
-  Future<void> refreshFolderList() async {
-    await ref.refresh(getFoldersByCurrentTeamIdProvider.future);
-  }
-
   // -----------------
-  // Folder 선택 메서드
+  // Folder 관련 메서드
   Future<void> selectFolderId(int folderId) async {
     ref.read(currentFolderIdStateProvider.notifier).set(folderId);
   }
 
   Future<void> clearFolderId() async {
     ref.read(currentFolderIdStateProvider.notifier).clear();
+  }
+
+  Future<void> refreshFolderList() async {
+    await ref.refresh(getFoldersByCurrentTeamIdProvider.future);
+  }
+
+  Future<void> createFolder(String folderName) async {
+    final currentTeamId = ref.read(currentTeamIdStateProvider);
+    if (currentTeamId != null) {
+      final result = await ref
+          .read(folderRepositoryProvider)
+          .createFolder(
+            FolderDto(folderName: folderName, teamId: currentTeamId),
+          );
+
+      switch (result) {
+        case Success(data: final data):
+          // 성공 시 폴더 리스트를 리프레시
+          refreshFolderList();
+          break;
+        case Error(error: final error):
+          debugPrint(error.message);
+          // 여기서 알림등 에러 처리 가능.
+          break;
+      }
+    }
+  }
+
+  Future<void> updateFolder(Folder folder) async {
+    final result = await ref
+        .read(folderRepositoryProvider)
+        .updateFolder(folder);
+
+    switch (result) {
+      case Success(data: final data):
+        // 성공 시 폴더 리스트를 리프레시
+        refreshFolderList();
+        break;
+      case Error(error: final error):
+        debugPrint(error.message);
+        // 여기서 알림등 에러 처리 가능.
+        break;
+    }
+  }
+
+  Future<void> deleteFolder(Folder folder) async {
+    final result = await ref
+        .read(folderRepositoryProvider)
+        .deleteFolder(folder);
+
+    switch (result) {
+      case Success(data: final data):
+        // 성공 시 폴더 리스트를 리프레시
+        refreshFolderList();
+        break;
+      case Error(error: final error):
+        debugPrint(error.message);
+        // 여기서 알림등 에러 처리 가능.
+        break;
+    }
   }
 
   // -----------------
@@ -62,8 +123,8 @@ class DashboardViewModel extends _$DashboardViewModel {
     ref.read(workbookFilterStateProvider.notifier).toggleShowBookmark();
   }
 
-  Future<void> toggleFilterShowGridView() async {
-    ref.read(workbookFilterStateProvider.notifier).toggleShowGridView();
+  Future<void> toggleFilterShowGridView(bool showGridView) async {
+    ref.read(workbookFilterStateProvider.notifier).toggleShowGridView(showGridView);
   }
 
   // -----------------

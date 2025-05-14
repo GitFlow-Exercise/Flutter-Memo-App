@@ -7,9 +7,9 @@ import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/dashboard/domain/model/folder.dart';
-import 'package:mongo_ai/dashboard/presentation/component/select_mode_button_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/folder_list_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/path_widget.dart';
+import 'package:mongo_ai/dashboard/presentation/component/select_mode_button_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/team_list_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/workbook_filter_bookmark_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/workbook_filter_sort_widget.dart';
@@ -83,8 +83,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             ),
                             const Gap(10),
                             WorkbookFilterTabBar(
-                              toggleGridView: () {
-                                viewModel.toggleFilterShowGridView();
+                              toggleGridView: (bool showGridView) {
+                                viewModel.toggleFilterShowGridView(showGridView);
                               },
                             ),
                             const Spacer(),
@@ -216,23 +216,25 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ],
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('폴더', style: AppTextStyle.bodyMedium),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.add),
-                ),
-              ],
-            ),
-            FolderListWidget(
-              onClickFolder: (Folder folder) {
-                viewModel.selectFolderId(folder.folderId);
-                viewModel.updatePath([folder.folderName]);
-                _onTap(context, 2);
-              },
-              onClickExpand: () {},
+            const Gap(10),
+            Expanded(
+              child: FolderListWidget(
+                onClickFolder: (Folder folder) {
+                  viewModel.selectFolderId(folder.folderId);
+                  viewModel.updatePath([folder.folderName]);
+                  _onTap(context, 2);
+                },
+                onClickExpand: () {},
+                onCreateFolder: (String folderName) {
+                  viewModel.createFolder(folderName);
+                },
+                onEditFolder: (Folder folder) {
+                  viewModel.updateFolder(folder);
+                },
+                onDeleteFolder: (Folder folder) {
+                  viewModel.deleteFolder(folder);
+                },
+              ),
             ),
           ],
         ),

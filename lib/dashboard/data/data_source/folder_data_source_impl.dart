@@ -24,10 +24,15 @@ class FolderDataSourceImpl implements FolderDataSource {
 
   @override
   Future<FolderDto> createFolder(FolderDto folderDto) async {
+    // null인 필드는 Json에서 아예 삭제
+    final data = folderDto.toJson()
+      ..removeWhere((key, value) => value == null);
+
     // 폴더 생성 후 folderId와 createdAt을 포함한 폴더 정보를 반환
     final json = await _client
         .from('folder')
-        .insert(folderDto.toJson())
+        .insert(data)
+        .select()     // Select를 붙여야 반환이 가능
         .single();
 
     return FolderDto.fromJson(json);
@@ -39,8 +44,7 @@ class FolderDataSourceImpl implements FolderDataSource {
     await _client
         .from('folder')
         .update(folderDto.toJson())
-        .eq('id', folderDto.folderId!.toInt())
-        .single();
+        .eq('folder_id', folderDto.folderId!.toInt());
   }
 
   @override
@@ -48,6 +52,6 @@ class FolderDataSourceImpl implements FolderDataSource {
     await _client
         .from('folder')
         .delete()
-        .eq('id', folderId);
+        .eq('folder_id', folderId);
   }
 }
