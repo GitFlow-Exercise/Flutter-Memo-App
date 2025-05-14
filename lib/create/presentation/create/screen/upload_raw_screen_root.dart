@@ -130,6 +130,8 @@ class _UploadRawScreenRootState extends ConsumerState<UploadRawScreenRoot> {
         viewModel.dropImageFile(event);
       case DropPdfFile(:final event):
         viewModel.dropPdfFile(event);
+      case DebounceAction(:final action):
+        viewModel.debounceAction(action);
     }
   }
 }

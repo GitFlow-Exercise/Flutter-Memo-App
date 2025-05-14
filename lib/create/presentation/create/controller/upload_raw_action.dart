@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -27,4 +28,7 @@ sealed class UploadRawAction with _$UploadRawAction {
 
   const factory UploadRawAction.dropPdfFile(DropzoneFileInterface event) =
       DropPdfFile;
+
+  const factory UploadRawAction.debounceAction(VoidCallback action) =
+      DebounceAction;
 }

@@ -67,6 +67,14 @@ class UploadInputFile extends StatelessWidget {
         if (file == null)
           Stack(
             children: [
+              // 웹일때만 drag&drop이 가능하도록 설정
+              if (kIsWeb)
+                Positioned.fill(
+                  child: DropzoneView(
+                    onCreated: setDropController,
+                    onDropFile: onDropFile,
+                  ),
+                ),
               // 점선을 나태내주는 패키지 이용
               DottedBorder(
                 color: AppColor.lightGrayBorder,
@@ -85,11 +93,18 @@ class UploadInputFile extends StatelessWidget {
                           color: AppColor.primary,
                           size: 40,
                         ),
-                        const Gap(16),
+                        const Gap(8),
                         Text(
                           'PDF 파일을 끌어서 놓거나 클릭하여 업로드하세요',
                           style: AppTextStyle.bodyMedium.copyWith(
                             color: AppColor.mediumGray,
+                          ),
+                        ),
+                        const Gap(4),
+                        Text(
+                          '파일은 한 개만 등록되며, 마지막 파일이 등록됩니다.',
+                          style: AppTextStyle.captionRegular.copyWith(
+                            color: AppColor.hintTextGrey,
                           ),
                         ),
                         Padding(
@@ -106,18 +121,7 @@ class UploadInputFile extends StatelessWidget {
                     ),
                   ),
                 ),
-              ), // 웹일때만 drag&drop이 가능하도록 설정
-              if (kIsWeb)
-                Positioned.fill(
-                  child: DropzoneView(
-                    onCreated: setDropController,
-                    onLoaded: () {},
-                    onError: (ev) {},
-                    onHover: () {},
-                    onLeave: () {},
-                    onDropFile: onDropFile,
-                  ),
-                ),
+              ),
             ],
           ),
       ],

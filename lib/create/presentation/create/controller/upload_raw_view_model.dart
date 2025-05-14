@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:mongo_ai/core/constants/ai_constant.dart';
+import 'package:mongo_ai/core/debounce/debounce.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/enum/allowed_extension_type.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
@@ -27,13 +28,14 @@ class UploadRawViewModel extends _$UploadRawViewModel {
   @override
   Future<UploadRawState> build() async {
     final textController = TextEditingController();
+    final debouncer = Debouncer(seconds: 1);
 
     ref.onDispose(() {
       _eventController.close();
       textController.dispose();
     });
 
-    return UploadRawState(textController: textController);
+    return UploadRawState(textController: textController, debouncer: debouncer);
   }
 
   // 업로드 타입 선택
@@ -176,6 +178,18 @@ class UploadRawViewModel extends _$UploadRawViewModel {
   // 파일 드래그앤드롭 controller 설정
   void setDropController(DropzoneViewController controller) {
     state = state.whenData((cb) => cb.copyWith(dropController: controller));
+  }
+
+  // 여러번 요청 로직을 막기위한 debounce
+  // 1초내에 여러번 실행해도 마지막 함수만 실행됨.
+  void debounceAction(VoidCallback action) {
+    final pState = state.value;
+    // 값이 할당되지 않은 경우 에러
+    if (pState == null) {
+      _readyForSnackBar('에러가 발생하였습니다.');
+      return;
+    }
+    pState.debouncer.run(action);
   }
 
   // 이미지 파일 드롭
