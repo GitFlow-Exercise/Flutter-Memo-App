@@ -38,6 +38,14 @@ class UploadInputFile extends StatelessWidget {
         if (file != null)
           Stack(
             children: [
+              // 웹일때만 drag&drop이 가능하도록 설정
+              if (kIsWeb)
+                Positioned.fill(
+                  child: DropzoneView(
+                    onCreated: setDropController,
+                    onDropFile: onDropFile,
+                  ),
+                ),
               Container(
                 height: 400,
                 decoration: BoxDecoration(
