@@ -19,7 +19,10 @@ class WorkbookListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final isSelected = ref.watch(selectedWorkbookStateProvider).selectedWorkbooks.contains(workbook);
+    final isSelected = ref
+        .watch(selectedWorkbookStateProvider)
+        .selectedWorkbooks
+        .contains(workbook);
     return GestureDetector(
       onTap: () {},
       child: Container(

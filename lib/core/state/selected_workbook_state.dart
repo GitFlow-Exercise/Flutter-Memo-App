@@ -1,18 +1,26 @@
 import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'selected_workbook_state.freezed.dart';
 part 'selected_workbook_state.g.dart';
 
-@freezed
-abstract class SelectedWorkbookStateModel with _$SelectedWorkbookStateModel {
-  const factory SelectedWorkbookStateModel({
-    @Default(<Workbook>[]) List<Workbook> selectedWorkbooks,
-    @Default(false) bool isSelectMode,
-  }) = _SelectedWorkbookStateModel;
+class SelectedWorkbookStateModel {
+  final List<Workbook> selectedWorkbooks;
+  final bool isSelectMode;
 
-  const SelectedWorkbookStateModel._();
+  const SelectedWorkbookStateModel({
+    this.selectedWorkbooks = const <Workbook>[],
+    this.isSelectMode = false,
+  });
+
+  SelectedWorkbookStateModel copyWith({
+    List<Workbook>? selectedWorkbooks,
+    bool? isSelectMode,
+  }) {
+    return SelectedWorkbookStateModel(
+      selectedWorkbooks: selectedWorkbooks ?? this.selectedWorkbooks,
+      isSelectMode: isSelectMode ?? this.isSelectMode,
+    );
+  }
 }
 
 @riverpod
