@@ -222,26 +222,6 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     const Gap(16),
 
-                    // 비밀번호 찾기
-                    Row(
-                      children: [
-                        Spacer(),
-                        GestureDetector(
-                          onTap:
-                              () => widget.onAction(
-                                const SignInAction.onTapForgotPassword(),
-                              ),
-                          child: Text(
-                            '비밀번호를 잊으셨나요?',
-                            style: AppTextStyle.labelMedium.copyWith(
-                              color: AppColor.primary,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Gap(24),
-
                     // 로그인 버튼
                     ElevatedButton(
                       onPressed: _submitForm,
