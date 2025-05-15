@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mongo_ai/create/presentation/%08create_complete/widget/pdf_preview_dialog.dart';
 import 'package:mongo_ai/create/presentation/base/layout/ai_base_layout.dart';
 import 'package:mongo_ai/create/presentation/%08create_complete/controller/create_complete_action.dart';
 import 'package:mongo_ai/create/presentation/%08create_complete/controller/create_complete_event.dart';
@@ -9,8 +9,7 @@ import 'package:mongo_ai/create/presentation/%08create_complete/controller/creat
 import 'package:mongo_ai/create/presentation/%08create_complete/screen/create_complete_screen.dart';
 
 class CreateCompleteScreenRoot extends ConsumerStatefulWidget {
-  final Uint8List pdfBytes;
-  const CreateCompleteScreenRoot({required this.pdfBytes, super.key});
+  const CreateCompleteScreenRoot({super.key});
 
   @override
   ConsumerState<CreateCompleteScreenRoot> createState() =>
@@ -26,7 +25,6 @@ class _PdfPreviewScreenRootState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final viewModel = ref.watch(createCompleteViewModelProvider.notifier);
-      _handleAction(CreateCompleteAction.setPdfData(widget.pdfBytes));
       _subscription = viewModel.eventStream.listen(_handleEvent);
     });
   }
@@ -60,17 +58,26 @@ class _PdfPreviewScreenRootState
     );
   }
 
-  void _handleAction(CreateCompleteAction action) {
+  void _handleAction(CreateCompleteAction action) async {
     final viewModel = ref.read(createCompleteViewModelProvider.notifier);
     switch (action) {
-      case SetPdfData(:final pdfBytes):
-        viewModel.setPdfData(pdfBytes);
       case SetFileName(:final fileName):
         viewModel.setFileName(fileName);
       case SetTitle(:final title):
         viewModel.setTitle(title);
       case ToggleEditMode():
         viewModel.toggleEditMode();
+      case PreviewPdf():
+        final bytes = await viewModel.setPdfData();
+        if (mounted) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return PdfPreviewDialog(pdfBytes: bytes);
+            },
+          );
+        }
+
       case DownloadPdf(:final pdfBytes):
         viewModel.downloadPdf(pdfBytes);
       case UpdateProblem():

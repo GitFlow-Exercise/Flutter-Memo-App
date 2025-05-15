@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:printing/printing.dart';
 
-class PdfPreviewScreen extends StatelessWidget {
+class PdfPreviewDialog extends StatelessWidget {
   final Uint8List pdfBytes;
-  const PdfPreviewScreen({super.key, required this.pdfBytes});
+  const PdfPreviewDialog({super.key, required this.pdfBytes});
 
   @override
   Widget build(BuildContext context) {

@@ -9,34 +9,6 @@ import 'package:mongo_ai/create/presentation/%08create_complete/controller/creat
 import 'package:mongo_ai/create/presentation/%08create_complete/widget/pdf_preview_dialog.dart';
 import 'package:mongo_ai/create/presentation/%08create_complete/widget/problem_preview_widget.dart';
 
-// CompleteProblem 리스트를 마크다운 형식의 텍스트로 변환하는 함수
-String convertProblemsToPdfContent(List<CompleteProblem> problems) {
-  final StringBuffer buffer = StringBuffer();
-
-  for (var problem in problems) {
-    // 문제 번호와 질문 추가
-    buffer.writeln(problem.question);
-    buffer.writeln();
-
-    // 본문 내용 추가
-    buffer.writeln(problem.content);
-    buffer.writeln();
-
-    // 선택지 추가
-    for (var option in problem.options) {
-      buffer.writeln(option);
-    }
-
-    // 문제 사이에 빈 줄 추가 (마지막 문제 제외)
-    if (problem != problems.last) {
-      buffer.writeln();
-      buffer.writeln();
-    }
-  }
-
-  return buffer.toString();
-}
-
 class CreateCompleteScreen extends StatefulWidget {
   final CreateCompleteState state;
   final void Function(CreateCompleteAction action) onAction;
@@ -287,29 +259,8 @@ class _CreateCompleteScreenState extends State<CreateCompleteScreen> {
         SizedBox(
           height: 50,
           child: ElevatedButton(
-            onPressed: () async {
-              // _previewAndDownloadPdf(
-              //   context,
-              //   PdfGenerator(),
-              //   '2025년 3월 모의고사.pdf',
-              // );
-
-              String content = convertProblemsToPdfContent(
-                widget.state.problems,
-              );
-              // PDF 생성
-              final pdfBytes = await PdfGenerator().generatePdf(
-                headerText: '2025년 3월 모의고사',
-                contentsText: content,
-                useDoubleColumn: widget.state.isDoubleColumns,
-              );
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return PdfPreviewScreen(pdfBytes: pdfBytes);
-                },
-              );
-            },
+            onPressed:
+                () => widget.onAction(const CreateCompleteAction.previewPdf()),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColor.primary,
               shape: RoundedRectangleBorder(
@@ -326,7 +277,7 @@ class _CreateCompleteScreenState extends State<CreateCompleteScreen> {
                 ),
                 const Gap(8),
                 Text(
-                  '다운로드',
+                  '미리보기',
                   style: AppTextStyle.bodyMedium.copyWith(
                     color: AppColor.white,
                   ),

@@ -138,8 +138,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.createComplete,
         builder: (context, state) {
-          final extra = state.extra as Uint8List;
-          return CreateCompleteScreenRoot(pdfBytes: extra);
+          return const CreateCompleteScreenRoot();
         },
         redirect: (context, state) {
           return AppRedirect.pdfPreviewRedirect(state.extra);

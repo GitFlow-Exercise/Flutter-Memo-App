@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:mongo_ai/core/component/pdf_generator.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
@@ -57,8 +58,17 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
   }
 
   // pdf data 설정
-  void setPdfData(Uint8List pdfBytes) async {
+  Future<Uint8List> setPdfData() async {
+    String content = _convertProblemsToPdfContent(state.problems);
+
+    // PDF 생성
+    final pdfBytes = await PdfGenerator().generatePdf(
+      headerText: state.title,
+      contentsText: content,
+      useDoubleColumn: state.isDoubleColumns,
+    );
     state = state.copyWith(bytes: pdfBytes);
+    return pdfBytes;
   }
 
   void downloadPdf(Uint8List bytes) async {
@@ -96,5 +106,34 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
   // 제목 업데이트
   void updateTitle(String title) {
     state = state.copyWith(title: title);
+  }
+
+  // CompleteProblem 리스트를 마크다운 형식의 텍스트로 변환하는 함수
+  String _convertProblemsToPdfContent(List<CompleteProblem> problems) {
+    final StringBuffer buffer = StringBuffer();
+
+    for (var problem in problems) {
+      // 문제 번호와 질문 추가
+      buffer.writeln('### ${problem.question}');
+      buffer.writeln();
+
+      // 본문 내용 추가
+      buffer.writeln(problem.content);
+      buffer.writeln();
+
+      // 선택지 추가
+      final circledNumbers = ['①', '②', '③', '④', '⑤', '⑥', '⑦', '⑧', '⑨', '⑩'];
+      for (int i = 0; i < problem.options.length; i++) {
+        buffer.writeln('${circledNumbers[i]} ${problem.options[i]}');
+      }
+
+      // 문제 사이에 빈 줄 추가 (마지막 문제 제외)
+      if (problem != problems.last) {
+        buffer.writeln();
+        buffer.writeln();
+      }
+    }
+
+    return buffer.toString();
   }
 }

@@ -175,7 +175,7 @@ class PdfGenerator {
         widgets.add(
           _createHeading(
             text: trimmedLine.substring(4),
-            style: headerStyle.copyWith(fontSize: 16),
+            style: headerStyle.copyWith(fontSize: 12),
             level: 3,
           ),
         );
