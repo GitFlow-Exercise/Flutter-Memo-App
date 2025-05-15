@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/core/component/base_app_button.dart';
+import 'package:mongo_ai/core/constants/ai_constant.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
@@ -51,31 +52,36 @@ class _UploadRawScreenRootState extends ConsumerState<UploadRawScreenRoot> {
         ).showSnackBar(SnackBar(content: Text(message)));
       case SuccessOCR(:final response):
         if (mounted) {
-          // 클린 텍스트를 받아서
-          // 해당 내용을 사용자에게 보여주는 확인 단계 Dialog
-          // => 클린 텍스트가 자주 이상하게 나와서 사용자가 확인할 필요하다고 느낌
           showDialog(
             context: context,
-            builder:
-                (ctx) => AlertDialog(
-                  backgroundColor: AppColor.white,
-                  title: const Text(
-                    '아래 텍스트가 추출된 내용입니다.\n확인 후 이상 없으면 ‘확인’하고 다음 단계로 이동해주세요.',
-                  ),
-                  content: SingleChildScrollView(
-                    child: Text(response.getContent()),
-                  ),
-                  actions: [
-                    BaseAppButton(onTap: () => context.pop(), text: '취소'),
-                    BaseAppButton(
-                      onTap: () {
-                        ctx.pop();
-                        context.push(Routes.createProblem, extra: response);
-                      },
-                      text: '확인',
-                    ),
-                  ],
+            builder: (ctx) {
+              final parts = response.getContent().split(AiConstant.splitEmoji);
+              return AlertDialog(
+                backgroundColor: AppColor.white,
+                title: const Text(
+                  '아래 텍스트가 추출된 내용입니다.\n확인 후 이상 없으면 ‘확인’하고 다음 단계로 이동해주세요.',
                 ),
+                content: SizedBox(
+                  width: double.maxFinite,
+                  child: ListView.separated(
+                    itemCount: parts.length,
+                    itemBuilder:
+                        (ctx, idx) => Text('${idx + 1}번: ${parts[idx]}'),
+                    separatorBuilder: (ctx, idx) => const SizedBox(height: 50),
+                  ),
+                ),
+                actions: [
+                  BaseAppButton(onTap: () => context.pop(), text: '취소'),
+                  BaseAppButton(
+                    onTap: () {
+                      ctx.pop();
+                      context.push(Routes.createProblem, extra: response);
+                    },
+                    text: '확인',
+                  ),
+                ],
+              );
+            },
           );
         }
     }
@@ -87,6 +93,7 @@ class _UploadRawScreenRootState extends ConsumerState<UploadRawScreenRoot> {
     final viewModel = ref.watch(uploadRawViewModelProvider.notifier);
     // 기본 레이아웃으로 UI가 묶이는 현상이 발생해서
     // Root 파일에서 로딩/에러/데이터 화면의 처리를 진행하도록 수정하였습니다.
+
     return state.when(
       data: (value) {
         return AiBaseLayout(
