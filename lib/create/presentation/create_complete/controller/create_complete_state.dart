@@ -12,6 +12,7 @@ abstract class CreateCompleteState with _$CreateCompleteState {
     @Default('') String fileName,
     @Default('') String title,
     @Default(false) bool isDoubleColumns,
+    @Default([]) List<String> problemTypes,
   }) = _CreateCompleteState;
 }
 
