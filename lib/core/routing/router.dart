@@ -10,7 +10,7 @@ import 'package:mongo_ai/core/routing/redirect.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/create/domain/model/create_workbook_params.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
-import 'package:mongo_ai/create/presentation/%08create_complete/screen/create_complete_screen_root.dart';
+import 'package:mongo_ai/create/presentation/create_complete/screen/create_complete_screen_root.dart';
 import 'package:mongo_ai/create/presentation/create/screen/upload_raw_screen_root.dart';
 import 'package:mongo_ai/create/presentation/create_problem/screen/create_problem_screen_root.dart';
 import 'package:mongo_ai/create/presentation/create_template/screen/create_template_screen_root.dart';

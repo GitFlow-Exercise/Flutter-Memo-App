@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
-import 'package:mongo_ai/create/presentation/%08create_complete/controller/create_complete_action.dart';
-import 'package:mongo_ai/create/presentation/%08create_complete/controller/create_complete_state.dart';
-import 'package:mongo_ai/create/presentation/%08create_complete/widget/problem_preview_widget.dart';
+import 'package:mongo_ai/create/presentation/create_complete/controller/create_complete_action.dart';
+import 'package:mongo_ai/create/presentation/create_complete/controller/create_complete_state.dart';
+import 'package:mongo_ai/create/presentation/create_complete/widget/problem_preview_widget.dart';
 
 class CreateCompleteScreen extends StatefulWidget {
   final CreateCompleteState state;

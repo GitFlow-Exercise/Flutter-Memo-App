@@ -2,12 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mongo_ai/create/presentation/%08create_complete/widget/pdf_preview_dialog.dart';
+import 'package:mongo_ai/create/presentation/create_complete/widget/pdf_preview_dialog.dart';
 import 'package:mongo_ai/create/presentation/base/layout/ai_base_layout.dart';
-import 'package:mongo_ai/create/presentation/%08create_complete/controller/create_complete_action.dart';
-import 'package:mongo_ai/create/presentation/%08create_complete/controller/create_complete_event.dart';
-import 'package:mongo_ai/create/presentation/%08create_complete/controller/create_complete_view_model.dart';
-import 'package:mongo_ai/create/presentation/%08create_complete/screen/create_complete_screen.dart';
+import 'package:mongo_ai/create/presentation/create_complete/controller/create_complete_action.dart';
+import 'package:mongo_ai/create/presentation/create_complete/controller/create_complete_event.dart';
+import 'package:mongo_ai/create/presentation/create_complete/controller/create_complete_view_model.dart';
+import 'package:mongo_ai/create/presentation/create_complete/screen/create_complete_screen.dart';
 
 class CreateCompleteScreenRoot extends ConsumerStatefulWidget {
   const CreateCompleteScreenRoot({super.key});

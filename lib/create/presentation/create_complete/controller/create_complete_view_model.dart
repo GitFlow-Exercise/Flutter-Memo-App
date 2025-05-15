@@ -4,8 +4,8 @@ import 'package:mongo_ai/core/component/pdf_generator.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
-import 'package:mongo_ai/create/presentation/%08create_complete/controller/create_complete_event.dart';
-import 'package:mongo_ai/create/presentation/%08create_complete/controller/create_complete_state.dart';
+import 'package:mongo_ai/create/presentation/create_complete/controller/create_complete_event.dart';
+import 'package:mongo_ai/create/presentation/create_complete/controller/create_complete_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_complete_view_model.g.dart';
