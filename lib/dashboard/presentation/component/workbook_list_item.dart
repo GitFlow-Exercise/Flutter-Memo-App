@@ -9,7 +9,7 @@ import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
 class WorkbookListItem extends ConsumerWidget {
   final void Function() onClick;
   final void Function(Workbook workbook) onSelect;
-  final void Function() onBookmark;
+  final void Function(Workbook workbook) onBookmark;
   final Workbook workbook;
 
   const WorkbookListItem({
@@ -68,7 +68,13 @@ class WorkbookListItem extends ConsumerWidget {
                         workbook.bookmark == true
                             ? const Icon(Icons.star, color: AppColor.secondary)
                             : const Icon(Icons.star_border),
-                    onPressed: () => onBookmark(),
+                    onPressed: () {
+                      if(isSelectMode) {
+                        onSelect(workbook);
+                      } else {
+                        onBookmark(workbook);
+                      }
+                    }
                   ),
                 ],
               ),
