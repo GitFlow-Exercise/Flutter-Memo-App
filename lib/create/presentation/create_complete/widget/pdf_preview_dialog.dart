@@ -6,7 +6,15 @@ import 'package:printing/printing.dart';
 
 class PdfPreviewDialog extends StatelessWidget {
   final Uint8List pdfBytes;
-  const PdfPreviewDialog({super.key, required this.pdfBytes});
+  final VoidCallback onTapCancel;
+  final VoidCallback onTapDownload;
+
+  const PdfPreviewDialog({
+    super.key,
+    required this.pdfBytes,
+    required this.onTapCancel,
+    required this.onTapDownload,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +45,7 @@ class PdfPreviewDialog extends StatelessWidget {
                             color: Colors.white,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
+                                color: Colors.black.withValues(alpha: 0.1),
                                 blurRadius: 10,
                                 spreadRadius: 2,
                               ),
@@ -87,9 +95,7 @@ class PdfPreviewDialog extends StatelessWidget {
                 children: [
                   // 취소 버튼
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
+                    onPressed: onTapCancel,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: AppColor.mediumGray,
@@ -107,13 +113,7 @@ class PdfPreviewDialog extends StatelessWidget {
                   const SizedBox(width: 8),
                   // 저장 버튼
                   ElevatedButton(
-                    onPressed: () {
-                      // pdfGenerator.downloadPdf(
-                      //   pdfBytes,
-                      //   fileName: fileName,
-                      // );
-                      Navigator.of(context).pop();
-                    },
+                    onPressed: onTapDownload,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColor.primary,
                       foregroundColor: Colors.white,

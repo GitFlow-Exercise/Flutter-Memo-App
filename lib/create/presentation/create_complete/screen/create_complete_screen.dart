@@ -6,12 +6,12 @@ import 'package:mongo_ai/core/style/app_text_style.dart';
 
 import 'package:mongo_ai/create/presentation/%08create_complete/controller/create_complete_action.dart';
 import 'package:mongo_ai/create/presentation/%08create_complete/controller/create_complete_state.dart';
-import 'package:mongo_ai/create/presentation/%08create_complete/widget/pdf_preview_dialog.dart';
 import 'package:mongo_ai/create/presentation/%08create_complete/widget/problem_preview_widget.dart';
 
 class CreateCompleteScreen extends StatefulWidget {
   final CreateCompleteState state;
   final void Function(CreateCompleteAction action) onAction;
+
   const CreateCompleteScreen({
     super.key,
     required this.state,

@@ -13,8 +13,7 @@ sealed class CreateCompleteAction with _$CreateCompleteAction {
 
   const factory CreateCompleteAction.toggleEditMode() = ToggleEditMode;
 
-  const factory CreateCompleteAction.downloadPdf(Uint8List pdfBytes) =
-      DownloadPdf;
+  const factory CreateCompleteAction.downloadPdf() = DownloadPdf;
 
   const factory CreateCompleteAction.previewPdf() = PreviewPdf;
 

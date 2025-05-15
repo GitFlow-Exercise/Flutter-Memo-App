@@ -5,8 +5,6 @@ import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/create/presentation/%08create_complete/controller/create_complete_state.dart';
 import 'package:mongo_ai/create/presentation/%08create_complete/controller/problem_editor_state.dart';
 
-// ProblemEditorState 클래스 추가
-
 class ProblemPreviewWidget extends StatefulWidget {
   final CreateCompleteState state;
   final TextEditingController titleController;

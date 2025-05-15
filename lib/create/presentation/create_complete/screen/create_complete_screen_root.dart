@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/create/presentation/%08create_complete/widget/pdf_preview_dialog.dart';
 import 'package:mongo_ai/create/presentation/base/layout/ai_base_layout.dart';
 import 'package:mongo_ai/create/presentation/%08create_complete/controller/create_complete_action.dart';
@@ -73,13 +74,20 @@ class _PdfPreviewScreenRootState
           showDialog(
             context: context,
             builder: (context) {
-              return PdfPreviewDialog(pdfBytes: bytes);
+              return PdfPreviewDialog(
+                pdfBytes: bytes,
+                onTapCancel: context.pop,
+                onTapDownload: () async {
+                  await viewModel.downloadPdf();
+                  if (context.mounted) context.pop();
+                },
+              );
             },
           );
         }
 
-      case DownloadPdf(:final pdfBytes):
-        viewModel.downloadPdf(pdfBytes);
+      case DownloadPdf():
+        viewModel.downloadPdf();
       case UpdateProblem():
         viewModel.updateProblem(action.index, action.updatedProblem);
       case ReorderOptions():

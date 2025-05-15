@@ -71,15 +71,21 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
     return pdfBytes;
   }
 
-  void downloadPdf(Uint8List bytes) async {
+  Future<void> downloadPdf() async {
     final useCase = ref.read(downloadPdfUseCase);
-    final result = useCase.execute(pdfBytes: bytes, fileName: state.fileName);
+    final result = useCase.execute(
+      pdfBytes: state.bytes,
+      fileName: state.fileName,
+    );
+
     switch (result) {
       case Success<void, AppException>():
+        break;
       case Error<void, AppException>():
         _eventController.add(
           const CreateCompleteEvent.showSnackBar('다운로드 중 에러가 발생하였습니다.'),
         );
+        break;
     }
   }
 
