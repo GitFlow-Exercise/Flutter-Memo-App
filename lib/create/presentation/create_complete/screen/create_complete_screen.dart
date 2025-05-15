@@ -9,19 +9,6 @@ import 'package:mongo_ai/create/presentation/%08create_complete/controller/creat
 import 'package:mongo_ai/create/presentation/%08create_complete/widget/pdf_preview_dialog.dart';
 import 'package:mongo_ai/create/presentation/%08create_complete/widget/problem_preview_widget.dart';
 
-class CompleteProblem {
-  final int id;
-  final String question;
-  final String content;
-  final List<String> options;
-  CompleteProblem({
-    required this.id,
-    required this.question,
-    required this.content,
-    required this.options,
-  });
-}
-
 // CompleteProblem 리스트를 마크다운 형식의 텍스트로 변환하는 함수
 String convertProblemsToPdfContent(List<CompleteProblem> problems) {
   final StringBuffer buffer = StringBuffer();
@@ -115,12 +102,45 @@ class CreateCompleteScreen extends StatelessWidget {
               color: AppColor.lightGray,
             ),
             const Gap(2),
-            Text(
-              '영어 문제집.pdf',
-              style: AppTextStyle.bodyMedium.copyWith(
-                color: AppColor.lightGray,
-              ),
-            ),
+            state.fileName.isEmpty
+                ? SizedBox(
+                  width: 200,
+                  child: TextField(
+                    cursorColor: AppColor.deepBlack,
+                    decoration: InputDecoration(
+                      hintText: '파일명을 입력하세요',
+                      hintStyle: AppTextStyle.bodyMedium.copyWith(
+                        color: AppColor.lightGray,
+                      ),
+                      enabledBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: AppColor.lightGrayBorder),
+                      ),
+                      focusedBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: AppColor.deepBlack),
+                      ),
+                      isDense: true,
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    style: AppTextStyle.bodyMedium.copyWith(
+                      color: AppColor.lightGray,
+                    ),
+                    onSubmitted: (value) {
+                      if (value.trim().isNotEmpty) {
+                        onAction(
+                          CreateCompleteAction.setFileName(
+                            '${value.trim()}.pdf',
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                )
+                : Text(
+                  state.fileName,
+                  style: AppTextStyle.bodyMedium.copyWith(
+                    color: AppColor.lightGray,
+                  ),
+                ),
             const Gap(24),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),

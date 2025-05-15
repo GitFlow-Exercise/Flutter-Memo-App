@@ -65,6 +65,8 @@ class _PdfPreviewScreenRootState
     switch (action) {
       case SetPdfData(:final pdfBytes):
         viewModel.setPdfData(pdfBytes);
+      case SetFileName(:final fileName):
+        viewModel.setFileName(fileName);
       case DownloadPdf(:final pdfBytes):
         viewModel.downloadPdf(pdfBytes);
     }

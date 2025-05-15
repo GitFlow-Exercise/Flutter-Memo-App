@@ -24,6 +24,10 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
     return CreateCompleteState(bytes: Uint8List(0));
   }
 
+  void setFileName(String fileName) {
+    state = state.copyWith(fileName: fileName);
+  }
+
   // pdf data 설정
   void setPdfData(Uint8List pdfBytes) async {
     state = state.copyWith(bytes: pdfBytes);
