@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:mongo_ai/auth/presentation/components/auth_header_widget.dart';
 import 'package:mongo_ai/auth/presentation/sign_in/controller/sign_in_action.dart';
 import 'package:mongo_ai/auth/presentation/sign_in/controller/sign_in_state.dart';
-import 'package:mongo_ai/auth/presentation/components/auth_header_widget.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 
@@ -245,6 +245,46 @@ class _SignInScreenState extends State<SignInScreen> {
                           Icon(Icons.arrow_forward, size: 16),
                         ],
                       ),
+                    ),
+
+                    const Gap(16),
+
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: 1,
+                            color: AppColor.lightGrayBorder,
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(
+                            '또는',
+                            style: TextStyle(
+                              fontFamily: AppTextStyle.fontFamily,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: AppColor.paleGray,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            height: 1,
+                            color: AppColor.lightGrayBorder,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const Gap(16),
+
+                    ElevatedButton(
+                      onPressed: () {
+                        widget.onAction(const SignInAction.onTapGoogleSingIn());
+                      },
+                      child: Text('구글로그인'),
                     ),
                   ],
                 ),

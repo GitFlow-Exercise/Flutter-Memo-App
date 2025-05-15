@@ -3,6 +3,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 abstract interface class AuthDataSource {
   Future<void> login(String email, String password);
 
+  Future<void> signInWithGoogle();
+
   Future<AuthResponse> signUp(String email, String password);
 
   Future<void> logout();
@@ -30,4 +32,6 @@ abstract interface class AuthDataSource {
   bool isSelectTeam();
 
   String? userId();
+
+  bool checkMetadata(String key);
 }

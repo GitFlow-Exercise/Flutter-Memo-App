@@ -11,7 +11,11 @@ abstract class AuthRepository extends ChangeNotifier {
 
   String? get userId;
 
+  bool checkMetadata(String key);
+
   Future<Result<void, AppException>> signIn(String email, String password);
+
+  Future<Result<void, AppException>> signInWithGoogle();
 
   Future<Result<void, AppException>> signUp(String email, String password);
 

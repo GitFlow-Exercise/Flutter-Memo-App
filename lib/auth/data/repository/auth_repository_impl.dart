@@ -41,6 +41,33 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
+  Future<Result<void, AppException>> signInWithGoogle() async {
+    try {
+      await _authDataSource.signInWithGoogle();
+      // 로그인 성공
+      notifyListeners();
+      return const Result.success(null);
+    } on AuthException catch (e) {
+      return Result.error(
+        AppException.unknown(
+          message: '이메일 또는 비밀번호가 일치하지 않습니다.',
+          error: e,
+          stackTrace: StackTrace.current,
+        ),
+      ); // 기타 인증 오류
+    } catch (e) {
+      // 기타 예외 (네트워크, 파싱 등)
+      return Result.error(
+        AppException.unknown(
+          message: '알 수 없는 오류입니다.',
+          error: e,
+          stackTrace: StackTrace.current,
+        ),
+      );
+    }
+  }
+
+  @override
   Future<Result<void, AppException>> signOut() async {
     try {
       await _authDataSource.logout();
@@ -119,7 +146,9 @@ class AuthRepositoryImpl extends AuthRepository {
       }
 
       await _authDataSource.saveUser();
-      // 사용자 정보 저장 성공
+
+      // 메타데이터 업데이트
+      await _authDataSource.updateUserMetadata('is_initial_setup_user');
       notifyListeners();
       return const Result.success(null);
     } catch (e) {
@@ -242,7 +271,7 @@ class AuthRepositoryImpl extends AuthRepository {
     } catch (e) {
       return Result.error(
         AppException.unknown(
-          message: '인증번호 전송을 실패하였습니다.',
+          message: 'Metadata를 설정하던 중 오류가 발생했습니다: is_select_team',
           error: e,
           stackTrace: StackTrace.current,
         ),
@@ -268,5 +297,10 @@ class AuthRepositoryImpl extends AuthRepository {
   @override
   String? get userId {
     return _authDataSource.userId();
+  }
+
+  @override
+  bool checkMetadata(String key) {
+    return _authDataSource.checkMetadata(key);
   }
 }

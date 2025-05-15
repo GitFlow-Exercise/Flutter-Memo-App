@@ -42,6 +42,14 @@ class _SignInScreenRootState extends ConsumerState<SignInScreenRoot> {
           context,
         ).showSnackBar(SnackBar(content: Text(message)));
         break;
+      case NavigateToHome():
+        if (mounted) {
+          context.go(Routes.folder);
+        }
+      case NavigateToSelectTeam():
+        if (mounted) {
+          context.go(Routes.selectTeam);
+        }
     }
   }
 
@@ -66,6 +74,8 @@ class _SignInScreenRootState extends ConsumerState<SignInScreenRoot> {
         await viewModel.login();
       case OnTapSignUp():
         context.go(Routes.signUp);
+      case OnTapGoogleSingIn():
+        await viewModel.googleSignIn();
     }
   }
 }

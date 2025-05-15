@@ -13,6 +13,16 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
+  Future<void> signInWithGoogle() async {
+    final origin = Uri.base.origin;
+    final redirectUrl = '$origin/auth/callback';
+    await Supabase.instance.client.auth.signInWithOAuth(
+      OAuthProvider.google,
+      redirectTo: redirectUrl,
+    );
+  }
+
+  @override
   Future<void> logout() async {
     await _client.auth.signOut();
   }
@@ -23,8 +33,6 @@ class AuthDataSourceImpl implements AuthDataSource {
       email: email,
       password: password,
     );
-
-    await updateUserMetadata('is_initial_setup_user');
 
     return authResponse;
   }
@@ -43,6 +51,7 @@ class AuthDataSourceImpl implements AuthDataSource {
 
   @override
   Future<void> saveUser() async {
+    print(_client.auth.currentUser);
     await _client.from(AppTableName.users).insert({
       'user_id': _client.auth.currentUser?.id,
       'user_name': _client.auth.currentUser?.email?.split('@')[0],
@@ -108,18 +117,21 @@ class AuthDataSourceImpl implements AuthDataSource {
 
   @override
   bool isInitialSetupUser() {
-    return _client.auth.currentUser?.userMetadata?['is_initial_setup_user'] ==
-        true;
+    return checkMetadata('is_initial_setup_user');
   }
 
   @override
   bool isSelectTeam() {
-    return _client.auth.currentUser?.userMetadata?['is_select_team'] ==
-        true;
+    return checkMetadata('is_select_team');
   }
 
   @override
   String? userId() {
     return _client.auth.currentUser?.id;
+  }
+
+  @override
+  bool checkMetadata(String key) {
+    return _client.auth.currentUser?.userMetadata?[key] == true;
   }
 }
