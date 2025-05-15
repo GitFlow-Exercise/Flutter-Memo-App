@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:mongo_ai/core/state/selected_workbook_state.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
@@ -10,6 +11,7 @@ class WorkbookListItem extends ConsumerWidget {
   final void Function() onClick;
   final void Function(Workbook workbook) onSelect;
   final void Function(Workbook workbook) onBookmark;
+  final void Function(Workbook workbook) onDelete;
   final Workbook workbook;
 
   const WorkbookListItem({
@@ -18,6 +20,7 @@ class WorkbookListItem extends ConsumerWidget {
     required this.onClick,
     required this.onSelect,
     required this.onBookmark,
+    required this.onDelete,
   });
 
   @override
@@ -53,96 +56,125 @@ class WorkbookListItem extends ConsumerWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Column(
+          child: Row(
             children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
                       workbook.workbookName,
-                      style: AppTextStyle.headingMedium,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyle.headingMedium.copyWith(fontWeight: FontWeight.bold),
                     ),
-                  ),
-                  IconButton(
-                    icon:
-                        workbook.bookmark == true
-                            ? const Icon(Icons.star, color: AppColor.secondary)
-                            : const Icon(Icons.star_border),
-                    onPressed: () {
+                    const Gap(10),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Row(
+                            children: [
+                              const Icon(Icons.person, color: AppColor.lightGray),
+                              const SizedBox(width: 5),
+                              Text(
+                                workbook.userName ?? 'Unknown',
+                                style: AppTextStyle.bodyMedium.copyWith(
+                                  color: AppColor.lightGray,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Row(
+                            children: [
+                              const Icon(Icons.groups, color: AppColor.lightGray),
+                              const SizedBox(width: 5),
+                              Text(
+                                workbook.teamName,
+                                style: AppTextStyle.bodyMedium.copyWith(
+                                  color: AppColor.lightGray,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Row(
+                            children: [
+                              const Icon(Icons.folder, color: AppColor.lightGray),
+                              const SizedBox(width: 5),
+                              Text(
+                                workbook.folderName ?? 'Unknown',
+                                style: AppTextStyle.bodyMedium.copyWith(
+                                  color: AppColor.lightGray,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.timer_sharp,
+                                color: AppColor.lightGray,
+                              ),
+                              const SizedBox(width: 5),
+                              Text(
+                                DateFormat(
+                                  'yyyy-MM-dd HH:mm',
+                                ).format(workbook.createdAt),
+                                style: AppTextStyle.bodyMedium.copyWith(
+                                  color: AppColor.lightGray,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
                       if(isSelectMode) {
                         onSelect(workbook);
                       } else {
                         onBookmark(workbook);
                       }
-                    }
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Row(
-                      children: [
-                        const Icon(Icons.person, color: AppColor.lightGray),
-                        const SizedBox(width: 5),
-                        Text(
-                          workbook.userName ?? 'Unknown',
-                          style: AppTextStyle.bodyMedium.copyWith(
-                            color: AppColor.lightGray,
-                          ),
-                        ),
-                      ],
+                    },
+                    child: Icon(
+                      workbook.bookmark
+                          ? Icons.star
+                          : Icons.star_border,
+                      size: 24,
+                      color:
+                      workbook.bookmark
+                          ? AppColor.secondary
+                          : AppColor.paleGray,
                     ),
                   ),
-                  Expanded(
-                    child: Row(
-                      children: [
-                        const Icon(Icons.groups, color: AppColor.lightGray),
-                        const SizedBox(width: 5),
-                        Text(
-                          workbook.teamName,
-                          style: AppTextStyle.bodyMedium.copyWith(
-                            color: AppColor.lightGray,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      children: [
-                        const Icon(Icons.folder, color: AppColor.lightGray),
-                        const SizedBox(width: 5),
-                        Text(
-                          workbook.folderName ?? 'Unknown',
-                          style: AppTextStyle.bodyMedium.copyWith(
-                            color: AppColor.lightGray,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.timer_sharp,
-                          color: AppColor.lightGray,
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          DateFormat(
-                            'yyyy-MM-dd HH:mm',
-                          ).format(workbook.createdAt),
-                          style: AppTextStyle.bodyMedium.copyWith(
-                            color: AppColor.lightGray,
-                          ),
-                        ),
-                      ],
+                  const Gap(10),
+                  GestureDetector(
+                    onTap: () {
+                      if(isSelectMode) {
+                        onSelect(workbook);
+                      } else {
+                        onDelete(workbook);
+                      }
+                    },
+                    child: const Icon(
+                        Icons.close,
+                        size: 24,
+                        color: AppColor.destructive
                     ),
                   ),
                 ],
-              ),
+              )
             ],
           ),
         ),

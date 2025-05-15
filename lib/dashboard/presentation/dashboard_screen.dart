@@ -252,6 +252,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 },
               ),
             ),
+            const Divider(
+              color: AppColor.lightGrayBorder,
+              thickness: 1,
+            ),
+            _sideBarTile(3, '휴지통', Icons.delete),
+            const Gap(20),
           ],
         ),
       ),

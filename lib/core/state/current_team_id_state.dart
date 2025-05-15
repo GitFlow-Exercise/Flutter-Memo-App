@@ -4,8 +4,6 @@ part 'current_team_id_state.g.dart';
 
 @riverpod
 class CurrentTeamIdState extends _$CurrentTeamIdState {
-
-  //Todo: SharedPreference 등으로 저장하는 것으로 리팩토링 할 것
   @override
   int? build() {
     // 초기에는 아무 팀도 선택되지 않음.
