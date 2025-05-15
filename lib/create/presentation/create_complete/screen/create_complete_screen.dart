@@ -44,6 +44,7 @@ class _CreateCompleteScreenState extends State<CreateCompleteScreen> {
   @override
   void dispose() {
     fileNameController.dispose();
+    titleController.dispose();
     super.dispose();
   }
 
