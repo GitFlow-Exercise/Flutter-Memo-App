@@ -14,10 +14,10 @@ class CreateCompleteScreenRoot extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<CreateCompleteScreenRoot> createState() =>
-      _PdfPreviewScreenRootState();
+      _CreateCompleteScreenRootState();
 }
 
-class _PdfPreviewScreenRootState
+class _CreateCompleteScreenRootState
     extends ConsumerState<CreateCompleteScreenRoot> {
   StreamSubscription? _subscription;
 
