@@ -103,7 +103,6 @@ class WorkbookGridItem extends ConsumerWidget {
                             ],
                           ),
                         ),
-                        const Gap(10),
                         Expanded(
                           child: Column(
                             children: [
