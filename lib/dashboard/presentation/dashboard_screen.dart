@@ -26,19 +26,28 @@ class DashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
-  int _selectedIndex = 0;
+  List<String> _currentPath = [];
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(dashboardViewModelProvider);
     final viewModel = ref.read(dashboardViewModelProvider.notifier);
+    final selectedIndex = widget.navigationShell.currentIndex;
+    if(selectedIndex == 0) {
+      _currentPath = ['내 항목'];
+    } else if(selectedIndex == 1) {
+      _currentPath = ['최근 항목'];
+    } else if(selectedIndex == 3) {
+      _currentPath = ['휴지통'];
+    }
+
     return state.when(
       data: (dashboard) {
         return Scaffold(
           backgroundColor: AppColor.white,
           body: Row(
             children: [
-              _sideBar(),
+              _sideBar(selectedIndex),
               Expanded(
                 child: Column(
                   children: [
@@ -49,7 +58,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         height: 40,
                         child: Row(
                           children: [
-                            const PathWidget(),
+                            PathWidget(path: _currentPath),
                             const Spacer(),
                             const Icon(Icons.person, color: AppColor.deepBlack),
                             const Gap(10),
@@ -158,7 +167,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _sideBar() {
+  Widget _sideBar(int selectedIndex) {
     final viewModel = ref.read(dashboardViewModelProvider.notifier);
     return SizedBox(
       width: 250,
@@ -225,9 +234,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               child: Column(
                 children: [
                   const Gap(10),
-                  _sideBarTile(0, '내 항목', Icons.person),
+                  _sideBarTile(selectedIndex, 0, '내 항목', Icons.person),
                   const Gap(10),
-                  _sideBarTile(1, '최근 항목', Icons.timelapse),
+                  _sideBarTile(selectedIndex, 1, '최근 항목', Icons.timelapse),
                   const Gap(10),
                 ],
               ),
@@ -237,8 +246,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               child: FolderListWidget(
                 onClickFolder: (Folder folder) {
                   viewModel.selectFolderId(folder.folderId);
-                  viewModel.updatePath([folder.folderName]);
                   _onTap(context, 2);
+                  setState(() {
+                    _currentPath = [folder.folderName];
+                  });
                 },
                 onClickExpand: () {},
                 onCreateFolder: (String folderName) {
@@ -256,7 +267,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               color: AppColor.lightGrayBorder,
               thickness: 1,
             ),
-            _sideBarTile(3, '휴지통', Icons.delete),
+            _sideBarTile(selectedIndex, 3, '휴지통', Icons.delete),
             const Gap(20),
           ],
         ),
@@ -264,14 +275,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _sideBarTile(int index, String title, IconData icon) {
+  Widget _sideBarTile(int selectedIndex, int index, String title, IconData icon) {
     final viewModel = ref.read(dashboardViewModelProvider.notifier);
     return ListTile(
       title: Text(
         title,
         style: AppTextStyle.bodyMedium.copyWith(
           color:
-          _selectedIndex == index
+          index == selectedIndex
               ? AppColor.primary
               : AppColor.mediumGray,
         ),
@@ -280,28 +291,27 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         borderRadius: BorderRadius.circular(10),
       ),
       tileColor:
-      _selectedIndex == index
+      index == selectedIndex
           ? AppColor.paleBlue
           : AppColor.white,
       leading: Icon(
         icon,
         color:
-        _selectedIndex == index
+        index == selectedIndex
             ? AppColor.primary
             : AppColor.mediumGray,
       ),
       onTap: () {
         viewModel.clearFolderId();
-        viewModel.updatePath([title]);
         _onTap(context, index);
+        setState(() {
+          _currentPath = [title];
+        });
       },
     );
   }
 
   void _onTap(BuildContext context, int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
     widget.navigationShell.goBranch(index);
   }
 }
