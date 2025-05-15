@@ -10,7 +10,7 @@ import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
 class WorkbookGridItem extends ConsumerWidget {
   final void Function() onClick;
   final void Function(Workbook workbook) onSelect;
-  final void Function() onBookmark;
+  final void Function(Workbook workbook) onBookmark;
   final Workbook workbook;
 
   const WorkbookGridItem({
@@ -87,7 +87,7 @@ class WorkbookGridItem extends ConsumerWidget {
                                 alignment: Alignment.topRight,
                                 child: GestureDetector(
                                   behavior: HitTestBehavior.translucent,
-                                  onTap: onBookmark,
+                                  onTap: () => onBookmark(workbook),
                                   child: Icon(
                                     workbook.bookmark
                                         ? Icons.star
