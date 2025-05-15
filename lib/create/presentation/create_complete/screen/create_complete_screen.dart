@@ -54,6 +54,9 @@ class _CreateCompleteScreenState extends State<CreateCompleteScreen> {
   late final TextEditingController fileNameController;
   late final TextEditingController titleController;
 
+  final GlobalKey<ProblemPreviewWidgetState> problemPreviewKey =
+      GlobalKey<ProblemPreviewWidgetState>();
+
   @override
   void initState() {
     super.initState();
@@ -130,6 +133,10 @@ class _CreateCompleteScreenState extends State<CreateCompleteScreen> {
             const Gap(24),
             GestureDetector(
               onTap: () {
+                // 편집 모드였다면 변경사항 저장
+                if (widget.state.isEditMode) {
+                  problemPreviewKey.currentState?.saveChanges();
+                }
                 widget.onAction(const CreateCompleteAction.toggleEditMode());
               },
               child: Container(
@@ -193,14 +200,24 @@ class _CreateCompleteScreenState extends State<CreateCompleteScreen> {
                 ),
               ),
               ProblemPreviewWidget(
+                key: problemPreviewKey,
                 state: widget.state,
                 titleController: titleController,
-                onTitleSubmitted: (value) {
-                  if (value.trim().isNotEmpty) {
-                    widget.onAction(
-                      CreateCompleteAction.setTitle(value.trim()),
-                    );
-                  }
+                onTitleSubmitted: (title) {
+                  // 제목 제출 로직
+                  widget.onAction(CreateCompleteAction.setTitle(title));
+                },
+                onProblemUpdated: (index, updatedProblem) {
+                  // 문제 업데이트 로직
+                  widget.onAction(
+                    CreateCompleteAction.updateProblem(index, updatedProblem),
+                  );
+                },
+                onOptionsReordered: (index, newOptions) {
+                  // 선택지 순서 변경 로직
+                  widget.onAction(
+                    CreateCompleteAction.reorderOptions(index, newOptions),
+                  );
                 },
               ),
             ],

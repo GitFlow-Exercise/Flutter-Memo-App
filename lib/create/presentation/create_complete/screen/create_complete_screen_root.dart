@@ -73,6 +73,10 @@ class _PdfPreviewScreenRootState
         viewModel.toggleEditMode();
       case DownloadPdf(:final pdfBytes):
         viewModel.downloadPdf(pdfBytes);
+      case UpdateProblem():
+        viewModel.updateProblem(action.index, action.updatedProblem);
+      case ReorderOptions():
+        viewModel.reorderOptions(action.problemIndex, action.newOptions);
     }
   }
 }
