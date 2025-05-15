@@ -37,49 +37,6 @@ String convertProblemsToPdfContent(List<CompleteProblem> problems) {
   return buffer.toString();
 }
 
-// TODO: UI 테스트용 데이터
-const _content = '''
-1. 다음 중 가장 적절한 것은?
-
-As technology advances, people are becoming increasingly dependent on smart devices to perform everyday tasks. While this convenience is undeniable, it also raises concerns about the gradual decline in certain cognitive skills. For instance, people often rely on navigation apps rather than using their own sense of direction. As a result, their ability to read maps or remember routes is diminishing. In the same way, the use of grammar-checking software can affect one's attention to language structure. Although these tools are helpful, __________.
-
-① They may lead users to overestimate their own writing abilities
-② They are designed to improve communication speed and accuracy  
-③ They encourage students to explore new ways of self-expression
-④ They provide a foundation for developing digital creativity
-⑤ They demonstrate how far AI technology has come
-
-1. 다음 중 가장 적절한 것은?
-
-As technology advances, people are becoming increasingly dependent on smart devices to perform everyday tasks. While this convenience is undeniable, it also raises concerns about the gradual decline in certain cognitive skills. For instance, people often rely on navigation apps rather than using their own sense of direction. As a result, their ability to read maps or remember routes is diminishing. In the same way, the use of grammar-checking software can affect one's attention to language structure. Although these tools are helpful, __________.
-
-① They may lead users to overestimate their own writing abilities
-② They are designed to improve communication speed and accuracy  
-③ They encourage students to explore new ways of self-expression
-④ They provide a foundation for developing digital creativity
-⑤ They demonstrate how far AI technology has come
-
-1. 다음 중 가장 적절한 것은?
-
-As technology advances, people are becoming increasingly dependent on smart devices to perform everyday tasks. While this convenience is undeniable, it also raises concerns about the gradual decline in certain cognitive skills. For instance, people often rely on navigation apps rather than using their own sense of direction. As a result, their ability to read maps or remember routes is diminishing. In the same way, the use of grammar-checking software can affect one's attention to language structure. Although these tools are helpful, __________.
-
-① They may lead users to overestimate their own writing abilities
-② They are designed to improve communication speed and accuracy  
-③ They encourage students to explore new ways of self-expression
-④ They provide a foundation for developing digital creativity
-⑤ They demonstrate how far AI technology has come
-
-1. 다음 중 가장 적절한 것은?
-
-As technology advances, people are becoming increasingly dependent on smart devices to perform everyday tasks. While this convenience is undeniable, it also raises concerns about the gradual decline in certain cognitive skills. For instance, people often rely on navigation apps rather than using their own sense of direction. As a result, their ability to read maps or remember routes is diminishing. In the same way, the use of grammar-checking software can affect one's attention to language structure. Although these tools are helpful, __________.
-
-① They may lead users to overestimate their own writing abilities
-② They are designed to improve communication speed and accuracy  
-③ They encourage students to explore new ways of self-expression
-④ They provide a foundation for developing digital creativity
-⑤ They demonstrate how far AI technology has come
-''';
-
 class CreateCompleteScreen extends StatelessWidget {
   final CreateCompleteState state;
   final void Function(CreateCompleteAction action) onAction;
@@ -188,23 +145,8 @@ class CreateCompleteScreen extends StatelessWidget {
                 ),
               ),
               ProblemPreviewWidget(
-                title: '2025년 3월 모의고사',
-                problems: List.generate(
-                  3,
-                  (index) => CompleteProblem(
-                    id: index,
-                    question: '${index + 1}. 다음 중 가장 적절한 것은?',
-                    content:
-                        'As technology advances, people are becoming increasingly dependent on smart devices to perform everyday tasks. While this convenience is undeniable, it also raises concerns about the gradual decline in certain cognitive skills. For instance, people often rely on navigation apps rather than using their own sense of direction. As a result, their ability to read maps or remember routes is diminishing. In the same way, the use of grammar-checking software can affect one\'s attention to language structure. Although these tools are helpful, __________.',
-                    options: [
-                      '① They may lead users to overestimate their own writing abilities',
-                      '② They are designed to improve communication speed and accuracy ',
-                      '③ They encourage students to explore new ways of self-expression',
-                      '④ They provide a foundation for developing digital creativity',
-                      '⑤ They demonstrate how far AI technology has come',
-                    ],
-                  ),
-                ),
+                title: state.title,
+                problems: state.problems,
               ),
             ],
           ),
@@ -242,7 +184,7 @@ class CreateCompleteScreen extends StatelessWidget {
                         ),
                         const Gap(12),
                         Text(
-                          '객관식, 주관식, 서술형',
+                          state.problemTypes.join(', '),
                           style: AppTextStyle.labelMedium.copyWith(
                             color: AppColor.paleGray,
                           ),
@@ -256,7 +198,7 @@ class CreateCompleteScreen extends StatelessWidget {
                         ),
                         const Gap(12),
                         Text(
-                          '15문항',
+                          '${state.problems.length}문항',
                           style: AppTextStyle.labelMedium.copyWith(
                             color: AppColor.paleGray,
                           ),
@@ -280,29 +222,12 @@ class CreateCompleteScreen extends StatelessWidget {
               //   '2025년 3월 모의고사.pdf',
               // );
 
-              String content = convertProblemsToPdfContent(
-                List.generate(
-                  4,
-                  (index) => CompleteProblem(
-                    id: index,
-                    question: '${index + 1}. 다음 중 가장 적절한 것은?',
-                    content:
-                        'As technology advances, people are becoming increasingly dependent on smart devices to perform everyday tasks. While this convenience is undeniable, it also raises concerns about the gradual decline in certain cognitive skills. For instance, people often rely on navigation apps rather than using their own sense of direction. As a result, their ability to read maps or remember routes is diminishing. In the same way, the use of grammar-checking software can affect one\'s attention to language structure. Although these tools are helpful, __________.',
-                    options: [
-                      '① They may lead users to overestimate their own writing abilities',
-                      '② They are designed to improve communication speed and accuracy ',
-                      '③ They encourage students to explore new ways of self-expression',
-                      '④ They provide a foundation for developing digital creativity',
-                      '⑤ They demonstrate how far AI technology has come',
-                    ],
-                  ),
-                ),
-              );
+              String content = convertProblemsToPdfContent(state.problems);
               // PDF 생성
               final pdfBytes = await PdfGenerator().generatePdf(
                 headerText: '2025년 3월 모의고사',
                 contentsText: content,
-                useDoubleColumn: true,
+                useDoubleColumn: state.isDoubleColumns,
               );
               showDialog(
                 context: context,
@@ -403,52 +328,52 @@ As technology advances, people are becoming increasingly dependent on smart devi
 }
 
 // PDF 미리보기 후 다운로드 메서드 수정
-Future<void> _previewAndDownloadPdf(
-  BuildContext context,
-  PdfGenerator pdfGenerator,
-  String fileName,
-) async {
-  // 로딩 표시
-  showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
-      return const Center(child: CircularProgressIndicator());
-    },
-  );
+// Future<void> _previewAndDownloadPdf(
+//   BuildContext context,
+//   PdfGenerator pdfGenerator,
+//   String fileName,
+// ) async {
+//   // 로딩 표시
+//   showDialog(
+//     context: context,
+//     barrierDismissible: false,
+//     builder: (BuildContext context) {
+//       return const Center(child: CircularProgressIndicator());
+//     },
+//   );
 
-  try {
-    // 문제 텍스트 구성 (마크다운 형식으로 변환)
+//   try {
+//     // 문제 텍스트 구성 (마크다운 형식으로 변환)
 
-    // PDF 생성
-    final pdfBytes = await pdfGenerator.generatePdf(
-      headerText: '2025년 3월 모의고사',
-      contentsText: _content,
-      useDoubleColumn: true,
-    );
+//     // PDF 생성
+//     final pdfBytes = await pdfGenerator.generatePdf(
+//       headerText: '2025년 3월 모의고사',
+//       contentsText: _content,
+//       useDoubleColumn: true,
+//     );
 
-    // 로딩 다이얼로그 닫기
-    if (context.mounted) Navigator.of(context).pop();
+//     // 로딩 다이얼로그 닫기
+//     if (context.mounted) Navigator.of(context).pop();
 
-    // PDF 미리보기 다이얼로그 (인쇄 미리보기 스타일)
-    if (context.mounted) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return PdfPreviewScreen(pdfBytes: pdfBytes);
-        },
-      );
-    }
-  } catch (e) {
-    // 로딩 다이얼로그가 열려있으면 닫기
-    if (context.mounted) Navigator.of(context).pop();
+//     // PDF 미리보기 다이얼로그 (인쇄 미리보기 스타일)
+//     if (context.mounted) {
+//       showDialog(
+//         context: context,
+//         builder: (BuildContext context) {
+//           return PdfPreviewScreen(pdfBytes: pdfBytes);
+//         },
+//       );
+//     }
+//   } catch (e) {
+//     // 로딩 다이얼로그가 열려있으면 닫기
+//     if (context.mounted) Navigator.of(context).pop();
 
-    print('PDF 생성 중 오류 발생: $e');
-    // 사용자에게 오류 알림 표시
-    if (context.mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('PDF 생성 중 오류가 발생했습니다: $e')));
-    }
-  }
-}
+//     print('PDF 생성 중 오류 발생: $e');
+//     // 사용자에게 오류 알림 표시
+//     if (context.mounted) {
+//       ScaffoldMessenger.of(
+//         context,
+//       ).showSnackBar(SnackBar(content: Text('PDF 생성 중 오류가 발생했습니다: $e')));
+//     }
+//   }
+// }
