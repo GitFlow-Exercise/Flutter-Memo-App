@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mongo_ai/create/presentation/%08create_complete/controller/create_complete_state.dart';
 
