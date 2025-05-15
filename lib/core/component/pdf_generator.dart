@@ -1,10 +1,7 @@
 import 'dart:convert';
-
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:printing/printing.dart';
 import 'package:web/web.dart'; // Blob, URL, document, HTMLAnchorElement 등
 
 /// PDF 문서 생성기

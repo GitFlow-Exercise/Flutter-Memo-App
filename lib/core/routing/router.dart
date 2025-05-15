@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/auth/presentation/check_otp/screen/check_otp_screen_root.dart';
