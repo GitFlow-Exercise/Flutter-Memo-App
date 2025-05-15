@@ -151,3 +151,6 @@ out/
 logs/
 
 devtools_options.yaml
+
+# Firebase
+lib/firebase_options.dart
