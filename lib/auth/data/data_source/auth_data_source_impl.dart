@@ -56,7 +56,6 @@ class AuthDataSourceImpl implements AuthDataSource {
 
   @override
   Future<void> saveUser() async {
-    print(_client.auth.currentUser);
     await _client.from(AppTableName.users).insert({
       'user_id': _client.auth.currentUser?.id,
       'user_name': _client.auth.currentUser?.email?.split('@')[0],

@@ -36,6 +36,7 @@ class SignInViewModel extends _$SignInViewModel {
     );
   }
 
+  //TODO: 주석 추가 필요
   void _setupAuthListener() {
     _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen((
       data,
@@ -47,8 +48,11 @@ class SignInViewModel extends _$SignInViewModel {
         final user = session?.user;
         final provider = user?.appMetadata['provider'] as String?;
 
+
         if (provider == 'google') {
           _handleGoogleSignIn(user);
+        } else {
+          _eventController.add(const SignInEvent.navigateToHome());
         }
       }
     });
@@ -79,14 +83,12 @@ class SignInViewModel extends _$SignInViewModel {
   // Google 로그인 시작
   Future<void> googleSignIn() async {
     try {
-      debugPrint('Google 로그인 시작');
       final authRepository = ref.read(authRepositoryProvider);
       await authRepository.signInWithGoogle();
 
       // 이후 처리는 _setupAuthListener에서 수행
       // 여기서 결과 처리는 하지 않음
     } catch (e) {
-      debugPrint('Google 로그인 초기화 오류: $e');
       _eventController.add(
         const SignInEvent.showSnackBar('Google 로그인을 시작할 수 없습니다.'),
       );
