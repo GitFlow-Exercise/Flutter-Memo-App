@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
-import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/create/presentation/%08create_complete/controller/create_complete_state.dart';
 import 'package:mongo_ai/create/presentation/%08create_complete/controller/problem_editor_state.dart';
+import 'package:mongo_ai/create/presentation/%08create_complete/widget/problem_content_editor.dart';
+import 'package:mongo_ai/create/presentation/%08create_complete/widget/problem_options_editor.dart';
+import 'package:mongo_ai/create/presentation/%08create_complete/widget/problem_question_editor.dart';
+import 'package:mongo_ai/create/presentation/%08create_complete/widget/problem_title_editor.dart';
 
 class ProblemPreviewWidget extends StatefulWidget {
   final CreateCompleteState state;
@@ -97,7 +100,7 @@ class ProblemPreviewWidgetState extends State<ProblemPreviewWidget> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              EditableTitle(
+              ProblemTitleEditor(
                 isEditMode: widget.state.isEditMode,
                 title: widget.state.title,
                 controller: widget.titleController,
@@ -116,7 +119,7 @@ class ProblemPreviewWidgetState extends State<ProblemPreviewWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Gap(24),
-                    QuestionEditor(
+                    ProblemQuestionEditor(
                       isEditMode: widget.state.isEditMode,
                       controller: questionController!,
                       question: problem.question,
@@ -135,7 +138,7 @@ class ProblemPreviewWidgetState extends State<ProblemPreviewWidget> {
 
                     const Gap(16),
 
-                    ContentEditor(
+                    ProblemContentEditor(
                       isEditMode: widget.state.isEditMode,
                       controller: contentController!,
                       content: problem.content,
@@ -154,7 +157,7 @@ class ProblemPreviewWidgetState extends State<ProblemPreviewWidget> {
 
                     const Gap(24),
 
-                    OptionEditor(
+                    ProblemOptionsEditor(
                       isEditMode: widget.state.isEditMode,
                       options: editorState.editedProblems[index].options,
                       problemId: problem.id,
@@ -187,189 +190,5 @@ class ProblemPreviewWidgetState extends State<ProblemPreviewWidget> {
         ),
       ),
     );
-  }
-}
-
-class EditableTitle extends StatelessWidget {
-  final bool isEditMode;
-  final String title;
-  final TextEditingController controller;
-  final void Function(String) onSubmitted;
-
-  const EditableTitle({
-    super.key,
-    required this.isEditMode,
-    required this.title,
-    required this.controller,
-    required this.onSubmitted,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    if (title.isEmpty || isEditMode) {
-      return SizedBox(
-        width: 300,
-        child: TextField(
-          controller: controller,
-          textAlign: TextAlign.center,
-          decoration: InputDecoration(
-            hintText: '제목을 입력하세요',
-            hintStyle: AppTextStyle.headingMedium.copyWith(
-              color: AppColor.mediumGray,
-            ),
-            enabledBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: AppColor.lightGrayBorder),
-            ),
-            focusedBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: AppColor.deepBlack),
-            ),
-            isDense: true,
-            contentPadding: EdgeInsets.zero,
-          ),
-          style: AppTextStyle.headingMedium.copyWith(color: AppColor.deepBlack),
-          onSubmitted: onSubmitted,
-        ),
-      );
-    } else {
-      return Text(
-        title,
-        style: AppTextStyle.titleBold.copyWith(color: AppColor.deepBlack),
-      );
-    }
-  }
-}
-
-class QuestionEditor extends StatelessWidget {
-  final bool isEditMode;
-  final TextEditingController controller;
-  final String question;
-  final ValueChanged<String> onChanged;
-
-  const QuestionEditor({
-    super.key,
-    required this.isEditMode,
-    required this.controller,
-    required this.question,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return isEditMode
-        ? TextField(
-          controller: controller,
-          decoration: InputDecoration(
-            hintText: '문제를 입력하세요',
-            hintStyle: AppTextStyle.labelMedium.copyWith(
-              color: AppColor.mediumGray,
-            ),
-            border: const OutlineInputBorder(),
-          ),
-          style: AppTextStyle.labelMedium.copyWith(color: AppColor.deepBlack),
-          onChanged: onChanged,
-          maxLines: null,
-        )
-        : Text(
-          question,
-          style: AppTextStyle.labelMedium.copyWith(color: AppColor.deepBlack),
-        );
-  }
-}
-
-class ContentEditor extends StatelessWidget {
-  final bool isEditMode;
-  final TextEditingController controller;
-  final String content;
-  final ValueChanged<String> onChanged;
-
-  const ContentEditor({
-    super.key,
-    required this.isEditMode,
-    required this.controller,
-    required this.content,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return isEditMode
-        ? TextField(
-          controller: controller,
-          decoration: InputDecoration(
-            hintText: '문제 내용을 입력하세요',
-            hintStyle: AppTextStyle.bodyMedium.copyWith(
-              color: AppColor.mediumGray,
-            ),
-            border: const OutlineInputBorder(),
-          ),
-          style: AppTextStyle.bodyMedium.copyWith(color: AppColor.deepBlack),
-          onChanged: onChanged,
-          maxLines: null,
-        )
-        : Text(
-          content,
-          style: AppTextStyle.bodyMedium.copyWith(color: AppColor.deepBlack),
-        );
-  }
-}
-
-class OptionEditor extends StatelessWidget {
-  final bool isEditMode;
-  final List<String> options;
-  final int problemId;
-  final void Function(int oldIndex, int newIndex) onReorder;
-
-  const OptionEditor({
-    super.key,
-    required this.isEditMode,
-    required this.options,
-    required this.problemId,
-    required this.onReorder,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return isEditMode
-        ? ReorderableListView(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          onReorder: onReorder,
-          children:
-              options.asMap().entries.map((entry) {
-                final index = entry.key;
-                final value = entry.value;
-                return Container(
-                  key: ValueKey('$problemId-$index'),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: AppColor.lightGrayBorder),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: ListTile(
-                    title: Text(
-                      '${index + 1}. $value',
-                      style: AppTextStyle.bodyMedium.copyWith(
-                        color: AppColor.mediumGray,
-                      ),
-                    ),
-                  ),
-                );
-              }).toList(),
-        )
-        : Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children:
-              options.asMap().entries.map((entry) {
-                final index = entry.key;
-                final value = entry.value;
-                return Text(
-                  '${index + 1}. $value',
-                  style: AppTextStyle.bodyMedium.copyWith(
-                    color: AppColor.mediumGray,
-                    height: 2,
-                  ),
-                );
-              }).toList(),
-        );
   }
 }
