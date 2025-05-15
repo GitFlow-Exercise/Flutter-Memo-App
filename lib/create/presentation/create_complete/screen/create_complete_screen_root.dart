@@ -69,6 +69,8 @@ class _PdfPreviewScreenRootState
         viewModel.setFileName(fileName);
       case SetTitle(:final title):
         viewModel.setTitle(title);
+      case ToggleEditMode():
+        viewModel.toggleEditMode();
       case DownloadPdf(:final pdfBytes):
         viewModel.downloadPdf(pdfBytes);
     }

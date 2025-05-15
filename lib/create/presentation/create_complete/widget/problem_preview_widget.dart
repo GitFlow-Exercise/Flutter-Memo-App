@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/create/presentation/%08create_complete/controller/create_complete_state.dart';
 
 class ProblemPreviewWidget extends StatelessWidget {
-  final String title;
-  final List<CompleteProblem> problems;
+  final CreateCompleteState state;
+  final TextEditingController titleController;
   final void Function(String) onTitleSubmitted;
+
   const ProblemPreviewWidget({
     super.key,
-    required this.problems,
-    required this.title,
+    required this.state,
     required this.onTitleSubmitted,
+    required this.titleController,
   });
 
   @override
@@ -33,10 +33,11 @@ class ProblemPreviewWidget extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              title.isEmpty
+              state.title.isEmpty || state.isEditMode
                   ? SizedBox(
                     width: 300,
                     child: TextField(
+                      controller: titleController,
                       textAlign: TextAlign.center,
                       decoration: InputDecoration(
                         hintText: '제목을 입력하세요',
@@ -61,13 +62,13 @@ class ProblemPreviewWidget extends StatelessWidget {
                     ),
                   )
                   : Text(
-                    title,
+                    state.title,
                     style: AppTextStyle.titleBold.copyWith(
                       color: AppColor.deepBlack,
                     ),
                   ),
               const Gap(24),
-              ...problems.map((problem) {
+              ...state.problems.map((problem) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

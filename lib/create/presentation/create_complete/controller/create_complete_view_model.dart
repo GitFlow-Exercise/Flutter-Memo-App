@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:typed_data';
+import 'package:flutter/material.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
@@ -49,6 +50,10 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
 
   void setTitle(String title) {
     state = state.copyWith(title: title);
+  }
+
+  void toggleEditMode() {
+    state = state.copyWith(isEditMode: !state.isEditMode);
   }
 
   // pdf data 설정

@@ -37,7 +37,7 @@ String convertProblemsToPdfContent(List<CompleteProblem> problems) {
   return buffer.toString();
 }
 
-class CreateCompleteScreen extends StatelessWidget {
+class CreateCompleteScreen extends StatefulWidget {
   final CreateCompleteState state;
   final void Function(CreateCompleteAction action) onAction;
   const CreateCompleteScreen({
@@ -45,6 +45,34 @@ class CreateCompleteScreen extends StatelessWidget {
     required this.state,
     required this.onAction,
   });
+
+  @override
+  State<CreateCompleteScreen> createState() => _CreateCompleteScreenState();
+}
+
+class _CreateCompleteScreenState extends State<CreateCompleteScreen> {
+  late final TextEditingController fileNameController;
+  late final TextEditingController titleController;
+
+  @override
+  void initState() {
+    super.initState();
+    fileNameController = TextEditingController(
+      text:
+          widget.state.isEditMode
+              ? widget.state.fileName.replaceAll('.pdf', '')
+              : null,
+    );
+    titleController = TextEditingController(
+      text: widget.state.isEditMode ? widget.state.title : null,
+    );
+  }
+
+  @override
+  void dispose() {
+    fileNameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,13 +87,14 @@ class CreateCompleteScreen extends StatelessWidget {
               color: AppColor.lightGray,
             ),
             const Gap(2),
-            state.fileName.isEmpty
+            widget.state.fileName.isEmpty || widget.state.isEditMode
                 ? SizedBox(
                   width: 200,
                   child: TextField(
                     cursorColor: AppColor.deepBlack,
+                    controller: fileNameController,
                     decoration: InputDecoration(
-                      hintText: '파일명을 입력하세요',
+                      hintText: widget.state.isEditMode ? null : '파일명을 입력하세요',
                       hintStyle: AppTextStyle.bodyMedium.copyWith(
                         color: AppColor.lightGray,
                       ),
@@ -83,7 +112,7 @@ class CreateCompleteScreen extends StatelessWidget {
                     ),
                     onSubmitted: (value) {
                       if (value.trim().isNotEmpty) {
-                        onAction(
+                        widget.onAction(
                           CreateCompleteAction.setFileName(
                             '${value.trim()}.pdf',
                           ),
@@ -93,33 +122,52 @@ class CreateCompleteScreen extends StatelessWidget {
                   ),
                 )
                 : Text(
-                  state.fileName,
+                  widget.state.fileName,
                   style: AppTextStyle.bodyMedium.copyWith(
                     color: AppColor.lightGray,
                   ),
                 ),
             const Gap(24),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-              decoration: BoxDecoration(
-                color: AppColor.paleBlue,
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.check_circle,
-                    size: 16,
-                    color: AppColor.primary,
+            GestureDetector(
+              onTap: () {
+                widget.onAction(const CreateCompleteAction.toggleEditMode());
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 5,
+                  horizontal: 15,
+                ),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color:
+                        widget.state.isEditMode
+                            ? AppColor.primary
+                            : AppColor.lightGrayBorder,
                   ),
-                  const Gap(4),
-                  Text(
-                    '생성완료',
-                    style: AppTextStyle.bodyMedium.copyWith(
-                      color: AppColor.primary,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.edit_square,
+                      size: 16,
+                      color:
+                          widget.state.isEditMode
+                              ? AppColor.primary
+                              : AppColor.lightGray,
                     ),
-                  ),
-                ],
+                    const Gap(4),
+                    Text(
+                      '문제 수정',
+                      style: AppTextStyle.bodyMedium.copyWith(
+                        color:
+                            widget.state.isEditMode
+                                ? AppColor.primary
+                                : AppColor.lightGray,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -145,11 +193,13 @@ class CreateCompleteScreen extends StatelessWidget {
                 ),
               ),
               ProblemPreviewWidget(
-                title: state.title,
-                problems: state.problems,
+                state: widget.state,
+                titleController: titleController,
                 onTitleSubmitted: (value) {
                   if (value.trim().isNotEmpty) {
-                    onAction(CreateCompleteAction.setTitle(value.trim()));
+                    widget.onAction(
+                      CreateCompleteAction.setTitle(value.trim()),
+                    );
                   }
                 },
               ),
@@ -189,7 +239,7 @@ class CreateCompleteScreen extends StatelessWidget {
                         ),
                         const Gap(12),
                         Text(
-                          state.problemTypes.join(', '),
+                          widget.state.problemTypes.join(', '),
                           style: AppTextStyle.labelMedium.copyWith(
                             color: AppColor.paleGray,
                           ),
@@ -203,7 +253,7 @@ class CreateCompleteScreen extends StatelessWidget {
                         ),
                         const Gap(12),
                         Text(
-                          '${state.problems.length}문항',
+                          '${widget.state.problems.length}문항',
                           style: AppTextStyle.labelMedium.copyWith(
                             color: AppColor.paleGray,
                           ),
@@ -227,12 +277,14 @@ class CreateCompleteScreen extends StatelessWidget {
               //   '2025년 3월 모의고사.pdf',
               // );
 
-              String content = convertProblemsToPdfContent(state.problems);
+              String content = convertProblemsToPdfContent(
+                widget.state.problems,
+              );
               // PDF 생성
               final pdfBytes = await PdfGenerator().generatePdf(
                 headerText: '2025년 3월 모의고사',
                 contentsText: content,
-                useDoubleColumn: state.isDoubleColumns,
+                useDoubleColumn: widget.state.isDoubleColumns,
               );
               showDialog(
                 context: context,

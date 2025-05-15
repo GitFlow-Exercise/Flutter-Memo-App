@@ -13,6 +13,8 @@ sealed class CreateCompleteAction with _$CreateCompleteAction {
 
   const factory CreateCompleteAction.setTitle(String title) = SetTitle;
 
+  const factory CreateCompleteAction.toggleEditMode() = ToggleEditMode;
+
   const factory CreateCompleteAction.downloadPdf(Uint8List pdfBytes) =
       DownloadPdf;
 }
