@@ -21,12 +21,12 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
       _eventController.close();
     });
 
-    return const CreateCompleteState();
+    return CreateCompleteState(bytes: Uint8List(0));
   }
 
   // pdf data 설정
   void setPdfData(Uint8List pdfBytes) async {
-    state = state.copyWith(bytes: AsyncValue.data(pdfBytes));
+    state = state.copyWith(bytes: pdfBytes);
   }
 
   void downloadPdf(Uint8List bytes) async {

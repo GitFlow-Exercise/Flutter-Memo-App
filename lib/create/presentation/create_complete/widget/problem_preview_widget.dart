@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
-import 'package:mongo_ai/create/presentation/%08create_complete/screen/create_complete_screen.dart';
+import 'package:mongo_ai/create/presentation/%08create_complete/controller/create_complete_state.dart';
 
 class ProblemPreviewWidget extends StatelessWidget {
   final String title;
