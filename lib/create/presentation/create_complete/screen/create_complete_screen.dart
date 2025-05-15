@@ -9,6 +9,19 @@ import 'package:mongo_ai/create/presentation/%08create_complete/controller/creat
 import 'package:mongo_ai/create/presentation/%08create_complete/widget/pdf_preview_dialog.dart';
 import 'package:mongo_ai/create/presentation/%08create_complete/widget/problem_preview_widget.dart';
 
+class CompleteProblem {
+  final int id;
+  final String question;
+  final String content;
+  final List<String> options;
+  CompleteProblem({
+    required this.id,
+    required this.question,
+    required this.content,
+    required this.options,
+  });
+}
+
 // TODO: UI 테스트용 데이터
 const _content = '''
 1. 다음 중 가장 적절한 것은?
@@ -126,7 +139,25 @@ class CreateCompleteScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
               ),
-              const ProblemPreviewWidget(),
+              ProblemPreviewWidget(
+                title: '2025년 3월 모의고사',
+                problems: List.generate(
+                  3,
+                  (index) => CompleteProblem(
+                    id: index,
+                    question: '${index + 1}. 다음 중 가장 적절한 것은?',
+                    content:
+                        'As technology advances, people are becoming increasingly dependent on smart devices to perform everyday tasks. While this convenience is undeniable, it also raises concerns about the gradual decline in certain cognitive skills. For instance, people often rely on navigation apps rather than using their own sense of direction. As a result, their ability to read maps or remember routes is diminishing. In the same way, the use of grammar-checking software can affect one\'s attention to language structure. Although these tools are helpful, __________.',
+                    options: [
+                      '① They may lead users to overestimate their own writing abilities',
+                      '② They are designed to improve communication speed and accuracy ',
+                      '③ They encourage students to explore new ways of self-expression',
+                      '④ They provide a foundation for developing digital creativity',
+                      '⑤ They demonstrate how far AI technology has come',
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
