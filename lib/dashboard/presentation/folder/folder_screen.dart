@@ -13,7 +13,6 @@ class FolderScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(folderViewModelProvider);
-    final viewModel = ref.read(folderViewModelProvider.notifier);
     return Padding(
       padding: const EdgeInsets.all(30),
       child: state.workbookList.when(
@@ -29,6 +28,7 @@ class FolderScreen extends ConsumerWidget {
   }
 
   Widget _buildGridView(WidgetRef ref, List<Workbook> workbookList) {
+    final viewModel = ref.read(folderViewModelProvider.notifier);
     return ResponsiveGridList(
       minItemWidth: 280, // 원하는 아이템 최소 너비
       children: workbookList.map((workbook) {
@@ -37,6 +37,9 @@ class FolderScreen extends ConsumerWidget {
           child: WorkbookGridItem(
             workbook: workbook,
             onClick: () {},
+            onSelect: (Workbook workbook) {
+              viewModel.selectWorkbook(workbook);
+            },
             onBookmark: () {},
           ),
         );
@@ -45,12 +48,16 @@ class FolderScreen extends ConsumerWidget {
   }
 
   Widget _buildListView(WidgetRef ref, List<Workbook> workbookList) {
+    final viewModel = ref.read(folderViewModelProvider.notifier);
     return ListView.separated(
       itemCount: workbookList.length,
       itemBuilder: (context, index) {
         return WorkbookListItem(
           workbook: workbookList[index],
           onClick: () {},
+          onSelect: (Workbook workbook) {
+            viewModel.selectWorkbook(workbook);
+          },
           onBookmark: () {},
         );
       },

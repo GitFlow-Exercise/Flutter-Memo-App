@@ -9,6 +9,7 @@ import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
 
 class WorkbookGridItem extends ConsumerWidget {
   final void Function() onClick;
+  final void Function(Workbook workbook) onSelect;
   final void Function() onBookmark;
   final Workbook workbook;
 
@@ -16,15 +17,24 @@ class WorkbookGridItem extends ConsumerWidget {
     super.key,
     required this.workbook,
     required this.onClick,
+    required this.onSelect,
     required this.onBookmark,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isSelected = ref.watch(selectedWorkbookStateProvider).selectedWorkbooks.contains(workbook);
+    final isSelected = ref
+        .watch(selectedWorkbookStateProvider)
+        .selectedWorkbooks
+        .contains(workbook);
+    final isSelectMode = ref.watch(selectedWorkbookStateProvider).isSelectMode;
     return GestureDetector(
       onTap: () {
-
+        if (isSelectMode) {
+          onSelect(workbook);
+        } else {
+          onClick();
+        }
       },
       child: Container(
         width: 250,
@@ -36,6 +46,11 @@ class WorkbookGridItem extends ConsumerWidget {
               offset: const Offset(0, 2),
             ),
           ],
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: isSelected ? AppColor.primary : Colors.transparent,
+            width: 2,
+          ),
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
@@ -74,20 +89,24 @@ class WorkbookGridItem extends ConsumerWidget {
                                   behavior: HitTestBehavior.translucent,
                                   onTap: onBookmark,
                                   child: Icon(
-                                    workbook.bookmark ? Icons.star : Icons.star_border,
+                                    workbook.bookmark
+                                        ? Icons.star
+                                        : Icons.star_border,
                                     size: 24,
-                                    color: workbook.bookmark ? AppColor.secondary : AppColor.paleGray,
+                                    color:
+                                        workbook.bookmark
+                                            ? AppColor.secondary
+                                            : AppColor.paleGray,
                                   ),
-                                )
+                                ),
                               ),
                             ],
                           ),
                         ),
-                        const Gap(10),
                         Expanded(
                           child: Column(
                             children: [
-                              Spacer(),
+                              const Spacer(),
                               _gridTile(
                                 Icons.person,
                                 workbook.userName ?? 'Unknown',
@@ -99,7 +118,7 @@ class WorkbookGridItem extends ConsumerWidget {
                                 Icons.folder,
                                 workbook.folderName.toString(),
                               ),
-                              Spacer(),
+                              const Spacer(),
                             ],
                           ),
                         ),
@@ -111,7 +130,13 @@ class WorkbookGridItem extends ConsumerWidget {
                   decoration: BoxDecoration(
                     color: AppColor.paleBlue,
                     border: Border(
-                      top: BorderSide(color: AppColor.lightGrayBorder, width: 1),
+                      top: BorderSide(
+                        color:
+                            isSelected
+                                ? AppColor.primary
+                                : AppColor.lightGrayBorder,
+                        width: 2,
+                      ),
                     ),
                   ),
                   child: Padding(
@@ -121,9 +146,11 @@ class WorkbookGridItem extends ConsumerWidget {
                     ),
                     child: Row(
                       children: [
-                        Text('수정 : '),
+                        const Text('수정 : '),
                         Text(
-                          DateFormat('yyyy-MM-dd HH:mm').format(workbook.createdAt),
+                          DateFormat(
+                            'yyyy-MM-dd HH:mm',
+                          ).format(workbook.createdAt),
                         ),
                       ],
                     ),

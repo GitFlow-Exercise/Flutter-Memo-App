@@ -8,20 +8,40 @@ import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
 
 class WorkbookListItem extends ConsumerWidget {
   final void Function() onClick;
+  final void Function(Workbook workbook) onSelect;
   final void Function() onBookmark;
   final Workbook workbook;
-  const WorkbookListItem({super.key, required this.workbook, required this.onClick, required this.onBookmark});
+
+  const WorkbookListItem({
+    super.key,
+    required this.workbook,
+    required this.onClick,
+    required this.onSelect,
+    required this.onBookmark,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isSelected = ref.watch(selectedWorkbookStateProvider).selectedWorkbooks.contains(workbook);
+    final isSelected = ref
+        .watch(selectedWorkbookStateProvider)
+        .selectedWorkbooks
+        .contains(workbook);
+    final isSelectMode = ref.watch(selectedWorkbookStateProvider).isSelectMode;
     return GestureDetector(
       onTap: () {
-
+        if (isSelectMode) {
+          onSelect(workbook);
+        } else {
+          onClick();
+        }
       },
       child: Container(
         decoration: BoxDecoration(
-          color: AppColor.white,
+          color: isSelected ? AppColor.paleBlue : AppColor.white,
+          border: Border.all(
+            color: isSelected ? AppColor.primary : Colors.transparent,
+            width: 2,
+          ),
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
@@ -44,9 +64,10 @@ class WorkbookListItem extends ConsumerWidget {
                     ),
                   ),
                   IconButton(
-                    icon: workbook.bookmark == true
-                        ? const Icon(Icons.star, color: AppColor.secondary)
-                        : const Icon(Icons.star_border),
+                    icon:
+                        workbook.bookmark == true
+                            ? const Icon(Icons.star, color: AppColor.secondary)
+                            : const Icon(Icons.star_border),
                     onPressed: () => onBookmark(),
                   ),
                 ],
@@ -98,10 +119,15 @@ class WorkbookListItem extends ConsumerWidget {
                   Expanded(
                     child: Row(
                       children: [
-                        const Icon(Icons.timer_sharp, color: AppColor.lightGray),
+                        const Icon(
+                          Icons.timer_sharp,
+                          color: AppColor.lightGray,
+                        ),
                         const SizedBox(width: 5),
                         Text(
-                          DateFormat('yyyy-MM-dd HH:mm').format(workbook.createdAt),
+                          DateFormat(
+                            'yyyy-MM-dd HH:mm',
+                          ).format(workbook.createdAt),
                           style: AppTextStyle.bodyMedium.copyWith(
                             color: AppColor.lightGray,
                           ),
@@ -110,7 +136,7 @@ class WorkbookListItem extends ConsumerWidget {
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),

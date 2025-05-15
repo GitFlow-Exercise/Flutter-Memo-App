@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
 import 'package:mongo_ai/dashboard/presentation/component/workbook_grid_item.dart';
 import 'package:mongo_ai/dashboard/presentation/component/workbook_list_item.dart';
@@ -14,7 +13,6 @@ class RecentFilesScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(recentFilesViewModelProvider);
-    final viewModel = ref.read(recentFilesViewModelProvider.notifier);
     return Padding(
       padding: const EdgeInsets.all(30),
       child: state.workbookList.when(
@@ -30,6 +28,7 @@ class RecentFilesScreen extends ConsumerWidget {
   }
 
   Widget _buildGridView(WidgetRef ref, List<Workbook> workbookList) {
+    final viewModel = ref.read(recentFilesViewModelProvider.notifier);
     return ResponsiveGridList(
       minItemWidth: 280, // 원하는 아이템 최소 너비
       children: workbookList.map((workbook) {
@@ -38,6 +37,9 @@ class RecentFilesScreen extends ConsumerWidget {
           child: WorkbookGridItem(
             workbook: workbook,
             onClick: () {},
+            onSelect: (Workbook workbook) {
+              viewModel.selectWorkbook(workbook);
+            },
             onBookmark: () {},
           ),
         );
@@ -46,12 +48,16 @@ class RecentFilesScreen extends ConsumerWidget {
   }
 
   Widget _buildListView(WidgetRef ref, List<Workbook> workbookList) {
+    final viewModel = ref.read(recentFilesViewModelProvider.notifier);
     return ListView.separated(
       itemCount: workbookList.length,
       itemBuilder: (context, index) {
         return WorkbookListItem(
           workbook: workbookList[index],
           onClick: () {},
+          onSelect: (Workbook workbook) {
+            viewModel.selectWorkbook(workbook);
+          },
           onBookmark: () {},
         );
       },
