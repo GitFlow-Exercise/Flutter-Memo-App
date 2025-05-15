@@ -12,10 +12,10 @@ import 'package:mongo_ai/core/routing/redirect.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/create/domain/model/create_workbook_params.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
+import 'package:mongo_ai/create/presentation/%08create_complete/screen/create_complete_screen_root.dart';
 import 'package:mongo_ai/create/presentation/create/screen/upload_raw_screen_root.dart';
 import 'package:mongo_ai/create/presentation/create_problem/screen/create_problem_screen_root.dart';
 import 'package:mongo_ai/create/presentation/create_template/screen/create_template_screen_root.dart';
-import 'package:mongo_ai/create/presentation/pdf_preview/screen/pdf_preview_screen_root.dart';
 import 'package:mongo_ai/dashboard/presentation/dashboard_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/folder/folder_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/my_files/my_files_screen.dart';
@@ -136,10 +136,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
-        path: Routes.pdfPreview,
+        path: Routes.createComplete,
         builder: (context, state) {
           final extra = state.extra as Uint8List;
-          return PdfPreviewScreenRoot(pdfBytes: extra);
+          return CreateCompleteScreenRoot(pdfBytes: extra);
         },
         redirect: (context, state) {
           return AppRedirect.pdfPreviewRedirect(state.extra);
