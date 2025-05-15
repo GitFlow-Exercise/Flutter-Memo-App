@@ -147,6 +147,11 @@ class CreateCompleteScreen extends StatelessWidget {
               ProblemPreviewWidget(
                 title: state.title,
                 problems: state.problems,
+                onTitleSubmitted: (value) {
+                  if (value.trim().isNotEmpty) {
+                    onAction(CreateCompleteAction.setTitle(value.trim()));
+                  }
+                },
               ),
             ],
           ),

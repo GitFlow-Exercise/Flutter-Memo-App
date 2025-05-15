@@ -11,6 +11,8 @@ sealed class CreateCompleteAction with _$CreateCompleteAction {
 
   const factory CreateCompleteAction.setFileName(String fileName) = SetFileName;
 
+  const factory CreateCompleteAction.setTitle(String title) = SetTitle;
+
   const factory CreateCompleteAction.downloadPdf(Uint8List pdfBytes) =
       DownloadPdf;
 }
