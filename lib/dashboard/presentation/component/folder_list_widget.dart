@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:mongo_ai/core/di/providers.dart';
@@ -32,6 +34,7 @@ class FolderListWidget extends ConsumerStatefulWidget {
 class _FolderListWidgetState extends ConsumerState<FolderListWidget> {
   final _createController = TextEditingController();
   final _editController = TextEditingController();
+  final MenuController _menuController = MenuController();
   late final FocusNode _createFocusNode;
   late final FocusNode _editFocusNode;
 
@@ -41,6 +44,10 @@ class _FolderListWidgetState extends ConsumerState<FolderListWidget> {
   @override
   void initState() {
     super.initState();
+    if (kIsWeb) {
+      // 브라우저 기본 메뉴 비활성화
+      BrowserContextMenu.disableContextMenu();
+    }
     // unfocus 시키면 폴더 생성 취소
     _createFocusNode = FocusNode()
       ..addListener(() {
@@ -200,7 +207,10 @@ class _FolderListWidgetState extends ConsumerState<FolderListWidget> {
                       } else {
                         // -------------------
                         // 폴더 리스트 UI
+                        // 각 항목마다 MenuController를 생성해야 정확한 위치 리턴 가능.
+                        final controller = MenuController();
                         return MenuAnchor(
+                          controller: controller,
                           menuChildren: [
                               MenuItemButton(
                                 onPressed: () {
@@ -225,25 +235,30 @@ class _FolderListWidgetState extends ConsumerState<FolderListWidget> {
                               backgroundColor: WidgetStateProperty.all(AppColor.white),
                           ),
                           builder: (context, controller, child) {
-                            return ListTile(
-                              title: Text(
-                                folder.folderName,
-                                style: AppTextStyle.bodyRegular.copyWith(
+                            return GestureDetector(
+                              onSecondaryTapDown: (details) {
+                                controller.open(position: details.localPosition);
+                              },
+                              onLongPressStart: (details) {
+                                controller.open(position: details.localPosition);
+                              },
+                              child: ListTile(
+                                title: Text(
+                                  folder.folderName,
+                                  style: AppTextStyle.bodyRegular.copyWith(
+                                    color: selected ? AppColor.primary : AppColor.mediumGray,
+                                  ),
+                                ),
+                                tileColor: selected ? AppColor.paleBlue : AppColor.white,
+                                leading: Icon(
+                                  Icons.folder,
                                   color: selected ? AppColor.primary : AppColor.mediumGray,
                                 ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                onTap: () => widget.onClickFolder(folder),
                               ),
-                              tileColor: selected ? AppColor.paleBlue : AppColor.white,
-                              leading: Icon(
-                                Icons.folder,
-                                color: selected ? AppColor.primary : AppColor.mediumGray,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              onTap: () => widget.onClickFolder(folder),
-                              onLongPress: () {
-                                controller.open();
-                              },
                             );
                           }
                         );

@@ -7,7 +7,6 @@ import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
 import 'package:mongo_ai/dashboard/presentation/folder/controller/folder_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-
 part 'folder_view_model.g.dart';
 
 @riverpod
@@ -35,11 +34,28 @@ class FolderViewModel extends _$FolderViewModel {
     );
   }
 
+  // ------------------------
+  // 문서 병합모드 메서드
   Future<void> selectWorkbook(Workbook workbook) async {
     ref.read(selectedWorkbookStateProvider.notifier).selectWorkbook(workbook);
   }
 
+  // ------------------------
+  // Workbook DB 메서드
   Future<void> refreshWorkbookList() async {
     ref.refresh(getWorkbooksByCurrentTeamIdProvider);
+  }
+
+  Future<void> toggleBookmark(Workbook workbook) async {
+    final result = await ref.read(toggleBookmarkUseCaseProvider).execute(workbook);
+    switch(result) {
+      case Success(data: final data):
+        refreshWorkbookList();
+        break;
+      case Error():
+        print('Error: ${result.error}');
+        // 여기서 알림등 에러 처리 가능.
+        break;
+    }
   }
 }

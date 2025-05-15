@@ -40,7 +40,15 @@ class FolderScreen extends ConsumerWidget {
             onSelect: (Workbook workbook) {
               viewModel.selectWorkbook(workbook);
             },
-            onBookmark: () {},
+            onBookmark: (Workbook workbook) {
+              viewModel.toggleBookmark(workbook);
+            },
+            onEdit: (Workbook workbook) {
+              print('Edit: ${workbook.workbookId}');
+            },
+            onDelete: (Workbook workbook) {
+              print('Delete: ${workbook.workbookId}');
+            },
           ),
         );
       }).toList(),
@@ -58,7 +66,9 @@ class FolderScreen extends ConsumerWidget {
           onSelect: (Workbook workbook) {
             viewModel.selectWorkbook(workbook);
           },
-          onBookmark: () {},
+          onBookmark: (Workbook workbook) {
+            viewModel.toggleBookmark(workbook);
+          },
         );
       },
       separatorBuilder: (context, index) {

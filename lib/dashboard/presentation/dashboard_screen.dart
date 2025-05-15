@@ -173,6 +173,22 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               child: Center(
                 child: Row(
                   children: [
+                    Container(
+                      width: 30,
+                      height: 30,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColor.primary,
+                      ),
+                      child: Center(
+                        child: Image.asset(
+                          'images/mongo_ai_logo.png',
+                          width: 16,
+                          height: 16,
+                        ),
+                      ),
+                    ),
+                    const Gap(10),
                     Text(
                       'Mongo AI',
                       style: AppTextStyle.titleBold.copyWith(

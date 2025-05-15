@@ -1,6 +1,8 @@
 import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/dashboard/data/data_source/workbook_data_source.dart';
+import 'package:mongo_ai/dashboard/data/dto/workbook_view_dto.dart';
+import 'package:mongo_ai/dashboard/data/dto/workbook_table_dto.dart';
 import 'package:mongo_ai/dashboard/data/mapper/workbook_mapper.dart';
 import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
 import 'package:mongo_ai/dashboard/domain/repository/workbook_repository.dart';
@@ -24,6 +26,56 @@ class WorkbookRepositoryImpl implements WorkbookRepository {
           message: '문제집 정보를 가져오는 중 오류가 발생했습니다.',
           error: e,
           stackTrace: StackTrace.current,
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Result<Workbook, AppException>> createWorkbook(WorkbookTableDto workbookTemplate) async {
+    try {
+      final workbookDto = await _dataSource.createWorkbook(workbookTemplate);
+      final workbook = workbookDto.toWorkbook();
+      return Result.success(workbook);
+    } catch (e, st) {
+      return Result.error(
+        AppException.remoteDataBase(
+          message: '문제집 생성 중 오류가 발생했습니다.',
+          error: e,
+          stackTrace: st,
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Result<Workbook, AppException>> updateWorkbook(Workbook workbook) async {
+    try {
+      final workbookTableDto = workbook.toWorkbookTableDto();
+      await _dataSource.updateWorkbook(workbookTableDto);
+      return Result.success(workbook);
+    } catch (e, st) {
+      return Result.error(
+        AppException.remoteDataBase(
+          message: '문제집 수정 중 오류가 발생했습니다.',
+          error: e,
+          stackTrace: st,
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Result<Workbook, AppException>> deleteWorkbook(Workbook workbook) async {
+    try {
+      await _dataSource.deleteWorkbook(workbook.workbookId);
+      return Result.success(workbook);
+    } catch (e, st) {
+      return Result.error(
+        AppException.remoteDataBase(
+          message: '문제집 삭제 중 오류가 발생했습니다.',
+          error: e,
+          stackTrace: st,
         ),
       );
     }

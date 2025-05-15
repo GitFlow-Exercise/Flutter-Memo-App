@@ -1,9 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'workbook_dto.g.dart';
+part 'workbook_table_dto.g.dart';
 
 @JsonSerializable()
-class WorkbookDto {
+class WorkbookTableDto {
   @JsonKey(name: 'workbook_id')
   num? workbookId;
 
@@ -12,9 +12,6 @@ class WorkbookDto {
 
   @JsonKey(name: 'user_id')
   String? userId;
-
-  @JsonKey(name: 'user_name')
-  String? userName;
 
   @JsonKey(name: 'bookmark')
   bool? bookmark;
@@ -25,14 +22,8 @@ class WorkbookDto {
   @JsonKey(name: 'folder_id')
   num? folderId;
 
-  @JsonKey(name: 'folder_name')
-  String? folderName;
-
   @JsonKey(name: 'team_id')
   num? teamId;
-
-  @JsonKey(name: 'team_name')
-  String? teamName;
 
   @JsonKey(name: 'created_at')
   String? createdAt;
@@ -43,7 +34,7 @@ class WorkbookDto {
   @JsonKey(name: 'deleted_at')
   String? deletedAt;
 
-  WorkbookDto({
+  WorkbookTableDto({
     this.workbookId,
     this.userId,
     this.workbookName,
@@ -56,8 +47,8 @@ class WorkbookDto {
     this.deletedAt
   });
 
-  factory WorkbookDto.fromJson(Map<String, dynamic> json) =>
-      _$WorkbookDtoFromJson(json);
+  factory WorkbookTableDto.fromJson(Map<String, dynamic> json) =>
+      _$WorkbookTableDtoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$WorkbookDtoToJson(this);
+  Map<String, dynamic> toJson() => _$WorkbookTableDtoToJson(this);
 }
