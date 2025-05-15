@@ -114,7 +114,7 @@ class DeletedListItem extends ConsumerWidget {
                             Text(
                               DateFormat(
                                 'yyyy-MM-dd HH:mm',
-                              ).format(workbook.createdAt),
+                              ).format(workbook.deletedAt!),
                               style: AppTextStyle.bodyMedium.copyWith(
                                 color: AppColor.lightGray,
                               ),

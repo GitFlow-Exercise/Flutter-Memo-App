@@ -103,7 +103,7 @@ class DeletedGridItem extends ConsumerWidget {
                             const Gap(10),
                             _gridTile(
                               Icons.folder,
-                              workbook.folderName.toString(),
+                              workbook.folderName ?? 'Unknown',
                             ),
                             const Spacer(),
                           ],
@@ -137,7 +137,7 @@ class DeletedGridItem extends ConsumerWidget {
                       Text(
                         DateFormat(
                           'yyyy-MM-dd HH:mm',
-                        ).format(workbook.deletedAt ?? DateTime.now()),
+                        ).format(workbook.deletedAt!),
                       ),
                       const Spacer(),
                       GestureDetector(
