@@ -86,6 +86,24 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
+  Future<Result<void, AppException>> deleteUser(String id) async {
+    try {
+      await _authDataSource.deleteUser(id);
+      notifyListeners();
+      return const Result.success(null);
+    } catch (e) {
+      // 기타 예외 (네트워크, 파싱 등)
+      return Result.error(
+        AppException.unknown(
+          message: '유저를 삭제하던 중 오류가 발생했습니다.',
+          error: e,
+          stackTrace: StackTrace.current,
+        ),
+      );
+    }
+  }
+
+  @override
   Future<Result<void, AppException>> signUp(
       String email,
       String password,

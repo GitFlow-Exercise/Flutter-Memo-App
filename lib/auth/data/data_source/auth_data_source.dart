@@ -9,6 +9,8 @@ abstract interface class AuthDataSource {
 
   Future<void> logout();
 
+  Future<void> deleteUser(String id);
+
   Future<bool> isEmailExist(String email);
 
   Future<void> saveUser();

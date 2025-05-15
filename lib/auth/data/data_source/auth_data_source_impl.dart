@@ -38,6 +38,11 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
+  Future<void> deleteUser(String id) async {
+    await _client.auth.admin.deleteUser(id);
+  }
+
+  @override
   Future<bool> isEmailExist(String email) async {
     final response =
         await _client

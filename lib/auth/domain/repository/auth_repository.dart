@@ -21,6 +21,8 @@ abstract class AuthRepository extends ChangeNotifier {
 
   Future<Result<void, AppException>> signOut();
 
+  Future<Result<void, AppException>> deleteUser(String id);
+
   Future<Result<bool, AppException>> isEmailExist(String email);
 
   Future<Result<void, AppException>> saveUser();
