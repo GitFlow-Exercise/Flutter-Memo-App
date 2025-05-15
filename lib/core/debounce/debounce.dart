@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
 // 설정한 시간초 이내에서
 // 마지막으로 실행된 함수 한 번만 실행

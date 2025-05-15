@@ -64,6 +64,7 @@ class _UploadRawScreenRootState extends ConsumerState<UploadRawScreenRoot> {
                 content: SizedBox(
                   width: double.maxFinite,
                   child: ListView.separated(
+                    shrinkWrap: true,
                     itemCount: parts.length,
                     itemBuilder:
                         (ctx, idx) => Text('${idx + 1}번: ${parts[idx]}'),
