@@ -26,76 +26,85 @@ class ProblemPreviewWidget extends StatelessWidget {
         color: AppColor.white,
         border: Border.all(color: AppColor.lightGrayBorder),
       ),
-      child: Column(
-        children: [
-          title.isEmpty
-              ? SizedBox(
-                width: 300,
-                child: TextField(
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                    hintText: '제목을 입력하세요',
-                    hintStyle: AppTextStyle.headingMedium.copyWith(
-                      color: AppColor.mediumGray,
-                    ),
-                    enabledBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide(color: AppColor.lightGrayBorder),
-                    ),
-                    focusedBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide(color: AppColor.deepBlack),
-                    ),
-                    isDense: true,
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                  style: AppTextStyle.headingMedium.copyWith(
-                    color: AppColor.deepBlack,
-                  ),
-                  onSubmitted: onTitleSubmitted,
-                ),
-              )
-              : Text(
-                title,
-                style: AppTextStyle.titleBold.copyWith(
-                  color: AppColor.deepBlack,
-                ),
-              ),
-          const Gap(24),
-          ...problems.map((problem) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Gap(24),
-                Text(
-                  problem.question,
-                  style: AppTextStyle.labelMedium.copyWith(
-                    color: AppColor.deepBlack,
-                  ),
-                ),
-                const Gap(16),
-                Text(
-                  problem.content,
-                  style: AppTextStyle.bodyMedium.copyWith(
-                    color: AppColor.deepBlack,
-                  ),
-                ),
-                const Gap(24),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children:
-                      problem.options.map((option) {
-                        return Text(
-                          option,
-                          style: AppTextStyle.bodyMedium.copyWith(
-                            color: AppColor.mediumGray,
-                            height: 2,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxHeight: 600, // 원하는 최대 높이로 조정
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              title.isEmpty
+                  ? SizedBox(
+                    width: 300,
+                    child: TextField(
+                      textAlign: TextAlign.center,
+                      decoration: InputDecoration(
+                        hintText: '제목을 입력하세요',
+                        hintStyle: AppTextStyle.headingMedium.copyWith(
+                          color: AppColor.mediumGray,
+                        ),
+                        enabledBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: AppColor.lightGrayBorder,
                           ),
-                        );
-                      }).toList(),
-                ),
-              ],
-            );
-          }),
-        ],
+                        ),
+                        focusedBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(color: AppColor.deepBlack),
+                        ),
+                        isDense: true,
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                      style: AppTextStyle.headingMedium.copyWith(
+                        color: AppColor.deepBlack,
+                      ),
+                      onSubmitted: onTitleSubmitted,
+                    ),
+                  )
+                  : Text(
+                    title,
+                    style: AppTextStyle.titleBold.copyWith(
+                      color: AppColor.deepBlack,
+                    ),
+                  ),
+              const Gap(24),
+              ...problems.map((problem) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Gap(24),
+                    Text(
+                      problem.question,
+                      style: AppTextStyle.labelMedium.copyWith(
+                        color: AppColor.deepBlack,
+                      ),
+                    ),
+                    const Gap(16),
+                    Text(
+                      problem.content,
+                      style: AppTextStyle.bodyMedium.copyWith(
+                        color: AppColor.deepBlack,
+                      ),
+                    ),
+                    const Gap(24),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children:
+                          problem.options.map((option) {
+                            return Text(
+                              option,
+                              style: AppTextStyle.bodyMedium.copyWith(
+                                color: AppColor.mediumGray,
+                                height: 2,
+                              ),
+                            );
+                          }).toList(),
+                    ),
+                  ],
+                );
+              }),
+            ],
+          ),
+        ),
       ),
     );
   }
