@@ -82,7 +82,8 @@ final teamRepositoryProvider = Provider<TeamRepository>((ref) {
   return TeamRepositoryImpl(dataSource: dataSource);
 });
 
-final getTeamsByCurrentUserProvider =
+final
+getTeamsByCurrentUserProvider =
     FutureProvider<Result<List<Team>, AppException>>((ref) async {
       final repository = ref.watch(teamRepositoryProvider);
       return repository.getTeamsByCurrentUser();

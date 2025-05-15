@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mongo_ai/auth/presentation/sign_up_complete/controller/sign_up_complete_action.dart';
-import 'package:mongo_ai/core/component/auth_feature_item_widget.dart';
-import 'package:mongo_ai/core/component/auth_header_widget.dart';
+import 'package:mongo_ai/auth/presentation/components/auth_feature_item_widget.dart';
+import 'package:mongo_ai/auth/presentation/components/auth_header_widget.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 

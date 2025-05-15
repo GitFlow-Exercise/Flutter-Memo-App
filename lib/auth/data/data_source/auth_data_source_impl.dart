@@ -24,9 +24,7 @@ class AuthDataSourceImpl implements AuthDataSource {
       password: password,
     );
 
-    await _client.auth.updateUser(
-      UserAttributes(data: {'is_initial_setup_user': true}),
-    );
+    await updateUserMetadata('is_initial_setup_user');
 
     return authResponse;
   }
@@ -68,11 +66,22 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
-  Future<AuthResponse> verifyOtp(String email, String otp) async {
+  Future<AuthResponse> verifyEmailOtp(String email, String otp) async {
     final response = await _client.auth.verifyOTP(
       email: email,
       token: otp,
       type: OtpType.email,
+    );
+
+    return response;
+  }
+
+  @override
+  Future<AuthResponse> verifyMagicLinkOtp(String email, String otp) async {
+    final response = await _client.auth.verifyOTP(
+      email: email,
+      token: otp,
+      type: OtpType.magiclink,
     );
 
     return response;
@@ -88,6 +97,11 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
+  Future<void> updateUserMetadata(String key) async {
+    await _client.auth.updateUser(UserAttributes(data: {key: true}));
+  }
+
+  @override
   Future<String?> getCurrentUserEmail() async {
     return _client.auth.currentUser?.email;
   }
@@ -96,5 +110,16 @@ class AuthDataSourceImpl implements AuthDataSource {
   bool isInitialSetupUser() {
     return _client.auth.currentUser?.userMetadata?['is_initial_setup_user'] ==
         true;
+  }
+
+  @override
+  bool isSelectTeam() {
+    return _client.auth.currentUser?.userMetadata?['is_select_team'] ==
+        true;
+  }
+
+  @override
+  String? userId() {
+    return _client.auth.currentUser?.id;
   }
 }
