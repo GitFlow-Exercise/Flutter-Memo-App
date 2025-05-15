@@ -59,7 +59,10 @@ class PdfGenerator {
     final boldFont = await _loadFont('assets/fonts/Pretendard-Bold.ttf');
 
     final effectiveHeaderStyle = _createHeaderStyle(headerStyle, boldFont);
-    final effectiveContentStyle = _createContentStyle(contentsStyle, regularFont);
+    final effectiveContentStyle = _createContentStyle(
+      contentsStyle,
+      regularFont,
+    );
 
     final contentLines = contentsText.split('\n');
     final pdf = pw.Document();
@@ -320,6 +323,7 @@ class PdfGenerator {
       ),
     );
   }
+
   // -----
   // pdf 파일 다운로드
   void downloadPdf(Uint8List bytes, {String fileName = 'document.pdf'}) {

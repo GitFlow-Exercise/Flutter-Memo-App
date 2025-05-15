@@ -3,29 +3,30 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mongo_ai/create/presentation/base/layout/ai_base_layout.dart';
-import 'package:mongo_ai/create/presentation/pdf_preview/controller/pdf_preview_action.dart';
-import 'package:mongo_ai/create/presentation/pdf_preview/controller/pdf_preview_event.dart';
-import 'package:mongo_ai/create/presentation/pdf_preview/controller/pdf_preview_view_model.dart';
-import 'package:mongo_ai/create/presentation/pdf_preview/screen/pdf_preview_screen.dart';
+import 'package:mongo_ai/create/presentation/%08create_complete/controller/create_complete_action.dart';
+import 'package:mongo_ai/create/presentation/%08create_complete/controller/create_complete_event.dart';
+import 'package:mongo_ai/create/presentation/%08create_complete/controller/create_complete_view_model.dart';
+import 'package:mongo_ai/create/presentation/%08create_complete/screen/create_complete_screen.dart';
 
-class PdfPreviewScreenRoot extends ConsumerStatefulWidget {
+class CreateCompleteScreenRoot extends ConsumerStatefulWidget {
   final Uint8List pdfBytes;
-  const PdfPreviewScreenRoot({required this.pdfBytes, super.key});
+  const CreateCompleteScreenRoot({required this.pdfBytes, super.key});
 
   @override
-  ConsumerState<PdfPreviewScreenRoot> createState() =>
+  ConsumerState<CreateCompleteScreenRoot> createState() =>
       _PdfPreviewScreenRootState();
 }
 
-class _PdfPreviewScreenRootState extends ConsumerState<PdfPreviewScreenRoot> {
+class _PdfPreviewScreenRootState
+    extends ConsumerState<CreateCompleteScreenRoot> {
   StreamSubscription? _subscription;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final viewModel = ref.watch(pdfPreViewViewModelProvider.notifier);
-      _handleAction(PdfPreViewActions.setPdfData(widget.pdfBytes));
+      final viewModel = ref.watch(createCompleteViewModelProvider.notifier);
+      _handleAction(CreateCompleteAction.setPdfData(widget.pdfBytes));
       _subscription = viewModel.eventStream.listen(_handleEvent);
     });
   }
@@ -36,7 +37,7 @@ class _PdfPreviewScreenRootState extends ConsumerState<PdfPreviewScreenRoot> {
     super.dispose();
   }
 
-  void _handleEvent(PdfPreViewEvent event) {
+  void _handleEvent(CreateCompleteEvent event) {
     switch (event) {
       case ShowSnackBar(message: final message):
         ScaffoldMessenger.of(
@@ -47,7 +48,7 @@ class _PdfPreviewScreenRootState extends ConsumerState<PdfPreviewScreenRoot> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(pdfPreViewViewModelProvider);
+    final state = ref.watch(createCompleteViewModelProvider);
     return AiBaseLayout(
       title: '문제집 생성',
       subTitle: '생성된 문제집 확인',
@@ -55,12 +56,12 @@ class _PdfPreviewScreenRootState extends ConsumerState<PdfPreviewScreenRoot> {
       maxWidth: 850,
       maxHeight: 750,
       isPopTap: true,
-      child: PdfPreviewScreen(state: state, onAction: _handleAction),
+      child: CreateCompleteScreen(state: state, onAction: _handleAction),
     );
   }
 
-  void _handleAction(PdfPreViewActions action) {
-    final viewModel = ref.read(pdfPreViewViewModelProvider.notifier);
+  void _handleAction(CreateCompleteAction action) {
+    final viewModel = ref.read(createCompleteViewModelProvider.notifier);
     switch (action) {
       case SetPdfData(:final pdfBytes):
         viewModel.setPdfData(pdfBytes);

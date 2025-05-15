@@ -3,25 +3,25 @@ import 'dart:typed_data';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
-import 'package:mongo_ai/create/presentation/pdf_preview/controller/pdf_preview_event.dart';
-import 'package:mongo_ai/create/presentation/pdf_preview/controller/pdf_preview_state.dart';
+import 'package:mongo_ai/create/presentation/%08create_complete/controller/create_complete_event.dart';
+import 'package:mongo_ai/create/presentation/%08create_complete/controller/create_complete_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'pdf_preview_view_model.g.dart';
+part 'create_complete_view_model.g.dart';
 
 @riverpod
-class PdfPreViewViewModel extends _$PdfPreViewViewModel {
-  final _eventController = StreamController<PdfPreViewEvent>();
+class CreateCompleteViewModel extends _$CreateCompleteViewModel {
+  final _eventController = StreamController<CreateCompleteEvent>();
 
-  Stream<PdfPreViewEvent> get eventStream => _eventController.stream;
+  Stream<CreateCompleteEvent> get eventStream => _eventController.stream;
 
   @override
-  PdfPreViewState build() {
+  CreateCompleteState build() {
     ref.onDispose(() {
       _eventController.close();
     });
 
-    return const PdfPreViewState();
+    return const CreateCompleteState();
   }
 
   // pdf data 설정
@@ -36,7 +36,7 @@ class PdfPreViewViewModel extends _$PdfPreViewViewModel {
       case Success<void, AppException>():
       case Error<void, AppException>():
         _eventController.add(
-          const PdfPreViewEvent.showSnackBar('다운로드 중 에러가 발생하였습니다.'),
+          const CreateCompleteEvent.showSnackBar('다운로드 중 에러가 발생하였습니다.'),
         );
     }
   }
