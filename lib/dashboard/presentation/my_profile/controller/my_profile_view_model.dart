@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/result/result.dart';
+import 'package:mongo_ai/core/state/dashboard_path_state.dart';
 import 'package:mongo_ai/dashboard/presentation/my_profile/controller/my_profile_event.dart';
 import 'package:mongo_ai/dashboard/presentation/my_profile/controller/my_profile_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -25,9 +26,16 @@ class MyProfileViewModel extends _$MyProfileViewModel {
 
     final state = const MyProfileState();
 
-    Future.microtask(_fetchUserProfile);
+    Future.microtask(() {
+      _fetchUserProfile();
+      _setHeaderTitle();
+    });
 
     return state;
+  }
+
+  void _setHeaderTitle() {
+    ref.read(dashboardPathStateProvider.notifier).set(['내 정보']);
   }
 
   // 사용자 프로필 정보 가져오기

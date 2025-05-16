@@ -72,7 +72,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       body: Center(
         child: widget.state.data.when(
           data: (profile) {
-            debugPrint('my_profile_screen.dart: 프로필 데이터 렌더링 - Line 49');
             // 현재 컨트롤러 텍스트가 profile.userName과 다르면 업데이트
             if (_nameController.text != profile.userName) {
               _nameController.text = profile.userName;
