@@ -64,7 +64,9 @@ class _CreateTemplateScreenRootState
       step: 3,
       maxWidth: 1000,
       maxHeight: 750,
-      nextTap: () {},
+      nextTap: () {
+        _handleAction(const CreateTemplateAction.onTapNext());
+      },
       isPopTap: false,
       child: CreateTemplateScreen(state: state, onAction: _handleAction),
     );
@@ -87,6 +89,10 @@ class _CreateTemplateScreenRootState
 
       case OnTapReset():
         viewModel.resetOrderedList();
+
+      case OnTapNext():
+        final orderedList = viewModel.fixProblemList();
+        context.go(Routes.createComplete, extra: orderedList);
     }
   }
 }

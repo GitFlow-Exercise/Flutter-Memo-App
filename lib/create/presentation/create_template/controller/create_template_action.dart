@@ -16,4 +16,6 @@ sealed class CreateTemplateAction with _$CreateTemplateAction {
       OnAcceptOrderedProblem;
 
   const factory CreateTemplateAction.onTapReset() = OnTapReset;
+
+  const factory CreateTemplateAction.onTapNext() = OnTapNext;
 }

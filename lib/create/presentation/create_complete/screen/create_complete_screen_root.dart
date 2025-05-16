@@ -8,9 +8,11 @@ import 'package:mongo_ai/create/presentation/create_complete/controller/create_c
 import 'package:mongo_ai/create/presentation/create_complete/controller/create_complete_event.dart';
 import 'package:mongo_ai/create/presentation/create_complete/controller/create_complete_view_model.dart';
 import 'package:mongo_ai/create/presentation/create_complete/screen/create_complete_screen.dart';
+import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
 
 class CreateCompleteScreenRoot extends ConsumerStatefulWidget {
-  const CreateCompleteScreenRoot({super.key});
+  final List<Problem> problems;
+  const CreateCompleteScreenRoot({super.key, required this.problems});
 
   @override
   ConsumerState<CreateCompleteScreenRoot> createState() =>
@@ -26,6 +28,7 @@ class _CreateCompleteScreenRootState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final viewModel = ref.watch(createCompleteViewModelProvider.notifier);
+      print('problems: ${widget.problems}');
       _subscription = viewModel.eventStream.listen(_handleEvent);
     });
   }

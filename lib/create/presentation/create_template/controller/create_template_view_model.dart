@@ -196,4 +196,18 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
 
     return allProblems;
   }
+
+  // orderedProblemList 내 요소 순서대로 number 수정
+  List<Problem> fixProblemList() {
+    final updatedList =
+        state.orderedProblemList
+            .asMap()
+            .entries
+            .map((entry) => entry.value.copyWith(number: entry.key + 1))
+            .toList();
+
+    state = state.copyWith(orderedProblemList: updatedList);
+
+    return state.orderedProblemList;
+  }
 }

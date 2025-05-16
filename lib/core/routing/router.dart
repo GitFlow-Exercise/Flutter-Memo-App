@@ -14,6 +14,7 @@ import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 import 'package:mongo_ai/create/presentation/create_complete/screen/create_complete_screen_root.dart';
 import 'package:mongo_ai/create/presentation/create/screen/upload_raw_screen_root.dart';
 import 'package:mongo_ai/create/presentation/create_problem/screen/create_problem_screen_root.dart';
+import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
 import 'package:mongo_ai/create/presentation/create_template/screen/create_template_screen_root.dart';
 import 'package:mongo_ai/dashboard/presentation/dashboard_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/deleted_files/deleted_files_screen.dart';
@@ -160,7 +161,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.createComplete,
         builder: (context, state) {
-          return const CreateCompleteScreenRoot();
+          final extra = state.extra as List<Problem>;
+          return CreateCompleteScreenRoot(problems: extra);
         },
         redirect: (context, state) {
           return AppRedirect.pdfPreviewRedirect(state.extra);
