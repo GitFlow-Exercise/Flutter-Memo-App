@@ -4,9 +4,12 @@ import 'package:mongo_ai/core/component/pdf_generator.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
+import 'package:mongo_ai/core/state/current_folder_id_state.dart';
+import 'package:mongo_ai/core/state/current_team_id_state.dart';
 import 'package:mongo_ai/create/presentation/create_complete/controller/create_complete_event.dart';
 import 'package:mongo_ai/create/presentation/create_complete/controller/create_complete_state.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
+import 'package:mongo_ai/dashboard/data/dto/workbook_table_dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_complete_view_model.g.dart';
@@ -121,5 +124,62 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
     }
 
     return buffer.toString();
+  }
+
+  Future<bool> saveProblems() async {
+    String? userId;
+    final teamId = ref.read(currentTeamIdStateProvider);
+    final folderId = ref.read(currentFolderIdStateProvider);
+    final userProfile = ref.read(getCurrentUserProfileProvider);
+
+    switch (userProfile) {
+      case Success(data: final user):
+        userId = user.id;
+      case Error():
+        _eventController.add(
+          const CreateCompleteEvent.showSnackBar('유저 정보를 불러오는데 실패했습니다.'),
+        );
+    }
+
+    if (teamId == null || folderId == null || userId == null) {
+      _eventController.add(
+        const CreateCompleteEvent.showSnackBar('필요한 정보를 불러오는 데 실패하였습니다.'),
+      );
+      return false;
+    }
+
+    final createdWorkbook = await ref
+        .read(workbookRepositoryProvider)
+        .createWorkbook(
+          WorkbookTableDto(
+            workbookName: state.title,
+            teamId: teamId,
+            folderId: folderId,
+            userId: userId,
+          ),
+        );
+
+    switch (createdWorkbook) {
+      case Success(data: final workbook):
+        final result = await ref
+            .read(problemRepositoryProvider)
+            .createProblems(state.problems, workbook.workbookId.toString());
+        switch (result) {
+          case Success():
+            return true;
+          case Error():
+            _eventController.add(
+              const CreateCompleteEvent.showSnackBar(
+                '문제집에 문제를 저장하는 데 실패하였씁니다.',
+              ),
+            );
+            return false;
+        }
+      case Error():
+        _eventController.add(
+          const CreateCompleteEvent.showSnackBar('문제집 생성에 실패하였습니다.'),
+        );
+        return false;
+    }
   }
 }
