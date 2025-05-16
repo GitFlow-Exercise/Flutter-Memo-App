@@ -50,7 +50,7 @@ class _CreateTemplateScreenRootState
           context,
         ).showSnackBar(SnackBar(content: Text(message)));
       case CreatePdfWithTemplate(:final bytes):
-        context.go(Routes.pdfPreview, extra: bytes);
+        context.go(Routes.createComplete, extra: bytes);
     }
   }
 
