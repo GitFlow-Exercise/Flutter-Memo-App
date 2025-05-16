@@ -8,6 +8,9 @@ class AuthDataSourceImpl implements AuthDataSource {
   AuthDataSourceImpl({required SupabaseClient client}) : _client = client;
 
   @override
+  Stream<AuthState> get authStateChanges => _client.auth.onAuthStateChange;
+
+  @override
   Future<void> login(String email, String password) async {
     await _client.auth.signInWithPassword(email: email, password: password);
   }
@@ -137,5 +140,11 @@ class AuthDataSourceImpl implements AuthDataSource {
   @override
   bool checkMetadata(String key) {
     return _client.auth.currentUser?.userMetadata?[key] == true;
+  }
+
+  @override
+  String? getUserProvider() {
+    final user = Supabase.instance.client.auth.currentUser;
+    return user?.appMetadata['provider'] as String?;
   }
 }

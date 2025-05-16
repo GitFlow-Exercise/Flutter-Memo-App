@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
+import 'package:mongo_ai/auth/domain/model/auth_state_change.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class AuthRepository extends ChangeNotifier {
   bool get isAuthenticated;
@@ -10,6 +12,10 @@ abstract class AuthRepository extends ChangeNotifier {
   bool get isSelectTeam;
 
   String? get userId;
+
+  Stream<AuthState> get authStateChanges;
+
+  Future<Result<void, AppException>> handleGoogleSignIn(User? user);
 
   bool checkMetadata(String key);
 
@@ -31,11 +37,21 @@ abstract class AuthRepository extends ChangeNotifier {
 
   Future<Result<void, AppException>> verifyEmailOtp(String email, String otp);
 
-  Future<Result<void, AppException>> verifyMagicLinkOtp(String email, String otp);
+  Future<Result<void, AppException>> verifyMagicLinkOtp(
+    String email,
+    String otp,
+  );
 
   Future<Result<void, AppException>> resetPassword(String password);
 
   Future<Result<String, AppException>> getCurrentUserEmail();
 
   Future<Result<void, AppException>> setSelectTeamMetadata();
+
+  // 인증 Provider 정보 반환
+  String? getUserProvider();
+
+  void addAuthStateListener(void Function(AuthStateChange) listener);
+
+  void removeAuthStateListener(void Function(AuthStateChange) listener);
 }

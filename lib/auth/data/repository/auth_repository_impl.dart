@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:mongo_ai/auth/data/data_source/auth_data_source.dart';
+import 'package:mongo_ai/auth/domain/model/auth_state_change.dart';
 import 'package:mongo_ai/auth/domain/repository/auth_repository.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
@@ -6,15 +9,102 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthRepositoryImpl extends AuthRepository {
   final AuthDataSource _authDataSource;
+  StreamSubscription<AuthState>? _authSubscription;
+
+  // 리스너 목록
+  final List<void Function(AuthStateChange)> _listeners = [];
 
   AuthRepositoryImpl({required AuthDataSource authDataSource})
-      : _authDataSource = authDataSource;
+    : _authDataSource = authDataSource {
+    _startAuthStateListening();
+  }
+
+  @override
+  Stream<AuthState> get authStateChanges => _authDataSource.authStateChanges;
+
+  // 내부적으로 리스닝 시작 메서드
+  void _startAuthStateListening() {
+    _authSubscription?.cancel();
+    _authSubscription = authStateChanges.listen((authState) {
+      final event = authState.event;
+      final session = authState.session;
+
+      if (event == AuthChangeEvent.signedIn) {
+        final provider = getUserProvider();
+        final user = session?.user;
+
+        if (provider == 'google') {
+          // Google 로그인은 비동기 처리가 필요하므로 별도 처리
+          _handleGoogleSignInAndNotify(user);
+        } else {
+          _notifyListeners(const AuthStateChange.signedIn());
+        }
+      } else if (event == AuthChangeEvent.signedOut) {
+        _notifyListeners(const AuthStateChange.signedOut());
+      }
+    });
+  }
+
+  // Google 로그인 처리 및 이벤트 발행
+  Future<void> _handleGoogleSignInAndNotify(User? user) async {
+    final result = await handleGoogleSignIn(user);
+    switch (result) {
+      case Success():
+        // 첫 로그인 여부 확인
+        final isFirstTime = !isInitialSetupUser;
+        _notifyListeners(
+          AuthStateChange.signedInWithGoogle(isFirstTimeUser: isFirstTime),
+        );
+        break;
+      case Error(error: final error):
+        _notifyListeners(AuthStateChange.signInFailed(message: error.message));
+        break;
+    }
+  }
+
+  // 모든 리스너에게 이벤트 전달
+  void _notifyListeners(AuthStateChange change) {
+    final listeners = List<void Function(AuthStateChange)>.from(_listeners);
+    for (final listener in listeners) {
+      listener(change);
+    }
+    notifyListeners();
+  }
+
+  @override
+  Future<Result<void, AppException>> handleGoogleSignIn(User? user) async {
+    try {
+      if (user == null) {
+        return Result.error(
+          AppException.unknownUser(
+            message: '사용자 정보를 찾을 수 없습니다.',
+            stackTrace: StackTrace.current,
+          ),
+        );
+      }
+
+      if (!checkMetadata('is_initial_setup_user')) {
+        await saveUser();
+        return const Result.success(null);
+      }
+
+      return const Result.success(null);
+    } catch (e) {
+      return Result.error(
+        AppException.unknown(
+          message: '구글 로그인 처리 중 오류가 발생했습니다.',
+          error: e,
+          stackTrace: StackTrace.current,
+        ),
+      );
+    }
+  }
 
   @override
   Future<Result<void, AppException>> signIn(
-      String email,
-      String password,
-      ) async {
+    String email,
+    String password,
+  ) async {
     try {
       await _authDataSource.login(email, password);
       // 로그인 성공
@@ -105,9 +195,9 @@ class AuthRepositoryImpl extends AuthRepository {
 
   @override
   Future<Result<void, AppException>> signUp(
-      String email,
-      String password,
-      ) async {
+    String email,
+    String password,
+  ) async {
     try {
       await _authDataSource.signUp(email, password);
 
@@ -232,7 +322,10 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
-  Future<Result<void, AppException>> verifyEmailOtp(String email, String otp) async {
+  Future<Result<void, AppException>> verifyEmailOtp(
+    String email,
+    String otp,
+  ) async {
     try {
       await _authDataSource.verifyEmailOtp(email, otp);
 
@@ -249,7 +342,10 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
-  Future<Result<void, AppException>> verifyMagicLinkOtp(String email, String otp) async {
+  Future<Result<void, AppException>> verifyMagicLinkOtp(
+    String email,
+    String otp,
+  ) async {
     try {
       await _authDataSource.verifyMagicLinkOtp(email, otp);
 
@@ -320,5 +416,27 @@ class AuthRepositoryImpl extends AuthRepository {
   @override
   bool checkMetadata(String key) {
     return _authDataSource.checkMetadata(key);
+  }
+
+  @override
+  String? getUserProvider() {
+    return _authDataSource.getUserProvider();
+  }
+
+  @override
+  void addAuthStateListener(void Function(AuthStateChange) listener) {
+    _listeners.add(listener);
+  }
+
+  @override
+  void removeAuthStateListener(void Function(AuthStateChange) listener) {
+    _listeners.remove(listener);
+  }
+
+  @override
+  void dispose() {
+    _authSubscription?.cancel();
+    _listeners.clear();
+    super.dispose();
   }
 }

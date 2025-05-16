@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:mongo_ai/auth/domain/model/auth_state_change.dart';
 import 'package:mongo_ai/auth/presentation/sign_in/controller/sign_in_event.dart';
 import 'package:mongo_ai/auth/presentation/sign_in/controller/sign_in_state.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'sign_in_view_model.g.dart';
 
@@ -17,16 +17,20 @@ class SignInViewModel extends _$SignInViewModel {
 
   Stream<SignInEvent> get eventStream => _eventController.stream;
 
-  StreamSubscription<AuthState>? _authSubscription;
+  void Function(AuthStateChange)? _authStateChangeCallback;
 
   @override
   SignInState build() {
-    // 인증 상태 구독 설정
-    _setupAuthListener();
+    final authRepository = ref.read(authRepositoryProvider);
 
-    // 메모리 누수 방지를 위한 해제 로직
+    _authStateChangeCallback = handleAuthStateChange;
+
+    authRepository.addAuthStateListener(_authStateChangeCallback!);
+
     ref.onDispose(() {
-      _authSubscription?.cancel();
+      if (_authStateChangeCallback != null) {
+        authRepository.removeAuthStateListener(_authStateChangeCallback!);
+      }
       _eventController.close();
     });
 
@@ -36,66 +40,36 @@ class SignInViewModel extends _$SignInViewModel {
     );
   }
 
-  //TODO: 주석 추가 필요
-  void _setupAuthListener() {
-    _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen((
-      data,
-    ) {
-      final AuthChangeEvent event = data.event;
-      final Session? session = data.session;
-
-      if (event == AuthChangeEvent.signedIn) {
-        final user = session?.user;
-        final provider = user?.appMetadata['provider'] as String?;
-
-
-        if (provider == 'google') {
-          _handleGoogleSignIn(user);
+  void handleAuthStateChange(AuthStateChange change) {
+    switch (change) {
+      case SignedInWithGoogle(:final isFirstTimeUser):
+        if (isFirstTimeUser) {
+          _eventController.add(const SignInEvent.navigateToSelectTeam());
         } else {
           _eventController.add(const SignInEvent.navigateToHome());
         }
-      }
-    });
-  }
-
-  // Google 로그인 처리
-  Future<void> _handleGoogleSignIn(User? user) async {
-    if (user == null) return;
-    final authRepository = ref.read(authRepositoryProvider);
-
-    final isUserExisting = authRepository.checkMetadata(
-      'is_initial_setup_user',
-    );
-    if (isUserExisting) {
-      _eventController.add(const SignInEvent.navigateToHome());
-    } else {
-      try {
-        await authRepository.saveUser();
-        _eventController.add(const SignInEvent.navigateToSelectTeam());
-      } catch (e) {
-        _eventController.add(
-          const SignInEvent.showSnackBar('구글 로그인 중 오류가 발생했습니다.'),
-        );
-      }
+        break;
+      case SignedIn():
+        _eventController.add(const SignInEvent.navigateToHome());
+      case SignInFailed(:final message):
+        _eventController.add(SignInEvent.showSnackBar(message));
+      default:
+        return;
     }
   }
 
   // Google 로그인 시작
   Future<void> googleSignIn() async {
-    try {
-      final authRepository = ref.read(authRepositoryProvider);
-      await authRepository.signInWithGoogle();
+    final authRepository = ref.read(authRepositoryProvider);
+    final result = await authRepository.signInWithGoogle();
 
-      // 이후 처리는 _setupAuthListener에서 수행
-      // 여기서 결과 처리는 하지 않음
-    } catch (e) {
-      _eventController.add(
-        const SignInEvent.showSnackBar('Google 로그인을 시작할 수 없습니다.'),
-      );
+    if (result case Error(error: final error)) {
+      _eventController.add(SignInEvent.showSnackBar(error.message));
     }
+    // 성공 시 처리는 인증 상태 리스너가 처리
   }
 
-  // 이메일 로그인 (기존 코드 유지)
+  // 이메일 로그인
   Future<SignInState> login() async {
     final authRepository = ref.read(authRepositoryProvider);
     final result = await authRepository.signIn(
