@@ -142,7 +142,7 @@ class AuthRepositoryImpl extends AuthRepository {
     } on AuthException catch (e) {
       return Result.error(
         AppException.unknown(
-          message: '이메일 또는 비밀번호가 일치하지 않습니다.',
+          message: 'Google 로그인 중 오류가 발생했습니다.',
           error: e,
           stackTrace: StackTrace.current,
         ),
