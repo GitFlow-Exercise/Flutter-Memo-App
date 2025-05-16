@@ -1,10 +1,7 @@
 import 'dart:convert';
-
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:printing/printing.dart';
 import 'package:web/web.dart'; // Blob, URL, document, HTMLAnchorElement 등
 
 /// PDF 문서 생성기
@@ -59,7 +56,10 @@ class PdfGenerator {
     final boldFont = await _loadFont('assets/fonts/Pretendard-Bold.ttf');
 
     final effectiveHeaderStyle = _createHeaderStyle(headerStyle, boldFont);
-    final effectiveContentStyle = _createContentStyle(contentsStyle, regularFont);
+    final effectiveContentStyle = _createContentStyle(
+      contentsStyle,
+      regularFont,
+    );
 
     final contentLines = contentsText.split('\n');
     final pdf = pw.Document();
@@ -172,7 +172,7 @@ class PdfGenerator {
         widgets.add(
           _createHeading(
             text: trimmedLine.substring(4),
-            style: headerStyle.copyWith(fontSize: 16),
+            style: headerStyle.copyWith(fontSize: 12),
             level: 3,
           ),
         );
@@ -320,6 +320,7 @@ class PdfGenerator {
       ),
     );
   }
+
   // -----
   // pdf 파일 다운로드
   void downloadPdf(Uint8List bytes, {String fileName = 'document.pdf'}) {

@@ -9,6 +9,7 @@ extension OpenAiBodyMapper on OpenAiBody {
       input: input.map((e) => e.toMessageInputDto()).toList(),
       instructions: instructions,
       previousResponseId: previousResponseId,
+      temperature: temperature,
     );
   }
 }

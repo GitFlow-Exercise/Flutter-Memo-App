@@ -51,6 +51,29 @@ class _CreateProblemScreenRootState
         ).showSnackBar(SnackBar(content: Text(message)));
       case SuccessOpenAIRequest(:final response):
         if (mounted) {
+          // showDialog(
+          //   context: context,
+          //   builder:
+          //       (ctx) => AlertDialog(
+          //         backgroundColor: AppColor.white,
+          //         title: const Text('내용'),
+          //         content: Row(
+          //           children:
+          //               response.response
+          //                   .map(
+          //                     (e) => Expanded(
+          //                       child: SingleChildScrollView(
+          //                         child: Text(e.getContent()),
+          //                       ),
+          //                     ),
+          //                   )
+          //                   .toList(),
+          //         ),
+          //         actions: [
+          //           BaseAppButton(onTap: () => context.pop(), text: '확인'),
+          //         ],
+          //       ),
+          // );
           context.go(Routes.createTemplate, extra: response);
         }
       case ShowDetailDialog(:final detail):

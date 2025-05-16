@@ -12,7 +12,7 @@ abstract class CreateProblemState with _$CreateProblemState {
     // 생성자에서 넘겨받는 ai response
     @Default(null) OpenAiResponse? response,
     @Default([]) List<Prompt> problemTypes,
-    @Default(null) Prompt? problemType,
+    @Default([]) List<Prompt> selectedProblemTypes,
     // hover 관련 속성
     @Default(null) Prompt? hoveredProblemType,
   }) = _CreateProblemState;

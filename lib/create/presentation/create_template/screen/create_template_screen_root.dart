@@ -33,7 +33,7 @@ class _CreateTemplateScreenRootState
 
       _subscription = viewModel.eventStream.listen(_handleEvent);
 
-      viewModel.setProblem(problem: widget.params.response);
+      //viewModel.setProblem(problem: widget.params.response);
     });
   }
 
@@ -50,7 +50,7 @@ class _CreateTemplateScreenRootState
           context,
         ).showSnackBar(SnackBar(content: Text(message)));
       case CreatePdfWithTemplate(:final bytes):
-        context.go(Routes.pdfPreview, extra: bytes);
+        context.go(Routes.createComplete, extra: bytes);
     }
   }
 
