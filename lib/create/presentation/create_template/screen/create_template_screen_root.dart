@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/create/presentation/base/layout/ai_base_layout.dart';
-import 'package:mongo_ai/create/domain/model/create_workbook_params.dart';
+import 'package:mongo_ai/create/domain/model/create_templete_params.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_action.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_event.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_view_model.dart';
@@ -29,8 +29,10 @@ class _CreateTemplateScreenRootState
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final viewModel = ref.watch(createTemplateViewModelProvider.notifier);
-
+      final viewModel = ref.watch(
+        createTemplateViewModelProvider(widget.params).notifier,
+      );
+      print(widget.params.toString());
       _subscription = viewModel.eventStream.listen(_handleEvent);
 
       //viewModel.setProblem(problem: widget.params.response);
@@ -56,7 +58,7 @@ class _CreateTemplateScreenRootState
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(createTemplateViewModelProvider);
+    final state = ref.watch(createTemplateViewModelProvider(widget.params));
 
     return AiBaseLayout(
       title: '문제집 생성',
@@ -71,7 +73,9 @@ class _CreateTemplateScreenRootState
   }
 
   void _handleAction(CreateTemplateAction action) {
-    final viewModel = ref.watch(createTemplateViewModelProvider.notifier);
+    final viewModel = ref.watch(
+      createTemplateViewModelProvider(widget.params).notifier,
+    );
 
     switch (action) {
       case OnTapColumnsTemplate(isSingleColumns: final isSingleColumns):

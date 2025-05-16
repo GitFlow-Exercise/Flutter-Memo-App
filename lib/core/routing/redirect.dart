@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
-import 'package:mongo_ai/create/domain/model/create_workbook_params.dart';
+import 'package:mongo_ai/create/domain/model/create_templete_params.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 
 abstract class AppRedirect {
