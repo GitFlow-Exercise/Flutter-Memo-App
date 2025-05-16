@@ -67,7 +67,7 @@ class _CreateTemplateScreenRootState
       nextTap: () {
         _handleAction(const CreateTemplateAction.onTapNext());
       },
-      isPopTap: false,
+      isPopTap: true,
       child: CreateTemplateScreen(state: state, onAction: _handleAction),
     );
   }
@@ -92,7 +92,7 @@ class _CreateTemplateScreenRootState
 
       case OnTapNext():
         final orderedList = viewModel.fixProblemList();
-        context.go(Routes.createComplete, extra: orderedList);
+        context.push(Routes.createComplete, extra: orderedList);
     }
   }
 }
