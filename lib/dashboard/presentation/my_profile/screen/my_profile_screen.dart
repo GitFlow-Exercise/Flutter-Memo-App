@@ -132,7 +132,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             widget.teamName,
             style: AppTextStyle.bodyRegular.copyWith(color: AppColor.lightGray),
           ),
-          const Gap(12),
+          const Gap(24),
+
           // 이름 수정 폼
           Form(
             key: _formKey,
@@ -140,12 +141,13 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '이름',
-                  style: AppTextStyle.labelMedium.copyWith(
-                    color: AppColor.mediumGray,
+                  '이름 수정',
+                  style: AppTextStyle.headingMedium.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: AppColor.deepBlack,
                   ),
                 ),
-                const Gap(8),
+                const Gap(16),
                 TextFormField(
                   controller: _nameController,
                   style: AppTextStyle.bodyRegular.copyWith(

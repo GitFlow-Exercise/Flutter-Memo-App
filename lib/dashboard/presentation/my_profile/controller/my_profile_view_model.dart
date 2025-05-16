@@ -30,24 +30,9 @@ class MyProfileViewModel extends _$MyProfileViewModel {
     Future.microtask(() {
       _fetchUserProfile();
       _setHeaderTitle();
-      _fetchCurrentTeam();
     });
 
     return const MyProfileState();
-  }
-
-  void _fetchCurrentTeam() {
-    final teamListAsync = ref.watch(getTeamsByCurrentUserProvider).value;
-    final currentTeamId = ref.watch(currentTeamIdStateProvider);
-
-    switch (teamListAsync) {
-      case Success<List<Team>, AppException>():
-
-        throw UnimplementedError();
-        default:
-        // TODO: Handle this case.
-        throw UnimplementedError();
-    }
   }
 
   void _setHeaderTitle() {
