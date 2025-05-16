@@ -27,8 +27,10 @@ class _CreateCompleteScreenRootState
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final viewModel = ref.watch(createCompleteViewModelProvider.notifier);
-      print('problems: ${widget.problems}');
+      final viewModel = ref.watch(
+        createCompleteViewModelProvider(widget.problems).notifier,
+      );
+
       _subscription = viewModel.eventStream.listen(_handleEvent);
     });
   }
@@ -50,7 +52,7 @@ class _CreateCompleteScreenRootState
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(createCompleteViewModelProvider);
+    final state = ref.watch(createCompleteViewModelProvider(widget.problems));
     return AiBaseLayout(
       title: '문제집 생성',
       subTitle: '생성된 문제집 확인',
@@ -63,7 +65,9 @@ class _CreateCompleteScreenRootState
   }
 
   void _handleAction(CreateCompleteAction action) async {
-    final viewModel = ref.read(createCompleteViewModelProvider.notifier);
+    final viewModel = ref.read(
+      createCompleteViewModelProvider(widget.problems).notifier,
+    );
     switch (action) {
       case SetFileName(:final fileName):
         viewModel.setFileName(fileName);

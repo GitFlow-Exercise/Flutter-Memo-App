@@ -6,6 +6,7 @@ import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/create/presentation/create_complete/controller/create_complete_event.dart';
 import 'package:mongo_ai/create/presentation/create_complete/controller/create_complete_state.dart';
+import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_complete_view_model.g.dart';
@@ -17,29 +18,14 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
   Stream<CreateCompleteEvent> get eventStream => _eventController.stream;
 
   @override
-  CreateCompleteState build() {
+  CreateCompleteState build(List<Problem> problems) {
     ref.onDispose(() {
       _eventController.close();
     });
 
     return CreateCompleteState(
       bytes: Uint8List(0),
-      problems: List.generate(
-        8,
-        (index) => CompleteProblem(
-          id: index,
-          question: '${index + 1}. 다음 중 가장 적절한 것은?',
-          content:
-              'As technology advances, people are becoming increasingly dependent on smart devices to perform everyday tasks. While this convenience is undeniable, it also raises concerns about the gradual decline in certain cognitive skills. For instance, people often rely on navigation apps rather than using their own sense of direction. As a result, their ability to read maps or remember routes is diminishing. In the same way, the use of grammar-checking software can affect one\'s attention to language structure. Although these tools are helpful, __________.',
-          options: [
-            'They may lead users to overestimate their own writing abilities. ',
-            'They are designed to improve communication speed and accuracy ',
-            'They encourage students to explore new ways of self-expression',
-            'They provide a foundation for developing digital creativity',
-            'They demonstrate how far AI technology has come',
-          ],
-        ),
-      ),
+      problems: problems,
       problemTypes: ['객관식, 주관식, 서술형'],
     );
   }
@@ -89,22 +75,17 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
   }
 
   // 문제 업데이트
-  void updateProblem(int index, CompleteProblem updatedProblem) {
-    final problems = List<CompleteProblem>.from(state.problems);
+  void updateProblem(int index, Problem updatedProblem) {
+    final problems = List<Problem>.from(state.problems);
     problems[index] = updatedProblem;
     state = state.copyWith(problems: problems);
   }
 
   // 옵션 순서 변경
   void reorderOptions(int problemIndex, List<String> newOptions) {
-    final problems = List<CompleteProblem>.from(state.problems);
+    final problems = List<Problem>.from(state.problems);
     final problem = problems[problemIndex];
-    problems[problemIndex] = CompleteProblem(
-      id: problem.id,
-      question: problem.question,
-      content: problem.content,
-      options: newOptions,
-    );
+    problems[problemIndex] = problem.copyWith(options: newOptions);
     state = state.copyWith(problems: problems);
   }
 
@@ -114,16 +95,16 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
   }
 
   // CompleteProblem 리스트를 마크다운 형식의 텍스트로 변환하는 함수
-  String _convertProblemsToPdfContent(List<CompleteProblem> problems) {
+  String _convertProblemsToPdfContent(List<Problem> problems) {
     final StringBuffer buffer = StringBuffer();
 
     for (var problem in problems) {
       // 문제 번호와 질문 추가
-      buffer.writeln('### ${problem.question}');
+      buffer.writeln('### ${problem.number}. ${problem.question}');
       buffer.writeln();
 
       // 본문 내용 추가
-      buffer.writeln(problem.content);
+      buffer.writeln(problem.passage);
       buffer.writeln();
 
       // 선택지 추가

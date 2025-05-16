@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:mongo_ai/create/presentation/create_complete/controller/create_complete_state.dart';
+import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
 
 part 'create_complete_action.freezed.dart';
 
@@ -17,7 +17,7 @@ sealed class CreateCompleteAction with _$CreateCompleteAction {
 
   const factory CreateCompleteAction.updateProblem(
     int index,
-    CompleteProblem updatedProblem,
+    Problem updatedProblem,
   ) = UpdateProblem;
 
   const factory CreateCompleteAction.reorderOptions(
