@@ -27,20 +27,15 @@ class MyProfileViewModel extends _$MyProfileViewModel {
       _eventController.close();
     });
 
-    Future.microtask(() {
-      _fetchUserProfile();
-      _setHeaderTitle();
-    });
-
     return const MyProfileState();
   }
 
-  void _setHeaderTitle() {
+  void setHeaderTitle() {
     ref.read(dashboardPathStateProvider.notifier).set(['내 정보']);
   }
 
   // 사용자 프로필 정보 가져오기
-  Future<void> _fetchUserProfile() async {
+  Future<void> fetchUserProfile() async {
     state = state.copyWith(data: const AsyncValue.loading());
 
     final repository = ref.read(userProfileRepositoryProvider);
@@ -92,10 +87,8 @@ class MyProfileViewModel extends _$MyProfileViewModel {
     }
   }
 
-  // 로그아웃 처리
+  // 로그아웃
   Future<void> logout() async {
-    debugPrint('my_profile_view_model.dart: logout() 호출 - Line 78');
-
     try {
       final authRepository = ref.read(authRepositoryProvider);
       final result = await authRepository.signOut();
@@ -105,13 +98,12 @@ class MyProfileViewModel extends _$MyProfileViewModel {
           _eventController.add(
             const MyProfileEvent.showSnackBar('로그아웃 되었습니다.'),
           );
-          debugPrint('my_profile_view_model.dart: 로그아웃 성공 - Line 88');
+          _eventController.add(
+            const MyProfileEvent.navigateSignIn(),
+          );
           break;
         case Error(error: final error):
           _eventController.add(MyProfileEvent.showSnackBar(error.message));
-          debugPrint(
-            'my_profile_view_model.dart: 로그아웃 오류 - ${error.message} - Line 91',
-          );
           break;
       }
     } catch (e) {

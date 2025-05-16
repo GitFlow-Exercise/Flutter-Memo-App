@@ -273,7 +273,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               const Gap(12),
               OutlinedButton(
                 onPressed: () {
-                  debugPrint('my_profile_screen.dart: 로그아웃 버튼 클릭 - Line 219');
                   widget.onAction(const MyProfileAction.onLogout());
                 },
                 style: OutlinedButton.styleFrom(
