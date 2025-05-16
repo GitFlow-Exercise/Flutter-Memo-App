@@ -12,7 +12,7 @@ sealed class AuthStateChange with _$AuthStateChange {
 
   // Google 로그인 성공 (첫 로그인 여부 포함)
   const factory AuthStateChange.signedInWithGoogle({
-    required bool isFirstTimeUser,
+    required bool hasTeamNotSelected,
   }) = SignedInWithGoogle;
 
   // 로그인 실패

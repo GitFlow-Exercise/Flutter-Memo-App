@@ -21,6 +21,8 @@ class SignInViewModel extends _$SignInViewModel {
 
   @override
   SignInState build() {
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
     final authRepository = ref.read(authRepositoryProvider);
 
     _authStateChangeCallback = handleAuthStateChange;
@@ -31,19 +33,21 @@ class SignInViewModel extends _$SignInViewModel {
       if (_authStateChangeCallback != null) {
         authRepository.removeAuthStateListener(_authStateChangeCallback!);
       }
+      emailController.dispose();
+      passwordController.dispose();
       _eventController.close();
     });
 
     return SignInState(
-      emailController: TextEditingController(),
-      passwordController: TextEditingController(),
+      emailController: emailController,
+      passwordController: passwordController,
     );
   }
 
   void handleAuthStateChange(AuthStateChange change) {
     switch (change) {
-      case SignedInWithGoogle(:final isFirstTimeUser):
-        if (isFirstTimeUser) {
+      case SignedInWithGoogle(:final hasTeamNotSelected):
+        if (hasTeamNotSelected) {
           _eventController.add(const SignInEvent.navigateToSelectTeam());
         } else {
           _eventController.add(const SignInEvent.navigateToHome());
