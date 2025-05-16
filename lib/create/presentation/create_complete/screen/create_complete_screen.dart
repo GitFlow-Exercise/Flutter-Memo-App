@@ -23,6 +23,8 @@ class CreateCompleteScreen extends StatefulWidget {
 class _CreateCompleteScreenState extends State<CreateCompleteScreen> {
   late final TextEditingController fileNameController;
   late final TextEditingController titleController;
+  final GlobalKey<FormFieldState<String>> fileNameKey =
+      GlobalKey<FormFieldState<String>>();
 
   final GlobalKey<ProblemPreviewWidgetState> problemPreviewKey =
       GlobalKey<ProblemPreviewWidgetState>();
@@ -45,6 +47,7 @@ class _CreateCompleteScreenState extends State<CreateCompleteScreen> {
   void dispose() {
     fileNameController.dispose();
     titleController.dispose();
+    fileNameKey.currentState?.dispose();
     super.dispose();
   }
 
@@ -64,7 +67,8 @@ class _CreateCompleteScreenState extends State<CreateCompleteScreen> {
             widget.state.fileName.isEmpty || widget.state.isEditMode
                 ? SizedBox(
                   width: 200,
-                  child: TextField(
+                  child: TextFormField(
+                    key: fileNameKey,
                     cursorColor: AppColor.deepBlack,
                     controller: fileNameController,
                     decoration: InputDecoration(
@@ -80,16 +84,30 @@ class _CreateCompleteScreenState extends State<CreateCompleteScreen> {
                       ),
                       isDense: true,
                       contentPadding: EdgeInsets.zero,
+                      errorStyle: AppTextStyle.labelMedium.copyWith(
+                        color: Colors.red,
+                      ),
                     ),
                     style: AppTextStyle.bodyMedium.copyWith(
                       color: AppColor.lightGray,
                     ),
-                    onSubmitted: (value) {
-                      if (value.trim().isNotEmpty) {
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return '파일명을 입력하세요';
+                      }
+                      // 파일 이름 유효성 검사: 특수문자 \/:"*?<>| 제외
+                      final validFileName = RegExp(r'^[^\/\\:"*?<>|]+$');
+                      if (!validFileName.hasMatch(value.trim())) {
+                        return '사용 불가능한 문자입니다.';
+                      }
+                      return null;
+                    },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    onFieldSubmitted: (value) {
+                      final trimmedValue = value.trim();
+                      if (fileNameKey.currentState?.validate() == true) {
                         widget.onAction(
-                          CreateCompleteAction.setFileName(
-                            '${value.trim()}.pdf',
-                          ),
+                          CreateCompleteAction.setFileName('$trimmedValue.pdf'),
                         );
                       }
                     },
