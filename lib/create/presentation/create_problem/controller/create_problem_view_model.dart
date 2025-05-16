@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:mongo_ai/core/constants/ai_constant.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/create/domain/model/create_workbook_params.dart';
@@ -35,46 +36,61 @@ class CreateProblemViewModel extends _$CreateProblemViewModel {
     final pState = state.value;
     // 값이 제대로 할당되지 않은게 있다면
     // 에러처리
-    if (pState == null ||
-        pState.response == null ||
-        pState.problemType == null) {
+    if (pState == null || pState.response == null) {
       state = const AsyncValue.error('에러가 발생하였습니다.', StackTrace.empty);
       return;
     }
-    state = const AsyncValue.loading();
-    final body = OpenAiBody(
-      input: [
-        MessageInput(
-          content: [InputContent.text(text: pState.response!.getContent())],
-        ),
-      ],
-      instructions: pState.problemType!.detail,
-    );
-
-    final useCase = ref.read(createProblemUseCaseProvider);
-    final result = await useCase.execute(body);
-
-    switch (result) {
-      case Success(data: final problem):
-        late CreateTemplateParams params;
-        state = state.whenData((cb) {
-          params = CreateTemplateParams(
-            response: problem,
-            prompt: cb.problemType!,
-          );
-          return cb.copyWith(problem: problem);
-        });
-        _eventController.add(CreateProblemEvent.successOpenAIRequest(params));
-      case Error(error: final error):
-        state = AsyncValue.error(error, error.stackTrace ?? StackTrace.empty);
-    }
-
-    if (state is AsyncError) {
-      final error = (state as AsyncError).error;
+    if (pState.selectedProblemTypes.isEmpty) {
       _eventController.add(
-        CreateProblemEvent.showSnackBar('정보를 불러오는데 실패했습니다: $error'),
+        const CreateProblemEvent.showSnackBar('문제 유형을 선택해주세요.'),
       );
+      return;
     }
+    CreateTemplateParams? params;
+    state = const AsyncValue.loading();
+    // 복수 유형일 시 반복해서 요청
+    for (final prompt in pState.selectedProblemTypes) {
+      final body = OpenAiBody(
+        input: [
+          MessageInput(
+            content: [InputContent.text(text: pState.response!.getContent())],
+          ),
+        ],
+        instructions: prompt.detail,
+      );
+
+      final useCase = ref.read(createProblemUseCaseProvider);
+      final result = await useCase.execute(body);
+
+      switch (result) {
+        case Success(data: final problem):
+          params = CreateTemplateParams(
+            response:
+                params == null ? [problem] : [...params.response, problem],
+            cleanText: pState.response!.getContent().split(
+              AiConstant.splitEmoji,
+            ),
+            prompt: pState.selectedProblemTypes,
+          );
+        case Error(error: final error):
+          state = AsyncValue.error(error, error.stackTrace ?? StackTrace.empty);
+      }
+
+      if (state is AsyncError) {
+        final error = (state as AsyncError).error;
+        _eventController.add(
+          CreateProblemEvent.showSnackBar('정보를 불러오는데 실패했습니다: $error'),
+        );
+      }
+    }
+    // 만약 보낼 parameter 값에 문제가 있다면 에러처리
+    if (params == null) {
+      final error = '문제 생성 중 에러가 발생하였습니다.';
+      state = AsyncValue.error(error, StackTrace.empty);
+      CreateProblemEvent.showSnackBar(error);
+      return;
+    }
+    _eventController.add(CreateProblemEvent.successOpenAIRequest(params));
   }
 
   // prompt 데이터 조회
@@ -86,7 +102,10 @@ class CreateProblemViewModel extends _$CreateProblemViewModel {
     switch (result) {
       case Success(data: final prompts):
         state = state.whenData(
-          (cb) => cb.copyWith(problemTypes: prompts, problemType: prompts[0]),
+          (cb) => cb.copyWith(
+            problemTypes: prompts,
+            selectedProblemTypes: [prompts[0]],
+          ),
         );
       case Error(error: final error):
         state = AsyncValue.error(error, error.stackTrace ?? StackTrace.empty);
@@ -107,7 +126,16 @@ class CreateProblemViewModel extends _$CreateProblemViewModel {
 
   // 문제 유형 설정
   void changeProblemType(Prompt problemType) {
-    state = state.whenData((cb) => cb.copyWith(problemType: problemType));
+    state = state.whenData((cb) {
+      if (cb.selectedProblemTypes.contains(problemType)) {
+        final selectedProblemTypes =
+            cb.selectedProblemTypes.where((e) => e != problemType).toList();
+        return cb.copyWith(selectedProblemTypes: selectedProblemTypes);
+      }
+      return cb.copyWith(
+        selectedProblemTypes: [...cb.selectedProblemTypes, problemType],
+      );
+    });
   }
 
   // 문제 유형 설정

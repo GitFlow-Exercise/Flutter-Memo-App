@@ -29,6 +29,7 @@ class WorkbookGridItem extends ConsumerWidget {
         .watch(selectedWorkbookStateProvider)
         .selectedWorkbooks
         .contains(workbook);
+
     final isSelectMode = ref.watch(selectedWorkbookStateProvider).isSelectMode;
     return GestureDetector(
       onTap: () {
@@ -134,7 +135,7 @@ class WorkbookGridItem extends ConsumerWidget {
                   ),
                 ),
                 Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: AppColor.paleBlue,
                     border: Border(
                       top: BorderSide(

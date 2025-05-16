@@ -33,7 +33,7 @@ class _CreateTemplateScreenRootState
 
       _subscription = viewModel.eventStream.listen(_handleEvent);
 
-      viewModel.setProblem(problem: widget.params.response);
+      //viewModel.setProblem(problem: widget.params.response);
     });
   }
 

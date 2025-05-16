@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:mongo_ai/core/constants/ai_constant.dart';
+import 'package:mongo_ai/core/debounce/debounce.dart';
 import 'package:mongo_ai/core/di/providers.dart';
+import 'package:mongo_ai/core/enum/allowed_extension_type.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
+import 'package:mongo_ai/create/domain/model/pick_file.dart';
 import 'package:mongo_ai/create/domain/model/request/input_content.dart';
 import 'package:mongo_ai/create/domain/model/request/message_input.dart';
 import 'package:mongo_ai/create/domain/model/request/open_ai_body.dart';
@@ -24,13 +28,14 @@ class UploadRawViewModel extends _$UploadRawViewModel {
   @override
   Future<UploadRawState> build() async {
     final textController = TextEditingController();
+    final debouncer = Debouncer(seconds: 1);
 
     ref.onDispose(() {
       _eventController.close();
       textController.dispose();
     });
 
-    return UploadRawState(textController: textController);
+    return UploadRawState(textController: textController, debouncer: debouncer);
   }
 
   // 업로드 타입 선택
@@ -163,5 +168,96 @@ class UploadRawViewModel extends _$UploadRawViewModel {
   // 텍스트 지우기
   void clearText() {
     state.whenData((cb) => cb.textController.clear());
+  }
+
+  // 파일 데이터 지우기
+  void deleteFile() {
+    state = state.whenData((cb) => cb.copyWith(pickFile: null));
+  }
+
+  // 파일 드래그앤드롭 controller 설정
+  void setDropController(DropzoneViewController controller) {
+    state = state.whenData((cb) => cb.copyWith(dropController: controller));
+  }
+
+  // 여러번 요청 로직을 막기위한 debounce
+  // 1초내에 여러번 실행해도 마지막 함수만 실행됨.
+  void debounceAction(VoidCallback action) {
+    final pState = state.value;
+    // 값이 할당되지 않은 경우 에러
+    if (pState == null) {
+      _readyForSnackBar('에러가 발생하였습니다.');
+      return;
+    }
+    pState.debouncer.run(action);
+  }
+
+  // 이미지 파일 드롭
+  void dropImageFile(DropzoneFileInterface event) async {
+    final pState = state.value;
+    // 값이 할당되지 않은 경우 에러
+    if (pState == null || pState.dropController == null) {
+      _readyForSnackBar('에러가 발생하였습니다.');
+      return;
+    }
+    final ctrl = pState.dropController!;
+    // 1) 이름
+    final fileName = await ctrl.getFilename(event);
+    // 2) 바이트 데이터
+    final bytes = await ctrl.getFileData(event); // Uint8List
+    // 3) 확장자
+    final fileExtension = (await ctrl.getFilename(event)).split('.').last;
+
+    if (!AllowedExtensionType.values
+        .map((e) => e.name)
+        .where((e) => e != 'pdf')
+        .contains(fileExtension)) {
+      _readyForSnackBar('지원되지 않는 파일 형식입니다.(지원되는 형식: jpg, png, jpeg)');
+      return;
+    }
+
+    final dropedFile = PickFile(
+      type: AiConstant.inputImage,
+      fileName: fileName,
+      fileExtension: fileExtension,
+      bytes: bytes,
+    );
+
+    state = state.whenData((cb) {
+      return cb.copyWith(pickFile: dropedFile);
+    });
+  }
+
+  // PDF 파일 드롭
+  void dropPdfFile(DropzoneFileInterface event) async {
+    final pState = state.value;
+    // 값이 할당되지 않은 경우 에러
+    if (pState == null || pState.dropController == null) {
+      _readyForSnackBar('에러가 발생하였습니다.');
+      return;
+    }
+    final ctrl = pState.dropController!;
+    // 1) 이름
+    final fileName = await ctrl.getFilename(event);
+    // 2) 바이트 데이터
+    final bytes = await ctrl.getFileData(event); // Uint8List
+    // 3) 확장자 (path package 사용)
+    final fileExtension = (await ctrl.getFilename(event)).split('.').last;
+
+    if (fileExtension != AllowedExtensionType.pdf.name) {
+      _readyForSnackBar('지원되지 않는 파일 형식입니다.(지원되는 형식: pdf)');
+      return;
+    }
+
+    final dropedFile = PickFile(
+      type: AiConstant.inputImage,
+      fileName: fileName,
+      fileExtension: fileExtension,
+      bytes: bytes,
+    );
+
+    state = state.whenData((cb) {
+      return cb.copyWith(pickFile: dropedFile);
+    });
   }
 }

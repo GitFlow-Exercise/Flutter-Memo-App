@@ -174,7 +174,7 @@ class WorkbookListItem extends ConsumerWidget {
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),

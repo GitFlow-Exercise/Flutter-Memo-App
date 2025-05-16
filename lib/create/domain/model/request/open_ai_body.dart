@@ -11,5 +11,6 @@ abstract class OpenAiBody with _$OpenAiBody {
     required List<MessageInput> input,
     required String instructions,
     String? previousResponseId,
+    @Default(0.2) double temperature,
   }) = _OpenAiBody;
 }

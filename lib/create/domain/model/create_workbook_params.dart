@@ -7,7 +7,11 @@ part 'create_workbook_params.freezed.dart';
 @freezed
 abstract class CreateTemplateParams with _$CreateTemplateParams {
   const factory CreateTemplateParams({
-    required OpenAiResponse response,
-    required Prompt prompt,
+    // 만약, 유형을 하나만 선택할시,
+    // 클린 텍스트 리스트 제외하고,
+    // 각 리스트에는 데이터가 하나씩만 들어갑니다.
+    required List<String> cleanText, // 클린 텍스트 리스트
+    required List<OpenAiResponse> response, // Open AI 응답 리스트
+    required List<Prompt> prompt, // 프롬프트 리스트
   }) = _CreateTemplateParams;
 }

@@ -47,13 +47,13 @@ class CreateProblemScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
                   color:
-                      prompt != state.problemType
+                      !state.selectedProblemTypes.contains(prompt)
                           ? AppColor.white
                           : AppColor.paleBlue,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
                     color:
-                        prompt != state.problemType
+                        !state.selectedProblemTypes.contains(prompt)
                             ? AppColor.lightGrayBorder
                             : AppColor.primary,
                     width: 2,
@@ -70,7 +70,7 @@ class CreateProblemScreen extends StatelessWidget {
                             color: AppColor.mediumGray,
                           ),
                         ),
-                        if (prompt != state.problemType)
+                        if (!state.selectedProblemTypes.contains(prompt))
                           Container(
                             width: 20,
                             height: 20,
@@ -80,7 +80,7 @@ class CreateProblemScreen extends StatelessWidget {
                               border: Border.all(color: AppColor.lighterGray),
                             ),
                           ),
-                        if (prompt == state.problemType)
+                        if (state.selectedProblemTypes.contains(prompt))
                           Container(
                             width: 20,
                             height: 20,
@@ -104,10 +104,12 @@ class CreateProblemScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         color:
-                            prompt != state.problemType ? null : AppColor.white,
+                            !state.selectedProblemTypes.contains(prompt)
+                                ? null
+                                : AppColor.white,
                         border: Border.all(
                           color:
-                              prompt != state.problemType
+                              !state.selectedProblemTypes.contains(prompt)
                                   ? AppColor.lightGrayBorder
                                   : AppColor.white,
                         ),
