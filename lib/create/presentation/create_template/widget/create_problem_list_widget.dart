@@ -54,21 +54,21 @@ class CreateProblemListWidget extends StatelessWidget {
                         child: SizedBox(
                           width: 500,
                           child: ProblemCardWidget(
-                            title: problemList[index].title,
-                            content: problemList[index].content,
+                            title: problemList[index].question,
+                            content: problemList[index].passage,
                           ),
                         ),
                       ),
                       childWhenDragging: Opacity(
                         opacity: 0.5,
                         child: ProblemCardWidget(
-                          title: problemList[index].title,
-                          content: problemList[index].content,
+                          title: problemList[index].question,
+                          content: problemList[index].passage,
                         ),
                       ),
                       child: ProblemCardWidget(
-                        title: problemList[index].title,
-                        content: problemList[index].content,
+                        title: problemList[index].question,
+                        content: problemList[index].passage,
                       ),
                     );
                   },

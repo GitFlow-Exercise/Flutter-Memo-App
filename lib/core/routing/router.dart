@@ -169,14 +169,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.createTemplate,
         builder: (context, state) {
-          //final extra = state.extra as CreateTemplateParams;
+          final extra = state.extra as CreateTemplateParams;
           return CreateTemplateScreenRoot(
             params: CreateTemplateParams.sampleData(),
           );
         },
-        // redirect: (context, state) {
-        //   return AppRedirect.createTemplateRedirect(state.extra);
-        // },
+        redirect: (context, state) {
+          return AppRedirect.createTemplateRedirect(state.extra);
+        },
       ),
     ],
   );

@@ -9,10 +9,6 @@ sealed class CreateTemplateAction with _$CreateTemplateAction {
     required bool isSingleColumns,
   }) = OnTapColumnsTemplate;
 
-  const factory CreateTemplateAction.createProblemForPdf({
-    required String contents,
-  }) = CreateProblemForPdf;
-
   const factory CreateTemplateAction.onAcceptProblem(Problem problem) =
       OnAcceptProblem;
 

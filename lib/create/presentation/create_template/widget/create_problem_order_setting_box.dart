@@ -129,9 +129,9 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
                                   child: SizedBox(
                                     width: 300,
                                     child: ProblemCardWidget(
-                                      title: orderedProblemList[index].title,
+                                      title: orderedProblemList[index].question,
                                       content:
-                                          orderedProblemList[index].content,
+                                          orderedProblemList[index].passage,
                                       maxLines: 5,
                                     ),
                                   ),
@@ -139,14 +139,14 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
                                 childWhenDragging: Opacity(
                                   opacity: 0.5,
                                   child: ProblemCardWidget(
-                                    title: orderedProblemList[index].title,
-                                    content: orderedProblemList[index].content,
+                                    title: orderedProblemList[index].question,
+                                    content: orderedProblemList[index].passage,
                                     maxLines: 5,
                                   ),
                                 ),
                                 child: ProblemCardWidget(
-                                  title: orderedProblemList[index].title,
-                                  content: orderedProblemList[index].content,
+                                  title: orderedProblemList[index].question,
+                                  content: orderedProblemList[index].passage,
                                   maxLines: 5,
                                 ),
                               );

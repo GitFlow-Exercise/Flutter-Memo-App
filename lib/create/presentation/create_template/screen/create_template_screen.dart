@@ -39,7 +39,9 @@ class CreateTemplateScreen extends StatelessWidget {
               CreateProblemListWidget(
                 problemList: state.problemList,
                 onAcceptProblem: (problem) {
-                  if (!state.problemList.any((p) => p.id == problem.id)) {
+                  if (!state.problemList.any(
+                    (p) => p.number == problem.number,
+                  )) {
                     onAction(CreateTemplateAction.onAcceptProblem(problem));
                   }
                 },
@@ -52,7 +54,9 @@ class CreateTemplateScreen extends StatelessWidget {
           orderedProblemList: state.orderedProblemList,
           onAcceptOrderedProblem: (problem) {
             // 중복 방지 로직 추가
-            if (!state.orderedProblemList.any((p) => p.id == problem.id)) {
+            if (!state.orderedProblemList.any(
+              (p) => p.number == problem.number,
+            )) {
               onAction(CreateTemplateAction.onAcceptOrderedProblem(problem));
             }
           },

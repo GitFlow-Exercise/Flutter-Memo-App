@@ -79,9 +79,6 @@ class _CreateTemplateScreenRootState
       case OnTapColumnsTemplate(isSingleColumns: final isSingleColumns):
         viewModel.toggleColumnsButton(isSingleColumns: isSingleColumns);
 
-      case CreateProblemForPdf(contents: final contents):
-        viewModel.generatePdf(contents: contents);
-
       case OnAcceptProblem():
         viewModel.moveToOriginalList(action.problem);
 
