@@ -3,13 +3,14 @@ import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/core/state/selected_workbook_state.dart';
 import 'package:mongo_ai/core/state/workbook_filter_state.dart';
 import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
+import 'package:mongo_ai/dashboard/presentation/controller/dashboard_navigation_view_model.dart';
 import 'package:mongo_ai/dashboard/presentation/recent_files/controller/recent_files_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'recent_files_view_model.g.dart';
 
 @riverpod
-class RecentFilesViewModel extends _$RecentFilesViewModel {
+class RecentFilesViewModel extends _$RecentFilesViewModel implements DashboardNavigationViewModel{
   @override
   RecentFilesState build() {
     final workbookResult = ref.watch(getWorkbooksByCurrentTeamIdProvider);
@@ -38,17 +39,30 @@ class RecentFilesViewModel extends _$RecentFilesViewModel {
   }
 
   // ------------------------
-  // 문서 병합모드 메서드
+  // 문제집 선택 메서드
+  @override
   Future<void> selectWorkbook(Workbook workbook) async {
     ref.read(selectedWorkbookStateProvider.notifier).selectWorkbook(workbook);
   }
 
+  @override
+  Future<void> enableSelectMode() async {
+    ref.read(selectedWorkbookStateProvider.notifier).enableSelectMode();
+  }
+
+  @override
+  Future<void> disableSelectMode() async {
+    ref.read(selectedWorkbookStateProvider.notifier).disableSelectMode();
+  }
+
   // ------------------------
   // Workbook DB 메서드
+  @override
   Future<void> refreshWorkbookList() async {
     ref.refresh(getWorkbooksByCurrentTeamIdProvider);
   }
 
+  @override
   Future<void> toggleBookmark(Workbook workbook) async {
     final result = await ref.read(toggleBookmarkUseCaseProvider).execute(workbook);
     switch(result) {
@@ -62,6 +76,7 @@ class RecentFilesViewModel extends _$RecentFilesViewModel {
     }
   }
 
+  @override
   Future<void> deleteWorkbook(Workbook workbook) async {
     final result = await ref.read(deleteWorkbookUseCaseProvider).execute(workbook);
     switch(result) {

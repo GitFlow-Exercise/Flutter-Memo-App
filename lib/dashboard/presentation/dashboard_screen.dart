@@ -9,7 +9,7 @@ import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/dashboard/domain/model/folder.dart';
 import 'package:mongo_ai/dashboard/presentation/component/folder_list_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/path_widget.dart';
-import 'package:mongo_ai/dashboard/presentation/component/select_mode_button_widget.dart';
+import 'package:mongo_ai/dashboard/presentation/component/merge_mode_button_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/team_list_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/workbook_filter_bookmark_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/workbook_filter_sort_widget.dart';
@@ -123,9 +123,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             const Gap(10),
                             SizedBox(
                               height: 40,
-                              child: SelectModeButtonWidget(
+                              child: MergeModeButtonWidget(
                                 onClick: () {
-                                  viewModel.toggleSelectMode();
+                                  viewModel.toggleMergeMode();
                                 },
                               ),
                             )
@@ -251,7 +251,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     _currentPath = [folder.folderName];
                   });
                 },
-                onClickExpand: () {},
                 onCreateFolder: (String folderName) {
                   viewModel.createFolder(folderName);
                 },
