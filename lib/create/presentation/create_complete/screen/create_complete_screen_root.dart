@@ -59,6 +59,9 @@ class _CreateCompleteScreenRootState
       step: 4,
       maxWidth: 850,
       maxHeight: 750,
+      nextTap: () {
+        print('완료 버튼 누름');
+      },
       isPopTap: true,
       child: CreateCompleteScreen(state: state, onAction: _handleAction),
     );
