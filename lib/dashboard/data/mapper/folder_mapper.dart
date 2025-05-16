@@ -11,3 +11,15 @@ extension FolderMapper on FolderDto {
     );
   }
 }
+
+extension FolderDtoMapper on Folder {
+  FolderDto toFolderDto() {
+    return FolderDto(
+      folderId: folderId,
+      folderName: folderName,
+      teamId: teamId,
+      createdAt: createdAt.toIso8601String(),
+      // 필요에 따라 parentId 등 기타 필드도 매핑
+    );
+  }
+}

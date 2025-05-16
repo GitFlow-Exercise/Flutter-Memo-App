@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:mongo_ai/auth/presentation/check_otp/controller/check_otp_action.dart';
 import 'package:mongo_ai/auth/presentation/check_otp/controller/check_otp_state.dart';
-import 'package:mongo_ai/core/component/auth_header_widget.dart';
+import 'package:mongo_ai/auth/presentation/components/auth_header_widget.dart';
 import 'package:mongo_ai/core/extension/int_extension.dart';
 import 'package:mongo_ai/core/extension/string_extension.dart';
 import 'package:mongo_ai/core/style/app_color.dart';

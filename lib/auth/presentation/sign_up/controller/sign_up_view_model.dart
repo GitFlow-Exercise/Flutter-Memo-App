@@ -113,7 +113,7 @@ class SignUpViewModel extends _$SignUpViewModel {
   //TODO(ok): 추후 화면 구현 시 이동 예정
   Future<bool> verifyOtp() async {
     final authRepository = ref.read(authRepositoryProvider);
-    final result = await authRepository.verifyOtp(
+    final result = await authRepository.verifyEmailOtp(
       state.emailController.text,
       state.codeController.text,
     );

@@ -3,7 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:mongo_ai/auth/domain/model/password_criteria.dart';
 import 'package:mongo_ai/auth/presentation/sign_up_password/controller/sign_up_password_action.dart';
 import 'package:mongo_ai/auth/presentation/sign_up_password/controller/sign_up_password_state.dart';
-import 'package:mongo_ai/core/component/auth_header_widget.dart';
+import 'package:mongo_ai/auth/presentation/components/auth_header_widget.dart';
 import 'package:mongo_ai/core/component/password_requirement_widget.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';

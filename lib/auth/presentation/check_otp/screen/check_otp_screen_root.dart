@@ -65,7 +65,7 @@ class _CheckOtpScreenRootState extends ConsumerState<CheckOtpScreenRoot> {
 
     switch (action) {
       case OnVerifyOtp():
-        viewModel.verifyOtp();
+        viewModel.verifyEmailOtp();
         break;
       case OnResendOtp():
         viewModel.resendOtp();

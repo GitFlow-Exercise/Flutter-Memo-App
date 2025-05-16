@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/auth/presentation/check_otp/screen/check_otp_screen_root.dart';
+import 'package:mongo_ai/auth/presentation/select_team/screen/select_team_screen_root.dart';
 import 'package:mongo_ai/auth/presentation/sign_in/screen/sign_in_screen_root.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/screen/sign_up_screen_root.dart';
 import 'package:mongo_ai/auth/presentation/sign_up_complete/screen/sign_up_complete_screen_root.dart';
@@ -17,6 +18,7 @@ import 'package:mongo_ai/create/presentation/create_problem/screen/create_proble
 import 'package:mongo_ai/create/presentation/create_template/screen/create_template_screen_root.dart';
 import 'package:mongo_ai/create/presentation/pdf_preview/screen/pdf_preview_screen_root.dart';
 import 'package:mongo_ai/dashboard/presentation/dashboard_screen.dart';
+import 'package:mongo_ai/dashboard/presentation/deleted_files/deleted_files_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/folder/folder_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/my_files/my_files_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/recent_files/recent_files_screen.dart';
@@ -35,6 +37,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       return AppRedirect.authRedirect(
         isAuthenticated: auth.isAuthenticated,
         isInitialSetupUser: auth.isInitialSetupUser,
+        isSelectTeam: auth.isSelectTeam,
         nowPath: path,
         extra: extra,
       );
@@ -86,6 +89,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
+        path: Routes.selectTeam,
+        builder: (context, state) {
+          return const SelectTeamScreenRoot();
+        },
+      ),
+      GoRoute(
         path: Routes.signUpComplete,
         builder: (context, state) => const SignUpCompleteScreenRoot(),
       ),
@@ -115,6 +124,14 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: Routes.folder,
                 builder: (context, state) => const FolderScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.deletedFiles,
+                builder: (context, state) => const DeletedFilesScreen(),
               ),
             ],
           ),

@@ -9,14 +9,18 @@ import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
 
 class WorkbookGridItem extends ConsumerWidget {
   final void Function() onClick;
-  final void Function() onBookmark;
+  final void Function(Workbook workbook) onSelect;
+  final void Function(Workbook workbook) onBookmark;
+  final void Function(Workbook workbook) onDelete;
   final Workbook workbook;
 
   const WorkbookGridItem({
     super.key,
     required this.workbook,
     required this.onClick,
+    required this.onSelect,
     required this.onBookmark,
+    required this.onDelete,
   });
 
   @override
@@ -25,8 +29,16 @@ class WorkbookGridItem extends ConsumerWidget {
         .watch(selectedWorkbookStateProvider)
         .selectedWorkbooks
         .contains(workbook);
+
+    final isSelectMode = ref.watch(selectedWorkbookStateProvider).isSelectMode;
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        if (isSelectMode) {
+          onSelect(workbook);
+        } else {
+          onClick();
+        }
+      },
       child: Container(
         width: 250,
         decoration: BoxDecoration(
@@ -37,6 +49,11 @@ class WorkbookGridItem extends ConsumerWidget {
               offset: const Offset(0, 2),
             ),
           ],
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: isSelected ? AppColor.primary : Colors.transparent,
+            width: 2,
+          ),
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
@@ -46,7 +63,7 @@ class WorkbookGridItem extends ConsumerWidget {
               children: [
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
                     child: Column(
                       children: [
                         SizedBox(
@@ -72,8 +89,13 @@ class WorkbookGridItem extends ConsumerWidget {
                               Align(
                                 alignment: Alignment.topRight,
                                 child: GestureDetector(
-                                  behavior: HitTestBehavior.translucent,
-                                  onTap: onBookmark,
+                                  onTap: () {
+                                    if(isSelectMode) {
+                                      onSelect(workbook);
+                                    } else {
+                                      onBookmark(workbook);
+                                    }
+                                  },
                                   child: Icon(
                                     workbook.bookmark
                                         ? Icons.star
@@ -89,7 +111,6 @@ class WorkbookGridItem extends ConsumerWidget {
                             ],
                           ),
                         ),
-                        const Gap(10),
                         Expanded(
                           child: Column(
                             children: [
@@ -118,8 +139,11 @@ class WorkbookGridItem extends ConsumerWidget {
                     color: AppColor.paleBlue,
                     border: Border(
                       top: BorderSide(
-                        color: AppColor.lightGrayBorder,
-                        width: 1,
+                        color:
+                            isSelected
+                                ? AppColor.primary
+                                : AppColor.lightGrayBorder,
+                        width: 2,
                       ),
                     ),
                   ),
@@ -135,6 +159,21 @@ class WorkbookGridItem extends ConsumerWidget {
                           DateFormat(
                             'yyyy-MM-dd HH:mm',
                           ).format(workbook.createdAt),
+                        ),
+                        const Spacer(),
+                        GestureDetector(
+                          onTap: () {
+                            if(isSelectMode) {
+                              onSelect(workbook);
+                            } else {
+                              onDelete(workbook);
+                            }
+                          },
+                          child: const Icon(
+                            Icons.close,
+                            size: 24,
+                            color: AppColor.destructive
+                          ),
                         ),
                       ],
                     ),
