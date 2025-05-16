@@ -2,11 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mongo_ai/core/di/providers.dart';
-import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
-import 'package:mongo_ai/core/state/current_team_id_state.dart';
 import 'package:mongo_ai/core/state/dashboard_path_state.dart';
-import 'package:mongo_ai/dashboard/domain/model/team.dart';
+import 'package:mongo_ai/dashboard/domain/model/user_profile.dart';
+import 'package:mongo_ai/dashboard/presentation/controller/dashboard_view_model.dart';
 import 'package:mongo_ai/dashboard/presentation/my_profile/controller/my_profile_event.dart';
 import 'package:mongo_ai/dashboard/presentation/my_profile/controller/my_profile_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -74,10 +73,13 @@ class MyProfileViewModel extends _$MyProfileViewModel {
 
     switch (result) {
       case Success():
-        state = state.copyWith(
-          data: AsyncValue.data(user.copyWith(userName: name)),
+        final updatedUser = user.copyWith(userName: name);
+
+        state = state.copyWith(data: AsyncValue.data(updatedUser));
+        _eventController.add(
+          const MyProfileEvent.showSnackBar('닉네임 변경을 완료했습니다.'),
         );
-        _eventController.add(const MyProfileEvent.showSnackBar('닉네임 변경을 완료했습니다.'));
+        _updateDashboardUserName(updatedUser);
         break;
       case Error(error: final error):
         state = state.copyWith(
@@ -86,6 +88,13 @@ class MyProfileViewModel extends _$MyProfileViewModel {
         _eventController.add(MyProfileEvent.showSnackBar(error.message));
         break;
     }
+  }
+
+  // 대시보드 유저 이름 업데이트
+  Future<void> _updateDashboardUserName(UserProfile userProfile) async {
+    await ref
+        .watch(dashboardViewModelProvider.notifier)
+        .updateUserProfile(userProfile);
   }
 
   // 로그아웃
@@ -99,9 +108,7 @@ class MyProfileViewModel extends _$MyProfileViewModel {
           _eventController.add(
             const MyProfileEvent.showSnackBar('로그아웃 되었습니다.'),
           );
-          _eventController.add(
-            const MyProfileEvent.navigateSignIn(),
-          );
+          _eventController.add(const MyProfileEvent.navigateSignIn());
           break;
         case Error(error: final error):
           _eventController.add(MyProfileEvent.showSnackBar(error.message));
