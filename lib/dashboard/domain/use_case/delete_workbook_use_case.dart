@@ -9,7 +9,10 @@ class DeleteWorkbookUseCase {
   DeleteWorkbookUseCase(this._workbookRepository);
 
   Future<Result<Workbook, AppException>> execute(Workbook workbook) async {
-    final result = await _workbookRepository.deleteWorkbook(workbook);
+    final updatedWorkbook = workbook.copyWith(
+      deletedAt: DateTime.now(),
+    );
+    final result = await _workbookRepository.updateWorkbook(updatedWorkbook);
     return result;
   }
 }

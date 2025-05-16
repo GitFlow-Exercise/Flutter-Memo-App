@@ -20,7 +20,7 @@ class FolderViewModel extends _$FolderViewModel {
     final workbookList = workbookResult.whenData((result) {
       switch (result) {
         case Success(data: final data):
-          final folderData = data.where((workbook) => workbook.folderId == currentFolderId).toList();
+          final folderData = data.where((workbook) => workbook.deletedAt == null && workbook.folderId == currentFolderId).toList();
           return WorkbookFilterState.applyWorkbookViewOption(folderData, filter);
         case Error():
           // 여기서 알림등 에러 처리 가능.
@@ -48,6 +48,19 @@ class FolderViewModel extends _$FolderViewModel {
 
   Future<void> toggleBookmark(Workbook workbook) async {
     final result = await ref.read(toggleBookmarkUseCaseProvider).execute(workbook);
+    switch(result) {
+      case Success(data: final data):
+        refreshWorkbookList();
+        break;
+      case Error():
+        print('Error: ${result.error}');
+        // 여기서 알림등 에러 처리 가능.
+        break;
+    }
+  }
+
+  Future<void> deleteWorkbook(Workbook workbook) async {
+    final result = await ref.read(deleteWorkbookUseCaseProvider).execute(workbook);
     switch(result) {
       case Success(data: final data):
         refreshWorkbookList();

@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:mongo_ai/core/state/dashboard_path_state.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 
-class PathWidget extends ConsumerWidget {
-  const PathWidget({super.key});
+class PathWidget extends StatelessWidget {
+  final List<String> path;
+
+  const PathWidget({super.key, required this.path});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final path = ref.watch(dashboardPathStateProvider);
+  Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [

@@ -18,6 +18,7 @@ import 'package:mongo_ai/create/presentation/create_problem/screen/create_proble
 import 'package:mongo_ai/create/presentation/create_template/screen/create_template_screen_root.dart';
 import 'package:mongo_ai/create/presentation/pdf_preview/screen/pdf_preview_screen_root.dart';
 import 'package:mongo_ai/dashboard/presentation/dashboard_screen.dart';
+import 'package:mongo_ai/dashboard/presentation/deleted_files/deleted_files_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/folder/folder_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/my_files/my_files_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/recent_files/recent_files_screen.dart';
@@ -123,6 +124,14 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: Routes.folder,
                 builder: (context, state) => const FolderScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.deletedFiles,
+                builder: (context, state) => const DeletedFilesScreen(),
               ),
             ],
           ),
