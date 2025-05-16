@@ -90,7 +90,7 @@ class WorkbookGridItem extends ConsumerWidget {
                                 alignment: Alignment.topRight,
                                 child: GestureDetector(
                                   onTap: () {
-                                    if(isSelectMode) {
+                                    if (isSelectMode) {
                                       onSelect(workbook);
                                     } else {
                                       onBookmark(workbook);
@@ -135,7 +135,7 @@ class WorkbookGridItem extends ConsumerWidget {
                   ),
                 ),
                 Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     color: AppColor.paleBlue,
                     border: Border(
                       top: BorderSide(
@@ -163,7 +163,7 @@ class WorkbookGridItem extends ConsumerWidget {
                         const Spacer(),
                         GestureDetector(
                           onTap: () {
-                            if(isSelectMode) {
+                            if (isSelectMode) {
                               onSelect(workbook);
                             } else {
                               onDelete(workbook);
@@ -172,7 +172,7 @@ class WorkbookGridItem extends ConsumerWidget {
                           child: const Icon(
                             Icons.close,
                             size: 24,
-                            color: AppColor.destructive
+                            color: AppColor.destructive,
                           ),
                         ),
                       ],
