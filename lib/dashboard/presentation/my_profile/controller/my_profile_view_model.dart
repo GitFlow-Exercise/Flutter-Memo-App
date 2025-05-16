@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/result/result.dart';
-import 'package:mongo_ai/core/state/dashboard_path_state.dart';
 import 'package:mongo_ai/dashboard/domain/model/user_profile.dart';
 import 'package:mongo_ai/dashboard/presentation/controller/dashboard_view_model.dart';
 import 'package:mongo_ai/dashboard/presentation/my_profile/controller/my_profile_event.dart';
@@ -31,7 +30,7 @@ class MyProfileViewModel extends _$MyProfileViewModel {
   }
 
   void setHeaderTitle() {
-    ref.read(dashboardPathStateProvider.notifier).set(['내 정보']);
+    debugPrint('deprecated');
   }
 
   // 사용자 프로필 정보 가져오기

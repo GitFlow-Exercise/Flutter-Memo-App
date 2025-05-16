@@ -10,7 +10,8 @@ import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
 class WorkbookGridItem extends ConsumerWidget {
   final void Function() onClick;
   final void Function(Workbook workbook) onSelect;
-  final void Function() onBookmark;
+  final void Function(Workbook workbook) onBookmark;
+  final void Function(Workbook workbook) onDelete;
   final Workbook workbook;
 
   const WorkbookGridItem({
@@ -19,6 +20,7 @@ class WorkbookGridItem extends ConsumerWidget {
     required this.onClick,
     required this.onSelect,
     required this.onBookmark,
+    required this.onDelete,
   });
 
   @override
@@ -27,6 +29,7 @@ class WorkbookGridItem extends ConsumerWidget {
         .watch(selectedWorkbookStateProvider)
         .selectedWorkbooks
         .contains(workbook);
+
     final isSelectMode = ref.watch(selectedWorkbookStateProvider).isSelectMode;
     return GestureDetector(
       onTap: () {
@@ -60,7 +63,7 @@ class WorkbookGridItem extends ConsumerWidget {
               children: [
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
                     child: Column(
                       children: [
                         SizedBox(
@@ -86,8 +89,13 @@ class WorkbookGridItem extends ConsumerWidget {
                               Align(
                                 alignment: Alignment.topRight,
                                 child: GestureDetector(
-                                  behavior: HitTestBehavior.translucent,
-                                  onTap: onBookmark,
+                                  onTap: () {
+                                    if (isSelectMode) {
+                                      onSelect(workbook);
+                                    } else {
+                                      onBookmark(workbook);
+                                    }
+                                  },
                                   child: Icon(
                                     workbook.bookmark
                                         ? Icons.star
@@ -151,6 +159,21 @@ class WorkbookGridItem extends ConsumerWidget {
                           DateFormat(
                             'yyyy-MM-dd HH:mm',
                           ).format(workbook.createdAt),
+                        ),
+                        const Spacer(),
+                        GestureDetector(
+                          onTap: () {
+                            if (isSelectMode) {
+                              onSelect(workbook);
+                            } else {
+                              onDelete(workbook);
+                            }
+                          },
+                          child: const Icon(
+                            Icons.close,
+                            size: 24,
+                            color: AppColor.destructive,
+                          ),
                         ),
                       ],
                     ),

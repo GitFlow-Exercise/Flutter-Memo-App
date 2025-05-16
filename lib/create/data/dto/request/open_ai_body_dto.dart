@@ -10,12 +10,14 @@ class OpenAIBodyDto {
   final String instructions;
   @JsonKey(name: 'previous_response_id')
   final String? previousResponseId;
+  final double temperature;
 
   OpenAIBodyDto({
     required this.model,
     required this.input,
     required this.instructions,
     this.previousResponseId,
+    required this.temperature,
   });
 
   factory OpenAIBodyDto.fromJson(Map<String, dynamic> json) =>

@@ -17,6 +17,8 @@ abstract class AiConstant {
   // status
   static const String completed = 'completed';
 
+  static const String splitEmoji = '~^^~';
+
   static const String cleanTextPrompt = '''
 **Clean Text 생성 규칙**
    - 문제의 요지나 정답을 출력하지 말고, 반드시 아래 규칙에 따라 지문만 정제하세요.
@@ -26,5 +28,6 @@ abstract class AiConstant {
    - 점수 표시 제거 ([3점] 등)
    - 주석이나 부가 설명 제거 (* conspiracy theory: 음모론 등)
    - 정답 삽입 시 어떠한 표시(볼드체, 기울임체 등)도 하지 않음.
+   - 만약 문제가 여러개일 경우에는 "~^^~"로 각 지문들을 구분해줘.
 ''';
 }

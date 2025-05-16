@@ -40,7 +40,12 @@ class RecentFilesScreen extends ConsumerWidget {
             onSelect: (Workbook workbook) {
               viewModel.selectWorkbook(workbook);
             },
-            onBookmark: () {},
+            onBookmark: (Workbook workbook) {
+              viewModel.toggleBookmark(workbook);
+            },
+            onDelete: (Workbook workbook) {
+              viewModel.deleteWorkbook(workbook);
+            },
           ),
         );
       }).toList(),
@@ -58,7 +63,12 @@ class RecentFilesScreen extends ConsumerWidget {
           onSelect: (Workbook workbook) {
             viewModel.selectWorkbook(workbook);
           },
-          onBookmark: () {},
+          onBookmark: (Workbook workbook) {
+            viewModel.toggleBookmark(workbook);
+          },
+          onDelete: (Workbook workbook) {
+            viewModel.deleteWorkbook(workbook);
+          },
         );
       },
       separatorBuilder: (context, index) {

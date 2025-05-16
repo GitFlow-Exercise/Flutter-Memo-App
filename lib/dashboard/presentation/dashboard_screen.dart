@@ -26,19 +26,28 @@ class DashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
-  int _selectedIndex = 0;
+  List<String> _currentPath = [];
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(dashboardViewModelProvider);
     final viewModel = ref.read(dashboardViewModelProvider.notifier);
+    final selectedIndex = widget.navigationShell.currentIndex;
+    if(selectedIndex == 0) {
+      _currentPath = ['내 항목'];
+    } else if(selectedIndex == 1) {
+      _currentPath = ['최근 항목'];
+    } else if(selectedIndex == 3) {
+      _currentPath = ['휴지통'];
+    }
+
     return state.when(
       data: (dashboard) {
         return Scaffold(
           backgroundColor: AppColor.white,
           body: Row(
             children: [
-              _sideBar(),
+              _sideBar(selectedIndex),
               Expanded(
                 child: Column(
                   children: [
@@ -49,7 +58,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         height: 40,
                         child: Row(
                           children: [
-                            const PathWidget(),
+                            PathWidget(path: _currentPath),
                             const Spacer(),
                         ElevatedButton(
                           onPressed: () {
@@ -185,7 +194,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _sideBar() {
+  Widget _sideBar(int selectedIndex) {
     final viewModel = ref.read(dashboardViewModelProvider.notifier);
     return SizedBox(
       width: 250,
@@ -200,6 +209,22 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               child: Center(
                 child: Row(
                   children: [
+                    Container(
+                      width: 30,
+                      height: 30,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColor.primary,
+                      ),
+                      child: Center(
+                        child: Image.asset(
+                          'images/mongo_ai_logo.png',
+                          width: 16,
+                          height: 16,
+                        ),
+                      ),
+                    ),
+                    const Gap(10),
                     Text(
                       'Mongo AI',
                       style: AppTextStyle.titleBold.copyWith(
@@ -230,9 +255,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               child: Column(
                 children: [
                   const Gap(10),
-                  _sideBarTile(0, '내 항목', Icons.person),
+                  _sideBarTile(selectedIndex, 0, '내 항목', Icons.person),
                   const Gap(10),
-                  _sideBarTile(1, '최근 항목', Icons.timelapse),
+                  _sideBarTile(selectedIndex, 1, '최근 항목', Icons.timelapse),
                   const Gap(10),
                 ],
               ),
@@ -242,8 +267,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               child: FolderListWidget(
                 onClickFolder: (Folder folder) {
                   viewModel.selectFolderId(folder.folderId);
-                  viewModel.updatePath([folder.folderName]);
                   _onTap(context, 2);
+                  setState(() {
+                    _currentPath = [folder.folderName];
+                  });
                 },
                 onClickExpand: () {},
                 onCreateFolder: (String folderName) {
@@ -257,40 +284,55 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 },
               ),
             ),
+            const Divider(
+              color: AppColor.lightGrayBorder,
+              thickness: 1,
+            ),
+            _sideBarTile(selectedIndex, 3, '휴지통', Icons.delete),
+            const Gap(20),
           ],
         ),
       ),
     );
   }
 
-  Widget _sideBarTile(int index, String title, IconData icon) {
+  Widget _sideBarTile(int selectedIndex, int index, String title, IconData icon) {
     final viewModel = ref.read(dashboardViewModelProvider.notifier);
     return ListTile(
       title: Text(
         title,
         style: AppTextStyle.bodyMedium.copyWith(
           color:
-              _selectedIndex == index ? AppColor.primary : AppColor.mediumGray,
+          index == selectedIndex
+              ? AppColor.primary
+              : AppColor.mediumGray,
         ),
       ),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      tileColor: _selectedIndex == index ? AppColor.paleBlue : AppColor.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      tileColor:
+      index == selectedIndex
+          ? AppColor.paleBlue
+          : AppColor.white,
       leading: Icon(
         icon,
-        color: _selectedIndex == index ? AppColor.primary : AppColor.mediumGray,
+        color:
+        index == selectedIndex
+            ? AppColor.primary
+            : AppColor.mediumGray,
       ),
       onTap: () {
         viewModel.clearFolderId();
-        viewModel.updatePath([title]);
         _onTap(context, index);
+        setState(() {
+          _currentPath = [title];
+        });
       },
     );
   }
 
   void _onTap(BuildContext context, int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
     widget.navigationShell.goBranch(index);
   }
 }

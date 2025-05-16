@@ -69,7 +69,7 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
     state = state.copyWith(isSingleColumns: isSingleColumns);
   }
 
-  void setProblem({required OpenAiResponse problem}) {
+  void setPr2oblem({required OpenAiResponse problem}) {
     state = state.copyWith(problem: AsyncValue.data(problem));
   }
 

@@ -44,6 +44,8 @@ import 'package:mongo_ai/dashboard/domain/repository/folder_repository.dart';
 import 'package:mongo_ai/dashboard/domain/repository/team_repository.dart';
 import 'package:mongo_ai/dashboard/domain/repository/user_profile_repository.dart';
 import 'package:mongo_ai/dashboard/domain/repository/workbook_repository.dart';
+import 'package:mongo_ai/dashboard/domain/use_case/delete_workbook_use_case.dart';
+import 'package:mongo_ai/dashboard/domain/use_case/toggle_bookmark_use_case.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final supabaseClientProvider = Provider<SupabaseClient>((ref) {
@@ -138,6 +140,16 @@ final getWorkbooksByCurrentTeamIdProvider =
       final repository = ref.watch(workbookRepositoryProvider);
       return repository.getWorkbooksByCurrentTeamId(teamId);
     });
+
+final toggleBookmarkUseCaseProvider = Provider<ToggleBookmarkUseCase>((ref) {
+  final workbookRepository = ref.watch(workbookRepositoryProvider);
+  return ToggleBookmarkUseCase(workbookRepository);
+});
+
+final deleteWorkbookUseCaseProvider = Provider<DeleteWorkbookUseCase>((ref) {
+  final workbookRepository = ref.watch(workbookRepositoryProvider);
+  return DeleteWorkbookUseCase(workbookRepository);
+});
 
 // -----------------------------------
 // create
