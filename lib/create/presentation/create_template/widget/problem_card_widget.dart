@@ -4,14 +4,16 @@ import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 
 class ProblemCardWidget extends StatelessWidget {
-  final String title;
-  final String content;
+  final int number;
+  final String question;
+  final String passage;
   final int? maxLines;
   const ProblemCardWidget({
     super.key,
-    required this.title,
-    required this.content,
+    required this.question,
+    required this.passage,
     this.maxLines = 2,
+    required this.number,
   });
 
   @override
@@ -48,7 +50,7 @@ class ProblemCardWidget extends StatelessWidget {
           ),
           const Gap(8),
           Text(
-            title,
+            '$number. $question',
             style: AppTextStyle.labelMedium.copyWith(
               color: AppColor.mediumGray,
             ),
@@ -56,7 +58,7 @@ class ProblemCardWidget extends StatelessWidget {
           ),
           const Gap(8),
           Text(
-            content,
+            passage,
             style: AppTextStyle.labelMedium.copyWith(
               color: AppColor.mediumGray,
             ),

@@ -180,7 +180,7 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
 
         allProblems.add(
           Problem(
-            number: number++,
+            number: number,
             question: questionLine,
             passage: passage,
             options: options,
@@ -189,6 +189,8 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
             cleanText: cleanText,
           ),
         );
+
+        number++;
       }
     }
 
