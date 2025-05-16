@@ -3,6 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart'; // 로케일 데이터 초기화 import 추가
+import 'package:mongo_ai/core/di/providers.dart';
+import 'package:mongo_ai/core/result/result.dart';
+import 'package:mongo_ai/core/state/current_team_id_state.dart';
+import 'package:mongo_ai/dashboard/domain/model/team.dart';
 import 'package:mongo_ai/dashboard/presentation/my_profile/controller/my_profile_action.dart';
 import 'package:mongo_ai/dashboard/presentation/my_profile/controller/my_profile_event.dart';
 import 'package:mongo_ai/dashboard/presentation/my_profile/controller/my_profile_view_model.dart';
@@ -59,23 +63,47 @@ class _MyProfileScreenRootState extends ConsumerState<MyProfileScreenRoot> {
 
     switch (event) {
       case ShowSnackBar(message: final message):
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(message)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(message)));
         break;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('my_profile_screen_root.dart: build - Line 45');
-
     final state = ref.watch(myProfileViewModelProvider);
+    final teamListAsync = ref.watch(getTeamsByCurrentUserProvider);
+    final currentTeamId = ref.watch(currentTeamIdStateProvider);
 
     return Scaffold(
-      body: MyProfileScreen(
-        state: state,
-        onAction: _handleAction,
+      body: Builder(
+        builder: (context) {
+          return teamListAsync.when(
+            data: (result) {
+              final teamList = switch (result) {
+                Success(data: final data) => data,
+                Error() => <Team>[],
+              };
+              final selectedTeamName =
+                  teamList
+                      .firstWhere(
+                        (team) => team.teamId == currentTeamId,
+                        orElse:
+                            () =>
+                                const Team(teamId: -1, teamName: '선택된 팀이 없습니다'),
+                      )
+                      .teamName;
+              return MyProfileScreen(
+                state: state,
+                onAction: _handleAction,
+                teamName: selectedTeamName,
+              );
+            },
+            loading: () => const SizedBox.shrink(),
+            error: (_, __) => const SizedBox.shrink(),
+          );
+        },
       ),
     );
   }
@@ -98,7 +126,9 @@ class _MyProfileScreenRootState extends ConsumerState<MyProfileScreenRoot> {
         // viewModel.logout();
         break;
       case OnDeleteAccount():
-        debugPrint('my_profile_screen_root.dart: OnDeleteAccount 액션 처리 - Line 76');
+        debugPrint(
+          'my_profile_screen_root.dart: OnDeleteAccount 액션 처리 - Line 76',
+        );
         // 뷰모델의 deleteAccount 메서드 호출
         // viewModel.deleteAccount();
         break;

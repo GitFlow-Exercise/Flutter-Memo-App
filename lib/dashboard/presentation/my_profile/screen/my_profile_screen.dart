@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:intl/intl.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/dashboard/presentation/my_profile/controller/my_profile_action.dart';
@@ -10,11 +9,13 @@ import 'package:mongo_ai/dashboard/presentation/my_profile/controller/my_profile
 class MyProfileScreen extends StatefulWidget {
   final MyProfileState state;
   final void Function(MyProfileAction action) onAction;
+  final String teamName;
 
   const MyProfileScreen({
     super.key,
     required this.state,
     required this.onAction,
+    required this.teamName,
   });
 
   @override
@@ -126,14 +127,12 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               color: AppColor.deepBlack,
             ),
           ),
-          const Gap(8),
+          const Gap(12),
           Text(
-            '국어팀', // 실제로는 API에서 받아와야 하는 값
-            style: AppTextStyle.bodyRegular.copyWith(
-              color: AppColor.lightGray,
-            ),
+            widget.teamName,
+            style: AppTextStyle.bodyRegular.copyWith(color: AppColor.lightGray),
           ),
-          const Gap(4),
+          const Gap(12),
           // 이름 수정 폼
           Form(
             key: _formKey,
@@ -161,11 +160,15 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(6),
-                      borderSide: const BorderSide(color: AppColor.lightGrayBorder),
+                      borderSide: const BorderSide(
+                        color: AppColor.lightGrayBorder,
+                      ),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(6),
-                      borderSide: const BorderSide(color: AppColor.lightGrayBorder),
+                      borderSide: const BorderSide(
+                        color: AppColor.lightGrayBorder,
+                      ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(6),
@@ -187,9 +190,15 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     height: 40,
                     child: ElevatedButton(
                       onPressed: () {
-                        debugPrint('my_profile_screen.dart: 저장 버튼 클릭 - Line 159');
+                        debugPrint(
+                          'my_profile_screen.dart: 저장 버튼 클릭 - Line 159',
+                        );
                         if (_formKey.currentState!.validate()) {
-                          widget.onAction(MyProfileAction.onUpdateProfile(_nameController.text));
+                          widget.onAction(
+                            MyProfileAction.onUpdateProfile(
+                              _nameController.text,
+                            ),
+                          );
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -271,7 +280,10 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(6),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                 ),
                 child: const Text('로그아웃'),
               ),
@@ -279,10 +291,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
           ),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 24),
-            child: Divider(
-              height: 1,
-              color: AppColor.lightGrayBorder,
-            ),
+            child: Divider(height: 1, color: AppColor.lightGrayBorder),
           ),
           // 회원 탈퇴 섹션
           Column(
@@ -314,7 +323,10 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(6),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                 ),
                 child: const Text('회원 탈퇴'),
               ),

@@ -2,8 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mongo_ai/core/di/providers.dart';
+import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
+import 'package:mongo_ai/core/state/current_team_id_state.dart';
 import 'package:mongo_ai/core/state/dashboard_path_state.dart';
+import 'package:mongo_ai/dashboard/domain/model/team.dart';
 import 'package:mongo_ai/dashboard/presentation/my_profile/controller/my_profile_event.dart';
 import 'package:mongo_ai/dashboard/presentation/my_profile/controller/my_profile_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -24,14 +27,27 @@ class MyProfileViewModel extends _$MyProfileViewModel {
       _eventController.close();
     });
 
-    final state = const MyProfileState();
-
     Future.microtask(() {
       _fetchUserProfile();
       _setHeaderTitle();
+      _fetchCurrentTeam();
     });
 
-    return state;
+    return const MyProfileState();
+  }
+
+  void _fetchCurrentTeam() {
+    final teamListAsync = ref.watch(getTeamsByCurrentUserProvider).value;
+    final currentTeamId = ref.watch(currentTeamIdStateProvider);
+
+    switch (teamListAsync) {
+      case Success<List<Team>, AppException>():
+
+        throw UnimplementedError();
+        default:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+    }
   }
 
   void _setHeaderTitle() {
