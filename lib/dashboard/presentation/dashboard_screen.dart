@@ -51,14 +51,35 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           children: [
                             const PathWidget(),
                             const Spacer(),
-                            const Icon(Icons.person, color: AppColor.deepBlack),
-                            const Gap(10),
-                            Text(
-                              dashboard.userProfile.userName,
-                              style: AppTextStyle.bodyMedium.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                        ElevatedButton(
+                          onPressed: () {
+                            context.go(Routes.myProfile);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColor.white,
+                            shadowColor: Colors.transparent,
+                            overlayColor: Colors.transparent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(0),
                             ),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.person,
+                                color: AppColor.deepBlack,
+                              ),
+                              const Gap(10),
+                              Text(
+                                dashboard.userProfile.userName,
+                                style: AppTextStyle.bodyMedium.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColor.black
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                           ],
                         ),
                       ),
@@ -84,31 +105,37 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             const Gap(10),
                             WorkbookFilterTabBar(
                               toggleGridView: (bool showGridView) {
-                                viewModel.toggleFilterShowGridView(showGridView);
+                                viewModel.toggleFilterShowGridView(
+                                  showGridView,
+                                );
                               },
                             ),
                             const Spacer(),
                             SizedBox(
                               height: 40,
                               child: ElevatedButton(
-                                  onPressed: () {
-                                    context.push(Routes.create);
-                                  },
-                                  style : ElevatedButton.styleFrom(
-                                    backgroundColor: AppColor.primary,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
+                                onPressed: () {
+                                  context.push(Routes.create);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColor.primary,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                  child: const Row(
-                                    children: [
-                                      Icon(Icons.auto_awesome,
-                                          color: AppColor.white),
-                                      Gap(8),
-                                      Text('새로 만들기', style: TextStyle(
-                                          color: AppColor.white)),
-                                    ],
-                                  )
+                                ),
+                                child: const Row(
+                                  children: [
+                                    Icon(
+                                      Icons.auto_awesome,
+                                      color: AppColor.white,
+                                    ),
+                                    Gap(8),
+                                    Text(
+                                      '새로 만들기',
+                                      style: TextStyle(color: AppColor.white),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                             const Gap(10),
@@ -119,7 +146,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   viewModel.toggleSelectMode();
                                 },
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -196,14 +223,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             Container(
               decoration: const BoxDecoration(
                 border: Border(
-                  bottom: BorderSide(
-                    color: AppColor.lightGrayBorder,
-                    width: 1,
-                  ),
-                  top: BorderSide(
-                    color: AppColor.lightGrayBorder,
-                    width: 1,
-                  ),
+                  bottom: BorderSide(color: AppColor.lightGrayBorder, width: 1),
+                  top: BorderSide(color: AppColor.lightGrayBorder, width: 1),
                 ),
               ),
               child: Column(
@@ -249,24 +270,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         title,
         style: AppTextStyle.bodyMedium.copyWith(
           color:
-          _selectedIndex == index
-              ? AppColor.primary
-              : AppColor.mediumGray,
+              _selectedIndex == index ? AppColor.primary : AppColor.mediumGray,
         ),
       ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      tileColor:
-      _selectedIndex == index
-          ? AppColor.paleBlue
-          : AppColor.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      tileColor: _selectedIndex == index ? AppColor.paleBlue : AppColor.white,
       leading: Icon(
         icon,
-        color:
-        _selectedIndex == index
-            ? AppColor.primary
-            : AppColor.mediumGray,
+        color: _selectedIndex == index ? AppColor.primary : AppColor.mediumGray,
       ),
       onTap: () {
         viewModel.clearFolderId();
