@@ -21,13 +21,14 @@ class MyProfileViewModel extends _$MyProfileViewModel {
 
   @override
   MyProfileState build() {
-    debugPrint('my_profile_view_model.dart: build() 호출 - Line 18');
+    final userNameTextController = TextEditingController();
 
     ref.onDispose(() {
       _eventController.close();
+      userNameTextController.dispose();
     });
 
-    return const MyProfileState();
+    return MyProfileState(userNameController: userNameTextController);
   }
 
   void setHeaderTitle() {

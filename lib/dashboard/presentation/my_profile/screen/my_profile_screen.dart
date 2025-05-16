@@ -23,37 +23,7 @@ class MyProfileScreen extends StatefulWidget {
 }
 
 class _MyProfileScreenState extends State<MyProfileScreen> {
-  final _nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _updateNameController();
-  }
-
-  @override
-  void didUpdateWidget(MyProfileScreen oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.state != oldWidget.state) {
-      _updateNameController();
-    }
-  }
-
-  void _updateNameController() {
-    if (widget.state.data.hasValue && widget.state.data.value != null) {
-      final profile = widget.state.data.value!;
-      if (_nameController.text != profile.userName) {
-        _nameController.text = profile.userName;
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,9 +32,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       body: Center(
         child: widget.state.data.when(
           data: (profile) {
-            // 현재 컨트롤러 텍스트가 profile.userName과 다르면 업데이트
-            if (_nameController.text != profile.userName) {
-              _nameController.text = profile.userName;
+            if (widget.state.userNameController.text != profile.userName) {
+              widget.state.userNameController.text = profile.userName;
             }
 
             return SingleChildScrollView(
@@ -99,7 +68,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 2,
             offset: const Offset(0, 1),
           ),
@@ -149,7 +118,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 ),
                 const Gap(16),
                 TextFormField(
-                  controller: _nameController,
+                  controller: widget.state.userNameController,
                   style: AppTextStyle.bodyRegular.copyWith(
                     color: AppColor.deepBlack,
                   ),
@@ -198,7 +167,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         if (_formKey.currentState!.validate()) {
                           widget.onAction(
                             MyProfileAction.onUpdateProfile(
-                              _nameController.text,
+                              widget.state.userNameController.text,
                             ),
                           );
                         }
@@ -233,7 +202,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 2,
             offset: const Offset(0, 1),
           ),
