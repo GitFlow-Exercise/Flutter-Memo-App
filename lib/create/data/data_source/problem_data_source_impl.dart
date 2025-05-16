@@ -5,7 +5,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class ProblemDataSourceImpl implements ProblemDataSource {
   final SupabaseClient _client;
 
-  ProblemDataSourceImpl(this._client);
+  const ProblemDataSourceImpl({required SupabaseClient client})
+    : _client = client;
 
   @override
   Future<void> createProblems(List<ProblemDto> problems) async {
