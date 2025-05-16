@@ -73,12 +73,6 @@ class _MyProfileScreenRootState extends ConsumerState<MyProfileScreenRoot> {
     final state = ref.watch(myProfileViewModelProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('내 프로필'),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: false,
-      ),
       body: MyProfileScreen(
         state: state,
         onAction: _handleAction,
