@@ -26,12 +26,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   final _formKey = GlobalKey<FormState>();
 
   @override
-  void initState() {
-    super.initState();
-    debugPrint('my_profile_screen.dart: initState - Line 26');
-  }
-
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _updateNameController();
@@ -58,11 +52,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   void dispose() {
     _nameController.dispose();
     super.dispose();
-  }
-
-  // 가입일 포맷팅 함수
-  String _formatJoinDate(DateTime joinDate) {
-    return '가입일: ${DateFormat('yyyy년 MM월 dd일', 'ko_KR').format(joinDate)}';
   }
 
   @override
@@ -145,13 +134,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             ),
           ),
           const Gap(4),
-          Text(
-            _formatJoinDate(DateTime(2025, 3, 15)), // 실제로는 API에서 받아와야 하는 값
-            style: AppTextStyle.captionRegular.copyWith(
-              color: AppColor.paleGray,
-            ),
-          ),
-          const Gap(24),
           // 이름 수정 폼
           Form(
             key: _formKey,
