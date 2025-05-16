@@ -4,7 +4,7 @@ import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response_content.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response_output.dart';
 
-part 'create_workbook_params.freezed.dart';
+part 'create_template_params.freezed.dart';
 
 @freezed
 abstract class CreateTemplateParams with _$CreateTemplateParams {

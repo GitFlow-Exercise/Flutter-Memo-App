@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/create/presentation/base/layout/ai_base_layout.dart';
-import 'package:mongo_ai/create/domain/model/create_templete_params.dart';
+import 'package:mongo_ai/create/domain/model/create_template_params.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_action.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_event.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_view_model.dart';
@@ -32,10 +32,8 @@ class _CreateTemplateScreenRootState
       final viewModel = ref.watch(
         createTemplateViewModelProvider(widget.params).notifier,
       );
-      print(widget.params.toString());
-      _subscription = viewModel.eventStream.listen(_handleEvent);
 
-      //viewModel.setProblem(problem: widget.params.response);
+      _subscription = viewModel.eventStream.listen(_handleEvent);
     });
   }
 
