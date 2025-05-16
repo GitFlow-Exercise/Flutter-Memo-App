@@ -2,6 +2,7 @@ abstract class Routes {
   static const myFiles = '/my-files';
   static const recentFiles = '/recent-files';
   static const folder = '/folder';
+  static const myProfile = '/profile';
   static const detail = 'detail';
   static const signIn = '/sign-in';
   static const signUp = '/sign-up';

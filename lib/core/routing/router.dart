@@ -20,6 +20,7 @@ import 'package:mongo_ai/create/presentation/pdf_preview/screen/pdf_preview_scre
 import 'package:mongo_ai/dashboard/presentation/dashboard_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/folder/folder_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/my_files/my_files_screen.dart';
+import 'package:mongo_ai/dashboard/presentation/my_profile/screen/my_profile_screen_root.dart';
 import 'package:mongo_ai/dashboard/presentation/recent_files/recent_files_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -123,6 +124,15 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: Routes.folder,
                 builder: (context, state) => const FolderScreen(),
+              ),
+            ],
+          ),
+
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.myProfile,
+                builder: (context, state) => const MyProfileScreenRoot(),
               ),
             ],
           ),

@@ -1,0 +1,8 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'my_profile_action.freezed.dart';
+
+@freezed
+sealed class MyProfileAction with _$MyProfileAction {
+  const factory MyProfileAction.onTap() = OnTap;
+}
