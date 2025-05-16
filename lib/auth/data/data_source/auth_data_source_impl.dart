@@ -19,7 +19,7 @@ class AuthDataSourceImpl implements AuthDataSource {
   Future<void> signInWithGoogle() async {
     final origin = Uri.base.origin;
     final redirectUrl = '$origin/auth/callback';
-    await Supabase.instance.client.auth.signInWithOAuth(
+    await _client.auth.signInWithOAuth(
       OAuthProvider.google,
       redirectTo: redirectUrl,
     );
@@ -144,7 +144,7 @@ class AuthDataSourceImpl implements AuthDataSource {
 
   @override
   String? getUserProvider() {
-    final user = Supabase.instance.client.auth.currentUser;
+    final user = _client.auth.currentUser;
     return user?.appMetadata['provider'] as String?;
   }
 }
