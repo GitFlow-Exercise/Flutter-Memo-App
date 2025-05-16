@@ -41,13 +41,10 @@ class _MyProfileScreenRootState extends ConsumerState<MyProfileScreenRoot> {
   @override
   void dispose() {
     _subscription?.cancel();
-    debugPrint('my_profile_screen_root.dart: dispose - Line 43');
     super.dispose();
   }
 
   void _handleEvent(MyProfileEvent event) {
-    debugPrint('my_profile_screen_root.dart: _handleEvent - Line 34');
-
     switch (event) {
       case ShowSnackBar(message: final message):
         ScaffoldMessenger.of(
@@ -99,14 +96,9 @@ class _MyProfileScreenRootState extends ConsumerState<MyProfileScreenRoot> {
   }
 
   void _handleAction(MyProfileAction action) {
-    debugPrint('my_profile_screen_root.dart: _handleAction - Line 61');
-
     final viewModel = ref.read(myProfileViewModelProvider.notifier);
 
     switch (action) {
-      case OnTap():
-        debugPrint('my_profile_screen_root.dart: OnTap 액션 처리 - Line 66');
-        break;
       case OnUpdateProfile(name: final name):
         viewModel.updateUserName(name);
         break;
@@ -114,11 +106,7 @@ class _MyProfileScreenRootState extends ConsumerState<MyProfileScreenRoot> {
         viewModel.logout();
         break;
       case OnDeleteAccount():
-        debugPrint(
-          'my_profile_screen_root.dart: OnDeleteAccount 액션 처리 - Line 76',
-        );
-        // 뷰모델의 deleteAccount 메서드 호출
-        // viewModel.deleteAccount();
+        viewModel.deleteAccount();
         break;
     }
   }

@@ -118,17 +118,40 @@ class MyProfileViewModel extends _$MyProfileViewModel {
       _eventController.add(
         const MyProfileEvent.showSnackBar('로그아웃 중 오류가 발생했습니다.'),
       );
-      debugPrint('my_profile_view_model.dart: 예상치 못한 로그아웃 오류 - $e - Line 98');
     }
   }
 
   // 회원 탈퇴 처리
   Future<void> deleteAccount() async {
-    debugPrint('my_profile_view_model.dart: deleteAccount() 호출 - Line 103');
+    final authRepository = ref.read(authRepositoryProvider);
 
-    // 실제 회원 탈퇴 로직 구현 필요
-    _eventController.add(
-      const MyProfileEvent.showSnackBar('회원 탈퇴 기능은 아직 구현되지 않았습니다.'),
-    );
+    final userId = authRepository.userId;
+
+    if (userId == null) {
+      _eventController.add(
+        const MyProfileEvent.showSnackBar('로그인된 사용자 정보를 찾을 수 없습니다.'),
+      );
+      return;
+    }
+
+    final result = await authRepository.deleteUser(userId);
+
+    switch (result) {
+      case Success():
+        await authRepository.signOut();
+        _eventController.add(
+          const MyProfileEvent.showSnackBar('회원 탈퇴가 완료되었습니다.'),
+        );
+
+        _eventController.add(
+          const MyProfileEvent.navigateSignIn(),
+        );
+        return;
+      case Error(error: final error):
+        _eventController.add(
+          MyProfileEvent.showSnackBar(error.message),
+        );
+        return;
+    }
   }
 }
