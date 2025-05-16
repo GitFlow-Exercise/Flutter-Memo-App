@@ -16,12 +16,10 @@ class FolderListWidget extends ConsumerStatefulWidget {
   final void Function(String folderName) onCreateFolder;
   final void Function(Folder folder) onEditFolder;
   final void Function(Folder folder) onDeleteFolder;
-  final void Function() onClickExpand;
 
   const FolderListWidget({
     super.key,
     required this.onClickFolder,
-    required this.onClickExpand,
     required this.onEditFolder,
     required this.onCreateFolder,
     required this.onDeleteFolder,
@@ -34,7 +32,6 @@ class FolderListWidget extends ConsumerStatefulWidget {
 class _FolderListWidgetState extends ConsumerState<FolderListWidget> {
   final _createController = TextEditingController();
   final _editController = TextEditingController();
-  final MenuController _menuController = MenuController();
   late final FocusNode _createFocusNode;
   late final FocusNode _editFocusNode;
 

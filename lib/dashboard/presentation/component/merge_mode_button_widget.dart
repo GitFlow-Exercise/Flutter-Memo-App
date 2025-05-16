@@ -5,14 +5,14 @@ import 'package:gap/gap.dart';
 import 'package:mongo_ai/core/state/selected_workbook_state.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 
-class SelectModeButtonWidget extends ConsumerWidget {
+class MergeModeButtonWidget extends ConsumerWidget {
   final void Function() onClick;
 
-  const SelectModeButtonWidget({super.key, required this.onClick});
+  const MergeModeButtonWidget({super.key, required this.onClick});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isSelectMode = ref.watch(selectedWorkbookStateProvider).isSelectMode;
+    final isMergeMode = ref.watch(selectedWorkbookStateProvider).isMergeMode;
     final selectedWorkbookList = ref.watch(selectedWorkbookStateProvider).selectedWorkbooks;
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -23,9 +23,9 @@ class SelectModeButtonWidget extends ConsumerWidget {
             onPressed: onClick,
             style: ElevatedButton.styleFrom(
               backgroundColor:
-                  isSelectMode ? AppColor.paleBlue : AppColor.primary,
+                  isMergeMode ? AppColor.paleBlue : AppColor.primary,
               side:
-                  isSelectMode
+                  isMergeMode
                       ? const BorderSide(color: AppColor.primary, width: 2)
                       : BorderSide.none,
               shape: RoundedRectangleBorder(
@@ -33,7 +33,7 @@ class SelectModeButtonWidget extends ConsumerWidget {
               ),
             ),
             child:
-                isSelectMode
+                isMergeMode
                     ? const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -58,8 +58,8 @@ class SelectModeButtonWidget extends ConsumerWidget {
                     ),
           ),
         ),
-        isSelectMode ? const Gap(10) : const SizedBox.shrink(),
-        isSelectMode
+        isMergeMode ? const Gap(10) : const SizedBox.shrink(),
+        isMergeMode
             ? badges.Badge(
               position: badges.BadgePosition.topEnd(top: -10, end: -6),
               badgeStyle: const badges.BadgeStyle(

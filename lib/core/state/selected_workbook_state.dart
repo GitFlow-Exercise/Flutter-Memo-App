@@ -6,19 +6,23 @@ part 'selected_workbook_state.g.dart';
 class SelectedWorkbookStateModel {
   final List<Workbook> selectedWorkbooks;
   final bool isSelectMode;
+  final bool isMergeMode;
 
   const SelectedWorkbookStateModel({
     this.selectedWorkbooks = const <Workbook>[],
     this.isSelectMode = false,
+    this.isMergeMode = false,
   });
 
   SelectedWorkbookStateModel copyWith({
     List<Workbook>? selectedWorkbooks,
     bool? isSelectMode,
+    bool? isMergeMode,
   }) {
     return SelectedWorkbookStateModel(
       selectedWorkbooks: selectedWorkbooks ?? this.selectedWorkbooks,
       isSelectMode: isSelectMode ?? this.isSelectMode,
+      isMergeMode: isMergeMode ?? this.isMergeMode,
     );
   }
 }
@@ -44,13 +48,22 @@ class SelectedWorkbookState extends _$SelectedWorkbookState {
     state = state.copyWith(selectedWorkbooks: <Workbook>[]);
   }
 
-  /// Select 모드 토글
-  void toggleSelectMode() {
-    if(state.isSelectMode) {
-      state = state.copyWith(isSelectMode: false);
+  void enableSelectMode() {
+    state = state.copyWith(isSelectMode: true);
+  }
+
+  void disableSelectMode() {
+    state = state.copyWith(isSelectMode: false);
+    clear();
+  }
+
+  /// Merge 모드 토글 삭제 예정
+  void toggleMergeMode() {
+    if(state.isMergeMode) {
+      state = state.copyWith(isMergeMode: false);
       clear();
     } else {
-      state = state.copyWith(isSelectMode: true);
+      state = state.copyWith(isMergeMode: true);
     }
   }
 }
