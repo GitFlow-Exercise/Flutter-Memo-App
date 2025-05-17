@@ -15,7 +15,7 @@ class AuthRepositoryImpl extends AuthRepository {
   final List<void Function(AuthStateChange)> _listeners = [];
 
   AuthRepositoryImpl({required AuthDataSource authDataSource})
-    : _authDataSource = authDataSource {
+      : _authDataSource = authDataSource {
     _startAuthStateListening();
   }
 
@@ -47,11 +47,11 @@ class AuthRepositoryImpl extends AuthRepository {
 
   // Google 로그인 처리 및 이벤트 발행
   Future<void> _handleGoogleSignInAndNotify(User? user) async {
-        print('호출 전 isSelectTeam: $isSelectTeam, isFirstTime: $isInitialSetupUser');
+    print('호출 전 isSelectTeam: $isSelectTeam, isFirstTime: $isInitialSetupUser');
     final result = await handleGoogleSignIn(user);
     switch (result) {
       case Success():
-        // 첫 로그인 여부 확인(팀 선택 미완료인지 아닌지)
+      // 첫 로그인 여부 확인(팀 선택 미완료인지 아닌지)
         final hasTeamNotSelected = !isSelectTeam;
         _notifyListeners(
           AuthStateChange.signedInWithGoogle(hasTeamNotSelected: hasTeamNotSelected),
@@ -104,9 +104,9 @@ class AuthRepositoryImpl extends AuthRepository {
 
   @override
   Future<Result<void, AppException>> signIn(
-    String email,
-    String password,
-  ) async {
+      String email,
+      String password,
+      ) async {
     try {
       await _authDataSource.login(email, password);
       // 로그인 성공
@@ -197,9 +197,9 @@ class AuthRepositoryImpl extends AuthRepository {
 
   @override
   Future<Result<void, AppException>> signUp(
-    String email,
-    String password,
-  ) async {
+      String email,
+      String password,
+      ) async {
     try {
       await _authDataSource.signUp(email, password);
 
@@ -325,9 +325,9 @@ class AuthRepositoryImpl extends AuthRepository {
 
   @override
   Future<Result<void, AppException>> verifyEmailOtp(
-    String email,
-    String otp,
-  ) async {
+      String email,
+      String otp,
+      ) async {
     try {
       await _authDataSource.verifyEmailOtp(email, otp);
 
@@ -345,9 +345,9 @@ class AuthRepositoryImpl extends AuthRepository {
 
   @override
   Future<Result<void, AppException>> verifyMagicLinkOtp(
-    String email,
-    String otp,
-  ) async {
+      String email,
+      String otp,
+      ) async {
     try {
       await _authDataSource.verifyMagicLinkOtp(email, otp);
 
@@ -433,6 +433,27 @@ class AuthRepositoryImpl extends AuthRepository {
   @override
   void removeAuthStateListener(void Function(AuthStateChange) listener) {
     _listeners.remove(listener);
+  }
+
+  @override
+  Future<Result<void, AppException>> saveSelectedTeamId(int teamId) async {
+    try {
+      await _authDataSource.saveSelectedTeamId(teamId);
+      return const Result.success(null);
+    } catch (e) {
+      return Result.error(
+        AppException.unknown(
+          message: '팀 ID 저장 중 오류가 발생했습니다.',
+          error: e,
+          stackTrace: StackTrace.current,
+        ),
+      );
+    }
+  }
+
+  @override
+  int? getSelectedTeamId() {
+    return _authDataSource.getSelectedTeamId();
   }
 
   @override

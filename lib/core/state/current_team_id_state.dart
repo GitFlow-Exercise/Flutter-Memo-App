@@ -1,3 +1,4 @@
+import 'package:mongo_ai/core/di/providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'current_team_id_state.g.dart';
@@ -14,6 +15,7 @@ class CurrentTeamIdState extends _$CurrentTeamIdState {
 
   /// 팀 선택 시 호출
   void set(int id) {
+    ref.read(authRepositoryProvider).saveSelectedTeamId(id);
     state = id;
   }
 

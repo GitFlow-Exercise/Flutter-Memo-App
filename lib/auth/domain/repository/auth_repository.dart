@@ -117,4 +117,12 @@ abstract class AuthRepository extends ChangeNotifier {
   ///
   /// 로그인되어 있지 않거나 제공자 정보가 없는 경우 null 반환
   String? getUserProvider();
+
+  /// 현재 선택된 팀의 ID를 저장합니다.
+  ///
+  /// 팀 선택이 끝나면 이 메서드를 호출해야 합니다.
+  Future<Result<void, AppException>> saveSelectedTeamId(int teamId);
+
+  /// 마지막으로 선택한 팀의 ID를 가져옵니다.
+  int? getSelectedTeamId();
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/enum/workbook_sort_option.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
@@ -27,6 +28,17 @@ class DashboardScreen extends ConsumerStatefulWidget {
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   List<String> _currentPath = [];
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(dashboardViewModelProvider.notifier).fetchSelectedTeam();
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {

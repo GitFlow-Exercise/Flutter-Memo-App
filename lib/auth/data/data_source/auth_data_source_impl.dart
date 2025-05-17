@@ -118,6 +118,22 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
+  Future<void> saveSelectedTeamId(int teamId) async {
+    await _client.auth.updateUser(
+      UserAttributes(data: {'current_team_id': teamId}),
+    );
+  }
+
+  @override
+  int? getSelectedTeamId() {
+    final metadata = _client.auth.currentUser?.userMetadata;
+    if (metadata != null && metadata.containsKey('current_team_id')) {
+      return metadata['current_team_id'] as int?;
+    }
+    return null;
+  }
+
+  @override
   Future<String?> getCurrentUserEmail() async {
     return _client.auth.currentUser?.email;
   }
