@@ -21,24 +21,7 @@ class LandingShellScreen extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          LandingHeader(
-            onTapFreeTrial: () {
-              onAction(const LandingShellAction.onTapFreeTrial());
-            },
-            onTapLogo: () {
-              onAction(const LandingShellAction.onTapLogo());
-            },
-            onTapHome: () {
-              onAction(const LandingShellAction.onTapHome());
-            },
-            onTapPaymentPlans: () {
-              onAction(const LandingShellAction.onTapPaymentPlans());
-            },
-            onTapNavigationItem: (menu) {
-              onAction(LandingShellAction.onTapNavigationItem(menu));
-            },
-            state: state,
-          ),
+          LandingHeader(state: state, onAction: onAction),
 
           Expanded(child: navigationShell),
         ],

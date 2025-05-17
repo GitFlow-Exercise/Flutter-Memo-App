@@ -3,23 +3,17 @@ import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/landing/domain/enum/landing_header_menu_type.dart';
 import 'package:mongo_ai/landing/presentation/components/landing_header_navigation_item.dart';
+import 'package:mongo_ai/landing/presentation/landing_shell/controller/landing_shell_action.dart';
 import 'package:mongo_ai/landing/presentation/landing_shell/controller/landing_shell_state.dart';
 
 class LandingHeader extends StatefulWidget {
   final LandingShellState state;
-  final VoidCallback onTapFreeTrial;
-  final VoidCallback onTapLogo;
-  final VoidCallback onTapHome;
-  final VoidCallback onTapPaymentPlans;
-  final Function(LandingHeaderMenuType) onTapNavigationItem;
+  final void Function(LandingShellAction action) onAction;
 
   const LandingHeader({
     super.key,
-    required this.onTapFreeTrial,
-    required this.onTapHome,
-    required this.onTapPaymentPlans,
-    required this.onTapLogo,
-    required this.state, required this.onTapNavigationItem,
+    required this.state,
+    required this.onAction,
   });
 
   @override
@@ -37,7 +31,9 @@ class _LandingHeaderState extends State<LandingHeader> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           TextButton(
-            onPressed: widget.onTapLogo,
+            onPressed: () {
+              widget.onAction(const LandingShellAction.onTapLogo());
+            },
             style: TextButton.styleFrom(
               foregroundColor: AppColor.primary,
               padding: EdgeInsets.zero,
@@ -54,24 +50,26 @@ class _LandingHeaderState extends State<LandingHeader> {
 
           Row(
             children:
-            LandingHeaderMenuType.values.map((menu) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: LandingHeaderNavigationItem(
-                  title: menu.title,
-                  isSelected: widget.state.selectLandingHeaderMenu == menu,
-                  onTap: () {
-                    widget.onTapNavigationItem(menu);
-                    _landingHeaderMenuAction(menu);
-                  },
-                ),
-              );
-            }).toList(),
+                LandingHeaderMenuType.values.map((menu) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: LandingHeaderNavigationItem(
+                      title: menu.title,
+                      isSelected: widget.state.selectLandingHeaderMenu == menu,
+                      onTap: () {
+                        widget.onAction(
+                          LandingShellAction.onTapNavigationItem(menu),
+                        );
+                        _landingHeaderMenuAction(menu);
+                      },
+                    ),
+                  );
+                }).toList(),
           ),
 
           ElevatedButton(
             onPressed: () {
-              widget.onTapFreeTrial();
+              widget.onAction(const LandingShellAction.onTapFreeTrial());
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColor.primary,
@@ -98,9 +96,9 @@ class _LandingHeaderState extends State<LandingHeader> {
   void _landingHeaderMenuAction(LandingHeaderMenuType menu) {
     switch (menu) {
       case LandingHeaderMenuType.home:
-        widget.onTapHome();
+        widget.onAction(const LandingShellAction.onTapHome());
       case LandingHeaderMenuType.paymentPlans:
-        widget.onTapPaymentPlans();
+        widget.onAction(const LandingShellAction.onTapPaymentPlans());
       default:
         debugPrint('미구현 버튼입니다. => ${menu.name}');
     }
