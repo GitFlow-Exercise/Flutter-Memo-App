@@ -28,6 +28,7 @@ class _MyProfileScreenRootState extends ConsumerState<MyProfileScreenRoot> {
   void initState() {
     super.initState();
 
+    //TODO(ok): path 접근 가능하게 수정이 되면 프로필 화면 진입 시 대시보드 path 수정 예정
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final viewModel = ref.read(myProfileViewModelProvider.notifier);
 
