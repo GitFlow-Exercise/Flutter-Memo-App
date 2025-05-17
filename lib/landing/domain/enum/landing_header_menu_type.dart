@@ -1,7 +1,7 @@
 enum LandingHeaderMenuType {
   home,
   feature,
-  hotToUse,
+  howToUse,
   paymentPlans,
   help,
 }
@@ -13,7 +13,7 @@ extension LandingHeaderMenuTypeExtension on LandingHeaderMenuType {
         return '홈';
       case LandingHeaderMenuType.feature:
         return '기능';
-      case LandingHeaderMenuType.hotToUse:
+      case LandingHeaderMenuType.howToUse:
         return '사용 방법';
       case LandingHeaderMenuType.paymentPlans:
         return '요금제';
