@@ -3,10 +3,10 @@ import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 
 class LandingHeader extends StatefulWidget {
-  final Function() onTapFreeTrial;
-  final Function() onTapLogo;
-  final Function() onTapHome;
-  final Function() onTapPaymentPlans;
+  final VoidCallback onTapFreeTrial;
+  final VoidCallback onTapLogo;
+  final VoidCallback onTapHome;
+  final VoidCallback onTapPaymentPlans;
 
   const LandingHeader({
     super.key,
