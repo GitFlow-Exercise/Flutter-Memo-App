@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/create/presentation/create_complete/widget/pdf_preview_dialog.dart';
 import 'package:mongo_ai/create/presentation/base/layout/ai_base_layout.dart';
 import 'package:mongo_ai/create/presentation/create_complete/controller/create_complete_action.dart';
@@ -60,7 +61,7 @@ class _CreateCompleteScreenRootState
       maxWidth: 850,
       maxHeight: 750,
       nextTap: () {
-        print('완료 버튼 누름');
+        _handleAction(const SaveProblems());
       },
       isPopTap: true,
       child: CreateCompleteScreen(state: state, onAction: _handleAction),
@@ -95,13 +96,14 @@ class _CreateCompleteScreenRootState
             },
           );
         }
-
-      case DownloadPdf():
-        viewModel.downloadPdf();
       case UpdateProblem():
         viewModel.updateProblem(action.index, action.updatedProblem);
       case ReorderOptions():
         viewModel.reorderOptions(action.problemIndex, action.newOptions);
+      case SaveProblems():
+        if (await viewModel.saveProblems() && mounted) {
+          context.go(Routes.myFiles);
+        }
     }
   }
 }

@@ -159,25 +159,24 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
-        path: Routes.createComplete,
-        builder: (context, state) {
-          final extra = state.extra as List<Problem>;
-          return CreateCompleteScreenRoot(problems: extra);
-        },
-        redirect: (context, state) {
-          return AppRedirect.pdfPreviewRedirect(state.extra);
-        },
-      ),
-      GoRoute(
         path: Routes.createTemplate,
         builder: (context, state) {
           final extra = state.extra as CreateTemplateParams;
-          return CreateTemplateScreenRoot(
-            params: CreateTemplateParams.sampleData(),
-          );
+          return CreateTemplateScreenRoot(params: extra);
         },
         redirect: (context, state) {
           return AppRedirect.createTemplateRedirect(state.extra);
+        },
+      ),
+      GoRoute(
+        path: Routes.createComplete,
+        builder: (context, state) {
+          final extra = state.extra as List<Problem>;
+
+          return CreateCompleteScreenRoot(problems: extra);
+        },
+        redirect: (context, state) {
+          return AppRedirect.createCompleteRedirect(state.extra);
         },
       ),
     ],

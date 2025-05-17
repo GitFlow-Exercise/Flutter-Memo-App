@@ -128,18 +128,20 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
 
   Future<bool> saveProblems() async {
     String? userId;
-    final teamId = ref.read(currentTeamIdStateProvider);
-    final folderId = ref.read(currentFolderIdStateProvider);
-    final userProfile = ref.read(getCurrentUserProfileProvider);
+    final teamId = ref.watch(currentTeamIdStateProvider);
+    final folderId = ref.watch(currentFolderIdStateProvider);
+    final userProfile = ref.watch(getCurrentUserProfileProvider);
 
-    switch (userProfile) {
-      case Success(data: final user):
-        userId = user.id;
-      case Error():
-        _eventController.add(
-          const CreateCompleteEvent.showSnackBar('유저 정보를 불러오는데 실패했습니다.'),
-        );
-    }
+    userProfile.whenData((user) {
+      switch (user) {
+        case Success(data: final user):
+          userId = user.userId;
+        case Error():
+          _eventController.add(
+            const CreateCompleteEvent.showSnackBar('유저 정보를 불러오는데 실패했습니다.'),
+          );
+      }
+    });
 
     if (teamId == null || folderId == null || userId == null) {
       _eventController.add(

@@ -11,8 +11,6 @@ sealed class CreateCompleteAction with _$CreateCompleteAction {
 
   const factory CreateCompleteAction.toggleEditMode() = ToggleEditMode;
 
-  const factory CreateCompleteAction.downloadPdf() = DownloadPdf;
-
   const factory CreateCompleteAction.previewPdf() = PreviewPdf;
 
   const factory CreateCompleteAction.updateProblem(
@@ -24,4 +22,6 @@ sealed class CreateCompleteAction with _$CreateCompleteAction {
     int problemIndex,
     List<String> newOptions,
   ) = ReorderOptions;
+
+  const factory CreateCompleteAction.saveProblems() = SaveProblems;
 }
