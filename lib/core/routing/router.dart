@@ -29,7 +29,7 @@ final routerProvider = Provider<GoRouter>((ref) {
   final auth = ref.watch(authRepositoryProvider);
   return GoRouter(
     //TODO(ok): 배포 전 랜딩페이지로 변경 예정
-    initialLocation: Routes.landingPage,
+    initialLocation: Routes.folder,
     // auth 관찰해서 변화가 있다면,
     // 새로 reidrect 함수 실행
     refreshListenable: auth,
