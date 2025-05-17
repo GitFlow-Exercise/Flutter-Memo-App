@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:mongo_ai/create/domain/model/create_workbook_params.dart';
+import 'package:mongo_ai/create/domain/model/create_template_params.dart';
 
 part 'create_problem_event.freezed.dart';
 

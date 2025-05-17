@@ -7,12 +7,13 @@ import 'package:mongo_ai/create/presentation/create_complete/widget/problem_cont
 import 'package:mongo_ai/create/presentation/create_complete/widget/problem_options_editor.dart';
 import 'package:mongo_ai/create/presentation/create_complete/widget/problem_question_editor.dart';
 import 'package:mongo_ai/create/presentation/create_complete/widget/problem_title_editor.dart';
+import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
 
 class ProblemPreviewWidget extends StatefulWidget {
   final CreateCompleteState state;
   final TextEditingController titleController;
   final void Function(String) onTitleSubmitted;
-  final void Function(int, CompleteProblem) onProblemUpdated;
+  final void Function(int, Problem) onProblemUpdated;
   final void Function(int, List<String>) onOptionsReordered;
 
   const ProblemPreviewWidget({
@@ -62,16 +63,15 @@ class ProblemPreviewWidgetState extends State<ProblemPreviewWidget> {
       for (var i = 0; i < editorState.editedProblems.length; i++) {
         final problem = editorState.editedProblems[i];
         final questionText =
-            editorState.questionControllers[problem.id]?.text ??
+            editorState.questionControllers[problem.number]?.text ??
             problem.question;
         final contentText =
-            editorState.contentControllers[problem.id]?.text ?? problem.content;
+            editorState.contentControllers[problem.number]?.text ??
+            problem.passage;
 
-        final updated = CompleteProblem(
-          id: problem.id,
+        final updated = problem.copyWith(
           question: questionText,
-          content: contentText,
-          options: problem.options,
+          passage: contentText,
         );
 
         widget.onProblemUpdated(i, updated);
@@ -111,9 +111,9 @@ class ProblemPreviewWidgetState extends State<ProblemPreviewWidget> {
                 final index = entry.key;
                 final problem = entry.value;
                 final questionController =
-                    editorState.questionControllers[problem.id];
+                    editorState.questionControllers[problem.number];
                 final contentController =
-                    editorState.contentControllers[problem.id];
+                    editorState.contentControllers[problem.number];
 
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,12 +141,12 @@ class ProblemPreviewWidgetState extends State<ProblemPreviewWidget> {
                     ProblemContentEditor(
                       isEditMode: widget.state.isEditMode,
                       controller: contentController!,
-                      content: problem.content,
+                      content: problem.passage,
                       onChanged: (value) {
                         setState(() {
                           final updatedProblem = editorState
                               .editedProblems[index]
-                              .copyWith(content: value);
+                              .copyWith(passage: value);
                           editorState = editorState.updateProblem(
                             index,
                             updatedProblem,
@@ -160,7 +160,7 @@ class ProblemPreviewWidgetState extends State<ProblemPreviewWidget> {
                     ProblemOptionsEditor(
                       isEditMode: widget.state.isEditMode,
                       options: editorState.editedProblems[index].options,
-                      problemId: problem.id,
+                      problemId: problem.number,
                       onReorder: (oldIndex, newIndex) {
                         final options = List<String>.from(
                           editorState.editedProblems[index].options,

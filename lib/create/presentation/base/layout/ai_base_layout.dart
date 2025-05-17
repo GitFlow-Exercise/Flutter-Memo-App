@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
@@ -69,7 +70,7 @@ class AiBaseLayout extends StatelessWidget {
                     color: AppColor.lightGray,
                     size: 16,
                   ),
-                  const SizedBox(width: 8),
+                  const Gap(8),
                   Text(
                     '취소',
                     style: AppTextStyle.bodyRegular.copyWith(
@@ -79,7 +80,6 @@ class AiBaseLayout extends StatelessWidget {
                 ],
               ),
             ),
-
             if (isPopTap)
               Padding(
                 padding: const EdgeInsets.only(left: 16),
@@ -98,7 +98,7 @@ class AiBaseLayout extends StatelessWidget {
                         color: AppColor.lightGray,
                         size: 16,
                       ),
-                      const SizedBox(width: 8),
+                      const Gap(8),
                       Text(
                         '이전 단계',
                         style: AppTextStyle.bodyRegular.copyWith(
@@ -109,27 +109,45 @@ class AiBaseLayout extends StatelessWidget {
                   ),
                 ),
               ),
-            const SizedBox(width: 16),
+            const Gap(16),
             BottomNavigateButton(
               onTap: nextTap,
               border: Border.all(color: AppColor.primary),
               bgColor: AppColor.primary,
-              child: Row(
-                children: [
-                  Text(
-                    '다음단계',
-                    style: AppTextStyle.bodyRegular.copyWith(
-                      color: AppColor.white,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  const Icon(
-                    Icons.arrow_forward,
-                    color: AppColor.white,
-                    size: 16,
-                  ),
-                ],
-              ),
+              child:
+                  step != 4
+                      ? Row(
+                        children: [
+                          Text(
+                            '다음단계',
+                            style: AppTextStyle.bodyRegular.copyWith(
+                              color: AppColor.white,
+                            ),
+                          ),
+                          const Gap(8),
+                          const Icon(
+                            Icons.arrow_forward,
+                            color: AppColor.white,
+                            size: 16,
+                          ),
+                        ],
+                      )
+                      : Row(
+                        children: [
+                          const Icon(
+                            Icons.check,
+                            color: AppColor.white,
+                            size: 16,
+                          ),
+                          const Gap(8),
+                          Text(
+                            '완료',
+                            style: AppTextStyle.bodyRegular.copyWith(
+                              color: AppColor.white,
+                            ),
+                          ),
+                        ],
+                      ),
             ),
           ],
         ),

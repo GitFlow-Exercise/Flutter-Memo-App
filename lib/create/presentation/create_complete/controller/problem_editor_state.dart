@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/material.dart';
-import 'package:mongo_ai/create/presentation/create_complete/controller/create_complete_state.dart';
+import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
 
 part 'problem_editor_state.freezed.dart';
 
@@ -11,27 +11,27 @@ abstract class ProblemEditorState with _$ProblemEditorState {
   const factory ProblemEditorState({
     required Map<int, TextEditingController> questionControllers,
     required Map<int, TextEditingController> contentControllers,
-    required List<CompleteProblem> editedProblems,
+    required List<Problem> editedProblems,
   }) = _ProblemEditorState;
 
   // 새로운 인스턴스 생성을 위한 팩토리 메서드
-  factory ProblemEditorState.fromProblems(List<CompleteProblem> problems) {
+  factory ProblemEditorState.fromProblems(List<Problem> problems) {
     final questionControllers = <int, TextEditingController>{};
     final contentControllers = <int, TextEditingController>{};
 
     for (final problem in problems) {
-      questionControllers[problem.id] = TextEditingController(
+      questionControllers[problem.number] = TextEditingController(
         text: problem.question,
       );
-      contentControllers[problem.id] = TextEditingController(
-        text: problem.content,
+      contentControllers[problem.number] = TextEditingController(
+        text: problem.passage,
       );
     }
 
     return ProblemEditorState(
       questionControllers: questionControllers,
       contentControllers: contentControllers,
-      editedProblems: List<CompleteProblem>.from(problems),
+      editedProblems: List<Problem>.from(problems),
     );
   }
 
@@ -46,8 +46,8 @@ abstract class ProblemEditorState with _$ProblemEditorState {
   }
 
   // 특정 문제 업데이트
-  ProblemEditorState updateProblem(int index, CompleteProblem updatedProblem) {
-    final newEditedProblems = List<CompleteProblem>.from(editedProblems);
+  ProblemEditorState updateProblem(int index, Problem updatedProblem) {
+    final newEditedProblems = List<Problem>.from(editedProblems);
     newEditedProblems[index] = updatedProblem;
 
     return copyWith(editedProblems: newEditedProblems);

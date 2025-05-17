@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:mongo_ai/core/constants/ai_constant.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/result/result.dart';
-import 'package:mongo_ai/create/domain/model/create_workbook_params.dart';
+import 'package:mongo_ai/create/domain/model/create_template_params.dart';
 import 'package:mongo_ai/create/domain/model/prompt.dart';
 import 'package:mongo_ai/create/domain/model/request/input_content.dart';
 import 'package:mongo_ai/create/domain/model/request/message_input.dart';
