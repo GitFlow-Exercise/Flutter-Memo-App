@@ -88,7 +88,7 @@ class MyProfileViewModel extends _$MyProfileViewModel {
   // 대시보드 유저 이름 업데이트
   Future<void> _updateDashboardUserName(UserProfile userProfile) async {
     await ref
-        .watch(dashboardViewModelProvider.notifier)
+        .read(dashboardViewModelProvider.notifier)
         .updateUserProfile(userProfile);
   }
 
