@@ -136,7 +136,7 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
     for (int i = 0; i < params.response.length; i++) {
       final response = params.response[i];
       final promptDetail = params.prompt[i].detail;
-      final cleanText = params.cleanText[i];
+      final promptName = params.prompt[i].name;
 
       final outputText = response.getContent();
 
@@ -147,6 +147,12 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
               .where((block) => block.isNotEmpty)
               .toList();
 
+      if (problemBlocks.length != params.cleanText.length) {
+        throw FormatException(
+          '유형 $promptName의 문제 수(${problemBlocks.length})와 클린텍스트 수(${params.cleanText.length})가 일치하지 않습니다.',
+        );
+      }
+
       for (int j = 0; j < problemBlocks.length; j++) {
         final block = problemBlocks[j];
         final sections = block.split(RegExp(r'#\s*'));
@@ -154,11 +160,11 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
           throw const FormatException('올바른 형식의 문제 텍스트가 아닙니다.');
         }
 
-        // 1. 지문 추출
+        // 1. 지문
         final passageSection = sections[1].trim();
         final passage = passageSection.split(':').skip(1).join(':').trim();
 
-        // 2. 문제+보기 추출
+        // 2. 문제 및 보기
         final questionSection = sections[2].trim();
         final lines =
             questionSection
@@ -167,10 +173,10 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
                 .where((line) => line.isNotEmpty)
                 .toList();
 
-        // 3. 질문 추출
+        // 3. 질문
         final questionLine = lines.length > 1 ? lines[1] : '';
 
-        // 4. 선택지 추출 (앞의 A./B./C./D. 제거)
+        // 4. 선택지
         final options =
             lines
                 .skip(2)
@@ -184,9 +190,9 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
             question: questionLine,
             passage: passage,
             options: options,
-            problemType: params.prompt[i].name,
+            problemType: promptName,
             promptDetail: promptDetail,
-            cleanText: cleanText,
+            cleanText: params.cleanText[j], // 클린텍스트 순서에 맞춰 대응
           ),
         );
 
