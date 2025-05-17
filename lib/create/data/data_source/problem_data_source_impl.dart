@@ -1,3 +1,4 @@
+import 'package:mongo_ai/core/constants/app_table_name.dart';
 import 'package:mongo_ai/create/data/data_source/problem_data_source.dart';
 import 'package:mongo_ai/create/data/dto/problem_dto.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -16,6 +17,6 @@ class ProblemDataSourceImpl implements ProblemDataSource {
             .map((e) => e.toJson()..removeWhere((key, value) => value == null))
             .toList();
 
-    await _client.from('problems').insert(data);
+    await _client.from(AppTableName.problem).insert(data);
   }
 }
