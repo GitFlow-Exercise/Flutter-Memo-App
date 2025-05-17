@@ -82,6 +82,9 @@ dependencies:
   # Google Sign In
   google_sign_in: ^6.3.0
 
+  # Mocking 패키지
+  mockito: ^5.4.5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
