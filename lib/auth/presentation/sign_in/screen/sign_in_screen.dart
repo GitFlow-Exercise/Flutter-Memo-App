@@ -5,6 +5,7 @@ import 'package:mongo_ai/auth/presentation/sign_in/controller/sign_in_action.dar
 import 'package:mongo_ai/auth/presentation/sign_in/controller/sign_in_state.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
+import 'package:mongo_ai/core/utils/validators.dart';
 
 class SignInScreen extends StatefulWidget {
   final SignInState state;
@@ -159,7 +160,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               vertical: 14,
                             ),
                           ),
-                          validator: _validateEmail,
+                          validator: Validators.validateEmail,
                         ),
                         const Gap(24),
 
@@ -222,7 +223,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               vertical: 14,
                             ),
                           ),
-                          validator: _validatePassword,
+                          validator: Validators.validatePassword,
                         ),
                         const Gap(16),
 
@@ -343,26 +344,6 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
       ),
     );
-  }
-
-  String? _validatePassword(value) {
-    if (value == null || value.isEmpty) {
-      return '비밀번호를 입력해주세요.';
-    }
-    return null;
-  }
-
-  String? _validateEmail(value) {
-    if (value == null || value.isEmpty) {
-      return '이메일을 입력해주세요.';
-    }
-    final emailRegex = RegExp(
-      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-    );
-    if (!emailRegex.hasMatch(value)) {
-      return '유효한 이메일 주소를 입력해주세요.';
-    }
-    return null;
   }
 
   void _submitForm() {
