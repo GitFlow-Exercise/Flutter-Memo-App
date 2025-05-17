@@ -221,5 +221,124 @@ void main() {
     });
   });
 
+  group('signOut 테스트', () {
+    test('로그아웃에 성공하면 Success를 반환해야 한다.', () async {
+      when(mockAuthDataSource.logout()).thenAnswer((_) async {});
 
+      final result = await authRepository.signOut();
+
+      switch (result) {
+        case Success():
+          break;
+        case Error():
+          fail('success를 반환해야 하지만 Error를 반환했습니다.');
+      }
+
+      verify(mockAuthDataSource.logout()).called(1);
+    });
+  });
+
+  group('deleteUser', () {
+    test('사용자 삭제가 성공했을 때 Success를 반환해야 한다', () async {
+      final userId = 'user123';
+      when(mockAuthDataSource.deleteUser(userId)).thenAnswer((_) async {});
+
+      final result = await authRepository.deleteUser(userId);
+
+      switch (result) {
+        case Success():
+          break;
+        case Error():
+          fail('사용자 삭제가 성공해야 하지만 Error가 반환되었습니다.');
+      }
+
+      verify(mockAuthDataSource.deleteUser(userId)).called(1);
+    });
+
+    test('사용자 삭제가 실패했을 때 Error를 반환해야 한다', () async {
+      final userId = 'user123';
+      when(mockAuthDataSource.deleteUser(userId)).thenThrow(Exception('Delete user failed'));
+
+      final result = await authRepository.deleteUser(userId);
+
+      switch (result) {
+        case Success():
+          fail('사용자 삭제가 실패해야 하지만 Success가 반환되었습니다.');
+        case Error():
+          expect(result.error.message, '유저를 삭제하던 중 오류가 발생했습니다.');
+      }
+
+      verify(mockAuthDataSource.deleteUser(userId)).called(1);
+    });
+  });
+
+  group('isEmailExist 테스트', () {
+    test('이메일이 존재하지 않을 때 Success(false)를 반환해야 한다', () async {
+      final email = 'new@example.com';
+      when(mockAuthDataSource.isEmailExist(email)).thenAnswer((_) async => false);
+
+      final result = await authRepository.isEmailExist(email);
+
+      // 검증: 결과가 Success(false)인지 확인
+      switch (result) {
+        case Success(data: final exists):
+          expect(exists, false);
+        case Error():
+          fail('이메일 존재 여부 로직에서 Error가 반환되었습니다.');
+      }
+
+      verify(mockAuthDataSource.isEmailExist(email)).called(1);
+    });
+
+    test('이메일이 존재할 때 Error를 반환해야 한다', () async {
+      final email = 'existing@example.com';
+      when(mockAuthDataSource.isEmailExist(email)).thenAnswer((_) async => true);
+
+      final result = await authRepository.isEmailExist(email);
+
+      switch (result) {
+        case Success():
+          fail('이메일이 존재하므로 Error가 반환되어야 합니다.');
+        case Error():
+          expect(result.error.message, '이미 존재하는 이메일입니다.');
+      }
+
+      verify(mockAuthDataSource.isEmailExist(email)).called(1);
+    });
+  });
+
+  group('saveUser', () {
+    test('사용자 저장이 성공했을 때 Success를 반환해야 한다', () async {
+      when(mockAuthDataSource.saveUser()).thenAnswer((_) async {});
+      when(mockAuthDataSource.updateUserMetadata('is_initial_setup_user'))
+          .thenAnswer((_) async {});
+
+      final result = await authRepository.saveUser();
+
+      switch (result) {
+        case Success():
+          break;
+        case Error():
+          fail('사용자 저장이 성공해야 하지만 Error가 반환되었습니다.');
+      }
+
+      verify(mockAuthDataSource.saveUser()).called(1);
+      verify(mockAuthDataSource.updateUserMetadata('is_initial_setup_user')).called(1);
+    });
+
+    test('사용자가 인증되지 않았을 때 Error를 반환해야 한다', () async {
+      when(mockAuthDataSource.isAuthenticated()).thenReturn(false);
+
+      final result = await authRepository.saveUser();
+
+      switch (result) {
+        case Success():
+          fail('사용자가 인증되지 않았으므로 Error가 반환되어야 합니다.');
+        case Error():
+          expect(result.error.message, '인증되지 않은 사용자입니다.');
+      }
+
+      verifyNever(mockAuthDataSource.saveUser());
+    });
+  });
 }
