@@ -34,7 +34,6 @@ class _MyProfileScreenRootState extends ConsumerState<MyProfileScreenRoot> {
       _subscription = viewModel.eventStream.listen(_handleEvent);
 
       viewModel.fetchUserProfile();
-      viewModel.setHeaderTitle();
     });
   }
 

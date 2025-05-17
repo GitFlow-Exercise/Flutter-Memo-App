@@ -29,10 +29,6 @@ class MyProfileViewModel extends _$MyProfileViewModel {
     return MyProfileState(userNameController: userNameTextController);
   }
 
-  void setHeaderTitle() {
-    debugPrint('deprecated');
-  }
-
   // 사용자 프로필 정보 가져오기
   Future<void> fetchUserProfile() async {
     state = state.copyWith(data: const AsyncValue.loading());
