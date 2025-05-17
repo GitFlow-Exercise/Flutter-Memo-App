@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mongo_ai/landing/presentation/controller/payment_plans_action.dart';
-import 'package:mongo_ai/landing/presentation/controller/payment_plans_event.dart';
-import 'package:mongo_ai/landing/presentation/controller/payment_plans_view_model.dart';
-import 'package:mongo_ai/landing/presentation/screen/payment_plans_screen.dart';
+import 'package:mongo_ai/landing/presentation/payment_plans/controller/payment_plans_action.dart';
+import 'package:mongo_ai/landing/presentation/payment_plans/controller/payment_plans_event.dart';
+import 'package:mongo_ai/landing/presentation/payment_plans/controller/payment_plans_view_model.dart';
+import 'package:mongo_ai/landing/presentation/payment_plans/screen/payment_plans_screen.dart';
 
 class PaymentPlansScreenRoot extends ConsumerStatefulWidget {
   const PaymentPlansScreenRoot({super.key});
@@ -44,17 +44,24 @@ class _PaymentPlansScreenRootState extends ConsumerState<PaymentPlansScreenRoot>
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(paymentPlansViewModelProvider);
-
-    return Scaffold(
-      body: PaymentPlansScreen(state: state, onAction: _handleAction),
-    );
+    return PaymentPlansScreen(onAction: _handleAction);
   }
 
   void _handleAction(PaymentPlansAction action) {
+    final viewModel = ref.read(paymentPlansViewModelProvider.notifier);
+
     switch (action) {
       case OnTap():
-        debugPrint('tapped onTap');
+        debugPrint('일반 액션: OnTap');
+      case OnStartClick():
+        viewModel.showStartButtonClicked();
+        debugPrint('시작하기 버튼 클릭');
+      case OnUpgradeClick():
+        viewModel.showUpgradeButtonClicked();
+        debugPrint('업그레이드 버튼 클릭');
+      case OnFreeTrialClick():
+        viewModel.showFreeTrial();
+        debugPrint('무료로 시작하기 버튼 클릭');
     }
   }
 }

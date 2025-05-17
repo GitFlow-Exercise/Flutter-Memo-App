@@ -20,6 +20,8 @@ import 'package:mongo_ai/dashboard/presentation/deleted_files/deleted_files_scre
 import 'package:mongo_ai/dashboard/presentation/folder/folder_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/my_files/my_files_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/recent_files/recent_files_screen.dart';
+import 'package:mongo_ai/landing/presentation/landing_layout.dart';
+import 'package:mongo_ai/landing/presentation/payment_plans/screen/payment_plans_screen_root.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -96,6 +98,22 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: Routes.signUpComplete,
         builder: (context, state) => const SignUpCompleteScreenRoot(),
       ),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return LandingShellLayout(navigationShell: navigationShell);
+        },
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.paymentPlans,
+                builder: (context, state) => const PaymentPlansScreenRoot(),
+              ),
+            ],
+          ),
+        ],
+      ),
+
       StatefulShellRoute.indexedStack(
         builder:
             (context, state, navigationShell) =>
