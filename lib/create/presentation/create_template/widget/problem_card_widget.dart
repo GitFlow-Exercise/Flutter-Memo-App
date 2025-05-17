@@ -2,18 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
+import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
 
 class ProblemCardWidget extends StatelessWidget {
-  final int number;
-  final String question;
-  final String passage;
+  final Problem problem;
   final int? maxLines;
   const ProblemCardWidget({
     super.key,
-    required this.question,
-    required this.passage,
+    required this.problem,
     this.maxLines = 2,
-    required this.number,
   });
 
   @override
@@ -40,7 +37,10 @@ class ProblemCardWidget extends StatelessWidget {
                   color: AppColor.paleBlue,
                   borderRadius: BorderRadius.circular(99),
                 ),
-                child: const Text('객관식', style: TextStyle(fontSize: 12)),
+                child: Text(
+                  problem.problemType,
+                  style: const TextStyle(fontSize: 12),
+                ),
               ),
               const Icon(
                 Icons.drag_handle_outlined,
@@ -50,7 +50,7 @@ class ProblemCardWidget extends StatelessWidget {
           ),
           const Gap(8),
           Text(
-            '$number. $question',
+            '${problem.number}. ${problem.question}',
             style: AppTextStyle.labelMedium.copyWith(
               color: AppColor.mediumGray,
             ),
@@ -58,7 +58,7 @@ class ProblemCardWidget extends StatelessWidget {
           ),
           const Gap(8),
           Text(
-            passage,
+            problem.passage,
             style: AppTextStyle.labelMedium.copyWith(
               color: AppColor.mediumGray,
             ),

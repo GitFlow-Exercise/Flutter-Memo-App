@@ -88,24 +88,18 @@ class _CreateProblemListWidgetState extends State<CreateProblemListWidget> {
                           child: SizedBox(
                             width: 500,
                             child: ProblemCardWidget(
-                              number: widget.problemList[index].number,
-                              question: widget.problemList[index].question,
-                              passage: widget.problemList[index].passage,
+                              problem: widget.problemList[index],
                             ),
                           ),
                         ),
                         childWhenDragging: Opacity(
                           opacity: 0.5,
                           child: ProblemCardWidget(
-                            number: widget.problemList[index].number,
-                            question: widget.problemList[index].question,
-                            passage: widget.problemList[index].passage,
+                            problem: widget.problemList[index],
                           ),
                         ),
                         child: ProblemCardWidget(
-                          number: widget.problemList[index].number,
-                          question: widget.problemList[index].question,
-                          passage: widget.problemList[index].passage,
+                          problem: widget.problemList[index],
                         ),
                       );
                     },

@@ -28,7 +28,7 @@ class _CreateCompleteScreenRootState
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final viewModel = ref.watch(
+      final viewModel = ref.read(
         createCompleteViewModelProvider(widget.problems).notifier,
       );
 

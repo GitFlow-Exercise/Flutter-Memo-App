@@ -131,12 +131,7 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
                                     child: SizedBox(
                                       width: 300,
                                       child: ProblemCardWidget(
-                                        number:
-                                            orderedProblemList[index].number,
-                                        question:
-                                            orderedProblemList[index].question,
-                                        passage:
-                                            orderedProblemList[index].passage,
+                                        problem: orderedProblemList[index],
                                         maxLines: 5,
                                       ),
                                     ),
@@ -144,19 +139,12 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
                                   childWhenDragging: Opacity(
                                     opacity: 0.5,
                                     child: ProblemCardWidget(
-                                      number: orderedProblemList[index].number,
-                                      question:
-                                          orderedProblemList[index].question,
-                                      passage:
-                                          orderedProblemList[index].passage,
+                                      problem: orderedProblemList[index],
                                       maxLines: 5,
                                     ),
                                   ),
                                   child: ProblemCardWidget(
-                                    number: orderedProblemList[index].number,
-                                    question:
-                                        orderedProblemList[index].question,
-                                    passage: orderedProblemList[index].passage,
+                                    problem: orderedProblemList[index],
                                     maxLines: 5,
                                   ),
                                 );

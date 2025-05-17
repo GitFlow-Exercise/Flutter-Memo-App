@@ -29,7 +29,7 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
     return CreateCompleteState(
       bytes: Uint8List(0),
       problems: problems,
-      problemTypes: ['객관식, 주관식, 서술형'],
+      problemTypes: problems.map((e) => e.problemType).toSet().toList(),
     );
   }
 
