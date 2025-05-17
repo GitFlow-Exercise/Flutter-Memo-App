@@ -66,6 +66,46 @@ class WorkbookRepositoryImpl implements WorkbookRepository {
   }
 
   @override
+  Future<Result<int, AppException>> bookmarkWorkbookList(List<Workbook> workbookList, bool bookmark) async {
+    try {
+      final workbookIds = workbookList.map((workbook) => workbook.workbookId).toList();
+      await _dataSource.updateWorkbookList(
+        workbookIds: workbookIds,
+        fields: {'bookmark': bookmark},
+      );
+      return Result.success(workbookList.length);
+    } catch(e, st) {
+      return Result.error(
+        AppException.remoteDataBase(
+          message: '문제집 북마크 수정 중 오류가 발생했습니다.',
+          error: e,
+          stackTrace: st,
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Result<int, AppException>> moveTrashWorkbookList(List<Workbook> workbookList) async {
+    try {
+      final workbookIds = workbookList.map((workbook) => workbook.workbookId).toList();
+      await _dataSource.updateWorkbookList(
+        workbookIds: workbookIds,
+        fields: {'deleted_at': DateTime.now().toIso8601String()},
+      );
+      return Result.success(workbookList.length);
+    } catch(e, st) {
+      return Result.error(
+        AppException.remoteDataBase(
+          message: '문제집 휴지통 이동 중 오류가 발생했습니다.',
+          error: e,
+          stackTrace: st,
+        ),
+      );
+    }
+  }
+
+  @override
   Future<Result<Workbook, AppException>> deleteWorkbook(Workbook workbook) async {
     try {
       await _dataSource.deleteWorkbook(workbook.workbookId);
@@ -74,6 +114,23 @@ class WorkbookRepositoryImpl implements WorkbookRepository {
       return Result.error(
         AppException.remoteDataBase(
           message: '문제집 삭제 중 오류가 발생했습니다.',
+          error: e,
+          stackTrace: st,
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Result<int, AppException>> deleteWorkbookList(List<Workbook> workbookList) async {
+    try {
+      final workbookIds = workbookList.map((w) => w.workbookId).toList();
+      await _dataSource.deleteWorkbookList(workbookIds);
+      return Result.success(workbookList.length);
+    } catch (e, st) {
+      return Result.error(
+        AppException.remoteDataBase(
+          message: '문제집 일괄 삭제 중 오류가 발생했습니다.',
           error: e,
           stackTrace: st,
         ),

@@ -1,6 +1,6 @@
 import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
 
-abstract interface class DashboardNavigationViewModel{
+abstract interface class DashboardNavigationViewModel {
   // 문제집 선택 메서드
   Future<void> selectWorkbook(Workbook workbook);
   Future<void> enableSelectMode();
@@ -13,5 +13,9 @@ abstract interface class DashboardNavigationViewModel{
   Future<void> toggleBookmark(Workbook workbook);
 
   // 문제집 휴지통 이동
-  Future<void> deleteWorkbook(Workbook workbook);
+  Future<void> moveTrashWorkbook(Workbook workbook);
+
+  // 드래그 후 적용 메서드
+  Future<void> bookmarkWorkbookList(bool bookmark);
+  Future<void> moveTrashWorkbookList();
 }

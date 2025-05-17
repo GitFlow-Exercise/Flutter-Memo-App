@@ -4,23 +4,23 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'selected_workbook_state.g.dart';
 
 class SelectedWorkbookStateModel {
-  final List<Workbook> selectedWorkbooks;
+  final List<Workbook> selectedWorkbookList;
   final bool isSelectMode;
   final bool isMergeMode;
 
   const SelectedWorkbookStateModel({
-    this.selectedWorkbooks = const <Workbook>[],
+    this.selectedWorkbookList = const <Workbook>[],
     this.isSelectMode = false,
     this.isMergeMode = false,
   });
 
   SelectedWorkbookStateModel copyWith({
-    List<Workbook>? selectedWorkbooks,
+    List<Workbook>? selectedWorkbookList,
     bool? isSelectMode,
     bool? isMergeMode,
   }) {
     return SelectedWorkbookStateModel(
-      selectedWorkbooks: selectedWorkbooks ?? this.selectedWorkbooks,
+      selectedWorkbookList: selectedWorkbookList ?? this.selectedWorkbookList,
       isSelectMode: isSelectMode ?? this.isSelectMode,
       isMergeMode: isMergeMode ?? this.isMergeMode,
     );
@@ -38,15 +38,15 @@ class SelectedWorkbookState extends _$SelectedWorkbookState {
   void selectWorkbook(Workbook workbook) {
     final current = state;
     final updatedList =
-        current.selectedWorkbooks.contains(workbook)
-            ? current.selectedWorkbooks.where((w) => w != workbook).toList()
-            : [...current.selectedWorkbooks, workbook];
-    state = current.copyWith(selectedWorkbooks: updatedList);
+        current.selectedWorkbookList.contains(workbook)
+            ? current.selectedWorkbookList.where((w) => w != workbook).toList()
+            : [...current.selectedWorkbookList, workbook];
+    state = current.copyWith(selectedWorkbookList: updatedList);
   }
 
   /// 전체 선택 해제
   void clear() {
-    state = state.copyWith(selectedWorkbooks: <Workbook>[]);
+    state = state.copyWith(selectedWorkbookList: <Workbook>[]);
   }
 
   void enableSelectMode() {

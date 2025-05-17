@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:mongo_ai/core/style/app_color.dart';
 
 class BaseSelectableView<T> extends StatefulWidget {
   final Widget Function(BuildContext, T) itemBuilder;
@@ -30,6 +33,7 @@ class _BaseSelectableViewState<T> extends State<BaseSelectableView<T>> {
   @override
   void initState() {
     super.initState();
+    // 모든 아이템에 대해 최초 키 생성
     _keys = List.generate(widget.items.length, (_) => GlobalKey());
   }
 
@@ -37,7 +41,7 @@ class _BaseSelectableViewState<T> extends State<BaseSelectableView<T>> {
   void didUpdateWidget(covariant BaseSelectableView<T> old) {
     super.didUpdateWidget(old);
 
-    // workbookList 같은 items 갯수가 변경될 경우에만 키를 재생성
+    // 최적화 : workbookList 같은 items 갯수가 변경될 경우에만 키를 재생성
     if (old.items.length != widget.items.length) {
       _keys = List.generate(widget.items.length, (_) => GlobalKey());
     }
@@ -54,6 +58,7 @@ class _BaseSelectableViewState<T> extends State<BaseSelectableView<T>> {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onPanStart: (d) {
+        print('start');
         widget.onDragStart();
         setState(() {
           _startGlobal = d.globalPosition;
@@ -61,34 +66,33 @@ class _BaseSelectableViewState<T> extends State<BaseSelectableView<T>> {
         });
       },
       onPanUpdate: (d) => setState(() => _currentGlobal = d.globalPosition),
-      onPanCancel: () {
-        widget.onDragEndEmpty();
-        setState(() {
-          _startGlobal = null;
-          _currentGlobal = null;
-        });
-      },
       onPanEnd: (d) {
-        final selRect = Rect.fromPoints(_startGlobal!, _currentGlobal!);
-        final selected = <T>[];
+        print('end');
+        final selectedRect = Rect.fromPoints(_startGlobal!, _currentGlobal!);
+        final selected = <T>[]; // 선택된 객체 리스트
 
         for (var i = 0; i < widget.items.length; i++) {
-          final ctx = _keys[i].currentContext;
-          if (ctx == null) continue;
-          final box = ctx.findRenderObject() as RenderBox;
+          // 모든 아이템에 대해 키를가지고 각 위젯의 context를 가져옴.
+          final context = _keys[i].currentContext;
+          if (context == null) continue;
+
+          final box = context.findRenderObject() as RenderBox;
           final topLeft = box.localToGlobal(Offset.zero);
           final itemRect = topLeft & box.size;
-          if (selRect.overlaps(itemRect)) {
+          if (selectedRect.overlaps(itemRect)) {
             selected.add(widget.items[i]);
           }
         }
 
         if (selected.isEmpty) {
+          // 선택된게 없으면 선택 모드 끄기
           widget.onDragEndEmpty();
         } else {
+          // 선택된 객체 리스트를 콜백 onSelection으로 전달
           widget.onSelection(selected);
         }
 
+        // 드래그 끝났으니 초기화
         setState(() {
           _startGlobal = null;
           _currentGlobal = null;
@@ -96,10 +100,14 @@ class _BaseSelectableViewState<T> extends State<BaseSelectableView<T>> {
       },
       child: Stack(
         children: [
+          // 최적화 : 그리드를 RepaintBoundary로 감싸서, children이 바뀔 때만 repaint
           Padding(
             padding: const EdgeInsets.all(30.0),
-            child: widget.layoutBuilder(context, children),
+            child: RepaintBoundary(
+              child: widget.layoutBuilder(context, children)
+            ),
           ),
+
           if (_startGlobal != null && _currentGlobal != null)
             Positioned.fromRect(
               rect: Rect.fromPoints(
@@ -107,7 +115,7 @@ class _BaseSelectableViewState<T> extends State<BaseSelectableView<T>> {
                 _toLocal(context, _currentGlobal!),
               ),
               child: Container(
-                color: Colors.blueAccent.withOpacity(0.3),
+                color: AppColor.primary.withAlpha(50),
               ),
             ),
         ],
@@ -115,6 +123,7 @@ class _BaseSelectableViewState<T> extends State<BaseSelectableView<T>> {
     );
   }
 
-  Offset _toLocal(BuildContext ctx, Offset global) =>
-      (ctx.findRenderObject() as RenderBox).globalToLocal(global);
+  // 로컬 좌표계 (특정 위젯 기준)에서 글로벌 좌표계 (화면 기준)로 변환
+  Offset _toLocal(BuildContext context, Offset global) =>
+      (context.findRenderObject() as RenderBox).globalToLocal(global);
 }

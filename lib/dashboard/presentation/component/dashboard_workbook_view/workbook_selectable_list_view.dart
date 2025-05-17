@@ -19,7 +19,10 @@ class WorkbookSelectableListView<T extends DashboardNavigationViewModel>
       onClick: () {},
       onSelect: (_) => viewModel.selectWorkbook(workbook),
       onBookmark: (_) => viewModel.toggleBookmark(workbook),
-      onDelete: (_) => viewModel.deleteWorkbook(workbook),
+      onMoveTrash: (_)   => viewModel.moveTrashWorkbook(workbook),
+      onBookmarkList: () => viewModel.bookmarkWorkbookList(true),
+      onRemoveBookmarkList: () => viewModel.bookmarkWorkbookList(false),
+      onMoveTrashList: () => viewModel.moveTrashWorkbookList(),
     ),
     layoutBuilder: (ctx, children) => ListView.separated(
       itemCount: children.length,

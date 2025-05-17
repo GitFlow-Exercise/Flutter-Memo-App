@@ -74,8 +74,38 @@ class FolderViewModel extends _$FolderViewModel implements DashboardNavigationVi
   }
 
   @override
-  Future<void> deleteWorkbook(Workbook workbook) async {
-    final result = await ref.read(deleteWorkbookUseCaseProvider).execute(workbook);
+  Future<void> moveTrashWorkbook(Workbook workbook) async {
+    final result = await ref.read(moveTrashWorkbookUseCaseProvider).execute(workbook);
+    switch(result) {
+      case Success(data: final data):
+        refreshWorkbookList();
+        break;
+      case Error():
+        print('Error: ${result.error}');
+        // 여기서 알림등 에러 처리 가능.
+        break;
+    }
+  }
+
+  @override
+  Future<void> bookmarkWorkbookList(bool bookmark) async {
+    final workbookList = ref.read(selectedWorkbookStateProvider).selectedWorkbookList;
+    final result = await ref.read(bookmarkWorkbookListUseCaseProvider).execute(workbookList, bookmark);
+    switch(result) {
+      case Success(data: final data):
+        refreshWorkbookList();
+        break;
+      case Error():
+        print('Error: ${result.error}');
+        // 여기서 알림등 에러 처리 가능.
+        break;
+    }
+  }
+
+  @override
+  Future<void> moveTrashWorkbookList() async {
+    final workbookList = ref.read(selectedWorkbookStateProvider).selectedWorkbookList;
+    final result = await ref.read(moveTrashWorkbookListUseCaseProvider).execute(workbookList);
     switch(result) {
       case Success(data: final data):
         refreshWorkbookList();

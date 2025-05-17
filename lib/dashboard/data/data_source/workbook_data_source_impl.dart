@@ -48,10 +48,29 @@ class WorkbookDataSourceImpl implements WorkbookDataSource {
   }
 
   @override
+  Future<void> updateWorkbookList({
+    required List<int> workbookIds,
+    required Map<String, dynamic> fields,
+  }) async {
+    await _client
+        .from('workbook')
+        .update(fields)
+        .inFilter('workbook_id', workbookIds);
+  }
+
+  @override
   Future<void> deleteWorkbook(int workbookId) async {
     await _client
         .from('workbook')
         .delete()
         .eq('workbook_id', workbookId);
+  }
+
+  @override
+  Future<void> deleteWorkbookList(List<int> workbookIds) async {
+    await _client
+        .from('workbook')
+        .delete()
+        .inFilter('workbook_id', workbookIds);
   }
 }

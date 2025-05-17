@@ -13,7 +13,7 @@ class MergeModeButtonWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isMergeMode = ref.watch(selectedWorkbookStateProvider).isMergeMode;
-    final selectedWorkbookList = ref.watch(selectedWorkbookStateProvider).selectedWorkbooks;
+    final selectedWorkbookList = ref.watch(selectedWorkbookStateProvider).selectedWorkbookList;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [

@@ -11,9 +11,10 @@ class WorkbookListItem extends ConsumerWidget {
   final void Function() onClick;
   final void Function(Workbook workbook) onSelect;
   final void Function(Workbook workbook) onBookmark;
-  final void Function(Workbook workbook) onDelete;
-  // final void Function() onGroupBookmark;
-  // final void Function() onGroupDelete;
+  final void Function(Workbook workbook) onMoveTrash;
+  final void Function() onBookmarkList;
+  final void Function() onRemoveBookmarkList;
+  final void Function() onMoveTrashList;
   final Workbook workbook;
 
   const WorkbookListItem({
@@ -22,16 +23,17 @@ class WorkbookListItem extends ConsumerWidget {
     required this.onClick,
     required this.onSelect,
     required this.onBookmark,
-    required this.onDelete,
-    // required this.onGroupBookmark,
-    // required this.onGroupDelete,
+    required this.onMoveTrash,
+    required this.onBookmarkList,
+    required this.onRemoveBookmarkList,
+    required this.onMoveTrashList,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isSelected = ref
         .watch(selectedWorkbookStateProvider)
-        .selectedWorkbooks
+        .selectedWorkbookList
         .contains(workbook);
     final isSelectMode = ref.watch(selectedWorkbookStateProvider).isSelectMode;
     final controller = MenuController();
@@ -39,15 +41,18 @@ class WorkbookListItem extends ConsumerWidget {
         controller: controller,
         menuChildren: [
           MenuItemButton(
-            onPressed: () {
-
-            },
+            onPressed: onBookmarkList,
             leadingIcon: const Icon(Icons.star, color: AppColor.secondary),
             child: const Text('문제집 북마크하기'),
           ),
           MenuItemButton(
+            onPressed: onRemoveBookmarkList,
+            leadingIcon: const Icon(Icons.star_border),
+            child: const Text('문제집 북마크 해제하기'),
+          ),
+          MenuItemButton(
             onPressed: () {
-
+              onMoveTrashList();
             },
             leadingIcon: const Icon(Icons.delete, color: AppColor.destructive),
             child: const Text('문제집 삭제하기'),
@@ -201,7 +206,7 @@ class WorkbookListItem extends ConsumerWidget {
                           if(isSelectMode) {
                             onSelect(workbook);
                           } else {
-                            onDelete(workbook);
+                            onMoveTrash(workbook);
                           }
                         },
                         child: const Icon(
