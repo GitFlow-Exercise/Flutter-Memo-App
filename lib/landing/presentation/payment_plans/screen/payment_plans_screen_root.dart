@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mongo_ai/landing/domain/enum/landing_header_menu_type.dart';
+import 'package:mongo_ai/landing/presentation/landing_shell/controller/landing_shell_view_model.dart';
 import 'package:mongo_ai/landing/presentation/payment_plans/controller/payment_plans_action.dart';
 import 'package:mongo_ai/landing/presentation/payment_plans/controller/payment_plans_event.dart';
 import 'package:mongo_ai/landing/presentation/payment_plans/controller/payment_plans_view_model.dart';
@@ -11,10 +13,12 @@ class PaymentPlansScreenRoot extends ConsumerStatefulWidget {
   const PaymentPlansScreenRoot({super.key});
 
   @override
-  ConsumerState<PaymentPlansScreenRoot> createState() => _PaymentPlansScreenRootState();
+  ConsumerState<PaymentPlansScreenRoot> createState() =>
+      _PaymentPlansScreenRootState();
 }
 
-class _PaymentPlansScreenRootState extends ConsumerState<PaymentPlansScreenRoot> {
+class _PaymentPlansScreenRootState
+    extends ConsumerState<PaymentPlansScreenRoot> {
   StreamSubscription? _subscription;
 
   @override
@@ -22,8 +26,15 @@ class _PaymentPlansScreenRootState extends ConsumerState<PaymentPlansScreenRoot>
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final viewModel = ref.watch(paymentPlansViewModelProvider.notifier);
+      final landingShellViewModel = ref.watch(
+        landingShellViewModelProvider.notifier,
+      );
 
       _subscription = viewModel.eventStream.listen(_handleEvent);
+
+      landingShellViewModel.setNavigationItem(
+        LandingHeaderMenuType.paymentPlans,
+      );
     });
   }
 
@@ -36,9 +47,9 @@ class _PaymentPlansScreenRootState extends ConsumerState<PaymentPlansScreenRoot>
   void _handleEvent(PaymentPlansEvent event) {
     switch (event) {
       case ShowSnackBar(message: final message):
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(message))
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(message)));
     }
   }
 
