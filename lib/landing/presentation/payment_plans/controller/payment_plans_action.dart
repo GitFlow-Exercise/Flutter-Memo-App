@@ -4,8 +4,6 @@ part 'payment_plans_action.freezed.dart';
 
 @freezed
 sealed class PaymentPlansAction with _$PaymentPlansAction {
-  const factory PaymentPlansAction.onTap() = OnTap;
-
   const factory PaymentPlansAction.onStartClick() = OnStartClick;
 
   const factory PaymentPlansAction.onUpgradeClick() = OnUpgradeClick;

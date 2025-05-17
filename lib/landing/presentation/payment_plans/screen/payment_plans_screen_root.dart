@@ -51,8 +51,6 @@ class _PaymentPlansScreenRootState extends ConsumerState<PaymentPlansScreenRoot>
     final viewModel = ref.read(paymentPlansViewModelProvider.notifier);
 
     switch (action) {
-      case OnTap():
-        debugPrint('일반 액션: OnTap');
       case OnStartClick():
         viewModel.showStartButtonClicked();
         debugPrint('시작하기 버튼 클릭');
