@@ -42,6 +42,14 @@ class _SignInScreenRootState extends ConsumerState<SignInScreenRoot> {
           context,
         ).showSnackBar(SnackBar(content: Text(message)));
         break;
+      case NavigateToHome():
+        if (mounted) {
+          context.go(Routes.folder);
+        }
+      case NavigateToSelectTeam():
+        if (mounted) {
+          context.go(Routes.selectTeam);
+        }
     }
   }
 
@@ -64,10 +72,10 @@ class _SignInScreenRootState extends ConsumerState<SignInScreenRoot> {
     switch (action) {
       case OnTapLogin():
         await viewModel.login();
-      case OnTapForgotPassword():
-      // TODO: 비밀번호 찾기 처리 로직 구현
       case OnTapSignUp():
         context.go(Routes.signUp);
+      case OnTapGoogleSingIn():
+        await viewModel.googleSignIn();
     }
   }
 }

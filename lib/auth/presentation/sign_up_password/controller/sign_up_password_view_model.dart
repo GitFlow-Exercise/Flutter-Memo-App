@@ -5,7 +5,6 @@ import 'package:mongo_ai/auth/domain/model/password_criteria.dart';
 import 'package:mongo_ai/auth/presentation/sign_up_password/controller/sign_up_password_event.dart';
 import 'package:mongo_ai/auth/presentation/sign_up_password/controller/sign_up_password_state.dart';
 import 'package:mongo_ai/core/di/providers.dart';
-import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -21,7 +20,6 @@ class SignUpPasswordViewModel extends _$SignUpPasswordViewModel {
   SignUpPasswordState build() {
     final passwordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
-
     ref.onDispose(() {
       _eventController.close();
       passwordController.dispose();
