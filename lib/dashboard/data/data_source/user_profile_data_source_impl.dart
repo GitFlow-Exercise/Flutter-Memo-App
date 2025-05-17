@@ -22,11 +22,10 @@ class UserProfileDataSourceImpl implements UserProfileDataSource {
     required String id,
     required String userName,
   }) async {
-    final userId = _client.auth.currentUser!.id;
     await _client
         .from('users')
         .update({'user_name': userName})
-        .eq('user_id', userId);
+        .eq('user_id', id);
     return;
   }
 }

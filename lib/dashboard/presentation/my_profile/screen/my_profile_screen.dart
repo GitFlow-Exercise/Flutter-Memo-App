@@ -28,16 +28,20 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   final _formKey = GlobalKey<FormState>();
 
   @override
+  void didUpdateWidget(covariant MyProfileScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.state.userNameController.text != widget.state.data.value?.userName) {
+      widget.state.userNameController.text = widget.state.data.value?.userName ?? '';
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.lightBlue,
       body: Center(
         child: widget.state.data.when(
           data: (profile) {
-            if (widget.state.userNameController.text != profile.userName) {
-              widget.state.userNameController.text = profile.userName;
-            }
-
             return LayoutBuilder(
               builder: (context, constraints) {
                 return SingleChildScrollView(
