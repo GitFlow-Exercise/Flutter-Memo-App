@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
+import 'package:mongo_ai/landing/domain/enum/landing_header_menu_type.dart';
+import 'package:mongo_ai/landing/presentation/components/landing_header_navigation_item.dart';
+import 'package:mongo_ai/landing/presentation/landing_shell/controller/landing_shell_state.dart';
 
 class LandingHeader extends StatefulWidget {
+  final LandingShellState state;
   final VoidCallback onTapFreeTrial;
   final VoidCallback onTapLogo;
   final VoidCallback onTapHome;
@@ -14,6 +18,7 @@ class LandingHeader extends StatefulWidget {
     required this.onTapHome,
     required this.onTapPaymentPlans,
     required this.onTapLogo,
+    required this.state,
   });
 
   @override
@@ -21,8 +26,6 @@ class LandingHeader extends StatefulWidget {
 }
 
 class _LandingHeaderState extends State<LandingHeader> {
-  int _selectedIndex = 2;
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -49,27 +52,24 @@ class _LandingHeaderState extends State<LandingHeader> {
           ),
 
           Row(
-            children: [
-              _buildNavItem(title: '홈', index: 0, onTap: widget.onTapHome),
-              const SizedBox(width: 32),
-              _buildNavItem(title: '기능', index: 1),
-              const SizedBox(width: 32),
-              _buildNavItem(title: '사용 방법', index: 2),
-              const SizedBox(width: 32),
-              _buildNavItem(
-                title: '요금제',
-                index: 3,
-                onTap: widget.onTapPaymentPlans,
-              ),
-              const SizedBox(width: 32),
-              _buildNavItem(title: '도움말', index: 4),
-            ],
+            children:
+                LandingHeaderMenuType.values.map((menu) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: LandingHeaderNavigationItem(
+                      title: menu.title,
+                      isSelected: widget.state.selectLandingHeaderMenu == menu,
+                      onTap: () {
+                        _landingHeaderMenuAction(menu);
+                      },
+                    ),
+                  );
+                }).toList(),
           ),
 
           ElevatedButton(
             onPressed: () {
               widget.onTapFreeTrial();
-              debugPrint('무료로 시작하기 클릭');
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColor.primary,
@@ -93,28 +93,14 @@ class _LandingHeaderState extends State<LandingHeader> {
     );
   }
 
-  Widget _buildNavItem({
-    required String title,
-    required int index,
-    VoidCallback? onTap,
-  }) {
-    return InkWell(
-      onTap: () {
-        setState(() {
-          _selectedIndex = index;
-        });
-        onTap?.call();
-      },
-      child: Text(
-        title,
-        style: TextStyle(
-          fontFamily: AppTextStyle.fontFamily,
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color:
-              _selectedIndex == index ? AppColor.primary : AppColor.mediumGray,
-        ),
-      ),
-    );
+  void _landingHeaderMenuAction(LandingHeaderMenuType menu) {
+    switch (menu) {
+      case LandingHeaderMenuType.home:
+        widget.onTapHome();
+      case LandingHeaderMenuType.paymentPlans:
+        widget.onTapPaymentPlans();
+      default:
+        debugPrint('미구현 버튼입니다. => ${menu.name}');
+    }
   }
 }

@@ -11,8 +11,8 @@ import 'package:mongo_ai/core/routing/redirect.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/create/domain/model/create_workbook_params.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
-import 'package:mongo_ai/create/presentation/create_complete/screen/create_complete_screen_root.dart';
 import 'package:mongo_ai/create/presentation/create/screen/upload_raw_screen_root.dart';
+import 'package:mongo_ai/create/presentation/create_complete/screen/create_complete_screen_root.dart';
 import 'package:mongo_ai/create/presentation/create_problem/screen/create_problem_screen_root.dart';
 import 'package:mongo_ai/create/presentation/create_template/screen/create_template_screen_root.dart';
 import 'package:mongo_ai/dashboard/presentation/dashboard_screen.dart';
@@ -20,7 +20,8 @@ import 'package:mongo_ai/dashboard/presentation/deleted_files/deleted_files_scre
 import 'package:mongo_ai/dashboard/presentation/folder/folder_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/my_files/my_files_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/recent_files/recent_files_screen.dart';
-import 'package:mongo_ai/landing/presentation/landing_layout.dart';
+import 'package:mongo_ai/landing/presentation/landing_page/screen/landing_page_screen.dart';
+import 'package:mongo_ai/landing/presentation/landing_shell/screen/landing_shell_screen_root.dart';
 import 'package:mongo_ai/landing/presentation/payment_plans/screen/payment_plans_screen_root.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -100,13 +101,21 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
-          return LandingShellLayout(navigationShell: navigationShell);
+          return LandingShellScreenRoot(navigationShell: navigationShell);
         },
         branches: [
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: Routes.paymentPlans,
+                path: Routes.landingPage,
+                builder: (context, state) => const LandingPageScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.landingPage,
                 builder: (context, state) => const PaymentPlansScreenRoot(),
               ),
             ],

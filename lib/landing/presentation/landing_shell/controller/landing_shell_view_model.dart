@@ -1,0 +1,12 @@
+import 'package:mongo_ai/landing/presentation/landing_shell/controller/landing_shell_state.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'landing_shell_view_model.g.dart';
+
+@riverpod
+class LandingShellViewModel extends _$LandingShellViewModel {
+  @override
+  LandingShellState build() {
+    return const LandingShellState();
+  }
+}

@@ -17,5 +17,6 @@ abstract class Routes {
   static const createTemplate = '/create-template';
   static const createComplete = '/create-complete';
 
+  static const landingPage = '/';
   static const paymentPlans = '/payment-plans';
 }
