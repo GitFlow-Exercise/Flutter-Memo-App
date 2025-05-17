@@ -28,7 +28,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 final routerProvider = Provider<GoRouter>((ref) {
   final auth = ref.watch(authRepositoryProvider);
   return GoRouter(
-    initialLocation: Routes.folder,
+    //TODO(ok): 배포 전 랜딩페이지로 변경 예정
+    initialLocation: Routes.landingPage,
     // auth 관찰해서 변화가 있다면,
     // 새로 reidrect 함수 실행
     refreshListenable: auth,
@@ -115,7 +116,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: Routes.landingPage,
+                path: Routes.paymentPlans,
                 builder: (context, state) => const PaymentPlansScreenRoot(),
               ),
             ],
