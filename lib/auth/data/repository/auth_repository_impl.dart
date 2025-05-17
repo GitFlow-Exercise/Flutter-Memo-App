@@ -47,7 +47,6 @@ class AuthRepositoryImpl extends AuthRepository {
 
   // Google 로그인 처리 및 이벤트 발행
   Future<void> _handleGoogleSignInAndNotify(User? user) async {
-        print('호출 전 isSelectTeam: $isSelectTeam, isFirstTime: $isInitialSetupUser');
     final result = await handleGoogleSignIn(user);
     switch (result) {
       case Success():
@@ -184,7 +183,7 @@ class AuthRepositoryImpl extends AuthRepository {
       notifyListeners();
       return const Result.success(null);
     } catch (e) {
-      // 기타 예외 (네트워크, 파싱 등)
+      print(e);
       return Result.error(
         AppException.unknown(
           message: '유저를 삭제하던 중 오류가 발생했습니다.',

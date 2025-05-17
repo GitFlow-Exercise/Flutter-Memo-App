@@ -39,7 +39,6 @@ class SelectTeamViewModel extends _$SelectTeamViewModel {
 
     if (userId != null) {
       state = state.copyWith(userId: userId);
-      debugPrint('현재 사용자 ID: $userId');
     } else {
       _eventController.add(
         const SelectTeamEvent.showSnackBar('사용자 정보를 가져올 수 없습니다'),
