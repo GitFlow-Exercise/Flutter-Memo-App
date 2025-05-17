@@ -7,6 +7,7 @@ part 'landing_shell_state.freezed.dart';
 abstract class LandingShellState with _$LandingShellState {
   const factory LandingShellState({
     @Default(LandingHeaderMenuType.home) LandingHeaderMenuType selectLandingHeaderMenu,
+    @Default(false) bool isAuthenticated,
   }) = _LandingShellState;
 }
 

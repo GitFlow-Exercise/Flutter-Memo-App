@@ -11,12 +11,16 @@ abstract class AppRedirect {
     required String? nowPath,
     required Object? extra,
   }) {
+    // 0. 모든 사용자는 랜딩페이지, 요금제 안내 페이지에 접근 가능
+    if (nowPath == Routes.landingPage ||
+        nowPath == Routes.paymentPlans) {
+      return null;
+    }
+
     // 1. 미인증 사용자 처리 (isAuthenticated = false)
     if (!isAuthenticated) {
       // Sign In과 Sign Up, 랜딩 페이지, 요금제 안내 페이지는 항상 접근 가능
-      if (nowPath == Routes.landingPage ||
-          nowPath == Routes.paymentPlans ||
-          nowPath == Routes.signIn ||
+      if (nowPath == Routes.signIn ||
           nowPath == Routes.signUp) {
         return null;
       }

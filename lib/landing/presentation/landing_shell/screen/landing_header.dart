@@ -79,9 +79,9 @@ class _LandingHeaderState extends State<LandingHeader> {
                 borderRadius: BorderRadius.circular(6),
               ),
             ),
-            child: const Text(
-              '무료로 시작하기',
-              style: TextStyle(
+            child: Text(
+              widget.state.isAuthenticated ? '대시보드로 이동' : '무료로 시작하기',
+              style: const TextStyle(
                 fontFamily: AppTextStyle.fontFamily,
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
