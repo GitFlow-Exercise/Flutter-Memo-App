@@ -34,6 +34,9 @@ class LandingShellScreen extends StatelessWidget {
             onTapPaymentPlans: () {
               onAction(const LandingShellAction.onTapPaymentPlans());
             },
+            onTapNavigationItem: (menu) {
+              onAction(LandingShellAction.onTapNavigationItem(menu));
+            },
             state: state,
           ),
 

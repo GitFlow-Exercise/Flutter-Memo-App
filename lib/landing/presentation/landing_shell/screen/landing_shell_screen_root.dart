@@ -32,6 +32,8 @@ class _LandingShellScreenRootState
   }
 
   void _handleAction(LandingShellAction action) {
+    final viewModel = ref.watch(landingShellViewModelProvider.notifier);
+
     switch (action) {
       case OnTapFreeTrial():
         context.go(Routes.signIn);
@@ -40,6 +42,8 @@ class _LandingShellScreenRootState
         context.go(Routes.landingPage);
       case OnTapPaymentPlans():
         context.go(Routes.paymentPlans);
+      case OnTapNavigationItem(:final menu):
+        viewModel.setNavigationItem(menu);
     }
   }
 }

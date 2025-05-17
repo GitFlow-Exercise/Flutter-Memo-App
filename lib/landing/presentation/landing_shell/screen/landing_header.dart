@@ -11,6 +11,7 @@ class LandingHeader extends StatefulWidget {
   final VoidCallback onTapLogo;
   final VoidCallback onTapHome;
   final VoidCallback onTapPaymentPlans;
+  final Function(LandingHeaderMenuType) onTapNavigationItem;
 
   const LandingHeader({
     super.key,
@@ -18,7 +19,7 @@ class LandingHeader extends StatefulWidget {
     required this.onTapHome,
     required this.onTapPaymentPlans,
     required this.onTapLogo,
-    required this.state,
+    required this.state, required this.onTapNavigationItem,
   });
 
   @override
@@ -53,18 +54,19 @@ class _LandingHeaderState extends State<LandingHeader> {
 
           Row(
             children:
-                LandingHeaderMenuType.values.map((menu) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: LandingHeaderNavigationItem(
-                      title: menu.title,
-                      isSelected: widget.state.selectLandingHeaderMenu == menu,
-                      onTap: () {
-                        _landingHeaderMenuAction(menu);
-                      },
-                    ),
-                  );
-                }).toList(),
+            LandingHeaderMenuType.values.map((menu) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: LandingHeaderNavigationItem(
+                  title: menu.title,
+                  isSelected: widget.state.selectLandingHeaderMenu == menu,
+                  onTap: () {
+                    widget.onTapNavigationItem(menu);
+                    _landingHeaderMenuAction(menu);
+                  },
+                ),
+              );
+            }).toList(),
           ),
 
           ElevatedButton(
