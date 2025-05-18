@@ -2,11 +2,23 @@ import 'dart:async';
 import 'package:mongo_ai/auth/data/data_source/auth_data_source.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class MockDataSource implements AuthDataSource {
+class MockAuthDataSource implements AuthDataSource {
   final _authController = StreamController<AuthState>.broadcast();
   bool _isAuthenticated = false;
+  static const email = 'test@test.com';
+  final AuthResponse _authResponse = AuthResponse(
+    session: null,
+    user: const User(
+      id: 'id',
+      email: email,
+      appMetadata: {},
+      userMetadata: {},
+      aud: 'aud',
+      createdAt: 'createdAt',
+    ),
+  );
 
-  MockDataSource() {
+  MockAuthDataSource() {
     // 초기 상태: signedIn
     _authController.add(const AuthState(AuthChangeEvent.signedIn, null));
   }
@@ -34,7 +46,7 @@ class MockDataSource implements AuthDataSource {
   Future<AuthResponse> signUp(String email, String password) async {
     await Future.delayed(const Duration(milliseconds: 200));
     // 더미 AuthResponse 반환
-    return AuthResponse(session: null, user: null);
+    return _authResponse;
   }
 
   @override
@@ -53,7 +65,7 @@ class MockDataSource implements AuthDataSource {
   @override
   Future<bool> isEmailExist(String email) async {
     await Future.delayed(const Duration(milliseconds: 100));
-    // '@' 포함 여부로 가짜 체크
+    // '@' 포함 여부로 체크
     return email.contains('@');
   }
 
@@ -72,13 +84,13 @@ class MockDataSource implements AuthDataSource {
   @override
   Future<AuthResponse> verifyEmailOtp(String email, String otp) async {
     await Future.delayed(const Duration(milliseconds: 200));
-    return AuthResponse(session: null, user: null);
+    return _authResponse;
   }
 
   @override
   Future<AuthResponse> verifyMagicLinkOtp(String email, String otp) async {
     await Future.delayed(const Duration(milliseconds: 200));
-    return AuthResponse(session: null, user: null);
+    return _authResponse;
   }
 
   @override
@@ -91,14 +103,11 @@ class MockDataSource implements AuthDataSource {
   @override
   Future<String?> getCurrentUserEmail() async {
     await Future.delayed(const Duration(milliseconds: 100));
-    return _isAuthenticated ? 'mockuser@example.com' : null;
+    return _isAuthenticated ? email : null;
   }
 
   @override
-  Future<void> updateUserMetadata(String key) async {
-    await Future.delayed(const Duration(milliseconds: 100));
-    // 메타데이터 업데이트 시뮬레이션
-  }
+  Future<void> updateUserMetadata(String key) async {}
 
   @override
   bool isAuthenticated() => _isAuthenticated;
