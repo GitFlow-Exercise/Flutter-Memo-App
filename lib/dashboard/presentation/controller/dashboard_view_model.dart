@@ -36,6 +36,11 @@ class DashboardViewModel extends _$DashboardViewModel {
     };
   }
 
+  // 외부에서 호출할 수 있도록 유저 업데이트 메서드 추가
+  Future<void> updateUserProfile(UserProfile userProfile) async {
+    state = state.whenData((value) => value.copyWith(userProfile: userProfile));
+  }
+
   // -----------------
   // Team 관련 메서드
   Future<void> refreshTeamList() async {
@@ -123,7 +128,9 @@ class DashboardViewModel extends _$DashboardViewModel {
   }
 
   Future<void> toggleFilterShowGridView(bool showGridView) async {
-    ref.read(workbookFilterStateProvider.notifier).toggleShowGridView(showGridView);
+    ref
+        .read(workbookFilterStateProvider.notifier)
+        .toggleShowGridView(showGridView);
   }
 
   // -----------------
