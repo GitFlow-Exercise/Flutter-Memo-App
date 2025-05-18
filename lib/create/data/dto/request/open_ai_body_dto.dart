@@ -12,7 +12,7 @@ class OpenAIBodyDto {
   final String? previousResponseId;
   final double temperature;
 
-  OpenAIBodyDto({
+  const OpenAIBodyDto({
     required this.model,
     required this.input,
     required this.instructions,
