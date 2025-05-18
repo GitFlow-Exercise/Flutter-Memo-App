@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:mongo_ai/auth/data/data_source/auth_data_source.dart';
@@ -12,6 +10,11 @@ class MockGoTrueClient extends Mock implements GoTrueClient {}
 
 class MockGoTrueAdmin extends Mock implements GoTrueAdminApi {}
 
+// 테스트는 mock data를 생성하여 진행합니다.
+// 1. mock class setup
+// 2. mock class의 함수 리턴값 임의로 설정
+// 3. dataSource를 호출
+// 4. verify를 이용하여 dataSource 내부에 mock class의 함수가 1번 호출되었는지 검증
 void main() {
   late MockSupabaseClient mockClient;
   late MockGoTrueClient mockAuth;
@@ -38,20 +41,38 @@ void main() {
     authDataSource = AuthDataSourceImpl(client: mockClient);
   });
 
-  test('login test', () async {
-    // signIn 리턴값 설정
-    when(
-      () => mockAuth.signInWithPassword(email: email, password: password),
-    ).thenAnswer((_) async {
-      return mockAuthResponse;
+  group('login test', () {
+    test('email, password login test', () async {
+      // signIn 리턴값 설정
+      when(
+        () => mockAuth.signInWithPassword(email: email, password: password),
+      ).thenAnswer((_) async {
+        return mockAuthResponse;
+      });
+
+      // 실제 login() 호출
+      await authDataSource.login(email, password);
+
+      verify(() => authDataSource.login(email, password)).called(1);
     });
 
-    // 실제 login() 호출
-    await authDataSource.login(email, password);
+    test('google login test', () async {
+      final provider = OAuthProvider.google;
+      final redirectUrl = '${Uri.base.origin}/auth/callback';
+      // signIn 리턴값 설정
+      when(
+        () => mockAuth.signInWithOAuth(provider, redirectTo: redirectUrl),
+      ).thenAnswer((_) async {
+        return true;
+      });
 
-    verify(
-      () => mockAuth.signInWithPassword(email: email, password: password),
-    ).called(1);
+      // 실제 login() 호출
+      await authDataSource.signInWithGoogle();
+
+      verify(
+        () => mockAuth.signInWithOAuth(provider, redirectTo: redirectUrl),
+      ).called(1);
+    });
   });
 
   test('logout test', () async {

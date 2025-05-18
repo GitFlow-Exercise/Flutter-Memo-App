@@ -5,7 +5,7 @@ abstract interface class AuthDataSource {
 
   Future<void> login(String email, String password);
 
-  Future<void> signInWithGoogle();
+  Future<void> signInWithGoogle(String redirectUrl);
 
   Future<AuthResponse> signUp(String email, String password);
 

@@ -47,14 +47,16 @@ class AuthRepositoryImpl extends AuthRepository {
 
   // Google 로그인 처리 및 이벤트 발행
   Future<void> _handleGoogleSignInAndNotify(User? user) async {
-        print('호출 전 isSelectTeam: $isSelectTeam, isFirstTime: $isInitialSetupUser');
+    print('호출 전 isSelectTeam: $isSelectTeam, isFirstTime: $isInitialSetupUser');
     final result = await handleGoogleSignIn(user);
     switch (result) {
       case Success():
         // 첫 로그인 여부 확인(팀 선택 미완료인지 아닌지)
         final hasTeamNotSelected = !isSelectTeam;
         _notifyListeners(
-          AuthStateChange.signedInWithGoogle(hasTeamNotSelected: hasTeamNotSelected),
+          AuthStateChange.signedInWithGoogle(
+            hasTeamNotSelected: hasTeamNotSelected,
+          ),
         );
         break;
       case Error(error: final error):
@@ -135,7 +137,9 @@ class AuthRepositoryImpl extends AuthRepository {
   @override
   Future<Result<void, AppException>> signInWithGoogle() async {
     try {
-      await _authDataSource.signInWithGoogle();
+      final origin = Uri.base.origin;
+      final redirectUrl = '$origin/auth/callback';
+      await _authDataSource.signInWithGoogle(redirectUrl);
       // 로그인 성공
       notifyListeners();
       return const Result.success(null);

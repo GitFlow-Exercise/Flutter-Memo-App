@@ -16,9 +16,7 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
-  Future<void> signInWithGoogle() async {
-    final origin = Uri.base.origin;
-    final redirectUrl = '$origin/auth/callback';
+  Future<void> signInWithGoogle(String redirectUrl) async {
     await _client.auth.signInWithOAuth(
       OAuthProvider.google,
       redirectTo: redirectUrl,
