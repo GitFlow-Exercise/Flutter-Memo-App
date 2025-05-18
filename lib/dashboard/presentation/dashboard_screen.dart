@@ -1,8 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/enum/workbook_sort_option.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
@@ -29,27 +30,25 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   List<String> _currentPath = [];
 
-
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(dashboardViewModelProvider.notifier).fetchSelectedTeam();
+      unawaited(ref.read(dashboardViewModelProvider.notifier).fetchSelectedTeam());
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(dashboardViewModelProvider);
     final viewModel = ref.read(dashboardViewModelProvider.notifier);
     final selectedIndex = widget.navigationShell.currentIndex;
-    if(selectedIndex == 0) {
+    if (selectedIndex == 0) {
       _currentPath = ['내 항목'];
-    } else if(selectedIndex == 1) {
+    } else if (selectedIndex == 1) {
       _currentPath = ['최근 항목'];
-    } else if(selectedIndex == 3) {
+    } else if (selectedIndex == 3) {
       _currentPath = ['휴지통'];
     }
 
@@ -105,31 +104,37 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             const Gap(10),
                             WorkbookFilterTabBar(
                               toggleGridView: (bool showGridView) {
-                                viewModel.toggleFilterShowGridView(showGridView);
+                                viewModel.toggleFilterShowGridView(
+                                  showGridView,
+                                );
                               },
                             ),
                             const Spacer(),
                             SizedBox(
                               height: 40,
                               child: ElevatedButton(
-                                  onPressed: () {
-                                    context.push(Routes.create);
-                                  },
-                                  style : ElevatedButton.styleFrom(
-                                    backgroundColor: AppColor.primary,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
+                                onPressed: () {
+                                  context.push(Routes.create);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColor.primary,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                  child: const Row(
-                                    children: [
-                                      Icon(Icons.auto_awesome,
-                                          color: AppColor.white),
-                                      Gap(8),
-                                      Text('새로 만들기', style: TextStyle(
-                                          color: AppColor.white)),
-                                    ],
-                                  )
+                                ),
+                                child: const Row(
+                                  children: [
+                                    Icon(
+                                      Icons.auto_awesome,
+                                      color: AppColor.white,
+                                    ),
+                                    Gap(8),
+                                    Text(
+                                      '새로 만들기',
+                                      style: TextStyle(color: AppColor.white),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                             const Gap(10),
@@ -140,7 +145,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   viewModel.toggleSelectMode();
                                 },
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -233,14 +238,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             Container(
               decoration: const BoxDecoration(
                 border: Border(
-                  bottom: BorderSide(
-                    color: AppColor.lightGrayBorder,
-                    width: 1,
-                  ),
-                  top: BorderSide(
-                    color: AppColor.lightGrayBorder,
-                    width: 1,
-                  ),
+                  bottom: BorderSide(color: AppColor.lightGrayBorder, width: 1),
+                  top: BorderSide(color: AppColor.lightGrayBorder, width: 1),
                 ),
               ),
               child: Column(
@@ -275,10 +274,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 },
               ),
             ),
-            const Divider(
-              color: AppColor.lightGrayBorder,
-              thickness: 1,
-            ),
+            const Divider(color: AppColor.lightGrayBorder, thickness: 1),
             _sideBarTile(selectedIndex, 3, '휴지통', Icons.delete),
             const Gap(20),
           ],
@@ -287,31 +283,26 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _sideBarTile(int selectedIndex, int index, String title, IconData icon) {
+  Widget _sideBarTile(
+    int selectedIndex,
+    int index,
+    String title,
+    IconData icon,
+  ) {
     final viewModel = ref.read(dashboardViewModelProvider.notifier);
     return ListTile(
       title: Text(
         title,
         style: AppTextStyle.bodyMedium.copyWith(
           color:
-          index == selectedIndex
-              ? AppColor.primary
-              : AppColor.mediumGray,
+              index == selectedIndex ? AppColor.primary : AppColor.mediumGray,
         ),
       ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      tileColor:
-      index == selectedIndex
-          ? AppColor.paleBlue
-          : AppColor.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      tileColor: index == selectedIndex ? AppColor.paleBlue : AppColor.white,
       leading: Icon(
         icon,
-        color:
-        index == selectedIndex
-            ? AppColor.primary
-            : AppColor.mediumGray,
+        color: index == selectedIndex ? AppColor.primary : AppColor.mediumGray,
       ),
       onTap: () {
         viewModel.clearFolderId();
