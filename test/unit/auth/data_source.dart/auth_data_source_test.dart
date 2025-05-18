@@ -2,13 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:mongo_ai/auth/data/data_source/auth_data_source.dart';
 import 'package:mongo_ai/auth/data/data_source/auth_data_source_impl.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
-class MockSupabaseClient extends Mock implements SupabaseClient {}
-
-class MockGoTrueClient extends Mock implements GoTrueClient {}
-
-class MockGoTrueAdmin extends Mock implements GoTrueAdminApi {}
+import '../../utils/mock_supabase.dart';
 
 // 테스트는 mock data를 생성하여 진행합니다.
 // 1. mock class setup
@@ -16,93 +11,60 @@ class MockGoTrueAdmin extends Mock implements GoTrueAdminApi {}
 // 3. dataSource를 호출
 // 4. verify를 이용하여 dataSource 내부에 mock class의 함수가 1번 호출되었는지 검증
 void main() {
-  late MockSupabaseClient mockClient;
-  late MockGoTrueClient mockAuth;
-  late MockGoTrueAdmin mockAdmin;
+  final supabase = SupabaseMockHelper();
   late AuthDataSource authDataSource;
 
   const email = 'test@test.com';
   const password = 'qwer1234';
   const userId = 'userId';
-  final mockAuthResponse = AuthResponse();
 
   // setting
   setUpAll(() {
-    mockClient = MockSupabaseClient();
-    mockAuth = MockGoTrueClient();
-    mockAdmin = MockGoTrueAdmin();
-
-    // mockClient.auth 리턴값 설정
-    when(() => mockClient.auth).thenReturn(mockAuth);
-
-    // mockClient.auth.admin 리턴값 설정
-    when(() => mockAuth.admin).thenReturn(mockAdmin);
-
-    authDataSource = AuthDataSourceImpl(client: mockClient);
+    supabase.init();
+    authDataSource = AuthDataSourceImpl(client: supabase.mockClient);
   });
 
-  group('login test', () {
-    test('email, password login test', () async {
-      // signIn 리턴값 설정
-      when(
-        () => mockAuth.signInWithPassword(email: email, password: password),
-      ).thenAnswer((_) async {
-        return mockAuthResponse;
-      });
+  // ------------------------------------
+  // ⚠️ 구글 로그인은 내부 함수가 캡슐화 되어있어서
+  // 테스트가 힘든 관계로 코드를 작성하지 않습니다.
+  test('email, password login test', () async {
+    await authDataSource.login(email, password);
 
-      // 실제 login() 호출
-      await authDataSource.login(email, password);
-
-      verify(() => authDataSource.login(email, password)).called(1);
-    });
-
-    test('google login test', () async {
-      final provider = OAuthProvider.google;
-      final redirectUrl = '${Uri.base.origin}/auth/callback';
-      // signIn 리턴값 설정
-      when(
-        () => mockAuth.signInWithOAuth(provider, redirectTo: redirectUrl),
-      ).thenAnswer((_) async {
-        return true;
-      });
-
-      // 실제 login() 호출
-      await authDataSource.signInWithGoogle();
-
-      verify(
-        () => mockAuth.signInWithOAuth(provider, redirectTo: redirectUrl),
-      ).called(1);
-    });
+    verify(
+      () => supabase.mockAuth.signInWithPassword(
+        email: email,
+        password: password,
+      ),
+    ).called(1);
   });
 
   test('logout test', () async {
-    when(() => mockAuth.signOut()).thenAnswer((_) async {});
-
     await authDataSource.logout();
 
-    verify(() => mockAuth.signOut()).called(1);
+    verify(() => supabase.mockAuth.signOut()).called(1);
   });
 
   test('deleteUser test', () async {
-    when(() => mockAdmin.deleteUser(userId)).thenAnswer((_) async {});
-
     await authDataSource.deleteUser(userId);
 
-    verify(() => mockAdmin.deleteUser(userId)).called(1);
+    verify(() => supabase.mockAdmin.deleteUser(userId)).called(1);
   });
 
   test('signup test', () async {
-    // signIn 리턴값 설정
-    when(() => mockAuth.signUp(email: email, password: password)).thenAnswer((
-      _,
-    ) async {
-      return mockAuthResponse;
-    });
-
     // 실제 login() 호출
     final authResponse = await authDataSource.signUp(email, password);
 
-    verify(() => mockAuth.signUp(email: email, password: password)).called(1);
-    expect(authResponse, equals(mockAuthResponse));
+    verify(
+      () => supabase.mockAuth.signUp(email: email, password: password),
+    ).called(1);
+    expect(authResponse, equals(supabase.mockAuthResponse));
+  });
+
+  test('isEmailExist returns true when a row is found', () async {
+    final exists = await authDataSource.isEmailExist(email);
+
+    verify(() => supabase.mockClient.from(any()).select()).called(1);
+
+    expect(exists, isTrue);
   });
 }

@@ -54,7 +54,7 @@ class _UploadRawScreenRootState extends ConsumerState<UploadRawScreenRoot> {
         if (mounted) {
           showDialog(
             context: context,
-            builder: (ctx) {
+            builder: (context) {
               final parts = response.getContent().split(AiConstant.splitEmoji);
               return AlertDialog(
                 backgroundColor: AppColor.white,
@@ -67,7 +67,7 @@ class _UploadRawScreenRootState extends ConsumerState<UploadRawScreenRoot> {
                     shrinkWrap: true,
                     itemCount: parts.length,
                     itemBuilder:
-                        (ctx, idx) => Text('${idx + 1}번: ${parts[idx]}'),
+                        (context, idx) => Text('${idx + 1}번: ${parts[idx]}'),
                     separatorBuilder: (ctx, idx) => const SizedBox(height: 50),
                   ),
                 ),
@@ -75,7 +75,7 @@ class _UploadRawScreenRootState extends ConsumerState<UploadRawScreenRoot> {
                   BaseAppButton(onTap: () => context.pop(), text: '취소'),
                   BaseAppButton(
                     onTap: () {
-                      ctx.pop();
+                      context.pop();
                       context.push(Routes.createProblem, extra: response);
                     },
                     text: '확인',
