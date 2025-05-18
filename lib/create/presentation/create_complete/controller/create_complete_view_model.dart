@@ -42,7 +42,9 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
   }
 
   void toggleEditMode() {
-    state = state.copyWith(isEditMode: !state.isEditMode);
+    state = state.copyWith(
+      isEditMode: false,
+    ); // TODO: 결제 기능 추가 후 결제한 유저만 수정가능하도록 설정할 예정
   }
 
   // pdf data 설정
