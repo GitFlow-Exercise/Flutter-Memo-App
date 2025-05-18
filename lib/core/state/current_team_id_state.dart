@@ -15,6 +15,7 @@ class CurrentTeamIdState extends _$CurrentTeamIdState {
 
   /// 팀 선택 시 호출
   void set(int id) {
+    // 선택한 팀을 저장.
     ref.read(authRepositoryProvider).saveSelectedTeamId(id);
     state = id;
   }
