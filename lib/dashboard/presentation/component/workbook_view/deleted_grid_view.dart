@@ -13,7 +13,7 @@ class DeletedGridView<T extends DeletedFilesViewModel> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ResponsiveGridList(
-      verticalGridMargin: 30,
+      verticalGridMargin: 90,
       horizontalGridMargin: 30,
       minItemWidth: 280, // 원하는 아이템 최소 너비
       children: workbookList.map((workbook) {

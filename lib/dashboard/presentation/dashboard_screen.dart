@@ -128,6 +128,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     const Gap(10),
                     Expanded(
                       child: Container(
+                        clipBehavior: Clip.antiAlias,
                         decoration: const BoxDecoration(
                           color: AppColor.lightBlue,
                           border: Border(
