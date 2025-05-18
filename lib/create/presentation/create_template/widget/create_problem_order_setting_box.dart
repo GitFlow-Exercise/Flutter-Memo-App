@@ -111,45 +111,57 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
                           ),
                           const Gap(12),
                           Text(
-                            '왼쪽의 문제를 이곳에 드래그하여 추가하세요',
+                            '왼쪽의 문제를 오른쪽으로 드래그하여 추가하세요',
+                            style: AppTextStyle.bodyMedium.copyWith(
+                              color: AppColor.paleGray,
+                            ),
+                          ),
+                          const Gap(12),
+                          Text(
+                            '추가되지 않은 문제는 마지막 순서로 배치됩니다',
                             style: AppTextStyle.bodyMedium.copyWith(
                               color: AppColor.paleGray,
                             ),
                           ),
                           const Gap(22),
-                          Container(
-                            constraints: const BoxConstraints(minHeight: 500),
-                            child: ListView.separated(
-                              shrinkWrap: true,
-                              itemCount: orderedProblemList.length,
-                              separatorBuilder:
-                                  (context, index) => const Gap(24),
-                              itemBuilder: (context, index) {
-                                return Draggable<Problem>(
-                                  data: orderedProblemList[index],
-                                  feedback: Material(
-                                    child: SizedBox(
-                                      width: 300,
-                                      child: ProblemCardWidget(
-                                        problem: orderedProblemList[index],
-                                        maxLines: 5,
-                                      ),
-                                    ),
-                                  ),
-                                  childWhenDragging: Opacity(
-                                    opacity: 0.5,
+                          if (orderedProblemList.isEmpty)
+                            const Column(
+                              children: [
+                                _OrderTypeButton(title: '문항별'),
+                                Gap(24),
+                                _OrderTypeButton(title: '유형별'),
+                              ],
+                            ),
+                          const Gap(22),
+                          ListView.separated(
+                            shrinkWrap: true,
+                            itemCount: orderedProblemList.length,
+                            separatorBuilder: (context, index) => const Gap(24),
+                            itemBuilder: (context, index) {
+                              return Draggable<Problem>(
+                                data: orderedProblemList[index],
+                                feedback: Material(
+                                  child: SizedBox(
+                                    width: 300,
                                     child: ProblemCardWidget(
                                       problem: orderedProblemList[index],
                                       maxLines: 5,
                                     ),
                                   ),
+                                ),
+                                childWhenDragging: Opacity(
+                                  opacity: 0.5,
                                   child: ProblemCardWidget(
                                     problem: orderedProblemList[index],
                                     maxLines: 5,
                                   ),
-                                );
-                              },
-                            ),
+                                ),
+                                child: ProblemCardWidget(
+                                  problem: orderedProblemList[index],
+                                  maxLines: 5,
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),
@@ -160,6 +172,29 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _OrderTypeButton extends StatelessWidget {
+  final String title;
+  const _OrderTypeButton({required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {},
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColor.white,
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(color: AppColor.lightGrayBorder, width: 0.5),
+          borderRadius: BorderRadius.circular(4),
+        ),
+      ),
+      child: Text(
+        title,
+        style: AppTextStyle.bodyMedium.copyWith(color: AppColor.lightGray),
       ),
     );
   }
