@@ -10,6 +10,7 @@ import 'package:mongo_ai/dashboard/domain/model/folder.dart';
 import 'package:mongo_ai/dashboard/presentation/component/folder_list_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/path_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/merge_mode_button_widget.dart';
+import 'package:mongo_ai/dashboard/presentation/component/select_mode_floating_button.dart';
 import 'package:mongo_ai/dashboard/presentation/component/team_list_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/workbook_filter_bookmark_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/workbook_filter_sort_widget.dart';
@@ -160,6 +161,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ),
             ],
           ),
+          floatingActionButton: SelectModeFloatingButton(
+            onClick: () {
+              viewModel.toggelSelectMode();
+            },
+          )
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),

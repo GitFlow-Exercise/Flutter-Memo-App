@@ -36,13 +36,5 @@ class WorkbookSelectableListView<T extends DashboardNavigationViewModel>
         viewModel.selectWorkbook(workbook);
       }
     },
-
-    onDragStart: () {
-      viewModel.enableSelectMode();
-    },
-    /// 드래그 끝났는데 선택 안 된 경우, 선택 모드 끄기
-    onDragEndEmpty: () {
-      viewModel.disableSelectMode();
-    },
   );
 }

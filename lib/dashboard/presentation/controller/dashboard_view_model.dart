@@ -132,6 +132,14 @@ class DashboardViewModel extends _$DashboardViewModel {
     ref.read(selectedWorkbookStateProvider.notifier).toggleMergeMode();
   }
 
+  Future<void> toggelSelectMode() async {
+    if(ref.read(selectedWorkbookStateProvider).isSelectMode) {
+      ref.read(selectedWorkbookStateProvider.notifier).disableSelectMode();
+    } else {
+      ref.read(selectedWorkbookStateProvider.notifier).enableSelectMode();
+    }
+  }
+
   // -----------------
   // Team 선택 메서드
   /// 팀 선택 시 currentTeamIdStateProvider 변하면서 자동 리빌드 됨.

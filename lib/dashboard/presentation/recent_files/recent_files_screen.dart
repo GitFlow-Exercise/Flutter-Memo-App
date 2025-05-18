@@ -4,6 +4,8 @@ import 'package:mongo_ai/dashboard/presentation/component/dashboard_workbook_vie
 import 'package:mongo_ai/dashboard/presentation/component/dashboard_workbook_view/workbook_selectable_list_view.dart';
 import 'package:mongo_ai/dashboard/presentation/recent_files/controller/recent_files_view_model.dart';
 
+import '../../../core/state/selected_workbook_state.dart';
+
 class RecentFilesScreen extends ConsumerWidget {
 
   const RecentFilesScreen({super.key});
@@ -12,6 +14,7 @@ class RecentFilesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(recentFilesViewModelProvider);
     final viewModel = ref.read(recentFilesViewModelProvider.notifier);
+    final isSelectMode = ref.watch(selectedWorkbookStateProvider).isSelectMode;
     return state.workbookList.when(
       data: (data) {
         return state.showGridView
