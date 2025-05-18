@@ -42,9 +42,14 @@ class ProblemCardWidget extends StatelessWidget {
                   style: const TextStyle(fontSize: 12),
                 ),
               ),
-              const Icon(
-                Icons.drag_handle_outlined,
-                color: AppColor.lighterGray,
+              GestureDetector(
+                onTap: () {
+                  print('요술봉 누름');
+                },
+                child: const Icon(
+                  Icons.auto_awesome,
+                  color: AppColor.lighterGray,
+                ),
               ),
             ],
           ),
