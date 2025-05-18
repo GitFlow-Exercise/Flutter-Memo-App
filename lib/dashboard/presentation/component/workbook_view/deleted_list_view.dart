@@ -12,7 +12,7 @@ class DeletedListView<T extends DeletedFilesViewModel> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      padding: const EdgeInsets.all(30),
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 90),
       itemCount: workbookList.length,
       itemBuilder: (context, index) {
         return DeletedListItem(
