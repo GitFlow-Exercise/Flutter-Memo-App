@@ -11,9 +11,9 @@ import 'package:mongo_ai/dashboard/presentation/component/folder_list_widget.dar
 import 'package:mongo_ai/dashboard/presentation/component/path_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/select_mode_button_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/team_list_widget.dart';
-import 'package:mongo_ai/dashboard/presentation/component/workbook_filter_bookmark_widget.dart';
-import 'package:mongo_ai/dashboard/presentation/component/workbook_filter_sort_widget.dart';
-import 'package:mongo_ai/dashboard/presentation/component/workbook_filter_tab_bar.dart';
+import 'package:mongo_ai/dashboard/presentation/component/workbook_filter_widget/workbook_filter_bookmark_widget.dart';
+import 'package:mongo_ai/dashboard/presentation/component/workbook_filter_widget/workbook_filter_sort_widget.dart';
+import 'package:mongo_ai/dashboard/presentation/component/workbook_filter_widget/workbook_filter_tab_bar.dart';
 import 'package:mongo_ai/dashboard/presentation/controller/dashboard_view_model.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
