@@ -12,7 +12,7 @@ class MockOpenAiDataSourceImpl implements OpenAiDataSource {
     return OpenAiResponseDto(
       id: 'id',
       status: 'status',
-      instructions: 'instructions',
+      instructions: body.instructions,
       output: [
         OpenAIResponseOutputDto(
           id: 'id',
