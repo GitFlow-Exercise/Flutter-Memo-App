@@ -11,6 +11,7 @@ class WorkbookListView<T extends DashboardNavigationViewModel> extends Stateless
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
+      padding: const EdgeInsets.all(30),
       itemCount: workbookList.length,
       itemBuilder: (context, index) {
         return WorkbookListItem(

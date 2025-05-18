@@ -1,6 +1,7 @@
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/core/state/current_folder_id_state.dart';
+import 'package:mongo_ai/core/state/current_team_id_state.dart';
 import 'package:mongo_ai/core/state/selected_workbook_state.dart';
 import 'package:mongo_ai/core/state/workbook_filter_state.dart';
 import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
@@ -14,6 +15,7 @@ part 'folder_view_model.g.dart';
 class FolderViewModel extends _$FolderViewModel implements DashboardNavigationViewModel{
   @override
   FolderState build() {
+    final currentTeamId = ref.watch(currentTeamIdStateProvider);
     final currentFolderId = ref.watch(currentFolderIdStateProvider);
     final workbookResult = ref.watch(getWorkbooksByCurrentTeamIdProvider);
     final filter = ref.watch(workbookFilterStateProvider);
@@ -30,6 +32,7 @@ class FolderViewModel extends _$FolderViewModel implements DashboardNavigationVi
     });
 
     return FolderState(
+      currentTeamId: currentTeamId,
       workbookList: workbookList,
       showGridView: filter.showGridView,
     );

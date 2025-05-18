@@ -7,6 +7,7 @@ import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/dashboard/domain/model/folder.dart';
+import 'package:mongo_ai/dashboard/presentation/component/button_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/folder_list_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/path_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/select_mode_button_widget.dart';
@@ -99,33 +100,24 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             const Spacer(),
                             SizedBox(
                               height: 40,
-                              child: ElevatedButton(
-                                  onPressed: () {
-                                    context.push(Routes.create);
-                                  },
-                                  style : ElevatedButton.styleFrom(
-                                    backgroundColor: AppColor.primary,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                  child: const Row(
-                                    children: [
-                                      Icon(Icons.auto_awesome,
-                                          color: AppColor.white),
-                                      Gap(8),
-                                      Text('새로 만들기', style: TextStyle(
-                                          color: AppColor.white)),
-                                    ],
-                                  )
-                              ),
+                              child: ButtonWidget(
+                                onClick: () {
+                                  if(dashboard.currentTeamId != null) {
+                                    context.go(Routes.create);
+                                  }
+                                },
+                                text: '새로 만들기',
+                                icon: Icons.auto_awesome,
+                              )
                             ),
                             const Gap(10),
                             SizedBox(
                               height: 40,
                               child: SelectModeButtonWidget(
                                 onClick: () {
-                                  viewModel.toggleSelectMode();
+                                  if(dashboard.currentTeamId != null) {
+                                    viewModel.toggleSelectMode();
+                                  }
                                 },
                               ),
                             )

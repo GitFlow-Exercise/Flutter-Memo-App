@@ -1,5 +1,6 @@
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/result/result.dart';
+import 'package:mongo_ai/core/state/current_team_id_state.dart';
 import 'package:mongo_ai/core/state/selected_workbook_state.dart';
 import 'package:mongo_ai/core/state/workbook_filter_state.dart';
 import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
@@ -13,6 +14,7 @@ part 'recent_files_view_model.g.dart';
 class RecentFilesViewModel extends _$RecentFilesViewModel implements DashboardNavigationViewModel {
   @override
   RecentFilesState build() {
+    final currentTeamId = ref.watch(currentTeamIdStateProvider);
     final workbookResult = ref.watch(getWorkbooksByCurrentTeamIdProvider);
     final filter = ref.watch(workbookFilterStateProvider);
 
@@ -33,6 +35,7 @@ class RecentFilesViewModel extends _$RecentFilesViewModel implements DashboardNa
     });
 
     return RecentFilesState(
+      currentTeamId: currentTeamId,
       workbookList: workbookList,
       showGridView: filter.showGridView,
     );

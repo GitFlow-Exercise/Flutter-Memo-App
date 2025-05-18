@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
-import 'package:mongo_ai/dashboard/presentation/component/workbook_view/workbook_grid_item.dart';
-import 'package:mongo_ai/dashboard/presentation/controller/dashboard_navigation_view_model.dart';
+import 'package:mongo_ai/dashboard/presentation/component/workbook_view/deleted_grid_item.dart';
+import 'package:mongo_ai/dashboard/presentation/deleted_files/controller/deleted_files_view_model.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
 
-class WorkbookGridView<T extends DashboardNavigationViewModel> extends StatelessWidget {
+class DeletedGridView<T extends DeletedFilesViewModel> extends StatelessWidget {
   final List<Workbook> workbookList;
   final T viewModel;
-  const WorkbookGridView({super.key, required this.workbookList, required this.viewModel});
+
+  const DeletedGridView({super.key, required this.workbookList, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -18,17 +19,15 @@ class WorkbookGridView<T extends DashboardNavigationViewModel> extends Stateless
       children: workbookList.map((workbook) {
         return AspectRatio(
           aspectRatio: 1, // 비율 유지
-          child: WorkbookGridItem(
+          child: DeletedGridItem(
             workbook: workbook,
-            onClick: () {},
             onSelect: (Workbook workbook) {
-              viewModel.selectWorkbook(workbook);
             },
-            onBookmark: (Workbook workbook) {
-              viewModel.toggleBookmark(workbook);
+            onPermanentDelete: (Workbook workbook) {
+              viewModel.permanentDeleteWorkbook(workbook);
             },
-            onDelete: (Workbook workbook) {
-              viewModel.moveTrashWorkbook(workbook);
+            onRestore: (Workbook workbook) {
+              viewModel.restoreWorkbook(workbook);
             },
           ),
         );

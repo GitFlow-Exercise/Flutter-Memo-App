@@ -9,5 +9,6 @@ abstract class MyFilesState with _$MyFilesState {
   const factory MyFilesState({
     required AsyncValue<List<Workbook>> workbookList,
     required bool showGridView,
+    int? currentTeamId,
   }) = _MyFilesState;
 }
