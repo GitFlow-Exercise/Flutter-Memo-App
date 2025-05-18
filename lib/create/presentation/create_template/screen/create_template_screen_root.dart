@@ -29,6 +29,7 @@ class _CreateTemplateScreenRootState
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      print(widget.params.toString());
       final viewModel = ref.watch(createTemplateViewModelProvider.notifier);
 
       _subscription = viewModel.eventStream.listen(_handleEvent);
