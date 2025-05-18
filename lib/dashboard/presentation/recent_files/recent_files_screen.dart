@@ -14,7 +14,6 @@ class RecentFilesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(recentFilesViewModelProvider);
     final viewModel = ref.read(recentFilesViewModelProvider.notifier);
-    final isSelectMode = ref.watch(selectedWorkbookStateProvider).isSelectMode;
     return state.workbookList.when(
       data: (data) {
         return state.showGridView

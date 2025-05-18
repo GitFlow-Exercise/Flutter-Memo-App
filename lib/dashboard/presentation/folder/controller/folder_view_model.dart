@@ -42,16 +42,6 @@ class FolderViewModel extends _$FolderViewModel implements DashboardNavigationVi
     ref.read(selectedWorkbookStateProvider.notifier).selectWorkbook(workbook);
   }
 
-  @override
-  Future<void> enableSelectMode() async {
-    ref.read(selectedWorkbookStateProvider.notifier).enableSelectMode();
-  }
-
-  @override
-  Future<void> disableSelectMode() async {
-    ref.read(selectedWorkbookStateProvider.notifier).disableSelectMode();
-  }
-
   // ------------------------
   // Workbook DB 메서드
   @override

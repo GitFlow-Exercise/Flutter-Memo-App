@@ -13,6 +13,10 @@ class SelectModeFloatingButton extends ConsumerWidget {
     return FloatingActionButton(
       onPressed: onClick,
       backgroundColor: isSelectMode ? Colors.red : Colors.blue,
+      child: Icon(
+        isSelectMode ? Icons.close : Icons.check,
+        color: Colors.white,
+      ),
     );
   }
 }

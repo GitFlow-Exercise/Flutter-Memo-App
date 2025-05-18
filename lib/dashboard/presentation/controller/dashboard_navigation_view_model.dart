@@ -3,8 +3,6 @@ import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
 abstract interface class DashboardNavigationViewModel {
   // 문제집 선택 메서드
   Future<void> selectWorkbook(Workbook workbook);
-  Future<void> enableSelectMode();
-  Future<void> disableSelectMode();
 
   /// 워크북 리스트 새로고침
   Future<void> refreshWorkbookList();

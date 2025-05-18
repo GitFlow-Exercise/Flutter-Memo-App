@@ -45,16 +45,6 @@ class RecentFilesViewModel extends _$RecentFilesViewModel implements DashboardNa
     ref.read(selectedWorkbookStateProvider.notifier).selectWorkbook(workbook);
   }
 
-  @override
-  Future<void> enableSelectMode() async {
-    ref.read(selectedWorkbookStateProvider.notifier).enableSelectMode();
-  }
-
-  @override
-  Future<void> disableSelectMode() async {
-    ref.read(selectedWorkbookStateProvider.notifier).disableSelectMode();
-  }
-
   // ------------------------
   // Workbook DB 메서드
   @override
