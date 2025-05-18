@@ -17,13 +17,14 @@ void main() {
     openAiRepository = OpenAiRepositoryImpl(openAiDataSource: openAiDataSource);
   });
 
-  test('image picker test', () async {
+  test('open ai response test', () async {
     final body = OpenAiBody(input: [], instructions: 'instructions');
     final result = await openAiRepository.createProblem(body);
 
     switch (result) {
       case Success<OpenAiResponse, AppException>():
         expect(result.data, isA<OpenAiResponse>());
+
         expect(result.data.instructions, equals(body.instructions));
       case Error<OpenAiResponse, AppException>():
         expect(result, isA<Error<OpenAiResponse, AppException>>());
