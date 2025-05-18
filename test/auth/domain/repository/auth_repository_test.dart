@@ -69,7 +69,6 @@ void main() {
         case Success():
           break;
         case Error():
-          // 실패 할 때만
           fail('로그인을 성공해야 하지만 Error가 반환되었습니다.');
       }
 
@@ -97,7 +96,6 @@ void main() {
     });
   });
 
-  // OTP 검증 테스트
   group('verifyEmailOtp 테스트', () {
     test('OTP 검증이 성공하면 Success를 반환해야 한다.', () async {
       final email = 'test@example.com';
