@@ -146,6 +146,9 @@ pubspec_overrides.yaml
 *.freezed.dart
 *.g.dart
 
+# mockito 생성 파일
+*.mocks.dart
+
 # 빌드 디렉토리 및 로그
 out/
 logs/
