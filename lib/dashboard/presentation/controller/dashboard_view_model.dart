@@ -47,6 +47,10 @@ class DashboardViewModel extends _$DashboardViewModel {
     await ref.refresh(getTeamsByCurrentUserProvider.future);
   }
 
+  Future<void> refreshWorkbookList() async {
+    ref.refresh(getWorkbooksByCurrentTeamIdProvider);
+  }
+
   // 최근에 선택한 팀 설정하기
   Future<void> fetchSelectedTeam() async {
     final authRepository = ref.read(authRepositoryProvider);
@@ -143,7 +147,41 @@ class DashboardViewModel extends _$DashboardViewModel {
   }
 
   // -----------------
-  // workbook 병합 모드 메서드
+  // workbook List 처리 메서드
+  Future<void> changeFolderWorkbookList(int folderId) async {
+    final workbookList = ref.read(selectedWorkbookStateProvider).selectedWorkbooks;
+    final result = await ref.read(changeFolderWorkbookListUseCaseProvider).execute(workbookList, folderId);
+    switch (result) {
+      case Success(data: final data):
+        // 성공 시 workbook 리스트를 리프레시
+        ref.read(selectedWorkbookStateProvider.notifier).clear();
+        refreshWorkbookList();
+        break;
+      case Error(error: final error):
+        debugPrint(error.message);
+        // 여기서 알림등 에러 처리 가능.
+        break;
+    }
+  }
+
+  Future<void> moveTrashWorkbookList() async {
+    final workbookList = ref.read(selectedWorkbookStateProvider).selectedWorkbooks;
+    final result = await ref.read(moveTrashWorkbookListUseCaseProvider).execute(workbookList);
+    switch (result) {
+      case Success(data: final data):
+        // 성공 시 workbook 리스트를 리프레시
+        ref.read(selectedWorkbookStateProvider.notifier).clear();
+        refreshWorkbookList();
+        break;
+      case Error(error: final error):
+        debugPrint(error.message);
+        // 여기서 알림등 에러 처리 가능.
+        break;
+    }
+  }
+
+  // -----------------
+  // workbook 선택 모드 메서드
   Future<void> toggleSelectMode() async {
     ref.read(selectedWorkbookStateProvider.notifier).toggleSelectMode();
   }
