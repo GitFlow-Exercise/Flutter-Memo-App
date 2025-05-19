@@ -1,22 +1,18 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mongo_ai/core/constants/ai_constant.dart';
+import '../../../core/di/test_di.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
-import 'package:mongo_ai/create/data/data_source/file_picker_data_source.dart';
 import 'package:mongo_ai/create/data/data_source/mock/mock_file_picker_data_source_impl.dart';
-import 'package:mongo_ai/create/data/repository/file_picker_repository_impl.dart';
 import 'package:mongo_ai/create/domain/model/pick_file.dart';
 import 'package:mongo_ai/create/domain/repository/file_picker_repository.dart';
 
 void main() {
-  late FilePickerDataSource filePickerDataSource;
   late FilePickerRepository filePickerRepository;
 
   setUpAll(() {
-    filePickerDataSource = MockFilePickerDataSourceImpl();
-    filePickerRepository = FilePickerRepositoryImpl(
-      filePickerDataSource: filePickerDataSource,
-    );
+    mockdDISetup();
+    filePickerRepository = mockLocator();
   });
 
   test('image picker test', () async {

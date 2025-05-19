@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:mongo_ai/auth/data/data_source/auth_data_source.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class MockAuthDataSource implements AuthDataSource {
+class MockAuthDataSourceImpl implements AuthDataSource {
   final _authController = StreamController<AuthState>.broadcast();
   bool _isAuthenticated = false;
   static const email = 'test@test.com';
@@ -18,7 +18,7 @@ class MockAuthDataSource implements AuthDataSource {
     ),
   );
 
-  MockAuthDataSource() {
+  MockAuthDataSourceImpl() {
     // 초기 상태: signedIn
     _authController.add(const AuthState(AuthChangeEvent.signedIn, null));
   }

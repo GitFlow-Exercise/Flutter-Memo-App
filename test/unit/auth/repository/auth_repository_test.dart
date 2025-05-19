@@ -1,21 +1,19 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mongo_ai/auth/data/data_source/auth_data_source.dart';
 import 'package:mongo_ai/auth/data/data_source/mock/mock_auth_data_source_impl.dart';
-import 'package:mongo_ai/auth/data/repository/auth_repository_impl.dart';
 import 'package:mongo_ai/auth/domain/repository/auth_repository.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
+import '../../../core/di/test_di.dart';
 
 void main() {
-  late AuthDataSource authDataSource;
   late AuthRepository authRepository;
 
-  const email = MockAuthDataSource.email;
+  const email = MockAuthDataSourceImpl.email;
   const password = 'qwer1234';
 
   setUpAll(() {
-    authDataSource = MockAuthDataSource();
-    authRepository = AuthRepositoryImpl(authDataSource: authDataSource);
+    mockdDISetup();
+    authRepository = mockLocator();
   });
 
   test('signIn test', () async {
@@ -29,7 +27,7 @@ void main() {
             await authRepository.getCurrentUserEmail();
         switch (currentUserEmailResult) {
           case Success<String, AppException>():
-            expect(currentUserEmailResult.data, MockAuthDataSource.email);
+            expect(currentUserEmailResult.data, MockAuthDataSourceImpl.email);
           case Error<String, AppException>():
             expect(currentUserEmailResult, isA<Error<void, AppException>>());
         }
