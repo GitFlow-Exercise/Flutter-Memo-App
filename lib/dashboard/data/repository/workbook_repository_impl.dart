@@ -67,6 +67,9 @@ class WorkbookRepositoryImpl implements WorkbookRepository {
 
   @override
   Future<Result<int, AppException>> bookmarkWorkbookList(List<Workbook> workbookList, bool bookmark) async {
+    if(workbookList.isEmpty) {
+      return const Result.success(0);
+    }
     try {
       final workbookIds = workbookList.map((workbook) => workbook.workbookId).toList();
       await _dataSource.updateWorkbookList(
@@ -87,6 +90,9 @@ class WorkbookRepositoryImpl implements WorkbookRepository {
 
   @override
   Future<Result<int, AppException>> changeFolderWorkbookList(List<Workbook> workbookList, int folderId) async {
+    if(workbookList.isEmpty) {
+      return const Result.success(0);
+    }
     try {
       final workbookIds = workbookList.map((workbook) => workbook.workbookId).toList();
       await _dataSource.updateWorkbookList(
@@ -107,6 +113,9 @@ class WorkbookRepositoryImpl implements WorkbookRepository {
 
   @override
   Future<Result<int, AppException>> moveTrashWorkbookList(List<Workbook> workbookList) async {
+    if(workbookList.isEmpty) {
+      return const Result.success(0);
+    }
     try {
       final workbookIds = workbookList.map((workbook) => workbook.workbookId).toList();
       await _dataSource.updateWorkbookList(
@@ -143,6 +152,9 @@ class WorkbookRepositoryImpl implements WorkbookRepository {
 
   @override
   Future<Result<int, AppException>> deleteWorkbookList(List<Workbook> workbookList) async {
+    if(workbookList.isEmpty) {
+      return const Result.success(0);
+    }
     try {
       final workbookIds = workbookList.map((w) => w.workbookId).toList();
       await _dataSource.deleteWorkbookList(workbookIds);
