@@ -1,3 +1,5 @@
+import 'dart:isolate';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -8,6 +10,7 @@ import 'package:mongo_ai/create/presentation/create_template/controller/create_t
 class ProblemCardWidget extends StatelessWidget {
   final Problem problem;
   final int? maxLines;
+  final bool? isOrdered;
   final void Function(Problem problem)? onTapReCreate;
 
   const ProblemCardWidget({
@@ -15,6 +18,7 @@ class ProblemCardWidget extends StatelessWidget {
     required this.problem,
     this.maxLines = 2,
     this.onTapReCreate,
+    this.isOrdered,
   });
 
   @override
@@ -46,15 +50,16 @@ class ProblemCardWidget extends StatelessWidget {
                   style: const TextStyle(fontSize: 12),
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  onTapReCreate!(problem);
-                },
-                child: const Icon(
-                  Icons.auto_awesome,
-                  color: AppColor.lighterGray,
+              if (isOrdered == true)
+                GestureDetector(
+                  onTap: () {
+                    onTapReCreate!(problem);
+                  },
+                  child: const Icon(
+                    Icons.auto_awesome,
+                    color: AppColor.lighterGray,
+                  ),
                 ),
-              ),
             ],
           ),
           const Gap(8),

@@ -80,9 +80,6 @@ class _CreateTemplateScreenState extends State<CreateTemplateScreen> {
                     );
                   }
                 },
-                onTapReCreate: (Problem problem) {
-                  widget.onAction(CreateTemplateAction.onTapReCreate(problem));
-                },
               ),
             ],
           ),
@@ -104,6 +101,9 @@ class _CreateTemplateScreenState extends State<CreateTemplateScreen> {
               totalLength:
                   widget.state.problemList.length +
                   widget.state.orderedProblemList.length,
+              onTapReCreate: (Problem problem) {
+                widget.onAction(CreateTemplateAction.onTapReCreate(problem));
+              },
             ),
           ),
         ),

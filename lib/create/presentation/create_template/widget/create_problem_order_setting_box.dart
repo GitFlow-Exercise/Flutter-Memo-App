@@ -10,6 +10,7 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
   final List<Problem> orderedProblemList;
   final int totalLength;
   final void Function(Problem problem) onAcceptOrderedProblem;
+  final void Function(Problem problem) onTapReCreate;
   final VoidCallback onTapClear;
 
   const CreateProblemOrderSettingBox({
@@ -18,6 +19,7 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
     required this.onAcceptOrderedProblem,
     required this.onTapClear,
     required this.totalLength,
+    required this.onTapReCreate,
   });
 
   @override
@@ -216,6 +218,8 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
                                   child: ProblemCardWidget(
                                     problem: orderedProblemList[index],
                                     maxLines: 5,
+                                    onTapReCreate: onTapReCreate,
+                                    isOrdered: true,
                                   ),
                                 ),
                               );
