@@ -9,4 +9,8 @@ abstract interface class WorkbookRepository {
   Future<Result<Workbook, AppException>> createWorkbook(WorkbookTableDto workbookTableDto);
   Future<Result<Workbook, AppException>> updateWorkbook(Workbook workbook);
   Future<Result<Workbook, AppException>> deleteWorkbook(Workbook workbook);
+  Future<Result<int, AppException>> bookmarkWorkbookList(List<Workbook> workbookList, bool bookmark);
+  Future<Result<int, AppException>> changeFolderWorkbookList(List<Workbook> workbookList, int folderId);
+  Future<Result<int, AppException>> moveTrashWorkbookList(List<Workbook> workbookList);
+  Future<Result<int, AppException>> deleteWorkbookList(List<Workbook> workbookList);
 }

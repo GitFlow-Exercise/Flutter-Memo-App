@@ -48,7 +48,10 @@ import 'package:mongo_ai/dashboard/domain/repository/folder_repository.dart';
 import 'package:mongo_ai/dashboard/domain/repository/team_repository.dart';
 import 'package:mongo_ai/dashboard/domain/repository/user_profile_repository.dart';
 import 'package:mongo_ai/dashboard/domain/repository/workbook_repository.dart';
-import 'package:mongo_ai/dashboard/domain/use_case/delete_workbook_use_case.dart';
+import 'package:mongo_ai/dashboard/domain/use_case/bookmark_workbook_list_use_case.dart';
+import 'package:mongo_ai/dashboard/domain/use_case/change_folder_workbook_list_use_case.dart';
+import 'package:mongo_ai/dashboard/domain/use_case/move_trash_workbook_list_use_case.dart';
+import 'package:mongo_ai/dashboard/domain/use_case/move_trash_workbook_use_case.dart';
 import 'package:mongo_ai/dashboard/domain/use_case/toggle_bookmark_use_case.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -149,9 +152,24 @@ final toggleBookmarkUseCaseProvider = Provider<ToggleBookmarkUseCase>((ref) {
   return ToggleBookmarkUseCase(workbookRepository);
 });
 
-final deleteWorkbookUseCaseProvider = Provider<DeleteWorkbookUseCase>((ref) {
+final moveTrashWorkbookUseCaseProvider = Provider<MoveTrashWorkbookUseCase>((ref) {
   final workbookRepository = ref.watch(workbookRepositoryProvider);
-  return DeleteWorkbookUseCase(workbookRepository);
+  return MoveTrashWorkbookUseCase(workbookRepository);
+});
+
+final moveTrashWorkbookListUseCaseProvider = Provider<MoveTrashWorkbookListUseCase>((ref) {
+   final workbookRepository = ref.watch(workbookRepositoryProvider);
+   return MoveTrashWorkbookListUseCase(workbookRepository);
+});
+
+final changeFolderWorkbookListUseCaseProvider = Provider<ChangeFolderWorkbookListUseCase>((ref) {
+  final workbookRepository = ref.watch(workbookRepositoryProvider);
+  return ChangeFolderWorkbookListUseCase(workbookRepository);
+});
+
+final bookmarkWorkbookListUseCaseProvider = Provider<BookmarkWorkbookListUseCase>((ref) {
+  final workbookRepository = ref.watch(workbookRepositoryProvider);
+  return BookmarkWorkbookListUseCase(workbookRepository);
 });
 
 // -----------------------------------
