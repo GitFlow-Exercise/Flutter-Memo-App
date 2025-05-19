@@ -10,11 +10,7 @@ class LandingHeader extends StatefulWidget {
   final LandingShellState state;
   final void Function(LandingShellAction action) onAction;
 
-  const LandingHeader({
-    super.key,
-    required this.state,
-    required this.onAction,
-  });
+  const LandingHeader({super.key, required this.state, required this.onAction});
 
   @override
   State<LandingHeader> createState() => _LandingHeaderState();
