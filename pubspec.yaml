@@ -76,6 +76,9 @@ dependencies:
   # badge 추가를 위한 패키지
   badges: ^3.1.2
 
+  # 로딩 인디케이터
+  flutter_spinkit: ^5.2.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

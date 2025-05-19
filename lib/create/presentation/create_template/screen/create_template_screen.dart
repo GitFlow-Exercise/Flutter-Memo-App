@@ -104,6 +104,7 @@ class _CreateTemplateScreenState extends State<CreateTemplateScreen> {
               onTapReCreate: (Problem problem) {
                 widget.onAction(CreateTemplateAction.onTapReCreate(problem));
               },
+              isReCreating: widget.state.isReCreating,
             ),
           ),
         ),

@@ -133,6 +133,7 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
   }
 
   Future<void> reCreateProblem(Problem problem) async {
+    state = state.copyWith(isReCreating: true); // 문제 '재생성 중'으로 상태 변경
     final body = OpenAiBody(
       input: [
         MessageInput(
@@ -148,6 +149,7 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
     switch (result) {
       case Success(data: final response):
         // 문제 생성 성공 시, 문제 리스트 업데이트
+
         final updatedProblem = getProblemByResponse(response, problem);
         state = state.copyWith(
           problemList:
@@ -155,6 +157,7 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
                   .map((p) => p.number == problem.number ? updatedProblem : p)
                   .toList(),
         );
+        state = state.copyWith(isReCreating: false); // 문제 '재생성 완료'로 상태 변경
       case Error():
         _eventController.add(
           const CreateTemplateEvent.showSnackBar('문제 재생성 중 에러가 발생하였습니다.'),

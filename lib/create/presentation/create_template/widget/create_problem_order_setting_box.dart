@@ -1,10 +1,13 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
 import 'package:mongo_ai/create/presentation/create_template/widget/problem_card_widget.dart';
+import 'package:mongo_ai/create/presentation/create_template/widget/problem_detail_dialog.dart';
 
 class CreateProblemOrderSettingBox extends StatelessWidget {
   final List<Problem> orderedProblemList;
@@ -12,14 +15,16 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
   final void Function(Problem problem) onAcceptOrderedProblem;
   final void Function(Problem problem) onTapReCreate;
   final VoidCallback onTapClear;
+  final bool isReCreating;
 
   const CreateProblemOrderSettingBox({
     super.key,
     required this.orderedProblemList,
-    required this.onAcceptOrderedProblem,
-    required this.onTapClear,
     required this.totalLength,
+    required this.onAcceptOrderedProblem,
     required this.onTapReCreate,
+    required this.onTapClear,
+    required this.isReCreating,
   });
 
   @override
@@ -140,60 +145,15 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
                             itemCount: orderedProblemList.length,
                             separatorBuilder: (context, index) => const Gap(24),
                             itemBuilder: (context, index) {
+                              final problem = orderedProblemList[index];
                               return GestureDetector(
-                                onLongPress: () {
+                                onDoubleTap: () {
+                                  if (isReCreating) return;
                                   showDialog(
                                     context: context,
                                     builder:
-                                        (context) => AlertDialog(
-                                          title: const Text(
-                                            '문제 정보',
-                                            style: AppTextStyle.headingMedium,
-                                          ),
-                                          content: SingleChildScrollView(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Text(
-                                                  '문제 ID: ${orderedProblemList[index].number}',
-                                                ),
-                                                const Gap(8),
-                                                const Text('문제 내용:'),
-                                                const Gap(4),
-                                                Text(
-                                                  orderedProblemList[index]
-                                                      .passage,
-                                                ),
-                                                if (orderedProblemList[index]
-                                                    .options
-                                                    .isNotEmpty) ...[
-                                                  const Gap(8),
-                                                  const Text('보기:'),
-                                                  ...orderedProblemList[index]
-                                                      .options
-                                                      .map(
-                                                        (option) => Padding(
-                                                          padding:
-                                                              const EdgeInsets.only(
-                                                                left: 8.0,
-                                                                top: 4.0,
-                                                              ),
-                                                          child: Text(option),
-                                                        ),
-                                                      ),
-                                                ],
-                                              ],
-                                            ),
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed:
-                                                  () => Navigator.pop(context),
-                                              child: const Text('닫기'),
-                                            ),
-                                          ],
+                                        (context) => ProblemDetailDialog(
+                                          problem: problem,
                                         ),
                                   );
                                 },
@@ -220,6 +180,7 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
                                     maxLines: 5,
                                     onTapReCreate: onTapReCreate,
                                     isOrdered: true,
+                                    isReCreating: isReCreating,
                                   ),
                                 ),
                               );

@@ -10,6 +10,7 @@ abstract class CreateTemplateState with _$CreateTemplateState {
     @Default([]) List<Problem> problemList,
     @Default([]) List<Problem> orderedProblemList,
     required PdfGenerator pdfGenerator,
+    @Default(false) bool isReCreating,
   }) = _CreateTemplateState;
 }
 
