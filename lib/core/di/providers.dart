@@ -6,14 +6,18 @@ import 'package:mongo_ai/create/data/data_source/file_picker_data_source.dart';
 import 'package:mongo_ai/create/data/data_source/file_picker_data_source_impl.dart';
 import 'package:mongo_ai/create/data/data_source/open_ai_data_source.dart';
 import 'package:mongo_ai/create/data/data_source/open_ai_data_source_impl.dart';
+import 'package:mongo_ai/create/data/data_source/problem_data_source.dart';
+import 'package:mongo_ai/create/data/data_source/problem_data_source_impl.dart';
 import 'package:mongo_ai/create/data/data_source/prompt_data_source.dart';
 import 'package:mongo_ai/create/data/data_source/prompt_data_source_impl.dart';
 import 'package:mongo_ai/create/data/repository/file_picker_repository_impl.dart';
 import 'package:mongo_ai/create/data/repository/open_ai_repository_impl.dart';
+import 'package:mongo_ai/create/data/repository/problem_repository_impl.dart';
 import 'package:mongo_ai/create/data/repository/prompt_repository_impl.dart';
 import 'package:mongo_ai/create/domain/model/prompt.dart';
 import 'package:mongo_ai/create/domain/repository/file_picker_repository.dart';
 import 'package:mongo_ai/create/domain/repository/open_ai_repository.dart';
+import 'package:mongo_ai/create/domain/repository/problem_repository.dart';
 import 'package:mongo_ai/create/domain/repository/prompt_repository.dart';
 import 'package:mongo_ai/create/domain/use_case/create_problem_use_case.dart';
 import 'package:mongo_ai/create/domain/use_case/download_pdf_use_case.dart';
@@ -84,8 +88,7 @@ final teamRepositoryProvider = Provider<TeamRepository>((ref) {
   return TeamRepositoryImpl(dataSource: dataSource);
 });
 
-final
-getTeamsByCurrentUserProvider =
+final getTeamsByCurrentUserProvider =
     FutureProvider<Result<List<Team>, AppException>>((ref) async {
       final repository = ref.watch(teamRepositoryProvider);
       return repository.getTeamsByCurrentUser();
@@ -223,4 +226,17 @@ final authDataSourceProvider = Provider<AuthDataSource>((ref) {
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final dataSource = ref.watch(authDataSourceProvider);
   return AuthRepositoryImpl(authDataSource: dataSource);
+});
+
+// -----------------------------------
+// Problem
+
+final problemDataSourceProvider = Provider<ProblemDataSource>((ref) {
+  final client = ref.watch(supabaseClientProvider);
+  return ProblemDataSourceImpl(client: client);
+});
+
+final problemRepositoryProvider = Provider<ProblemRepository>((ref) {
+  final dataSource = ref.watch(problemDataSourceProvider);
+  return ProblemRepositoryImpl(dataSource: dataSource);
 });

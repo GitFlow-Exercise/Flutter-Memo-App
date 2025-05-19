@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:mongo_ai/core/component/pdf_generator.dart';
+import 'package:mongo_ai/create/domain/model/create_template_params.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_event.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
@@ -14,53 +15,17 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
   Stream<CreateTemplateEvent> get eventStream => _eventController.stream;
 
   @override
-  CreateTemplateState build() {
+  CreateTemplateState build(CreateTemplateParams params) {
     final pdfGenerator = PdfGenerator();
 
     ref.onDispose(() {
       _eventController.close();
     });
 
+    final problems = parseCreateTemplateParamsToProblems(params);
+
     return CreateTemplateState(
-      // TODO(jh): UI 테스트용 데이터. 추후 삭제 예정
-      problemList: [
-        Problem(
-          id: 1,
-          title: '1. 다음 중 가장 적절한 것은?',
-          content:
-              'As technology advances, people are becoming increasingly dependent on smart devices to perform everyday tasks. While this convenience is undeniable, it also raises concerns about the gradual decline in certain cognitive skills. For instance, people often rely on navigation apps rather than using their own sense of direction. As a result, their ability to read maps or remember routes is diminishing. In the same way, the use of grammar-checking software can affect one’s attention to language structure. Although these tools are helpful, __________.',
-        ),
-        Problem(
-          id: 2,
-          title: '2. 다음 중 가장 적절한 것은?',
-          content:
-              'As technology advances, people are becoming increasingly dependent on smart devices to perform everyday tasks. While this convenience is undeniable, it also raises concerns about the gradual decline in certain cognitive skills. For instance, people often rely on navigation apps rather than using their own sense of direction. As a result, their ability to read maps or remember routes is diminishing. In the same way, the use of grammar-checking software can affect one’s attention to language structure. Although these tools are helpful, __________.',
-        ),
-        Problem(
-          id: 3,
-          title: '3. 다음 중 가장 적절한 것은?',
-          content:
-              'As technology advances, people are becoming increasingly dependent on smart devices to perform everyday tasks. While this convenience is undeniable, it also raises concerns about the gradual decline in certain cognitive skills. For instance, people often rely on navigation apps rather than using their own sense of direction. As a result, their ability to read maps or remember routes is diminishing. In the same way, the use of grammar-checking software can affect one’s attention to language structure. Although these tools are helpful, __________.',
-        ),
-        Problem(
-          id: 4,
-          title: '4. 다음 중 가장 적절한 것은?',
-          content:
-              'As technology advances, people are becoming increasingly dependent on smart devices to perform everyday tasks. While this convenience is undeniable, it also raises concerns about the gradual decline in certain cognitive skills. For instance, people often rely on navigation apps rather than using their own sense of direction. As a result, their ability to read maps or remember routes is diminishing. In the same way, the use of grammar-checking software can affect one’s attention to language structure. Although these tools are helpful, __________.',
-        ),
-        Problem(
-          id: 5,
-          title: '5. 다음 중 가장 적절한 것은?',
-          content:
-              'As technology advances, people are becoming increasingly dependent on smart devices to perform everyday tasks. While this convenience is undeniable, it also raises concerns about the gradual decline in certain cognitive skills. For instance, people often rely on navigation apps rather than using their own sense of direction. As a result, their ability to read maps or remember routes is diminishing. In the same way, the use of grammar-checking software can affect one’s attention to language structure. Although these tools are helpful, __________.',
-        ),
-        Problem(
-          id: 6,
-          title: '6. 다음 중 가장 적절한 것은?',
-          content:
-              'As technology advances, people are becoming increasingly dependent on smart devices to perform everyday tasks. While this convenience is undeniable, it also raises concerns about the gradual decline in certain cognitive skills. For instance, people often rely on navigation apps rather than using their own sense of direction. As a result, their ability to read maps or remember routes is diminishing. In the same way, the use of grammar-checking software can affect one’s attention to language structure. Although these tools are helpful, __________.',
-        ),
-      ],
+      problemList: problems,
       pdfGenerator: pdfGenerator,
     );
   }
@@ -69,20 +34,24 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
     state = state.copyWith(isSingleColumns: isSingleColumns);
   }
 
-  void setPr2oblem({required OpenAiResponse problem}) {
-    state = state.copyWith(problem: AsyncValue.data(problem));
-  }
-
   void moveToOrderedList(Problem problem) {
     // 1. 원본 리스트(problemList)에서 항목 제거
     final problemList = List<Problem>.from(state.problemList);
-    problemList.removeWhere((p) => p.id == problem.id);
+    problemList.removeWhere((p) => p.number == problem.number);
 
     // 2. 대상 리스트(orderedProblemList)에 추가 (중복 방지)
     final orderedProblemList = List<Problem>.from(state.orderedProblemList);
-    if (!orderedProblemList.any((p) => p.id == problem.id)) {
+    if (!orderedProblemList.any((p) => p.number == problem.number)) {
       orderedProblemList.add(
-        Problem(id: problem.id, title: problem.title, content: problem.content),
+        Problem(
+          number: problem.number,
+          question: problem.question,
+          passage: problem.passage,
+          options: problem.options,
+          problemType: problem.problemType,
+          promptDetail: problem.promptDetail,
+          cleanText: problem.cleanText,
+        ),
       );
     }
 
@@ -96,13 +65,21 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
   void moveToOriginalList(Problem problem) {
     // 1. 대상 리스트(orderedProblemList)에서 항목 제거
     final orderedProblemList = List<Problem>.from(state.orderedProblemList);
-    orderedProblemList.removeWhere((p) => p.id == problem.id);
+    orderedProblemList.removeWhere((p) => p.number == problem.number);
 
     // 2. 원본 리스트(problemList)에 추가 (중복 방지)
     final problemList = List<Problem>.from(state.problemList);
-    if (!problemList.any((p) => p.id == problem.id)) {
+    if (!problemList.any((p) => p.number == problem.number)) {
       problemList.add(
-        Problem(id: problem.id, title: problem.title, content: problem.content),
+        Problem(
+          number: problem.number,
+          question: problem.question,
+          passage: problem.passage,
+          options: problem.options,
+          problemType: problem.problemType,
+          promptDetail: problem.promptDetail,
+          cleanText: problem.cleanText,
+        ),
       );
     }
 
@@ -125,19 +102,23 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
 
     // 4. orderedProblemList에 있던 항목들을 problemList에 추가 (중복 방지)
     for (final problem in itemsToRestore) {
-      if (!problemList.any((p) => p.id == problem.id)) {
+      if (!problemList.any((p) => p.number == problem.number)) {
         problemList.add(
           Problem(
-            id: problem.id,
-            title: problem.title,
-            content: problem.content,
+            number: problem.number,
+            question: problem.question,
+            passage: problem.passage,
+            options: problem.options,
+            problemType: problem.problemType,
+            promptDetail: problem.promptDetail,
+            cleanText: problem.cleanText,
           ),
         );
       }
     }
 
     // 5. problemList 정렬
-    problemList.sort((a, b) => a.id.compareTo(b.id));
+    problemList.sort((a, b) => a.number.compareTo(b.number));
 
     // 6. 상태 업데이트
     state = state.copyWith(
@@ -146,14 +127,93 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
     );
   }
 
-  void generatePdf({required String contents}) async {
-    //TODO(ok): 추후 템플릿 확정 시 변경 예정, 다음 화면으로 Uint8List 전달
-    // => 임시로 화면 이동하는 로직 추가하였습니다.(명우)
-    final bytes = await state.pdfGenerator.generatePdf(
-      headerText: 'Text',
-      contentsText: contents,
-      useDoubleColumn: !state.isSingleColumns,
-    );
-    _eventController.add(CreateTemplateEvent.createPdfWithTemplate(bytes));
+  List<Problem> parseCreateTemplateParamsToProblems(
+    CreateTemplateParams params,
+  ) {
+    final List<Problem> allProblems = [];
+    int number = 1;
+
+    for (int i = 0; i < params.response.length; i++) {
+      final response = params.response[i];
+      final promptDetail = params.prompt[i].detail;
+      final promptName = params.prompt[i].name;
+
+      final outputText = response.getContent();
+
+      final problemBlocks =
+          outputText
+              .split('~^^~')
+              .map((block) => block.trim())
+              .where((block) => block.isNotEmpty)
+              .toList();
+
+      if (problemBlocks.length != params.cleanText.length) {
+        throw FormatException(
+          '유형 $promptName의 문제 수(${problemBlocks.length})와 클린텍스트 수(${params.cleanText.length})가 일치하지 않습니다.',
+        );
+      }
+
+      for (int j = 0; j < problemBlocks.length; j++) {
+        final block = problemBlocks[j];
+        final sections = block.split(RegExp(r'#\s*'));
+        if (sections.length < 3) {
+          throw const FormatException('올바른 형식의 문제 텍스트가 아닙니다.');
+        }
+
+        // 1. 지문
+        final passageSection = sections[1].trim();
+        final passage = passageSection.split(':').skip(1).join(':').trim();
+
+        // 2. 문제 및 보기
+        final questionSection = sections[2].trim();
+        final lines =
+            questionSection
+                .split('\n')
+                .map((line) => line.trim())
+                .where((line) => line.isNotEmpty)
+                .toList();
+
+        // 3. 질문
+        final questionLine = lines.length > 1 ? lines[1] : '';
+
+        // 4. 선택지
+        final options =
+            lines
+                .skip(2)
+                .where((line) => line.startsWith(RegExp(r'[A-Da-d]\.')))
+                .map((line) => line.replaceFirst(RegExp(r'^[A-Da-d]\.\s*'), ''))
+                .toList();
+
+        allProblems.add(
+          Problem(
+            number: number,
+            question: questionLine,
+            passage: passage,
+            options: options,
+            problemType: promptName,
+            promptDetail: promptDetail,
+            cleanText: params.cleanText[j], // 클린텍스트 순서에 맞춰 대응
+          ),
+        );
+
+        number++;
+      }
+    }
+
+    return allProblems;
+  }
+
+  // orderedProblemList 내 요소 순서대로 number 수정
+  List<Problem> fixProblemList() {
+    final updatedList =
+        state.orderedProblemList
+            .asMap()
+            .entries
+            .map((entry) => entry.value.copyWith(number: entry.key + 1))
+            .toList();
+
+    state = state.copyWith(orderedProblemList: updatedList);
+
+    return state.orderedProblemList;
   }
 }
