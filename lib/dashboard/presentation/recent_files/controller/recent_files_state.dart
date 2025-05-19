@@ -9,5 +9,6 @@ abstract class RecentFilesState with _$RecentFilesState {
   const factory RecentFilesState({
     required AsyncValue<List<Workbook>> workbookList,
     required bool showGridView,
+    int? currentTeamId,
   }) = _RecentFilesState;
 }

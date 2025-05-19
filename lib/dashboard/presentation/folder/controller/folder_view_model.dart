@@ -1,18 +1,21 @@
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/core/state/current_folder_id_state.dart';
+import 'package:mongo_ai/core/state/current_team_id_state.dart';
 import 'package:mongo_ai/core/state/selected_workbook_state.dart';
 import 'package:mongo_ai/core/state/workbook_filter_state.dart';
 import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
+import 'package:mongo_ai/dashboard/presentation/controller/dashboard_navigation_view_model.dart';
 import 'package:mongo_ai/dashboard/presentation/folder/controller/folder_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'folder_view_model.g.dart';
 
 @riverpod
-class FolderViewModel extends _$FolderViewModel {
+class FolderViewModel extends _$FolderViewModel implements DashboardNavigationViewModel{
   @override
   FolderState build() {
+    final currentTeamId = ref.watch(currentTeamIdStateProvider);
     final currentFolderId = ref.watch(currentFolderIdStateProvider);
     final workbookResult = ref.watch(getWorkbooksByCurrentTeamIdProvider);
     final filter = ref.watch(workbookFilterStateProvider);
@@ -29,6 +32,7 @@ class FolderViewModel extends _$FolderViewModel {
     });
 
     return FolderState(
+      currentTeamId: currentTeamId,
       workbookList: workbookList,
       showGridView: filter.showGridView,
     );
@@ -36,16 +40,19 @@ class FolderViewModel extends _$FolderViewModel {
 
   // ------------------------
   // 문서 병합모드 메서드
+  @override
   Future<void> selectWorkbook(Workbook workbook) async {
     ref.read(selectedWorkbookStateProvider.notifier).selectWorkbook(workbook);
   }
 
   // ------------------------
   // Workbook DB 메서드
+  @override
   Future<void> refreshWorkbookList() async {
     ref.refresh(getWorkbooksByCurrentTeamIdProvider);
   }
 
+  @override
   Future<void> toggleBookmark(Workbook workbook) async {
     final result = await ref.read(toggleBookmarkUseCaseProvider).execute(workbook);
     switch(result) {
@@ -59,7 +66,8 @@ class FolderViewModel extends _$FolderViewModel {
     }
   }
 
-  Future<void> deleteWorkbook(Workbook workbook) async {
+  @override
+  Future<void> moveTrashWorkbook(Workbook workbook) async {
     final result = await ref.read(deleteWorkbookUseCaseProvider).execute(workbook);
     switch(result) {
       case Success(data: final data):
