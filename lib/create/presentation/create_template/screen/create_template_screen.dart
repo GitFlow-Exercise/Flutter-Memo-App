@@ -105,6 +105,11 @@ class _CreateTemplateScreenState extends State<CreateTemplateScreen> {
                 widget.onAction(CreateTemplateAction.onTapReCreate(problem));
               },
               isReCreating: widget.state.isReCreating,
+              onDoubleTapProblem: (Problem problem) {
+                widget.onAction(
+                  CreateTemplateAction.onDoubleTapProblem(problem),
+                );
+              },
             ),
           ),
         ),

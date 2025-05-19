@@ -10,6 +10,7 @@ import 'package:mongo_ai/create/presentation/create_template/controller/create_t
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_event.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_view_model.dart';
 import 'package:mongo_ai/create/presentation/create_template/screen/create_template_screen.dart';
+import 'package:mongo_ai/create/presentation/create_template/widget/problem_detail_dialog.dart';
 
 class CreateTemplateScreenRoot extends ConsumerStatefulWidget {
   final CreateTemplateParams params;
@@ -96,6 +97,12 @@ class _CreateTemplateScreenRootState
 
       case OnTapReCreate():
         viewModel.reCreateProblem(action.problem);
+
+      case OnDoubleTapProblem():
+        showDialog(
+          context: context,
+          builder: (context) => ProblemDetailDialog(problem: action.problem),
+        );
     }
   }
 }

@@ -21,4 +21,7 @@ sealed class CreateTemplateAction with _$CreateTemplateAction {
 
   const factory CreateTemplateAction.onTapReCreate(Problem problem) =
       OnTapReCreate;
+
+  const factory CreateTemplateAction.onDoubleTapProblem(Problem problem) =
+      OnDoubleTapProblem;
 }

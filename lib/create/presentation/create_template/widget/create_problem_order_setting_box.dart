@@ -15,6 +15,7 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
   final void Function(Problem problem) onAcceptOrderedProblem;
   final void Function(Problem problem) onTapReCreate;
   final VoidCallback onTapClear;
+  final void Function(Problem problem) onDoubleTapProblem;
   final bool isReCreating;
 
   const CreateProblemOrderSettingBox({
@@ -25,6 +26,7 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
     required this.onTapReCreate,
     required this.onTapClear,
     required this.isReCreating,
+    required this.onDoubleTapProblem,
   });
 
   @override
@@ -149,13 +151,7 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
                               return GestureDetector(
                                 onDoubleTap: () {
                                   if (isReCreating) return;
-                                  showDialog(
-                                    context: context,
-                                    builder:
-                                        (context) => ProblemDetailDialog(
-                                          problem: problem,
-                                        ),
-                                  );
+                                  onDoubleTapProblem(problem);
                                 },
                                 child: Draggable<Problem>(
                                   data: orderedProblemList[index],
