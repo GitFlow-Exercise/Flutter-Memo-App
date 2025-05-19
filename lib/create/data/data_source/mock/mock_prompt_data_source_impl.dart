@@ -1,8 +1,8 @@
 import 'package:mongo_ai/create/data/data_source/prompt_data_source.dart';
 import 'package:mongo_ai/create/data/dto/prompt_dto.dart';
 
-class MokcPromptDataSourceImpl implements PromptDataSource {
-  MokcPromptDataSourceImpl();
+class MockPromptDataSourceImpl implements PromptDataSource {
+  MockPromptDataSourceImpl();
 
   @override
   Future<List<PromptDto>> getPrompts() async {

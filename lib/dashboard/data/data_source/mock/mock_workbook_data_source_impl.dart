@@ -2,8 +2,8 @@ import 'package:mongo_ai/dashboard/data/data_source/workbook_data_source.dart';
 import 'package:mongo_ai/dashboard/data/dto/workbook_view_dto.dart';
 import 'package:mongo_ai/dashboard/data/dto/workbook_table_dto.dart';
 
-class WorkbookDataSourceImpl implements WorkbookDataSource {
-  WorkbookDataSourceImpl();
+class MockWorkbookDataSourceImpl implements WorkbookDataSource {
+  MockWorkbookDataSourceImpl();
 
   List<WorkbookViewDto> workbooks = [
     WorkbookViewDto(
@@ -16,8 +16,8 @@ class WorkbookDataSourceImpl implements WorkbookDataSource {
       folderName: '기초학습',
       teamId: 5,
       teamName: '팀A',
-      createdAt: '2025-05-10T14:30:00Z',
-      lastOpen: '2025-05-18T09:00:00Z',
+      createdAt: '2025-05-10',
+      lastOpen: '2025-05-18',
       deletedAt: null,
     ),
     WorkbookViewDto(
@@ -30,8 +30,8 @@ class WorkbookDataSourceImpl implements WorkbookDataSource {
       folderName: '심화과정',
       teamId: 6,
       teamName: '팀B',
-      createdAt: '2025-04-01T08:15:00Z',
-      lastOpen: '2025-05-17T16:45:00Z',
+      createdAt: '2025-05-10',
+      lastOpen: '2025-05-18',
       deletedAt: null,
     ),
     WorkbookViewDto(
@@ -42,24 +42,27 @@ class WorkbookDataSourceImpl implements WorkbookDataSource {
       level: 3,
       folderId: 30,
       folderName: '디자인',
-      teamId: 7,
+      teamId: 1,
       teamName: '팀C',
-      createdAt: '2025-03-20T12:00:00Z',
-      lastOpen: '2025-05-15T11:20:00Z',
-      deletedAt: '2025-05-16T10:00:00Z',
+      createdAt: '2025-05-10',
+      lastOpen: '2025-05-18',
+      deletedAt: '2025-05-16',
     ),
   ];
 
   @override
   Future<List<WorkbookViewDto>> getWorkbooksByCurrentTeamId(int teamId) async {
-    return workbooks;
+    return workbooks.where((e) => e.teamId == teamId).toList();
   }
 
   @override
   Future<WorkbookViewDto> createWorkbook(
     WorkbookTableDto workbookTableDto,
   ) async {
-    return workbooks[0];
+    return WorkbookViewDto(
+      workbookId: workbookTableDto.workbookId,
+      workbookName: workbookTableDto.workbookName,
+    );
   }
 
   @override
@@ -70,6 +73,7 @@ class WorkbookDataSourceImpl implements WorkbookDataSource {
               (e) =>
                   e.workbookId == workbookTableDto.workbookId
                       ? WorkbookViewDto(
+                        workbookId: workbookTableDto.workbookId,
                         workbookName: workbookTableDto.workbookName,
                       )
                       : e,

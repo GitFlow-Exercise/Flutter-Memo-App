@@ -19,6 +19,22 @@ import 'package:mongo_ai/create/domain/use_case/create_problem_use_case.dart';
 import 'package:mongo_ai/create/domain/use_case/get_prompts_use_case.dart';
 import 'package:mongo_ai/create/domain/use_case/image_pick_file_use_case.dart';
 import 'package:mongo_ai/create/domain/use_case/pdf_pick_file_use_case.dart';
+import 'package:mongo_ai/dashboard/data/data_source/folder_data_source.dart';
+import 'package:mongo_ai/dashboard/data/data_source/mock/mock_folder_data_source_impl.dart';
+import 'package:mongo_ai/dashboard/data/data_source/mock/mock_team_data_source_impl.dart';
+import 'package:mongo_ai/dashboard/data/data_source/mock/mock_user_profile_data_source_impl.dart';
+import 'package:mongo_ai/dashboard/data/data_source/mock/mock_workbook_data_source_impl.dart';
+import 'package:mongo_ai/dashboard/data/data_source/team_data_source.dart';
+import 'package:mongo_ai/dashboard/data/data_source/user_profile_data_source.dart';
+import 'package:mongo_ai/dashboard/data/data_source/workbook_data_source.dart';
+import 'package:mongo_ai/dashboard/data/repository/folder_repository_impl.dart';
+import 'package:mongo_ai/dashboard/data/repository/team_repository_impl.dart';
+import 'package:mongo_ai/dashboard/data/repository/user_profile_repository_impl.dart';
+import 'package:mongo_ai/dashboard/data/repository/workbook_repository_impl.dart';
+import 'package:mongo_ai/dashboard/domain/repository/folder_repository.dart';
+import 'package:mongo_ai/dashboard/domain/repository/team_repository.dart';
+import 'package:mongo_ai/dashboard/domain/repository/user_profile_repository.dart';
+import 'package:mongo_ai/dashboard/domain/repository/workbook_repository.dart';
 
 final mockLocator = GetIt.instance;
 
@@ -29,7 +45,15 @@ void mockdDISetup() {
     MockFilePickerDataSourceImpl(),
   );
   mockLocator.registerSingleton<OpenAiDataSource>(MockOpenAiDataSourceImpl());
-  mockLocator.registerSingleton<PromptDataSource>(MokcPromptDataSourceImpl());
+  mockLocator.registerSingleton<PromptDataSource>(MockPromptDataSourceImpl());
+  mockLocator.registerSingleton<FolderDataSource>(MockFolderDataSourceImpl());
+  mockLocator.registerSingleton<TeamDataSource>(MockTeamDataSourceImpl());
+  mockLocator.registerSingleton<UserProfileDataSource>(
+    MockUserProfileDataSourceImpl(),
+  );
+  mockLocator.registerSingleton<WorkbookDataSource>(
+    MockWorkbookDataSourceImpl(),
+  );
 
   // Repository
   mockLocator.registerSingleton<AuthRepository>(
@@ -43,6 +67,18 @@ void mockdDISetup() {
   );
   mockLocator.registerSingleton<PromptRepository>(
     PromptRepositoryImpl(promptDataSource: mockLocator()),
+  );
+  mockLocator.registerSingleton<FolderRepository>(
+    FolderRepositoryImpl(dataSource: mockLocator()),
+  );
+  mockLocator.registerSingleton<TeamRepository>(
+    TeamRepositoryImpl(dataSource: mockLocator()),
+  );
+  mockLocator.registerSingleton<UserProfileRepository>(
+    UserProfileRepositoryImpl(dataSource: mockLocator()),
+  );
+  mockLocator.registerSingleton<WorkbookRepository>(
+    WorkbookRepositoryImpl(dataSource: mockLocator()),
   );
 
   // UseCase

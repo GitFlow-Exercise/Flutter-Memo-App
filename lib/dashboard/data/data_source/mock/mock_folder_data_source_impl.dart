@@ -5,15 +5,35 @@ class MockFolderDataSourceImpl implements FolderDataSource {
   MockFolderDataSourceImpl();
 
   List<FolderDto> folders = [
-    FolderDto(folderId: 1, folderName: 'folderName1', teamId: 1, createdAt: ''),
-    FolderDto(folderId: 2, folderName: 'folderName2', teamId: 1, createdAt: ''),
-    FolderDto(folderId: 3, folderName: 'folderName3', teamId: 1, createdAt: ''),
-    FolderDto(folderId: 4, folderName: 'folderName4', teamId: 1, createdAt: ''),
+    FolderDto(
+      folderId: 1,
+      folderName: 'folderName1',
+      teamId: 1,
+      createdAt: '2025-05-10',
+    ),
+    FolderDto(
+      folderId: 2,
+      folderName: 'folderName2',
+      teamId: 1,
+      createdAt: '2025-05-10',
+    ),
+    FolderDto(
+      folderId: 3,
+      folderName: 'folderName3',
+      teamId: 1,
+      createdAt: '2025-05-10',
+    ),
+    FolderDto(
+      folderId: 4,
+      folderName: 'folderName4',
+      teamId: 1,
+      createdAt: '2025-05-10',
+    ),
   ];
 
   @override
   Future<List<FolderDto>> getFoldersByCurrentTeamId(int teamId) async {
-    return folders;
+    return folders.where((e) => e.teamId == teamId).toList();
   }
 
   @override

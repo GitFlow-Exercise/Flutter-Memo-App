@@ -22,11 +22,7 @@ class MockTeamDataSourceImpl implements TeamDataSource {
 
   @override
   Future<TeamDto> createTeam(String teamName, String? teamImage) async {
-    final team = TeamDto(
-      teamId: 4,
-      teamName: 'teamName4',
-      teamImage: 'teamImage4',
-    );
+    final team = TeamDto(teamId: 4, teamName: teamName, teamImage: teamImage);
     teams.add(team);
     return team;
   }
