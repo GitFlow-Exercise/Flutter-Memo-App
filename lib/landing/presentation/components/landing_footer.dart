@@ -136,10 +136,7 @@ class LandingFooter extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 24),
                   decoration: const BoxDecoration(
                     border: Border(
-                      top: BorderSide(
-                        color: Color(0xFF374151),
-                        width: 1,
-                      ),
+                      top: BorderSide(color: Color(0xFF374151), width: 1),
                     ),
                   ),
                   child: Row(
@@ -180,11 +177,7 @@ class LandingFooter extends StatelessWidget {
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Icon(
-        icon,
-        color: AppColor.paleGray,
-        size: 16,
-      ),
+      child: Icon(icon, color: AppColor.paleGray, size: 16),
     );
   }
 

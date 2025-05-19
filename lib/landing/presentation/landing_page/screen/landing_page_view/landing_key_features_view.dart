@@ -11,43 +11,38 @@ class LandingKeyFeaturesView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: AppColor.white,
-      child: Column(
-        children: [
-          Text(
-            'Mongo AI 주요 기능',
-            style: AppTextStyle.landingSubHeader.copyWith(
-              color: AppColor.deepBlack,
-            ),
-          ),
-          const Gap(20),
-          Text(
-            '교사의 자료 준비 시간을 획기적으로 단축하고, 다양한 학습 자료를 효율적으로 만들 수 있도록 도와드립니다.',
-            style: AppTextStyle.bodyMedium.copyWith(color: AppColor.lightGray),
-          ),
-          const Gap(60),
-          Container(
-            height: 449,
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: GridView.builder(
-              shrinkWrap: true,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                mainAxisSpacing: 32,
-                crossAxisSpacing: 32,
-                childAspectRatio: 2 / 1.3,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            const Gap(60),
+            Text(
+              'Mongo AI 주요 기능',
+              style: AppTextStyle.landingSubHeader.copyWith(
+                color: AppColor.deepBlack,
               ),
-              itemCount: _icons.length,
-              itemBuilder: (context, index) {
+            ),
+            const Gap(20),
+            Text(
+              '교사의 자료 준비 시간을 획기적으로 단축하고, 다양한 학습 자료를 효율적으로 만들 수 있도록 도와드립니다.',
+              style: AppTextStyle.bodyMedium.copyWith(
+                color: AppColor.lightGray,
+              ),
+            ),
+            const Gap(60),
+            Wrap(
+              spacing: 24,
+              runSpacing: 24,
+              children: List.generate(_icons.length, (index) {
                 return LandingFeatureCard(
                   icon: _icons[index],
                   title: _titles[index],
                   description: _descriptions[index],
                 );
-              },
+              }),
             ),
-          ),
-          const Gap(60),
-        ],
+            const Gap(60),
+          ],
+        ),
       ),
     );
   }

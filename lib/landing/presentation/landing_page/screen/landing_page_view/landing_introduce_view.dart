@@ -10,64 +10,64 @@ class LandingIntroduceView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Container(
-          height: constraints.maxHeight,
-          color: AppColor.paleGrayBorder,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                RichText(
-                  text: TextSpan(
-                    text: '하나의 지문으로 ',
-                    style: AppTextStyle.landingHeader,
-                    children: [
-                      TextSpan(
-                        text: '다양한 문제',
-                        style: AppTextStyle.landingHeader.copyWith(
-                          color: AppColor.primary,
-                        ),
+    return SingleChildScrollView(
+      child: Container(
+        color: AppColor.paleGrayBorder,
+        constraints: BoxConstraints(
+          minHeight: MediaQuery.of(context).size.height,
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              RichText(
+                text: TextSpan(
+                  text: '하나의 지문으로 ',
+                  style: AppTextStyle.landingHeader,
+                  children: [
+                    TextSpan(
+                      text: '다양한 문제',
+                      style: AppTextStyle.landingHeader.copyWith(
+                        color: AppColor.primary,
                       ),
-                      const TextSpan(text: '를\n손쉽게 만들어보세요'),
-                    ],
-                  ),
-                  textAlign: TextAlign.center,
+                    ),
+                    const TextSpan(text: '를\n손쉽게 만들어보세요'),
+                  ],
                 ),
-                const Gap(40),
-                Text(
-                  'Mongo AI는 교사를 위한 AI 기반 문제집 생성 도구입니다. 텍스트, 이미지, PDF에서 콘텐츠를\n추출하여 다양한 유형의 문제를 자동 생성합니다.',
-                  style: AppTextStyle.headingMedium.copyWith(
-                    color: AppColor.lightGray,
-                  ),
-                  textAlign: TextAlign.center,
+                textAlign: TextAlign.center,
+              ),
+              const Gap(40),
+              Text(
+                'Mongo AI는 교사를 위한 AI 기반 문제집 생성 도구입니다. 텍스트, 이미지, PDF에서 콘텐츠를\n추출하여 다양한 유형의 문제를 자동 생성합니다.',
+                style: AppTextStyle.headingMedium.copyWith(
+                  color: AppColor.lightGray,
                 ),
-                const Gap(80),
-                SizedBox(
-                  height: 128,
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _icons.length,
-                    itemBuilder: (context, index) {
-                      return LandingIntroduceCard(
-                        icon: _icons[index],
-                        text: _texts[index],
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return const Gap(24);
-                    },
-                  ),
+                textAlign: TextAlign.center,
+              ),
+              const Gap(80),
+              SizedBox(
+                height: 128,
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _icons.length,
+                  itemBuilder: (context, index) {
+                    return LandingIntroduceCard(
+                      icon: _icons[index],
+                      text: _texts[index],
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return const Gap(24);
+                  },
                 ),
-                const Gap(48),
-                BaseAppButton(onTap: () {}, text: '무료료 시작하기'),
-              ],
-            ),
+              ),
+              const Gap(48),
+              BaseAppButton(onTap: () {}, text: '무료료 시작하기'),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 

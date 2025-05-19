@@ -28,7 +28,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
   @override
   Future<UploadRawState> build() async {
     final textController = TextEditingController();
-    final debouncer = Debouncer(seconds: 1);
+    final debouncer = Debouncer(delay: const Duration(seconds: 1));
 
     ref.onDispose(() {
       _eventController.close();
