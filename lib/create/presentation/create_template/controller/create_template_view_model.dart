@@ -56,6 +56,7 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
           problemType: problem.problemType,
           promptDetail: problem.promptDetail,
           requestContent: problem.requestContent,
+          cleanText: problem.cleanText,
         ),
       );
     }
@@ -84,6 +85,7 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
           problemType: problem.problemType,
           promptDetail: problem.promptDetail,
           requestContent: problem.requestContent,
+          cleanText: problem.cleanText,
         ),
       );
     }
@@ -117,6 +119,7 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
             problemType: problem.problemType,
             promptDetail: problem.promptDetail,
             requestContent: problem.requestContent,
+            cleanText: problem.cleanText,
           ),
         );
       }
@@ -133,7 +136,9 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
   }
 
   Future<void> reCreateProblem(Problem problem) async {
-    state = state.copyWith(isReCreating: true); // 문제 '재생성 중'으로 상태 변경
+    state = state.copyWith(
+      reCreatingNumber: problem.number,
+    ); // 문제 '재생성 중'으로 상태 변경
     final body = OpenAiBody(
       input: [
         MessageInput(
@@ -156,8 +161,9 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
               state.problemList
                   .map((p) => p.number == problem.number ? updatedProblem : p)
                   .toList(),
+          reCreatingNumber: null,
         );
-        state = state.copyWith(isReCreating: false); // 문제 '재생성 완료'로 상태 변경
+
       case Error():
         _eventController.add(
           const CreateTemplateEvent.showSnackBar('문제 재생성 중 에러가 발생하였습니다.'),
@@ -230,7 +236,8 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
             options: options,
             problemType: promptName,
             promptDetail: promptDetail,
-            requestContent: block, // 클린텍스트 순서에 맞춰 대응
+            requestContent: block,
+            cleanText: params.cleanText[j], // 클린텍스트 순서에 맞춰 대응
           ),
         );
 
@@ -279,6 +286,7 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
       problemType: problem.problemType,
       promptDetail: problem.promptDetail,
       requestContent: response.getContent(), // 클린텍스트 순서에 맞춰 대응
+      cleanText: problem.cleanText,
     );
   }
 
@@ -297,58 +305,31 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
   }
 
   void quickOrderProblemList(bool isTypeGroup) {
+    final problems = List<Problem>.from(state.problemList);
+    final orderedProblems = <Problem>[];
+
     if (isTypeGroup) {
-      // isType이 true일 경우 모든 문제를 problemList에서 orderedProblemList로 이동
-      final problems = List<Problem>.from(state.problemList);
-      final orderedProblems = List<Problem>.from(state.orderedProblemList);
-
-      for (final problem in problems) {
-        if (!orderedProblems.any((p) => p.number == problem.number)) {
-          orderedProblems.add(problem);
-        }
-      }
-
-      state = state.copyWith(
-        problemList: [],
-        orderedProblemList: orderedProblems,
-      );
+      // ✅ 유형별: 기존 problemList 그대로 넣기
+      orderedProblems.addAll(problems);
     } else {
-      // isType이 false일 경우 동일한 passage를 가진 문제들을 함께 이동
-      final problems = List<Problem>.from(state.problemList);
-      final orderedProblems = List<Problem>.from(state.orderedProblemList);
-
-      // passage별로 문제들을 그룹화
-      final Map<String, List<Problem>> passageGroups = {};
+      // ✅ 문항별 정렬: cleanText 기준으로 묶기
+      final Map<String, List<Problem>> cleanTextGroups = {};
 
       for (final problem in problems) {
-        if (!passageGroups.containsKey(problem.passage)) {
-          passageGroups[problem.passage] = [];
-        }
-        passageGroups[problem.passage]!.add(problem);
+        // cleanText를 키로 사용하여 그룹화
+        // cleanText가 같은 문제들을 같은 그룹으로 묶기
+        cleanTextGroups.putIfAbsent(problem.cleanText, () => []);
+        cleanTextGroups[problem.cleanText]!.add(problem);
       }
 
-      // 그룹화된 문제들을 orderedProblemList에 추가
-      for (final problemGroup in passageGroups.values) {
-        for (final problem in problemGroup) {
-          if (!orderedProblems.any((p) => p.number == problem.number)) {
-            orderedProblems.add(problem);
-          }
-        }
+      for (final group in cleanTextGroups.values) {
+        orderedProblems.addAll(group);
       }
-
-      // 남은 problemList 업데이트 (이미 이동된 문제 제거)
-      final remainingProblems =
-          problems
-              .where(
-                (problem) =>
-                    !orderedProblems.any((p) => p.number == problem.number),
-              )
-              .toList();
-
-      state = state.copyWith(
-        problemList: remainingProblems,
-        orderedProblemList: orderedProblems,
-      );
     }
+
+    state = state.copyWith(
+      problemList: [],
+      orderedProblemList: orderedProblems,
+    );
   }
 }

@@ -9,7 +9,7 @@ class ProblemCardWidget extends StatelessWidget {
   final Problem problem;
   final int? maxLines;
   final bool? isOrdered;
-  final bool? isReCreating;
+  final int? reCreatingNum;
   final void Function(Problem problem)? onTapReCreate;
 
   const ProblemCardWidget({
@@ -18,7 +18,7 @@ class ProblemCardWidget extends StatelessWidget {
     this.maxLines = 2,
     this.onTapReCreate,
     this.isOrdered,
-    this.isReCreating,
+    this.reCreatingNum,
   });
 
   @override
@@ -63,7 +63,7 @@ class ProblemCardWidget extends StatelessWidget {
             ],
           ),
           const Gap(8),
-          isReCreating == true
+          reCreatingNum == problem.number
               ? Center(
                 child: SpinKitThreeInOut(
                   color: AppColor.primary.withValues(alpha: 0.5),
