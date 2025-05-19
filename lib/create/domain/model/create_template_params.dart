@@ -64,9 +64,6 @@ D. ...s
 
 # 빈칸 1번 문제:
 다음 빈칸에 들어갈 가장 알맞은 단어를 고르세요.
-
-Speaking with members of the media has advantages in getting a message out and perhaps receiving favorable _____, but it runs the risk of misinterpretations, the need for repeated clarifications, and engagement in never-ending controversy.
-
 A. recognition  
 B. experiment  
 C. hesitation  
@@ -77,9 +74,6 @@ D. prediction
 
 # 빈칸 1번 문제:
 다음 빈칸에 들어갈 가장 알맞은 단어를 고르세요.
-
-We trust our common sense largely because we are prone to naive _____: the belief that we see the world precisely as it is.
-
 A. realism  
 B. optimism  
 C. criticism  
@@ -90,9 +84,6 @@ D. ambition
 
 # 빈칸 1번 문제:
 다음 빈칸에 들어갈 가장 알맞은 단어를 고르세요.
-
-In fact, gratitude can be very difficult, because it requires that you recognize your _____ on others, and that’s not always positive.
-
 A. dependence  
 B. influence  
 C. curiosity  
@@ -103,9 +94,6 @@ D. authority
 
 # 빈칸 1번 문제:
 다음 빈칸에 들어갈 가장 알맞은 단어를 고르세요.
-
-Human societies have much more complexity and choice than baboon societies, but the point is that behavioral norms are to a great degree the product of culture and _____, not the other way around.
-
 A. learning  
 B. instinct  
 C. heredity  
@@ -214,12 +202,14 @@ D. All societies have the same behavioral norms
 • 해설은 제외
 • 문제는 한국어로 작성할 것.
 • 정답은 표시하지 않아도 됨.
-• 지문,문제 앞에 붙는 '#'은 반드시 넣어줄 것
+• 지문,문제 앞에 붙는 '#'은 반드시 넣어줄 것.
+• **생성된 문제를 지문에 적용하여 지문을 수정할 것**.
+• **절대 문제 영역에 보기 외에 문장은 포함하지 말 것**.
 
 # 1번 지문: {지문}
 
 # 빈칸 1번 문제:
-{생성된 문제}
+다음 빈칸에 들어갈 답을 고르시오.
 A. ...
 B. ...
 C. ...
