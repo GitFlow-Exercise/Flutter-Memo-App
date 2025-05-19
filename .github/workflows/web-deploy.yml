@@ -21,7 +21,7 @@ jobs:
           channel: stable
           flutter-version: 3.29.2
 
-      # .env 파일 생성
+      # 임의로 .env 파일 생성
       - name: Generate .env
         run: |
           cat <<EOF > .env
