@@ -132,6 +132,7 @@ class SelectTeamViewModel extends _$SelectTeamViewModel {
 
     // 사용자를 팀에 할당
     final teamRepository = ref.read(teamRepositoryProvider);
+    final authRepository = ref.read(authRepositoryProvider);
     final assignResult = await teamRepository.assignUserToTeam(
       userId,
       selectedTeam.teamId,
@@ -142,7 +143,8 @@ class SelectTeamViewModel extends _$SelectTeamViewModel {
       // 현재 선택된 팀 ID 설정
         ref.read(currentTeamIdStateProvider.notifier).set(selectedTeam.teamId);
 
-        final authRepository = ref.read(authRepositoryProvider);
+        await authRepository.saveSelectedTeamId(selectedTeam.teamId);
+
         final metadataResult = await authRepository.setSelectTeamMetadata();
 
         switch (metadataResult) {

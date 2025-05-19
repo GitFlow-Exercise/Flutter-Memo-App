@@ -31,6 +31,10 @@ abstract interface class AuthDataSource {
 
   Future<void> updateUserMetadata(String key);
 
+  Future<void> saveSelectedTeamId(int teamId);
+
+  int? getSelectedTeamId();
+
   bool isAuthenticated();
 
   bool isInitialSetupUser();

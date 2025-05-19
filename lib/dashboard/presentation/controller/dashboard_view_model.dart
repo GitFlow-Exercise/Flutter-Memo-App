@@ -47,6 +47,15 @@ class DashboardViewModel extends _$DashboardViewModel {
     await ref.refresh(getTeamsByCurrentUserProvider.future);
   }
 
+  // 최근에 선택한 팀 설정하기
+  Future<void> fetchSelectedTeam() async {
+    final authRepository = ref.read(authRepositoryProvider);
+    final teamId = authRepository.getSelectedTeamId();
+    if (teamId != null) {
+      selectTeam(teamId);
+    }
+  }
+
   // -----------------
   // Folder 관련 메서드
   Future<void> selectFolderId(int folderId) async {
