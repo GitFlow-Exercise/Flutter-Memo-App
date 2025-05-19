@@ -141,7 +141,9 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
-                              borderSide: const BorderSide(color: AppColor.primary),
+                              borderSide: const BorderSide(
+                                color: AppColor.primary,
+                              ),
                             ),
                             errorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
@@ -204,7 +206,9 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
-                              borderSide: const BorderSide(color: AppColor.primary),
+                              borderSide: const BorderSide(
+                                color: AppColor.primary,
+                              ),
                             ),
                             errorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
@@ -287,7 +291,9 @@ class _SignInScreenState extends State<SignInScreen> {
 
                         ElevatedButton(
                           onPressed: () {
-                            widget.onAction(const SignInAction.onTapGoogleSingIn());
+                            widget.onAction(
+                              const SignInAction.onTapGoogleSingIn(),
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColor.white,
@@ -300,11 +306,28 @@ class _SignInScreenState extends State<SignInScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 10),
-                                child: SizedBox(width: 40, height: 40, child: Image.asset('images/google_logo.png', width: 40, height: 40,)),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10,
+                                ),
+                                child: SizedBox(
+                                  width: 40,
+                                  height: 40,
+                                  child: Image.asset(
+                                    'assets/images/google_logo.png',
+                                    width: 40,
+                                    height: 40,
+                                  ),
+                                ),
                               ),
                               const Gap(10),
-                              Text('Sign in with Google', style: AppTextStyle.bodyMedium.copyWith(fontWeight: FontWeight.w500, color: AppColor.black, fontSize: 16))
+                              Text(
+                                'Sign in with Google',
+                                style: AppTextStyle.bodyMedium.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColor.black,
+                                  fontSize: 16,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -325,7 +348,9 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                       GestureDetector(
                         onTap:
-                            () => widget.onAction(const SignInAction.onTapSignUp()),
+                            () => widget.onAction(
+                              const SignInAction.onTapSignUp(),
+                            ),
                         child: Text(
                           '회원가입',
                           style: AppTextStyle.captionRegular.copyWith(
