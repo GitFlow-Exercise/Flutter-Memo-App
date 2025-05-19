@@ -147,7 +147,7 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
       }
     });
 
-    if (teamId == null || folderId == null || userId == null) {
+    if (teamId == null || userId == null) {
       _eventController.add(
         const CreateCompleteEvent.showSnackBar('필요한 정보를 불러오는 데 실패하였습니다.'),
       );
