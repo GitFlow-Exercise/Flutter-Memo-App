@@ -10,7 +10,8 @@ class LandingIntroduceView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return OverflowBox(
+      maxHeight: double.infinity,
       child: Container(
         color: AppColor.paleGrayBorder,
         constraints: BoxConstraints(
