@@ -3,9 +3,11 @@ import 'package:gap/gap.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/landing/presentation/components/landing_feature_card.dart';
+import 'package:mongo_ai/landing/presentation/landing_page/controller/landing_page_action.dart';
 
 class LandingKeyFeaturesView extends StatelessWidget {
-  const LandingKeyFeaturesView({super.key});
+  final void Function(LandingPageAction action) onAction;
+  const LandingKeyFeaturesView({super.key, required this.onAction});
 
   @override
   Widget build(BuildContext context) {

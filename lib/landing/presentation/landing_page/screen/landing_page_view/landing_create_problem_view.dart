@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/core/component/base_app_button.dart';
-import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/landing/presentation/components/landing_create_stage_card.dart';
 import 'package:gap/gap.dart';
+import 'package:mongo_ai/landing/presentation/landing_page/controller/landing_page_action.dart';
 
 class LandingCreateProblemView extends StatelessWidget {
-  const LandingCreateProblemView({super.key});
+  final void Function(LandingPageAction action) onAction;
+  const LandingCreateProblemView({super.key, required this.onAction});
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +55,7 @@ class LandingCreateProblemView extends StatelessWidget {
             const Gap(40),
             BaseAppButton(
               onTap: () {
-                context.push(Routes.signIn);
+                onAction(const LandingPageAction.goToSignIn());
               },
               text: '무료로 시작하기',
             ),

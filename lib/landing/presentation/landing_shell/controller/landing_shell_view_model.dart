@@ -17,4 +17,6 @@ class LandingShellViewModel extends _$LandingShellViewModel {
   void setNavigationItem(LandingHeaderMenuType item) {
     state = state.copyWith(selectLandingHeaderMenu: item);
   }
+
+  void startMongoAI() {}
 }
