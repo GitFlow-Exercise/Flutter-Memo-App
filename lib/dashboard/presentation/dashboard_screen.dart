@@ -9,13 +9,14 @@ import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/dashboard/domain/model/folder.dart';
+import 'package:mongo_ai/dashboard/presentation/component/button_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/folder_list_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/path_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/select_mode_button_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/team_list_widget.dart';
-import 'package:mongo_ai/dashboard/presentation/component/workbook_filter_bookmark_widget.dart';
-import 'package:mongo_ai/dashboard/presentation/component/workbook_filter_sort_widget.dart';
-import 'package:mongo_ai/dashboard/presentation/component/workbook_filter_tab_bar.dart';
+import 'package:mongo_ai/dashboard/presentation/component/workbook_filter_widget/workbook_filter_bookmark_widget.dart';
+import 'package:mongo_ai/dashboard/presentation/component/workbook_filter_widget/workbook_filter_sort_widget.dart';
+import 'package:mongo_ai/dashboard/presentation/component/workbook_filter_widget/workbook_filter_tab_bar.dart';
 import 'package:mongo_ai/dashboard/presentation/controller/dashboard_view_model.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
@@ -71,14 +72,35 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           children: [
                             PathWidget(path: _currentPath),
                             const Spacer(),
-                            const Icon(Icons.person, color: AppColor.deepBlack),
-                            const Gap(10),
-                            Text(
-                              dashboard.userProfile.userName,
-                              style: AppTextStyle.bodyMedium.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                        ElevatedButton(
+                          onPressed: () {
+                            context.go(Routes.myProfile);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColor.white,
+                            shadowColor: Colors.transparent,
+                            overlayColor: Colors.transparent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(0),
                             ),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.person,
+                                color: AppColor.deepBlack,
+                              ),
+                              const Gap(10),
+                              Text(
+                                dashboard.userProfile.userName,
+                                style: AppTextStyle.bodyMedium.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColor.black
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                           ],
                         ),
                       ),
@@ -142,7 +164,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               height: 40,
                               child: SelectModeButtonWidget(
                                 onClick: () {
-                                  viewModel.toggleSelectMode();
+                                  if(dashboard.currentTeamId != null) {
+                                    viewModel.toggleSelectMode();
+                                  }
                                 },
                               ),
                             ),
@@ -153,6 +177,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     const Gap(10),
                     Expanded(
                       child: Container(
+                        clipBehavior: Clip.antiAlias,
                         decoration: const BoxDecoration(
                           color: AppColor.lightBlue,
                           border: Border(

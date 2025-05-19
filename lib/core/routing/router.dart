@@ -9,16 +9,18 @@ import 'package:mongo_ai/auth/presentation/sign_up_password/screen/sign_up_passw
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/routing/redirect.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
-import 'package:mongo_ai/create/domain/model/create_workbook_params.dart';
+import 'package:mongo_ai/create/domain/model/create_template_params.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
-import 'package:mongo_ai/create/presentation/create_complete/screen/create_complete_screen_root.dart';
 import 'package:mongo_ai/create/presentation/create/screen/upload_raw_screen_root.dart';
+import 'package:mongo_ai/create/presentation/create_complete/screen/create_complete_screen_root.dart';
 import 'package:mongo_ai/create/presentation/create_problem/screen/create_problem_screen_root.dart';
+import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
 import 'package:mongo_ai/create/presentation/create_template/screen/create_template_screen_root.dart';
 import 'package:mongo_ai/dashboard/presentation/dashboard_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/deleted_files/deleted_files_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/folder/folder_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/my_files/my_files_screen.dart';
+import 'package:mongo_ai/dashboard/presentation/my_profile/screen/my_profile_screen_root.dart';
 import 'package:mongo_ai/dashboard/presentation/recent_files/recent_files_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -128,6 +130,14 @@ final routerProvider = Provider<GoRouter>((ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
+                path: Routes.myProfile,
+                builder: (context, state) => const MyProfileScreenRoot(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
                 path: Routes.deletedFiles,
                 builder: (context, state) => const DeletedFilesScreen(),
               ),
@@ -158,15 +168,6 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
-        path: Routes.createComplete,
-        builder: (context, state) {
-          return const CreateCompleteScreenRoot();
-        },
-        redirect: (context, state) {
-          return AppRedirect.pdfPreviewRedirect(state.extra);
-        },
-      ),
-      GoRoute(
         path: Routes.createTemplate,
         builder: (context, state) {
           final extra = state.extra as CreateTemplateParams;
@@ -174,6 +175,17 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
         redirect: (context, state) {
           return AppRedirect.createTemplateRedirect(state.extra);
+        },
+      ),
+      GoRoute(
+        path: Routes.createComplete,
+        builder: (context, state) {
+          final extra = state.extra as List<Problem>;
+
+          return CreateCompleteScreenRoot(problems: extra);
+        },
+        redirect: (context, state) {
+          return AppRedirect.createCompleteRedirect(state.extra);
         },
       ),
     ],

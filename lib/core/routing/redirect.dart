@@ -1,7 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
-import 'package:mongo_ai/create/domain/model/create_workbook_params.dart';
+import 'package:mongo_ai/create/domain/model/create_template_params.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
+import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
 
 abstract class AppRedirect {
   static String? authRedirect({
@@ -72,10 +72,10 @@ abstract class AppRedirect {
     return null;
   }
 
-  static String? pdfPreviewRedirect(Object? extra) {
+  static String? createCompleteRedirect(Object? extra) {
     // 만약 화면 이동간 필요한 데이터가 타입과 일치하지 않는다면,
     // 강제로 문제 생성 처음 화면으로 이동시킵니다.
-    if (extra is! Uint8List) {
+    if (extra is! List<Problem>) {
       return Routes.create;
     }
     return null;

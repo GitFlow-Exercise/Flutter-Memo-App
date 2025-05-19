@@ -3,6 +3,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 abstract interface class AuthDataSource {
   Stream<AuthState> get authStateChanges;
 
+  Session? get session;
+
   Future<void> login(String email, String password);
 
   Future<void> signInWithGoogle();

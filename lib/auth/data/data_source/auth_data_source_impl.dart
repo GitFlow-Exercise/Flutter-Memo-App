@@ -42,7 +42,14 @@ class AuthDataSourceImpl implements AuthDataSource {
 
   @override
   Future<void> deleteUser(String id) async {
-    await _client.auth.admin.deleteUser(id);
+    final response = await _client.functions.invoke(
+      'delete-user',
+      body: {
+        'authorization': session!.accessToken,
+      },
+    );
+
+    print(response);
   }
 
   @override
@@ -163,4 +170,7 @@ class AuthDataSourceImpl implements AuthDataSource {
     final user = _client.auth.currentUser;
     return user?.appMetadata['provider'] as String?;
   }
+
+  @override
+  Session? get session => _client.auth.currentSession;
 }
