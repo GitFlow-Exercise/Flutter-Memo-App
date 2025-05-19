@@ -103,6 +103,9 @@ class _CreateTemplateScreenRootState
           context: context,
           builder: (context) => ProblemDetailDialog(problem: action.problem),
         );
+
+      case OnTapQuickSort():
+        viewModel.quickOrderProblemList(action.isTypeGroup);
     }
   }
 }

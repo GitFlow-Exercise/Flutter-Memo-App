@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -7,7 +6,6 @@ import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
 import 'package:mongo_ai/create/presentation/create_template/widget/problem_card_widget.dart';
-import 'package:mongo_ai/create/presentation/create_template/widget/problem_detail_dialog.dart';
 
 class CreateProblemOrderSettingBox extends StatelessWidget {
   final List<Problem> orderedProblemList;
@@ -16,6 +14,7 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
   final void Function(Problem problem) onTapReCreate;
   final VoidCallback onTapClear;
   final void Function(Problem problem) onDoubleTapProblem;
+  final void Function(bool isTypeGroup) onTapSortBtn;
   final bool isReCreating;
 
   const CreateProblemOrderSettingBox({
@@ -25,8 +24,9 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
     required this.onAcceptOrderedProblem,
     required this.onTapReCreate,
     required this.onTapClear,
-    required this.isReCreating,
     required this.onDoubleTapProblem,
+    required this.onTapSortBtn,
+    required this.isReCreating,
   });
 
   @override
@@ -134,11 +134,17 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
                           ),
                           const Gap(22),
                           if (orderedProblemList.isEmpty)
-                            const Column(
+                            Column(
                               children: [
-                                _OrderTypeButton(title: '문항별'),
-                                Gap(24),
-                                _OrderTypeButton(title: '유형별'),
+                                _OrderTypeButton(
+                                  title: '문항별',
+                                  onTapSortBtn: onTapSortBtn,
+                                ),
+                                const Gap(24),
+                                _OrderTypeButton(
+                                  title: '유형별',
+                                  onTapSortBtn: onTapSortBtn,
+                                ),
                               ],
                             ),
                           const Gap(22),
@@ -198,12 +204,13 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
 
 class _OrderTypeButton extends StatelessWidget {
   final String title;
-  const _OrderTypeButton({required this.title});
+  final void Function(bool isTypeGroup) onTapSortBtn;
+  const _OrderTypeButton({required this.title, required this.onTapSortBtn});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () => onTapSortBtn(title == '유형별'),
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColor.white,
         shape: RoundedRectangleBorder(

@@ -110,6 +110,11 @@ class _CreateTemplateScreenState extends State<CreateTemplateScreen> {
                   CreateTemplateAction.onDoubleTapProblem(problem),
                 );
               },
+              onTapSortBtn: (bool isTypeGroup) {
+                widget.onAction(
+                  CreateTemplateAction.onTapQuickSort(isTypeGroup),
+                );
+              },
             ),
           ),
         ),

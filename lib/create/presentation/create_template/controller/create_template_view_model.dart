@@ -295,4 +295,60 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
 
     return state.orderedProblemList;
   }
+
+  void quickOrderProblemList(bool isTypeGroup) {
+    if (isTypeGroup) {
+      // isType이 true일 경우 모든 문제를 problemList에서 orderedProblemList로 이동
+      final problems = List<Problem>.from(state.problemList);
+      final orderedProblems = List<Problem>.from(state.orderedProblemList);
+
+      for (final problem in problems) {
+        if (!orderedProblems.any((p) => p.number == problem.number)) {
+          orderedProblems.add(problem);
+        }
+      }
+
+      state = state.copyWith(
+        problemList: [],
+        orderedProblemList: orderedProblems,
+      );
+    } else {
+      // isType이 false일 경우 동일한 passage를 가진 문제들을 함께 이동
+      final problems = List<Problem>.from(state.problemList);
+      final orderedProblems = List<Problem>.from(state.orderedProblemList);
+
+      // passage별로 문제들을 그룹화
+      final Map<String, List<Problem>> passageGroups = {};
+
+      for (final problem in problems) {
+        if (!passageGroups.containsKey(problem.passage)) {
+          passageGroups[problem.passage] = [];
+        }
+        passageGroups[problem.passage]!.add(problem);
+      }
+
+      // 그룹화된 문제들을 orderedProblemList에 추가
+      for (final problemGroup in passageGroups.values) {
+        for (final problem in problemGroup) {
+          if (!orderedProblems.any((p) => p.number == problem.number)) {
+            orderedProblems.add(problem);
+          }
+        }
+      }
+
+      // 남은 problemList 업데이트 (이미 이동된 문제 제거)
+      final remainingProblems =
+          problems
+              .where(
+                (problem) =>
+                    !orderedProblems.any((p) => p.number == problem.number),
+              )
+              .toList();
+
+      state = state.copyWith(
+        problemList: remainingProblems,
+        orderedProblemList: orderedProblems,
+      );
+    }
+  }
 }

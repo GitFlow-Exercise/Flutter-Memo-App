@@ -24,4 +24,7 @@ sealed class CreateTemplateAction with _$CreateTemplateAction {
 
   const factory CreateTemplateAction.onDoubleTapProblem(Problem problem) =
       OnDoubleTapProblem;
+
+  const factory CreateTemplateAction.onTapQuickSort(bool isTypeGroup) =
+      OnTapQuickSort;
 }
