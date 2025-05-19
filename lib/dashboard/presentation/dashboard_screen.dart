@@ -40,6 +40,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       _currentPath = ['최근 항목'];
     } else if(selectedIndex == 3) {
       _currentPath = ['휴지통'];
+    } else if(selectedIndex == 4) {
+      _currentPath = ['내 정보'];
     }
 
     return state.when(

@@ -129,16 +129,16 @@ final routerProvider = Provider<GoRouter>((ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: Routes.myProfile,
-                builder: (context, state) => const MyProfileScreenRoot(),
+                path: Routes.deletedFiles,
+                builder: (context, state) => const DeletedFilesScreen(),
               ),
             ],
           ),
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: Routes.deletedFiles,
-                builder: (context, state) => const DeletedFilesScreen(),
+                path: Routes.myProfile,
+                builder: (context, state) => const MyProfileScreenRoot(),
               ),
             ],
           ),
