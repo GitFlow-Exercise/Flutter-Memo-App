@@ -31,9 +31,7 @@ Future<void> main() async {
   );
 
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   final loader = FontLoader('Pretendard');
   loader.addFont(rootBundle.load('assets/fonts/Pretendard-Bold.ttf'));

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mongo_ai/landing/presentation/landing_page/screen/landing_page_view/landing_create_problem_view.dart';
+import 'package:mongo_ai/landing/presentation/landing_page/screen/landing_page_view/landing_introduce_view.dart';
+import 'package:mongo_ai/landing/presentation/landing_page/screen/landing_page_view/landing_key_features_view.dart';
+import 'package:mongo_ai/landing/presentation/landing_page/screen/landing_page_view/landing_start_view.dart';
 
 class LandingPageScreen extends StatefulWidget {
   const LandingPageScreen({super.key});
@@ -10,8 +14,14 @@ class LandingPageScreen extends StatefulWidget {
 class _LandingPageScreenState extends State<LandingPageScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('랜딩페이지\n홈, 요금제만 동작합니다\n무료로 시작하기 클릭 시 로그인으로 이동합니다.'),
+    return PageView(
+      scrollDirection: Axis.vertical,
+      children: const [
+        LandingIntroduceView(),
+        LandingKeyFeaturesView(),
+        LandingCreateProblemView(),
+        LandingStartView(),
+      ],
     );
   }
 }
