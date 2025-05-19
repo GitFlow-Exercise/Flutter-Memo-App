@@ -13,8 +13,9 @@ class LandingKeyFeaturesView extends StatelessWidget {
       color: AppColor.white,
       child: SingleChildScrollView(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Gap(60),
+            const Gap(32),
             Text(
               'Mongo AI 주요 기능',
               style: AppTextStyle.landingSubHeader.copyWith(
@@ -28,19 +29,23 @@ class LandingKeyFeaturesView extends StatelessWidget {
                 color: AppColor.lightGray,
               ),
             ),
-            const Gap(60),
+            const Gap(40),
             Wrap(
               spacing: 24,
               runSpacing: 24,
               children: List.generate(_icons.length, (index) {
-                return LandingFeatureCard(
-                  icon: _icons[index],
-                  title: _titles[index],
-                  description: _descriptions[index],
+                return LayoutBuilder(
+                  builder: (context, constraints) {
+                    return LandingFeatureCard(
+                      icon: _icons[index],
+                      title: _titles[index],
+                      description: _descriptions[index],
+                    );
+                  },
                 );
               }),
             ),
-            const Gap(60),
+            const Gap(32),
           ],
         ),
       ),

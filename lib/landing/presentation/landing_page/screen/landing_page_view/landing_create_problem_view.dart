@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/core/component/base_app_button.dart';
+import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/landing/presentation/components/landing_create_stage_card.dart';
@@ -51,7 +53,12 @@ class LandingCreateProblemView extends StatelessWidget {
               ),
             ),
             const Gap(40),
-            BaseAppButton(onTap: () {}, text: '무료로 시작하기'),
+            BaseAppButton(
+              onTap: () {
+                context.push(Routes.signIn);
+              },
+              text: '무료로 시작하기',
+            ),
           ],
         ),
       ),

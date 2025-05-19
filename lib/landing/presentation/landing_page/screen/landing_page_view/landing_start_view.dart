@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/core/component/base_app_button.dart';
+import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/landing/presentation/components/landing_footer.dart';
@@ -41,7 +43,9 @@ class LandingStartView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       BaseAppButton(
-                        onTap: () {},
+                        onTap: () {
+                          context.push(Routes.signIn);
+                        },
                         text: '무료로 시작하기',
                         bgColor: AppColor.white,
                         border: Border.all(color: AppColor.white),

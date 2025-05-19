@@ -16,7 +16,7 @@ class LandingFeatureCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 400,
+      width: 380,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: AppColor.white,
