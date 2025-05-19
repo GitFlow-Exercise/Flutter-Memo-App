@@ -68,7 +68,7 @@ class FolderViewModel extends _$FolderViewModel implements DashboardNavigationVi
 
   @override
   Future<void> moveTrashWorkbook(Workbook workbook) async {
-    final result = await ref.read(deleteWorkbookUseCaseProvider).execute(workbook);
+    final result = await ref.read(moveTrashWorkbookUseCaseProvider).execute(workbook);
     switch(result) {
       case Success(data: final data):
         refreshWorkbookList();
