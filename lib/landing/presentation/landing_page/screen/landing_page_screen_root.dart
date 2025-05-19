@@ -21,9 +21,7 @@ class _LandingPageScreenRootState extends ConsumerState<LandingPageScreenRoot> {
         landingShellViewModelProvider.notifier,
       );
 
-      landingShellViewModel.setNavigationItem(
-        LandingHeaderMenuType.home,
-      );
+      landingShellViewModel.setNavigationItem(LandingHeaderMenuType.home);
     });
   }
 

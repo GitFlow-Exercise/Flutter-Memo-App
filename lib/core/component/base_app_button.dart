@@ -8,7 +8,17 @@ import 'package:mongo_ai/core/style/app_text_style.dart';
 class BaseAppButton extends StatelessWidget {
   final VoidCallback onTap;
   final String text;
-  const BaseAppButton({super.key, required this.onTap, required this.text});
+  final Border? border;
+  final Color? textColor;
+  final Color? bgColor;
+  const BaseAppButton({
+    super.key,
+    required this.onTap,
+    required this.text,
+    this.border,
+    this.textColor,
+    this.bgColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +27,15 @@ class BaseAppButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         decoration: BoxDecoration(
-          color: AppColor.primary,
+          color: bgColor ?? AppColor.primary,
           borderRadius: BorderRadius.circular(6),
+          border: border,
         ),
         child: Text(
           text,
-          style: AppTextStyle.bodyRegular.copyWith(color: AppColor.white),
+          style: AppTextStyle.bodyRegular.copyWith(
+            color: textColor ?? AppColor.white,
+          ),
         ),
       ),
     );

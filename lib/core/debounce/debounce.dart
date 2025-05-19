@@ -1,18 +1,19 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 
-// 설정한 시간초 이내에서
-// 마지막으로 실행된 함수 한 번만 실행
+/// 마지막 호출 후 [delay] 시간만큼 대기한 뒤에야 [action]이 실행됩니다.
 class Debouncer {
-  final int seconds;
+  final Duration delay;
   Timer? _timer;
 
-  Debouncer({required this.seconds});
+  Debouncer({required this.delay});
 
   void run(VoidCallback action) {
-    if (_timer != null) {
-      _timer!.cancel();
-    }
-    _timer = Timer(Duration(seconds: seconds), action);
+    _timer?.cancel();
+    _timer = Timer(delay, action);
+  }
+
+  void dispose() {
+    _timer?.cancel();
   }
 }
