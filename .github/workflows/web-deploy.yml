@@ -45,6 +45,11 @@ jobs:
       # 플러터 웹 빌드
       - name: Build web
         run: flutter build web --base-href "/${{ github.event.repository.name }}/"
+      
+      # 404.html = index.html 복사
+      # => 강제 url로 라우팅이 404에러를 해결
+      - name: Copy index.html to 404.html
+        run: cp build/web/index.html build/web/404.html
 
       # github page 배포
       - name: Deploy to github pages
