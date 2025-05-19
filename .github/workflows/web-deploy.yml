@@ -1,0 +1,37 @@
+name: deploy flutter web to github pages
+
+on:
+  # main branch에 푸쉬가 들어올 경우 실행
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # git 기본 세팅
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 플러터 세팅
+      - name: Setup flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.29.2
+
+      #  추가: 의존성 설치
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 플러터 웹 빌드
+      - name: Build web
+        run: flutter build web --base-href "/${{ github.event.repository.name }}/"
+
+      # github page 배포
+      - name: Deploy to github pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.STATIC_DEPLOY_KEY }}
+          publish_dir: ./build/web
