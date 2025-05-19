@@ -119,7 +119,7 @@ class _CreateProblemScreenRootState
         );
       },
       error: (error, stackTrace) => const AiErrorView(),
-      loading: () => const AiLoadingView(),
+      loading: () => const AiLoadingView(text: '유형별 문제 추출 중...'),
     );
   }
 
