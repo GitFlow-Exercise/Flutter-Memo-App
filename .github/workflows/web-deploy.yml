@@ -21,6 +21,14 @@ jobs:
           channel: stable
           flutter-version: 3.29.2
 
+      # .env 파일 생성
+      - name: Generate .env
+        run: |
+          cat <<EOF > .env
+          SUPABASE_URL=${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
+          EOF
+
       #  추가: 의존성 설치
       - name: Install dependencies
         run: flutter pub get
