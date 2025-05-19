@@ -9,10 +9,13 @@ import 'package:mongo_ai/create/presentation/create_template/widget/problem_card
 class CreateProblemListWidget extends StatefulWidget {
   final List<Problem> problemList;
   final void Function(Problem problem) onAcceptProblem;
+  final void Function(Problem problem) onTapReCreate;
+
   const CreateProblemListWidget({
     super.key,
     required this.problemList,
     required this.onAcceptProblem,
+    required this.onTapReCreate,
   });
 
   @override
@@ -100,6 +103,7 @@ class _CreateProblemListWidgetState extends State<CreateProblemListWidget> {
                         ),
                         child: ProblemCardWidget(
                           problem: widget.problemList[index],
+                          onTapReCreate: widget.onTapReCreate,
                         ),
                       );
                     },

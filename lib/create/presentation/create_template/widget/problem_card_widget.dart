@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
@@ -7,10 +8,13 @@ import 'package:mongo_ai/create/presentation/create_template/controller/create_t
 class ProblemCardWidget extends StatelessWidget {
   final Problem problem;
   final int? maxLines;
+  final void Function(Problem problem)? onTapReCreate;
+
   const ProblemCardWidget({
     super.key,
     required this.problem,
     this.maxLines = 2,
+    this.onTapReCreate,
   });
 
   @override
@@ -44,7 +48,7 @@ class ProblemCardWidget extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  print('요술봉 누름');
+                  onTapReCreate!(problem);
                 },
                 child: const Icon(
                   Icons.auto_awesome,

@@ -138,27 +138,85 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
                             itemCount: orderedProblemList.length,
                             separatorBuilder: (context, index) => const Gap(24),
                             itemBuilder: (context, index) {
-                              return Draggable<Problem>(
-                                data: orderedProblemList[index],
-                                feedback: Material(
-                                  child: SizedBox(
-                                    width: 300,
+                              return GestureDetector(
+                                onLongPress: () {
+                                  showDialog(
+                                    context: context,
+                                    builder:
+                                        (context) => AlertDialog(
+                                          title: const Text(
+                                            '문제 정보',
+                                            style: AppTextStyle.headingMedium,
+                                          ),
+                                          content: SingleChildScrollView(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  '문제 ID: ${orderedProblemList[index].number}',
+                                                ),
+                                                const Gap(8),
+                                                const Text('문제 내용:'),
+                                                const Gap(4),
+                                                Text(
+                                                  orderedProblemList[index]
+                                                      .passage,
+                                                ),
+                                                if (orderedProblemList[index]
+                                                    .options
+                                                    .isNotEmpty) ...[
+                                                  const Gap(8),
+                                                  const Text('보기:'),
+                                                  ...orderedProblemList[index]
+                                                      .options
+                                                      .map(
+                                                        (option) => Padding(
+                                                          padding:
+                                                              const EdgeInsets.only(
+                                                                left: 8.0,
+                                                                top: 4.0,
+                                                              ),
+                                                          child: Text(option),
+                                                        ),
+                                                      ),
+                                                ],
+                                              ],
+                                            ),
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed:
+                                                  () => Navigator.pop(context),
+                                              child: const Text('닫기'),
+                                            ),
+                                          ],
+                                        ),
+                                  );
+                                },
+                                child: Draggable<Problem>(
+                                  data: orderedProblemList[index],
+                                  feedback: Material(
+                                    child: SizedBox(
+                                      width: 300,
+                                      child: ProblemCardWidget(
+                                        problem: orderedProblemList[index],
+                                        maxLines: 5,
+                                      ),
+                                    ),
+                                  ),
+                                  childWhenDragging: Opacity(
+                                    opacity: 0.5,
                                     child: ProblemCardWidget(
                                       problem: orderedProblemList[index],
                                       maxLines: 5,
                                     ),
                                   ),
-                                ),
-                                childWhenDragging: Opacity(
-                                  opacity: 0.5,
                                   child: ProblemCardWidget(
                                     problem: orderedProblemList[index],
                                     maxLines: 5,
                                   ),
-                                ),
-                                child: ProblemCardWidget(
-                                  problem: orderedProblemList[index],
-                                  maxLines: 5,
                                 ),
                               );
                             },

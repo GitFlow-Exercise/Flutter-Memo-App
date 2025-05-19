@@ -93,6 +93,9 @@ class _CreateTemplateScreenRootState
       case OnTapNext():
         final orderedList = viewModel.fixProblemList();
         context.push(Routes.createComplete, extra: orderedList);
+
+      case OnTapReCreate():
+        viewModel.reCreateProblem(action.problem);
     }
   }
 }
