@@ -20,7 +20,6 @@ class _LandingHeaderState extends State<LandingHeader> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
       decoration: const BoxDecoration(color: AppColor.lightBlue),
       padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 16),
       child: Row(
@@ -44,23 +43,30 @@ class _LandingHeaderState extends State<LandingHeader> {
             ),
           ),
 
-          Row(
-            children:
-                LandingHeaderMenuType.values.map((menu) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: LandingHeaderNavigationItem(
-                      title: menu.title,
-                      isSelected: widget.state.selectLandingHeaderMenu == menu,
-                      onTap: () {
-                        widget.onAction(
-                          LandingShellAction.onTapNavigationItem(menu),
-                        );
-                        _landingHeaderMenuAction(menu);
-                      },
-                    ),
-                  );
-                }).toList(),
+          Flexible(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children:
+                    LandingHeaderMenuType.values.map((menu) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: LandingHeaderNavigationItem(
+                          title: menu.title,
+                          isSelected:
+                              widget.state.selectLandingHeaderMenu == menu,
+                          onTap: () {
+                            widget.onAction(
+                              LandingShellAction.onTapNavigationItem(menu),
+                            );
+                            _landingHeaderMenuAction(menu);
+                          },
+                        ),
+                      );
+                    }).toList(),
+              ),
+            ),
           ),
 
           ElevatedButton(
