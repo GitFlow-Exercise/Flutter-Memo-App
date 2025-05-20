@@ -71,7 +71,7 @@ final userProfileRepositoryProvider = Provider<UserProfileRepository>((ref) {
 });
 
 final getCurrentUserProfileProvider =
-    FutureProvider<Result<UserProfile, AppException>>((ref) async {
+    FutureProvider.autoDispose<Result<UserProfile, AppException>>((ref) async {
       final repository = ref.watch(userProfileRepositoryProvider);
       return repository.getCurrentUserProfile();
     });
