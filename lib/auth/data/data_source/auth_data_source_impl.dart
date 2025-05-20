@@ -150,8 +150,8 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
-  bool isSelectTeam() {
-    return checkMetadata('is_select_team');
+  bool isPreferredTeamSelected() {
+    return checkMetadata('is_preferred_team_selected');
   }
 
   @override

@@ -39,7 +39,7 @@ abstract interface class AuthDataSource {
 
   bool isInitialSetupUser();
 
-  bool isSelectTeam();
+  bool isPreferredTeamSelected();
 
   String? userId();
 

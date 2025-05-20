@@ -7,7 +7,7 @@ abstract class AppRedirect {
   static String? authRedirect({
     required bool isAuthenticated,
     required bool isInitialSetupUser,
-    required bool isSelectTeam,
+    required bool isPreferredTeamSelected,
     required String? nowPath,
     required Object? extra,
   }) {
@@ -50,8 +50,8 @@ abstract class AppRedirect {
       return null;
     }
 
-    // 3. 인증은 됐고 초기설정은 됐지만 팀 설정이 안됐을 경우
-    if (!isSelectTeam) {
+    // 3. 인증은 됐고 초기설정은 됐지만 팀 설정이 안됐을 경우 또는 팀을 추가 선택할 경우
+    if (!isPreferredTeamSelected) {
       return Routes.selectTeam;
     }
 

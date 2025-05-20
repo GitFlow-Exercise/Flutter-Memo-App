@@ -51,7 +51,7 @@ void main() {
     // isAuthenticated, isInitialSetupUser, isSelectTeam 스텁 설정
     when(mockAuthDataSource.isAuthenticated()).thenReturn(true);
     when(mockAuthDataSource.isInitialSetupUser()).thenReturn(true);
-    when(mockAuthDataSource.isSelectTeam()).thenReturn(true);
+    when(mockAuthDataSource.isPreferredTeamSelected()).thenReturn(true);
 
     authRepository = AuthRepositoryImpl(authDataSource: mockAuthDataSource);
   });
@@ -439,7 +439,7 @@ void main() {
   group('setSelectTeamMetadata', () {
     test('팀 선택 메타데이터 설정이 성공했을 때 Success를 반환해야 한다', () async {
       when(
-        mockAuthDataSource.updateUserMetadata('is_select_team'),
+        mockAuthDataSource.updateUserMetadata('is_preferred_team_selected'),
       ).thenAnswer((_) async {});
 
       final result = await authRepository.setSelectTeamMetadata();
@@ -452,12 +452,12 @@ void main() {
           fail('메타데이터 설정이 성공해야 하지만 Error가 반환되었습니다.');
       }
 
-      verify(mockAuthDataSource.updateUserMetadata('is_select_team')).called(1);
+      verify(mockAuthDataSource.updateUserMetadata('is_preferred_team_selected')).called(1);
     });
 
     test('메타데이터 설정이 실패했을 때 Error를 반환해야 한다', () async {
       when(
-        mockAuthDataSource.updateUserMetadata('is_select_team'),
+        mockAuthDataSource.updateUserMetadata('is_preferred_team_selected'),
       ).thenThrow(Exception('Metadata update failed'));
 
       final result = await authRepository.setSelectTeamMetadata();
@@ -468,11 +468,11 @@ void main() {
         case Error():
           expect(
             result.error.message,
-            'Metadata를 설정하던 중 오류가 발생했습니다: is_select_team',
+            'Metadata를 설정하던 중 오류가 발생했습니다: is_preferred_team_selected',
           );
       }
 
-      verify(mockAuthDataSource.updateUserMetadata('is_select_team')).called(1);
+      verify(mockAuthDataSource.updateUserMetadata('is_preferred_team_selected')).called(1);
     });
   });
 }
