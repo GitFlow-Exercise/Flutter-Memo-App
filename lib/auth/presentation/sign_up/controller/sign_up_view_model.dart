@@ -2,9 +2,8 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/controller/sign_up_state.dart';
 import 'package:mongo_ai/core/di/providers.dart';
-import 'package:mongo_ai/core/event/app_event.dart';
-import 'package:mongo_ai/core/event/app_event_provider.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
+import 'package:mongo_ai/core/extension/ref_extension.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -34,7 +33,7 @@ class SignUpViewModel extends _$SignUpViewModel {
       case Success<bool, AppException>():
         return true;
       case Error<bool, AppException>():
-        _readySnackBar(result.error.message);
+        ref.showSnackBar(result.error.message);
         return false;
     }
   }
@@ -47,26 +46,13 @@ class SignUpViewModel extends _$SignUpViewModel {
     switch (result) {
       case Success<void, AppException>():
         state = state.copyWith(hasOtpBeenSent: const AsyncData(true));
-        _readySnackBar('인증번호가 발송되었습니다.');
-        ref
-            .read(appEventProvider.notifier)
-            .addEvent(
-              AppEventState.navigate(
-                routeName: Routes.checkOtp,
-                extra: state.emailController.text,
-              ),
-            );
+        ref.showSnackBar('인증번호가 발송되었습니다.');
+        ref.navigate(Routes.checkOtp, extra: state.emailController.text);
         return;
       case Error<void, AppException>():
         state = state.copyWith(hasOtpBeenSent: const AsyncData(false));
-        _readySnackBar(result.error.message);
+        ref.showSnackBar(result.error.message);
         return;
     }
-  }
-
-  void _readySnackBar(String message) {
-    ref
-        .read(appEventProvider.notifier)
-        .addEvent(AppEventState.showSnackBar(message: message));
   }
 }
