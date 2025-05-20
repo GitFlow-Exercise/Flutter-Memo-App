@@ -50,6 +50,10 @@ import 'package:mongo_ai/dashboard/domain/repository/user_profile_repository.dar
 import 'package:mongo_ai/dashboard/domain/repository/workbook_repository.dart';
 import 'package:mongo_ai/dashboard/domain/use_case/delete_workbook_use_case.dart';
 import 'package:mongo_ai/dashboard/domain/use_case/toggle_bookmark_use_case.dart';
+import 'package:mongo_ai/landing/data/data_source/payment_data_source.dart';
+import 'package:mongo_ai/landing/data/data_source/payment_data_source_impl.dart';
+import 'package:mongo_ai/landing/data/repository/payment_repository_impl.dart';
+import 'package:mongo_ai/landing/domain/repository/payment_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final supabaseClientProvider = Provider<SupabaseClient>((ref) {
@@ -239,4 +243,17 @@ final problemDataSourceProvider = Provider<ProblemDataSource>((ref) {
 final problemRepositoryProvider = Provider<ProblemRepository>((ref) {
   final dataSource = ref.watch(problemDataSourceProvider);
   return ProblemRepositoryImpl(dataSource: dataSource);
+});
+
+// -----------------------------------
+// Payment
+
+final paymentDataSourceProvider = Provider<PaymentDataSource>((ref) {
+  final client = ref.watch(supabaseClientProvider);
+  return PaymentDataSourceImpl(client: client);
+});
+
+final paymentRepositoryProvider = Provider<PaymentRepository>((ref) {
+  final dataSource = ref.watch(paymentDataSourceProvider);
+  return PaymentRepositoryImpl(dataSource: dataSource);
 });
