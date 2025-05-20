@@ -36,7 +36,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      unawaited(ref.read(dashboardViewModelProvider.notifier).fetchSelectedTeam());
+      unawaited(
+        ref.read(dashboardViewModelProvider.notifier).fetchSelectedTeam(),
+      );
     });
   }
 
@@ -51,7 +53,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       _currentPath = ['최근 항목'];
     } else if (selectedIndex == 3) {
       _currentPath = ['휴지통'];
-    } else if(selectedIndex == 4) {
+    } else if (selectedIndex == 4) {
       _currentPath = ['내 정보'];
     }
 
@@ -74,35 +76,35 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           children: [
                             PathWidget(path: _currentPath),
                             const Spacer(),
-                        ElevatedButton(
-                          onPressed: () {
-                            context.go(Routes.myProfile);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColor.white,
-                            shadowColor: Colors.transparent,
-                            overlayColor: Colors.transparent,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(0),
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.person,
-                                color: AppColor.deepBlack,
-                              ),
-                              const Gap(10),
-                              Text(
-                                dashboard.userProfile.userName,
-                                style: AppTextStyle.bodyMedium.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColor.black
+                            ElevatedButton(
+                              onPressed: () {
+                                context.go(Routes.myProfile);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColor.white,
+                                shadowColor: Colors.transparent,
+                                overlayColor: Colors.transparent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(0),
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.person,
+                                    color: AppColor.deepBlack,
+                                  ),
+                                  const Gap(10),
+                                  Text(
+                                    dashboard.userProfile.userName,
+                                    style: AppTextStyle.bodyMedium.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColor.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -166,7 +168,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               height: 40,
                               child: SelectModeButtonWidget(
                                 onClick: () {
-                                  if(dashboard.currentTeamId != null) {
+                                  if (dashboard.currentTeamId != null) {
                                     viewModel.toggleSelectMode();
                                   }
                                 },
@@ -235,7 +237,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                       child: Center(
                         child: Image.asset(
-                          'images/mongo_ai_logo.png',
+                          'assets/images/mongo_ai_logo.png',
                           width: 16,
                           height: 16,
                         ),

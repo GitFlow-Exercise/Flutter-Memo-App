@@ -20,7 +20,7 @@ class AuthHeaderWidget extends StatelessWidget {
           ),
           child: Center(
             child: Image.asset(
-              'images/mongo_ai_logo.png',
+              'assets/images/mongo_ai_logo.png',
               width: 24,
               height: 24,
             ),
