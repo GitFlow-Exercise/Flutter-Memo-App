@@ -5,6 +5,7 @@ import 'package:mongo_ai/dashboard/domain/model/team.dart';
 abstract interface class TeamRepository {
   Future<Result<List<Team>, AppException>> getTeamsByCurrentUser();
 
+  // 현재 사용자가 속한 팀을 제외하고 모든 팀 목록 가져오기
   Future<Result<List<Team>, AppException>> getAllTeams();
 
   Future<Result<Team, AppException>> createTeam(

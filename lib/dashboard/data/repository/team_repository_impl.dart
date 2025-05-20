@@ -36,7 +36,6 @@ class TeamRepositoryImpl implements TeamRepository {
       final teams = teamDtos.map((e) => e.toTeam()).toList();
       return Result.success(teams);
     } catch (e) {
-      print(e);
       return Result.error(
         AppException.remoteDataBase(
           message: '팀 목록을 가져오는 중 오류가 발생했습니다.',

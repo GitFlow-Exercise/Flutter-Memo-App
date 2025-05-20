@@ -145,7 +145,7 @@ class SelectTeamViewModel extends _$SelectTeamViewModel {
 
         await authRepository.saveSelectedTeamId(selectedTeam.teamId);
 
-        final metadataResult = await authRepository.setSelectTeamMetadata();
+        final metadataResult = await authRepository.setIsPreferredTeamSelected(true);
 
         switch (metadataResult) {
           case Success():

@@ -29,7 +29,7 @@ abstract interface class AuthDataSource {
 
   Future<String?> getCurrentUserEmail();
 
-  Future<void> updateUserMetadata(String key);
+  Future<void> updateUserMetadata(String key, bool isSelect);
 
   Future<void> saveSelectedTeamId(int teamId);
 

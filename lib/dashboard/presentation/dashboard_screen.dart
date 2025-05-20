@@ -341,7 +341,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   viewModel.selectTeam(teamId);
                 },
                 onCreateTeam: () {
-                  context.go(Routes.selectTeam);
+                  viewModel.selectNewTeam(() {
+                    context.go(Routes.selectTeam);
+                  });
                 },
               ),
             ),

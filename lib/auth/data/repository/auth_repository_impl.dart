@@ -257,7 +257,7 @@ class AuthRepositoryImpl extends AuthRepository {
       await _authDataSource.saveUser();
 
       // 메타데이터 업데이트
-      await _authDataSource.updateUserMetadata('is_initial_setup_user');
+      await _authDataSource.updateUserMetadata('is_initial_setup_user', true);
       notifyListeners();
       return const Result.success(null);
     } catch (e) {
@@ -379,9 +379,9 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
-  Future<Result<void, AppException>> setSelectTeamMetadata() async {
+  Future<Result<void, AppException>> setIsPreferredTeamSelected(bool isSelect) async {
     try {
-      await _authDataSource.updateUserMetadata('is_preferred_team_selected');
+      await _authDataSource.updateUserMetadata('is_preferred_team_selected', isSelect);
       return const Result.success(null);
     } catch (e) {
       return Result.error(

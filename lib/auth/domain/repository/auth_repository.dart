@@ -111,7 +111,7 @@ abstract class AuthRepository extends ChangeNotifier {
   Future<Result<String, AppException>> getCurrentUserEmail();
 
   /// 팀 선택 완료 메타데이터를 설정합니다.
-  Future<Result<void, AppException>> setSelectTeamMetadata();
+  Future<Result<void, AppException>> setIsPreferredTeamSelected(bool isSelect);
 
   /// 현재 사용자의 인증 제공자(구글, 이메일/비밀번호 등)를 반환합니다.
   ///

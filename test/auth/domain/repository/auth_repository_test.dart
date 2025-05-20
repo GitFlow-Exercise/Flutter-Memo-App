@@ -442,7 +442,7 @@ void main() {
         mockAuthDataSource.updateUserMetadata('is_preferred_team_selected'),
       ).thenAnswer((_) async {});
 
-      final result = await authRepository.setSelectTeamMetadata();
+      final result = await authRepository.setIsPreferredTeamSelected(true);
 
       // 검증: 결과가 Success인지 확인
       switch (result) {
@@ -460,7 +460,7 @@ void main() {
         mockAuthDataSource.updateUserMetadata('is_preferred_team_selected'),
       ).thenThrow(Exception('Metadata update failed'));
 
-      final result = await authRepository.setSelectTeamMetadata();
+      final result = await authRepository.setIsPreferredTeamSelected(true);
 
       switch (result) {
         case Success():
