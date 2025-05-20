@@ -9,4 +9,6 @@ abstract interface class TeamDataSource {
   Future<TeamDto> createTeam(String teamName, String? teamImage);
 
   Future<void> assignUserToTeam(String userId, int teamId);
+
+  Future<bool> isUserInAnyTeam();
 }

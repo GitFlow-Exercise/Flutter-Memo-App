@@ -8,6 +8,8 @@ abstract interface class TeamRepository {
   // 현재 사용자가 속한 팀을 제외하고 모든 팀 목록 가져오기
   Future<Result<List<Team>, AppException>> getAllTeams();
 
+  Future<Result<bool, AppException>> isUserInAnyTeam();
+
   Future<Result<Team, AppException>> createTeam(
     String teamName,
     String? teamImage,

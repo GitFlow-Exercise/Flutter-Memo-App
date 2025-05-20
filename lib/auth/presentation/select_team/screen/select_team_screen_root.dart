@@ -33,6 +33,9 @@ class _SelectGroupScreenRootState extends ConsumerState<SelectTeamScreenRoot> {
       // 유저 아이디 불러오기
       viewModel.fetchUserId();
 
+      // 유저가 어느 한 팀 이상에 속해있는지
+      viewModel.checkIsUserInAnyTeam();
+
       // 이벤트 리스너 등록
       _subscription = viewModel.eventStream.listen(_handleEvent);
     });

@@ -84,4 +84,20 @@ class TeamRepositoryImpl implements TeamRepository {
       );
     }
   }
+
+  @override
+  Future<Result<bool, AppException>> isUserInAnyTeam() async {
+    try {
+      final isUserNotInAnyTeam = await _dataSource.isUserInAnyTeam();
+      return Result.success(isUserNotInAnyTeam);
+    } catch (e) {
+      return Result.error(
+        AppException.remoteDataBase(
+          message: '사용자가 속한 팀이 있는지 확인하는 중 오류가 발생했습니다.',
+          error: e,
+          stackTrace: StackTrace.current,
+        ),
+      );
+    }
+  }
 }

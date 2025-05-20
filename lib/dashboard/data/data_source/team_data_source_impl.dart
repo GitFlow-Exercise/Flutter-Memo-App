@@ -21,9 +21,10 @@ class TeamDataSourceImpl implements TeamDataSource {
 
   @override
   Future<List<TeamDto>> getAllTeams() async {
+    final userId = _client.auth.currentUser!.id;
     final result = await _client
         .rpc('get_non_joined_teams', params: {
-      'user_uuid': _client.auth.currentUser!.id
+      'user_uuid': userId
     });
 
     final List<dynamic> data = result;
@@ -52,5 +53,16 @@ class TeamDataSourceImpl implements TeamDataSource {
       'user_id': userId,
       'team_id': teamId,
     });
+  }
+
+  @override
+  Future<bool> isUserInAnyTeam() async {
+    final userId = _client.auth.currentUser!.id;
+    final data = await _client
+        .from('team_users')
+        .select('team_id')
+        .eq('user_id', userId);
+
+    return data.isNotEmpty;
   }
 }

@@ -166,4 +166,18 @@ class SelectTeamViewModel extends _$SelectTeamViewModel {
     await ref.read(authRepositoryProvider).setIsPreferredTeamSelected(true);
     onComplete();
   }
+
+  Future<void> checkIsUserInAnyTeam() async {
+    final result = await ref.read(teamRepositoryProvider).isUserInAnyTeam();
+
+    switch (result) {
+      case Success():
+        final isUserInAnyTeam = result.data;
+        state = state.copyWith(isUserInAnyTeam: isUserInAnyTeam);
+      case Error(error: final error):
+        _eventController.add(
+          SelectTeamEvent.showSnackBar(error.userFriendlyMessage),
+        );
+    }
+  }
 }
