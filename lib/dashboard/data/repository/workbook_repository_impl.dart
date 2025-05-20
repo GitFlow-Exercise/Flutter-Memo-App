@@ -135,6 +135,29 @@ class WorkbookRepositoryImpl implements WorkbookRepository {
   }
 
   @override
+  Future<Result<int, AppException>> restoreWorkbookList(List<Workbook> workbookList) async {
+    if(workbookList.isEmpty) {
+      return const Result.success(0);
+    }
+    try {
+      final workbookIds = workbookList.map((workbook) => workbook.workbookId).toList();
+      await _dataSource.updateWorkbookList(
+        workbookIds: workbookIds,
+        fields: {'deleted_at': null},
+      );
+      return Result.success(workbookList.length);
+    } catch(e, st) {
+      return Result.error(
+        AppException.remoteDataBase(
+          message: '문제집 복원 중 오류가 발생했습니다.',
+          error: e,
+          stackTrace: st,
+        ),
+      );
+    }
+  }
+
+  @override
   Future<Result<Workbook, AppException>> deleteWorkbook(Workbook workbook) async {
     try {
       await _dataSource.deleteWorkbook(workbook.workbookId);
