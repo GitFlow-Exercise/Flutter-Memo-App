@@ -9,9 +9,9 @@ import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
 
 class WorkbookListItem extends ConsumerWidget {
   final void Function() onClick;
-  final void Function(Workbook workbook) onSelect;
-  final void Function(Workbook workbook) onBookmark;
-  final void Function(Workbook workbook) onDelete;
+  final void Function() onSelect;
+  final void Function() onBookmark;
+  final void Function() onMoveTrash;
   final Workbook workbook;
 
   const WorkbookListItem({
@@ -20,7 +20,7 @@ class WorkbookListItem extends ConsumerWidget {
     required this.onClick,
     required this.onSelect,
     required this.onBookmark,
-    required this.onDelete,
+    required this.onMoveTrash,
   });
 
   @override
@@ -33,7 +33,7 @@ class WorkbookListItem extends ConsumerWidget {
     return GestureDetector(
       onTap: () {
         if (isSelectMode) {
-          onSelect(workbook);
+          onSelect();
         } else {
           onClick();
         }
@@ -142,9 +142,9 @@ class WorkbookListItem extends ConsumerWidget {
                   GestureDetector(
                     onTap: () {
                       if(isSelectMode) {
-                        onSelect(workbook);
+                        onSelect();
                       } else {
-                        onBookmark(workbook);
+                        onBookmark();
                       }
                     },
                     child: Icon(
@@ -162,9 +162,9 @@ class WorkbookListItem extends ConsumerWidget {
                   GestureDetector(
                     onTap: () {
                       if(isSelectMode) {
-                        onSelect(workbook);
+                        onSelect();
                       } else {
-                        onDelete(workbook);
+                        onMoveTrash();
                       }
                     },
                     child: const Icon(

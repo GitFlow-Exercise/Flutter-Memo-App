@@ -9,8 +9,10 @@ import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/dashboard/domain/model/folder.dart';
+import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
 import 'package:mongo_ai/dashboard/presentation/component/button_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/folder_list_widget.dart';
+import 'package:mongo_ai/dashboard/presentation/component/merge_button_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/path_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/select_mode_button_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/team_list_widget.dart';
@@ -36,16 +38,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      unawaited(
-        ref.read(dashboardViewModelProvider.notifier).fetchSelectedTeam(),
-      );
+      unawaited(ref.read(dashboardViewModelProvider.notifier).fetchSelectedTeam());
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(dashboardViewModelProvider);
-    final viewModel = ref.read(dashboardViewModelProvider.notifier);
     final selectedIndex = widget.navigationShell.currentIndex;
     if (selectedIndex == 0) {
       _currentPath = ['내 항목'];
@@ -53,7 +52,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       _currentPath = ['최근 항목'];
     } else if (selectedIndex == 3) {
       _currentPath = ['휴지통'];
-    } else if (selectedIndex == 4) {
+    } else if(selectedIndex == 4) {
       _currentPath = ['내 정보'];
     }
 
@@ -98,8 +97,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   Text(
                                     dashboard.userProfile.userName,
                                     style: AppTextStyle.bodyMedium.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColor.black,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColor.black
                                     ),
                                   ),
                                 ],
@@ -110,78 +109,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                     ),
                     const Gap(10),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
-                      child: SizedBox(
-                        height: 40,
-                        child: Row(
-                          children: [
-                            WorkbookFilterSortWidget(
-                              changeSortOption: (WorkbookSortOption option) {
-                                viewModel.changeFilterSortOption(option);
-                              },
-                            ),
-                            const Gap(10),
-                            WorkbookFilterBookmarkWidget(
-                              toggleBookmark: () {
-                                viewModel.toggleFilterShowBookmark();
-                              },
-                            ),
-                            const Gap(10),
-                            WorkbookFilterTabBar(
-                              toggleGridView: (bool showGridView) {
-                                viewModel.toggleFilterShowGridView(
-                                  showGridView,
-                                );
-                              },
-                            ),
-                            const Spacer(),
-                            SizedBox(
-                              height: 40,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  context.push(Routes.create);
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColor.primary,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                                child: const Row(
-                                  children: [
-                                    Icon(
-                                      Icons.auto_awesome,
-                                      color: AppColor.white,
-                                    ),
-                                    Gap(8),
-                                    Text(
-                                      '새로 만들기',
-                                      style: TextStyle(color: AppColor.white),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const Gap(10),
-                            SizedBox(
-                              height: 40,
-                              child: SelectModeButtonWidget(
-                                onClick: () {
-                                  if (dashboard.currentTeamId != null) {
-                                    viewModel.toggleSelectMode();
-                                  }
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    _filterBar(dashboard.currentTeamId),
                     const Gap(10),
                     Expanded(
                       child: Container(
-                        clipBehavior: Clip.antiAlias,
                         decoration: const BoxDecoration(
                           color: AppColor.lightBlue,
                           border: Border(
@@ -213,6 +144,71 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
+  Widget _filterBar(int? currentTeamId) {
+    final viewModel = ref.read(dashboardViewModelProvider.notifier);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30),
+      child: SizedBox(
+        height: 40,
+        child: Row(
+          children: [
+            WorkbookFilterSortWidget(
+              changeSortOption: (WorkbookSortOption option) {
+                viewModel.changeFilterSortOption(option);
+              },
+            ),
+            const Gap(10),
+            WorkbookFilterBookmarkWidget(
+              toggleBookmark: () {
+                viewModel.toggleFilterShowBookmark();
+              },
+            ),
+            const Gap(10),
+            WorkbookFilterTabBar(
+              toggleGridView: (bool showGridView) {
+                viewModel.toggleFilterShowGridView(
+                  showGridView,
+                );
+              },
+            ),
+            const Spacer(),
+            SizedBox(
+              height: 40,
+              child: ButtonWidget(
+                onClick: () {
+                  if(currentTeamId != null) {
+                    context.go(Routes.create);
+                  }
+                },
+                icon: Icons.auto_awesome,
+                text: '새로 만들기'
+              )
+            ),
+            const Gap(10),
+            MergeButtonWidget(
+              onMerge: () {
+                print('onMerge');
+              },
+              onToggleSelectMode: () {
+                if(currentTeamId != null) {
+                  viewModel.toggleSelectMode();
+                }
+              },
+            ),
+            const Gap(10),
+            SelectModeButtonWidget(
+              onToggleSelectMode: () {
+                if(currentTeamId != null) {
+                  viewModel.toggleSelectMode();
+                }
+              },
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _sideBar(int selectedIndex) {
     final viewModel = ref.read(dashboardViewModelProvider.notifier);
     return SizedBox(
@@ -237,7 +233,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                       child: Center(
                         child: Image.asset(
-                          'assets/images/mongo_ai_logo.png',
+                          'images/mongo_ai_logo.png',
                           width: 16,
                           height: 16,
                         ),
@@ -291,7 +287,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     _currentPath = [folder.folderName];
                   });
                 },
-                onClickExpand: () {},
                 onCreateFolder: (String folderName) {
                   viewModel.createFolder(folderName);
                 },
@@ -301,10 +296,39 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 onDeleteFolder: (Folder folder) {
                   viewModel.deleteFolder(folder);
                 },
+                onChangeFolderWorkbookList: (int folderId) {
+                  viewModel.changeFolderWorkbookList(folderId);
+                },
               ),
             ),
             const Divider(color: AppColor.lightGrayBorder, thickness: 1),
-            _sideBarTile(selectedIndex, 3, '휴지통', Icons.delete),
+            DragTarget<List<Workbook>>(
+              onWillAcceptWithDetails: (details) {
+                return details.data.isNotEmpty;
+              },
+              onAcceptWithDetails: (details) {
+                viewModel.moveTrashWorkbookList();
+              },
+              builder: (context, candidateData, rejectedData) {
+                final isHover = candidateData.isNotEmpty;
+                return Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 8),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: isHover ? AppColor.primary : Colors.transparent,
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: _sideBarTile(
+                    selectedIndex,
+                    3,
+                    '휴지통',
+                    Icons.delete,
+                  ),
+                );
+              },
+            ),
             const Gap(20),
           ],
         ),

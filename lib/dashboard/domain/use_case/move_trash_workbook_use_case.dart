@@ -3,10 +3,10 @@ import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
 import 'package:mongo_ai/dashboard/domain/repository/workbook_repository.dart';
 
-class DeleteWorkbookUseCase {
+class MoveTrashWorkbookUseCase {
   final WorkbookRepository _workbookRepository;
 
-  DeleteWorkbookUseCase(this._workbookRepository);
+  MoveTrashWorkbookUseCase(this._workbookRepository);
 
   Future<Result<Workbook, AppException>> execute(Workbook workbook) async {
     final updatedWorkbook = workbook.copyWith(

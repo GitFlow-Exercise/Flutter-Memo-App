@@ -23,8 +23,8 @@ class RecentFilesScreen extends ConsumerWidget {
           return const EmptyFolderScreen();
         }
         return state.showGridView
-            ? WorkbookGridView(workbookList: data, viewModel: viewModel)
-            : WorkbookListView(workbookList: data, viewModel: viewModel);
+            ? WorkbookGridView(workbookList: data, viewModel: viewModel, onClick: (int workbookId) {print('클릭: $workbookId');},)
+            : WorkbookListView(workbookList: data, viewModel: viewModel, onClick: (int workbookId) {print('클릭: $workbookId');},);
       },
       loading: () => const SizedBox.shrink(),
       error: (e, _) => const SizedBox.shrink(),
