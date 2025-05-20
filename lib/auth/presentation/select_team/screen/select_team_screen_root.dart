@@ -1,13 +1,8 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/auth/presentation/select_team/controller/select_team_action.dart';
-import 'package:mongo_ai/auth/presentation/select_team/controller/select_team_event.dart';
 import 'package:mongo_ai/auth/presentation/select_team/controller/select_team_view_model.dart';
 import 'package:mongo_ai/auth/presentation/select_team/screen/select_team_screen.dart';
-import 'package:mongo_ai/core/routing/routes.dart';
 
 class SelectTeamScreenRoot extends ConsumerStatefulWidget {
   const SelectTeamScreenRoot({super.key});
@@ -18,8 +13,6 @@ class SelectTeamScreenRoot extends ConsumerStatefulWidget {
 }
 
 class _SelectGroupScreenRootState extends ConsumerState<SelectTeamScreenRoot> {
-  StreamSubscription? _subscription;
-
   @override
   void initState() {
     super.initState();
@@ -32,33 +25,7 @@ class _SelectGroupScreenRootState extends ConsumerState<SelectTeamScreenRoot> {
 
       // 유저 아이디 불러오기
       viewModel.fetchUserId();
-
-      // 이벤트 리스너 등록
-      _subscription = viewModel.eventStream.listen(_handleEvent);
     });
-  }
-
-  @override
-  void dispose() {
-    _subscription?.cancel();
-    super.dispose();
-  }
-
-  void _handleEvent(SelectTeamEvent event) {
-    switch (event) {
-      case ShowSnackBar(message: final message):
-        if (mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(message)));
-        }
-        break;
-      case ConfirmSuccess():
-        if (mounted) {
-          context.go(Routes.myFiles);
-        }
-        break;
-    }
   }
 
   @override
