@@ -10,11 +10,15 @@ import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/dashboard/domain/model/folder.dart';
 import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
-import 'package:mongo_ai/dashboard/presentation/component/button_widget.dart';
+import 'package:mongo_ai/dashboard/presentation/component/button/button_widget.dart';
+import 'package:mongo_ai/dashboard/presentation/component/button/clean_trash_button.dart';
+import 'package:mongo_ai/dashboard/presentation/component/button/delete_mode_button_widget.dart';
+import 'package:mongo_ai/dashboard/presentation/component/button/merge_button_widget.dart';
+import 'package:mongo_ai/dashboard/presentation/component/button/restore_button_widget.dart';
+import 'package:mongo_ai/dashboard/presentation/component/button/select_mode_button_widget.dart';
+import 'package:mongo_ai/dashboard/presentation/component/delete_workbook_alert_dialog.dart';
 import 'package:mongo_ai/dashboard/presentation/component/folder_list_widget.dart';
-import 'package:mongo_ai/dashboard/presentation/component/merge_button_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/path_widget.dart';
-import 'package:mongo_ai/dashboard/presentation/component/select_mode_button_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/team_list_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/workbook_filter_widget/workbook_filter_bookmark_widget.dart';
 import 'package:mongo_ai/dashboard/presentation/component/workbook_filter_widget/workbook_filter_sort_widget.dart';
@@ -109,10 +113,22 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                     ),
                     const Gap(10),
-                    _filterBar(dashboard.currentTeamId),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: Row(
+                        children: [
+                          _filterBar(),
+                          const Spacer(),
+                          selectedIndex == 3
+                              ? _trashButtonBar(dashboard.currentTeamId)
+                              : _buttonBar(dashboard.currentTeamId)
+                        ],
+                      ),
+                    ),
                     const Gap(10),
                     Expanded(
                       child: Container(
+                        clipBehavior: Clip.hardEdge,
                         decoration: const BoxDecoration(
                           color: AppColor.lightBlue,
                           border: Border(
@@ -144,67 +160,134 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _filterBar(int? currentTeamId) {
+  Widget _filterBar() {
     final viewModel = ref.read(dashboardViewModelProvider.notifier);
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
-      child: SizedBox(
-        height: 40,
-        child: Row(
-          children: [
-            WorkbookFilterSortWidget(
-              changeSortOption: (WorkbookSortOption option) {
-                viewModel.changeFilterSortOption(option);
-              },
-            ),
-            const Gap(10),
-            WorkbookFilterBookmarkWidget(
-              toggleBookmark: () {
-                viewModel.toggleFilterShowBookmark();
-              },
-            ),
-            const Gap(10),
-            WorkbookFilterTabBar(
-              toggleGridView: (bool showGridView) {
-                viewModel.toggleFilterShowGridView(
-                  showGridView,
-                );
-              },
-            ),
-            const Spacer(),
-            SizedBox(
+    return SizedBox(
+      height: 40,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          WorkbookFilterSortWidget(
+            changeSortOption: (WorkbookSortOption option) {
+              viewModel.changeFilterSortOption(option);
+            },
+          ),
+          const Gap(10),
+          WorkbookFilterBookmarkWidget(
+            toggleBookmark: () {
+              viewModel.toggleFilterShowBookmark();
+            },
+          ),
+          const Gap(10),
+          WorkbookFilterTabBar(
+            toggleGridView: (bool showGridView) {
+              viewModel.toggleFilterShowGridView(
+                showGridView,
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buttonBar(int? currentTeamId) {
+    final viewModel = ref.read(dashboardViewModelProvider.notifier);
+    return SizedBox(
+      height: 40,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
               height: 40,
               child: ButtonWidget(
-                onClick: () {
-                  if(currentTeamId != null) {
-                    context.go(Routes.create);
-                  }
-                },
-                icon: Icons.auto_awesome,
-                text: '새로 만들기'
+                  onClick: () {
+                    if(currentTeamId != null) {
+                      context.go(Routes.create);
+                    }
+                  },
+                  icon: Icons.auto_awesome,
+                  text: '새로 만들기'
               )
-            ),
-            const Gap(10),
-            MergeButtonWidget(
-              onMerge: () {
-                print('onMerge');
-              },
-              onToggleSelectMode: () {
-                if(currentTeamId != null) {
-                  viewModel.toggleSelectMode();
-                }
-              },
-            ),
-            const Gap(10),
-            SelectModeButtonWidget(
-              onToggleSelectMode: () {
-                if(currentTeamId != null) {
-                  viewModel.toggleSelectMode();
-                }
-              },
-            )
-          ],
-        ),
+          ),
+          const Gap(10),
+          MergeButtonWidget(
+            onMerge: () {
+              print('onMerge');
+            },
+            onToggleSelectMode: () {
+              if(currentTeamId != null) {
+                viewModel.toggleSelectMode();
+              }
+            },
+          ),
+          const Gap(10),
+          SelectModeButtonWidget(
+            onToggleSelectMode: () {
+              if(currentTeamId != null) {
+                viewModel.toggleSelectMode();
+              }
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _trashButtonBar(int? currentTeamId) {
+    final viewModel = ref.read(dashboardViewModelProvider.notifier);
+    return SizedBox(
+      height: 40,
+      child: Row(
+        children: [
+          RestoreButtonWidget(
+            onRestoreAll: () {
+              if(currentTeamId != null) {
+                viewModel.selectAll();
+                viewModel.toggleDeleteMode();
+              }
+            },
+            onRestoreSelected: () {
+              if(currentTeamId != null) {
+                viewModel.restoreWorkbookList();
+                viewModel.toggleDeleteMode();
+              }
+            }
+          ),
+          const Gap(10),
+          CleanTrashButton(
+            onCleanAll: () {
+              if(currentTeamId != null) {
+                viewModel.selectAll();
+                viewModel.toggleDeleteMode();
+              }
+            },
+            onDeleteSelected: () {
+              if(currentTeamId != null) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DeleteWorkbookAlertDialog(
+                      onDeleteWorkbook: () {
+                        viewModel.deleteWorkbookList();
+                        viewModel.toggleDeleteMode();
+                      },
+                      title: '문제집 삭제하기',
+                    );
+                  },
+                );
+              }
+            },
+          ),
+          const Gap(10),
+          DeleteModeButtonWidget(
+            onToggleDeleteMode: () {
+              if(currentTeamId != null) {
+                viewModel.toggleDeleteMode();
+              }
+            }
+          )
+        ],
       ),
     );
   }

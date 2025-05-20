@@ -12,7 +12,7 @@ class DeletedFilesInfoWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: const BorderRadius.only(
-        topLeft: Radius.circular(20)),
+        topLeft: Radius.circular(18)),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 30, sigmaY: 10),
         child: Container(

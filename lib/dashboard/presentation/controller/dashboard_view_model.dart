@@ -4,11 +4,13 @@ import 'package:mongo_ai/core/enum/workbook_sort_option.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/core/state/current_folder_id_state.dart';
 import 'package:mongo_ai/core/state/current_team_id_state.dart';
+import 'package:mongo_ai/core/state/deleted_workbook_state.dart';
 import 'package:mongo_ai/core/state/selected_workbook_state.dart';
 import 'package:mongo_ai/core/state/workbook_filter_state.dart';
 import 'package:mongo_ai/dashboard/data/dto/folder_dto.dart';
 import 'package:mongo_ai/dashboard/domain/model/folder.dart';
 import 'package:mongo_ai/dashboard/domain/model/user_profile.dart';
+import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
 import 'package:mongo_ai/dashboard/presentation/controller/dashboard_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -191,5 +193,70 @@ class DashboardViewModel extends _$DashboardViewModel {
   /// 팀 선택 시 currentTeamIdStateProvider 변하면서 자동 리빌드 됨.
   Future<void> selectTeam(int teamId) async {
     ref.read(currentTeamIdStateProvider.notifier).set(teamId);
+  }
+
+  // -----------------
+  // 휴지통 관련 메서드
+  Future<void> toggleDeleteMode() async {
+    ref.read(deletedWorkbookStateProvider.notifier).toggleDeleteMode();
+  }
+
+  Future<void> restoreWorkbookList({List<Workbook>? workbookList}) async {
+    final List<Workbook> deletedWorkbookList;
+    if (workbookList == null) {
+      deletedWorkbookList = ref.read(deletedWorkbookStateProvider).deletedWorkbooks;
+    } else {
+      deletedWorkbookList = workbookList;
+    }
+    final result = await ref.read(restoreWorkbookListUseCaseProvider).execute(deletedWorkbookList);
+    switch (result) {
+      case Success(data: final data):
+        // 성공 시 workbook 리스트를 리프레시
+        ref.read(deletedWorkbookStateProvider.notifier).clear();
+        refreshWorkbookList();
+        break;
+      case Error(error: final error):
+        debugPrint(error.message);
+        // 여기서 알림등 에러 처리 가능.
+        break;
+    }
+  }
+
+  Future<void> deleteWorkbookList({List<Workbook>? workbookList}) async {
+    final List<Workbook> deletedWorkbookList;
+    if (workbookList == null) {
+      deletedWorkbookList = ref.read(deletedWorkbookStateProvider).deletedWorkbooks;
+    } else {
+      deletedWorkbookList = workbookList;
+    }
+    final result = await ref.read(deleteWorkbookListUseCaseProvider).execute(deletedWorkbookList);
+    switch (result) {
+      case Success(data: final data):
+        // 성공 시 workbook 리스트를 리프레시
+        ref.read(deletedWorkbookStateProvider.notifier).clear();
+        refreshWorkbookList();
+        break;
+      case Error(error: final error):
+        debugPrint(error.message);
+        // 여기서 알림등 에러 처리 가능.
+        break;
+    }
+  }
+
+  Future<void> selectAll() async {
+    final workbookResult = await ref.read(getWorkbooksByCurrentTeamIdProvider.future);
+    switch (workbookResult) {
+      case Success(data: final data):
+        // 휴지통의 문제집만 필터링
+        final deletedWorkbookList = data.where((workbook) => workbook.deletedAt != null).toList();
+        for(final workbook in deletedWorkbookList) {
+          ref.read(deletedWorkbookStateProvider.notifier).selectDeletedWorkbook(workbook);
+        }
+        break;
+      case Error(error: final error):
+        debugPrint(error.message);
+        // 여기서 알림등 에러 처리 가능.
+        break;
+    }
   }
 }
