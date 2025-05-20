@@ -75,6 +75,22 @@ class MainContentPanel extends StatelessWidget {
                 ),
                 child: state.teams.when(
                   data: (teams) {
+                    if (teams.isEmpty) {
+                      return Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        child: const Text(
+                          '선택 가능한 팀이 없습니다. 팀을 새로 만들어보세요',
+                          style: TextStyle(
+                            fontFamily: AppTextStyle.fontFamily,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: AppColor.lightGray,
+                          ),
+                        ),
+                      );
+                    }
+
                     return DropdownButtonHideUnderline(
                       child: DropdownButton<Team>(
                         value: state.isCreatingNewTeam ? null : state.selectedTeam,
