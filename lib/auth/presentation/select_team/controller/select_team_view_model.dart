@@ -161,4 +161,9 @@ class SelectTeamViewModel extends _$SelectTeamViewModel {
         );
     }
   }
+
+  Future<void> cancelTeamSelect(VoidCallback onComplete) async {
+    await ref.read(authRepositoryProvider).setIsPreferredTeamSelected(true);
+    onComplete();
+  }
 }

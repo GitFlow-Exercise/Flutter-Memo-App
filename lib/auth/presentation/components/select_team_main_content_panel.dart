@@ -284,6 +284,32 @@ class MainContentPanel extends StatelessWidget {
                 ),
               ),
 
+              const Gap(16),
+
+              Container(
+                width: double.infinity,
+                height: 48,
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColor.lighterGray),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: ElevatedButton(
+                  onPressed: () => onAction(const SelectTeamAction.onCancel()),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColor.white,
+                    foregroundColor: AppColor.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: Text(
+                    '취소',
+                    style: AppTextStyle.bodyRegular.copyWith(color: AppColor.deepBlack)
+                  ),
+                ),
+              ),
+
               if (showInfoInSmallScreen) ...[
                 const Gap(32),
                 const Divider(height: 1, color: AppColor.lightGrayBorder),
