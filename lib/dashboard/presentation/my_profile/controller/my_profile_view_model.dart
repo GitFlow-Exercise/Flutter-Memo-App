@@ -1,11 +1,12 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:mongo_ai/core/di/providers.dart';
+import 'package:mongo_ai/core/event/app_event.dart';
+import 'package:mongo_ai/core/event/app_event_provider.dart';
 import 'package:mongo_ai/core/result/result.dart';
+import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/dashboard/domain/model/user_profile.dart';
 import 'package:mongo_ai/dashboard/presentation/controller/dashboard_view_model.dart';
-import 'package:mongo_ai/dashboard/presentation/my_profile/controller/my_profile_event.dart';
 import 'package:mongo_ai/dashboard/presentation/my_profile/controller/my_profile_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -13,16 +14,11 @@ part 'my_profile_view_model.g.dart';
 
 @riverpod
 class MyProfileViewModel extends _$MyProfileViewModel {
-  final _eventController = StreamController<MyProfileEvent>.broadcast();
-
-  Stream<MyProfileEvent> get eventStream => _eventController.stream;
-
   @override
   MyProfileState build() {
     final userNameTextController = TextEditingController();
 
     ref.onDispose(() {
-      _eventController.close();
       userNameTextController.dispose();
     });
 
@@ -47,7 +43,7 @@ class MyProfileViewModel extends _$MyProfileViewModel {
           data: AsyncValue.error(error, StackTrace.current),
         );
         // 에러 메시지 이벤트 발생
-        _eventController.add(MyProfileEvent.showSnackBar(error.message));
+        _readyForSnackBar(error.message);
         break;
     }
   }
@@ -57,9 +53,7 @@ class MyProfileViewModel extends _$MyProfileViewModel {
     final user = state.data.value;
 
     if (user == null) {
-      _eventController.add(
-        const MyProfileEvent.showSnackBar('사용자 정보를 가져오는 중 오류가 발생했습니다.'),
-      );
+      _readyForSnackBar('사용자 정보를 가져오는 중 오류가 발생했습니다.');
       return;
     }
 
@@ -71,16 +65,14 @@ class MyProfileViewModel extends _$MyProfileViewModel {
         final updatedUser = user.copyWith(userName: name);
 
         state = state.copyWith(data: AsyncValue.data(updatedUser));
-        _eventController.add(
-          const MyProfileEvent.showSnackBar('닉네임 변경을 완료했습니다.'),
-        );
+        _readyForSnackBar('닉네임 변경을 완료했습니다.');
         _updateDashboardUserName(updatedUser);
         break;
       case Error(error: final error):
         state = state.copyWith(
           data: AsyncValue.error(error, StackTrace.current),
         );
-        _eventController.add(MyProfileEvent.showSnackBar(error.message));
+        _readyForSnackBar(error.message);
         break;
     }
   }
@@ -100,19 +92,16 @@ class MyProfileViewModel extends _$MyProfileViewModel {
 
       switch (result) {
         case Success():
-          _eventController.add(
-            const MyProfileEvent.showSnackBar('로그아웃 되었습니다.'),
-          );
-          _eventController.add(const MyProfileEvent.navigateSignIn());
+          _readyForSnackBar('로그아웃 되었습니다.');
+
+          navigateSignIn();
           break;
         case Error(error: final error):
-          _eventController.add(MyProfileEvent.showSnackBar(error.message));
+          _readyForSnackBar(error.message);
           break;
       }
     } catch (e) {
-      _eventController.add(
-        const MyProfileEvent.showSnackBar('로그아웃 중 오류가 발생했습니다.'),
-      );
+      _readyForSnackBar('로그아웃 중 오류가 발생했습니다.');
     }
   }
 
@@ -123,9 +112,7 @@ class MyProfileViewModel extends _$MyProfileViewModel {
     final userId = authRepository.userId;
 
     if (userId == null) {
-      _eventController.add(
-        const MyProfileEvent.showSnackBar('로그인된 사용자 정보를 찾을 수 없습니다.'),
-      );
+      _readyForSnackBar('로그인된 사용자 정보를 찾을 수 없습니다.');
       return;
     }
 
@@ -134,19 +121,26 @@ class MyProfileViewModel extends _$MyProfileViewModel {
     switch (result) {
       case Success():
         await authRepository.signOut();
-        _eventController.add(
-          const MyProfileEvent.showSnackBar('회원 탈퇴가 완료되었습니다.'),
-        );
+        _readyForSnackBar('회원 탈퇴가 완료되었습니다.');
 
-        _eventController.add(
-          const MyProfileEvent.navigateSignIn(),
-        );
+        navigateSignIn();
         return;
       case Error(error: final error):
-        _eventController.add(
-          MyProfileEvent.showSnackBar(error.message),
-        );
+        _readyForSnackBar(error.message);
         return;
     }
+  }
+
+  // 하단 스낵바 출력
+  void _readyForSnackBar(String message) {
+    ref
+        .read(appEventProvider.notifier)
+        .addEvent(AppEventState.showSnackBar(message: message));
+  }
+
+  void navigateSignIn() {
+    ref
+        .read(appEventProvider.notifier)
+        .addEvent(const AppEventState.navigate(routeName: Routes.signIn));
   }
 }

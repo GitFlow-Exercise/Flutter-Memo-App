@@ -87,6 +87,7 @@ class CreateProblemViewModel extends _$CreateProblemViewModel {
         .addEvent(
           AppEventState.navigate(
             routeName: Routes.createTemplate,
+            navigateMethod: NavigationMethod.push,
             extra: params,
           ),
         );

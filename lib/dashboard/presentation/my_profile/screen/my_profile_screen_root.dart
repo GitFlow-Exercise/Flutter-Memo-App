@@ -1,15 +1,10 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/result/result.dart';
-import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/core/state/current_team_id_state.dart';
 import 'package:mongo_ai/dashboard/domain/model/team.dart';
 import 'package:mongo_ai/dashboard/presentation/my_profile/controller/my_profile_action.dart';
-import 'package:mongo_ai/dashboard/presentation/my_profile/controller/my_profile_event.dart';
 import 'package:mongo_ai/dashboard/presentation/my_profile/controller/my_profile_view_model.dart';
 import 'package:mongo_ai/dashboard/presentation/my_profile/screen/my_profile_screen.dart';
 
@@ -22,8 +17,6 @@ class MyProfileScreenRoot extends ConsumerStatefulWidget {
 }
 
 class _MyProfileScreenRootState extends ConsumerState<MyProfileScreenRoot> {
-  StreamSubscription? _subscription;
-
   @override
   void initState() {
     super.initState();
@@ -32,29 +25,8 @@ class _MyProfileScreenRootState extends ConsumerState<MyProfileScreenRoot> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final viewModel = ref.read(myProfileViewModelProvider.notifier);
 
-      _subscription = viewModel.eventStream.listen(_handleEvent);
-
       viewModel.fetchUserProfile();
     });
-  }
-
-  @override
-  void dispose() {
-    _subscription?.cancel();
-    super.dispose();
-  }
-
-  void _handleEvent(MyProfileEvent event) {
-    switch (event) {
-      case ShowSnackBar(message: final message):
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(message)));
-        break;
-      case NavigateSignIn():
-        context.go(Routes.signIn);
-        break;
-    }
   }
 
   @override
