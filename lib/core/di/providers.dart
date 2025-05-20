@@ -50,8 +50,10 @@ import 'package:mongo_ai/dashboard/domain/repository/user_profile_repository.dar
 import 'package:mongo_ai/dashboard/domain/repository/workbook_repository.dart';
 import 'package:mongo_ai/dashboard/domain/use_case/bookmark_workbook_list_use_case.dart';
 import 'package:mongo_ai/dashboard/domain/use_case/change_folder_workbook_list_use_case.dart';
+import 'package:mongo_ai/dashboard/domain/use_case/delete_workbook_list_use_case.dart';
 import 'package:mongo_ai/dashboard/domain/use_case/move_trash_workbook_list_use_case.dart';
 import 'package:mongo_ai/dashboard/domain/use_case/move_trash_workbook_use_case.dart';
+import 'package:mongo_ai/dashboard/domain/use_case/restore_workbook_list_use_case.dart';
 import 'package:mongo_ai/dashboard/domain/use_case/toggle_bookmark_use_case.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -170,6 +172,16 @@ final changeFolderWorkbookListUseCaseProvider = Provider<ChangeFolderWorkbookLis
 final bookmarkWorkbookListUseCaseProvider = Provider<BookmarkWorkbookListUseCase>((ref) {
   final workbookRepository = ref.watch(workbookRepositoryProvider);
   return BookmarkWorkbookListUseCase(workbookRepository);
+});
+
+final restoreWorkbookListUseCaseProvider = Provider<RestoreWorkbookListUseCase>((ref) {
+  final workbookRepository = ref.watch(workbookRepositoryProvider);
+  return RestoreWorkbookListUseCase(workbookRepository);
+});
+
+final deleteWorkbookListUseCaseProvider = Provider<DeleteWorkbookListUseCase>((ref) {
+  final workbookRepository = ref.watch(workbookRepositoryProvider);
+  return DeleteWorkbookListUseCase(workbookRepository);
 });
 
 // -----------------------------------

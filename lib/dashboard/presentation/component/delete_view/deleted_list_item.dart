@@ -8,9 +8,9 @@ import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
 
 class DeletedListItem extends ConsumerWidget {
-  final void Function(Workbook workbook) onSelect;
-  final void Function(Workbook workbook) onPermanentDelete;
-  final void Function(Workbook workbook) onRestore;
+  final void Function() onSelect;
+  final void Function() onPermanentDelete;
+  final void Function() onRestore;
   final Workbook workbook;
 
   const DeletedListItem({
@@ -23,7 +23,6 @@ class DeletedListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isDeleteMode = ref.watch(deletedWorkbookStateProvider).isDeleteMode;
     final isSelected = ref
         .watch(deletedWorkbookStateProvider)
         .deletedWorkbooks
@@ -131,18 +130,18 @@ class DeletedListItem extends ConsumerWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    onRestore(workbook);
+                    onRestore();
                   },
                   child: const Icon(
                       Icons.restore,
                       size: 24,
-                      color: AppColor.circle
+                      color: AppColor.primary
                   ),
                 ),
                 const Gap(10),
                 GestureDetector(
                   onTap: () {
-                    onPermanentDelete(workbook);
+                    onPermanentDelete();
                   },
                   child: const Icon(
                       Icons.close,
