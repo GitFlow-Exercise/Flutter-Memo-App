@@ -91,6 +91,7 @@ class _SelectGroupScreenRootState extends ConsumerState<SelectTeamScreenRoot> {
         break;
       case OnCancel():
         viewModel.cancelTeamSelect();
+        break;
     }
   }
 }

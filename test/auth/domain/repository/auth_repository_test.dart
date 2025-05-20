@@ -436,7 +436,7 @@ void main() {
     });
   });
 
-  group('setSelectTeamMetadata', () {
+  group('setIsPreferredTeamSelected', () {
     test('팀 선택 메타데이터 설정이 성공했을 때 Success를 반환해야 한다', () async {
       when(
         mockAuthDataSource.updateUserMetadata('is_preferred_team_selected', true),
