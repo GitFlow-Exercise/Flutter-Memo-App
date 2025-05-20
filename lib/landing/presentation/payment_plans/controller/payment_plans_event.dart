@@ -4,5 +4,5 @@ part 'payment_plans_event.freezed.dart';
 
 @freezed
 sealed class PaymentPlansEvent with _$PaymentPlansEvent {
-  const factory PaymentPlansEvent.showSnackBar(String message) = ShowSnackBar;
+  const factory PaymentPlansEvent.showToast(String message) = ShowToast;
 }
