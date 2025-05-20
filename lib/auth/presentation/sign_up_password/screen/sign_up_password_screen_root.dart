@@ -80,6 +80,8 @@ class _SignUpPasswordScreenRootState
       case SubmitForm():
         viewModel.submitForm();
         break;
+      case OnPressedPrivacyPolicies():
+        context.go(Routes.privacyPolicies);
     }
   }
 }

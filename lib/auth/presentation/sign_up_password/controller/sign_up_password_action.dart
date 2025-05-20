@@ -15,4 +15,6 @@ sealed class SignUpPasswordAction with _$SignUpPasswordAction {
       OnTapShowConfirmPassword;
 
   const factory SignUpPasswordAction.onTapLogin() = OnTapLogin;
+
+  const factory SignUpPasswordAction.onPressedPrivacyPolicies() = OnPressedPrivacyPolicies;
 }
