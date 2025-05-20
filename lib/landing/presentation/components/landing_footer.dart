@@ -8,7 +8,7 @@ class LandingFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
+      width: MediaQuery.sizeOf(context).width,
       color: AppColor.deepBlack,
       padding: const EdgeInsets.only(top: 64, bottom: 32),
       child: Center(
@@ -43,7 +43,7 @@ class LandingFooter extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 16),
-                          Row(
+                          Wrap(
                             children: [
                               _buildSocialIcon(Icons.facebook),
                               const SizedBox(width: 16),
@@ -136,14 +136,11 @@ class LandingFooter extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 24),
                   decoration: const BoxDecoration(
                     border: Border(
-                      top: BorderSide(
-                        color: Color(0xFF374151),
-                        width: 1,
-                      ),
+                      top: BorderSide(color: Color(0xFF374151), width: 1),
                     ),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Wrap(
+                    alignment: WrapAlignment.spaceBetween,
                     children: [
                       Text(
                         '© 2025 Mongo AI. All rights reserved.',
@@ -180,11 +177,7 @@ class LandingFooter extends StatelessWidget {
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Icon(
-        icon,
-        color: AppColor.paleGray,
-        size: 16,
-      ),
+      child: Icon(icon, color: AppColor.paleGray, size: 16),
     );
   }
 

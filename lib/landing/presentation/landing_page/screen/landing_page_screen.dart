@@ -1,17 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mongo_ai/core/routing/routes.dart';
+import 'package:mongo_ai/landing/presentation/landing_page/controller/landing_page_action.dart';
+import 'package:mongo_ai/landing/presentation/landing_page/screen/landing_page_view/landing_create_problem_view.dart';
+import 'package:mongo_ai/landing/presentation/landing_page/screen/landing_page_view/landing_introduce_view.dart';
+import 'package:mongo_ai/landing/presentation/landing_page/screen/landing_page_view/landing_key_features_view.dart';
+import 'package:mongo_ai/landing/presentation/landing_page/screen/landing_page_view/landing_start_view.dart';
 
-class LandingPageScreen extends StatefulWidget {
+class LandingPageScreen extends StatelessWidget {
   const LandingPageScreen({super.key});
 
   @override
-  State<LandingPageScreen> createState() => _LandingPageScreenState();
-}
-
-class _LandingPageScreenState extends State<LandingPageScreen> {
-  @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('랜딩페이지\n홈, 요금제만 동작합니다\n무료로 시작하기 클릭 시 로그인으로 이동합니다.'),
+    return PageView(
+      scrollDirection: Axis.vertical,
+      children: [
+        LandingIntroduceView(
+          onAction: (action) => _handleAction(context, action: action),
+        ),
+        LandingKeyFeaturesView(
+          onAction: (action) => _handleAction(context, action: action),
+        ),
+        LandingCreateProblemView(
+          onAction: (action) => _handleAction(context, action: action),
+        ),
+        LandingStartView(
+          onAction: (action) => _handleAction(context, action: action),
+        ),
+      ],
     );
+  }
+
+  void _handleAction(
+    BuildContext context, {
+    required LandingPageAction action,
+  }) {
+    switch (action) {
+      case GoToSignIn():
+        context.go(Routes.signIn);
+    }
   }
 }

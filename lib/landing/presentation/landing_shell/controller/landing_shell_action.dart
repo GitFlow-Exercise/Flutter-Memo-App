@@ -13,5 +13,7 @@ sealed class LandingShellAction with _$LandingShellAction {
 
   const factory LandingShellAction.onTapPaymentPlans() = OnTapPaymentPlans;
 
-  const factory LandingShellAction.onTapNavigationItem(LandingHeaderMenuType menu) = OnTapNavigationItem;
+  const factory LandingShellAction.onTapNavigationItem(
+    LandingHeaderMenuType menu,
+  ) = OnTapNavigationItem;
 }

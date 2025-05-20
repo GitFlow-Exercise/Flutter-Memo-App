@@ -5,6 +5,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class AuthDataSourceImpl implements AuthDataSource {
   final SupabaseClient _client;
 
+  static const _url = 'https://gitflow-exercise.github.io/MongoAI-web';
+
   AuthDataSourceImpl({required SupabaseClient client}) : _client = client;
 
   @override
@@ -17,8 +19,7 @@ class AuthDataSourceImpl implements AuthDataSource {
 
   @override
   Future<void> signInWithGoogle() async {
-    final origin = Uri.base.origin;
-    final redirectUrl = '$origin/auth/callback';
+    final redirectUrl = '$_url/auth/callback';
     await _client.auth.signInWithOAuth(
       OAuthProvider.google,
       redirectTo: redirectUrl,
@@ -44,9 +45,7 @@ class AuthDataSourceImpl implements AuthDataSource {
   Future<void> deleteUser(String id) async {
     final response = await _client.functions.invoke(
       'delete-user',
-      body: {
-        'authorization': session!.accessToken,
-      },
+      body: {'authorization': session!.accessToken},
     );
 
     print(response);
