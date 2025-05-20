@@ -7,9 +7,8 @@ import 'package:mongo_ai/core/constants/ai_constant.dart';
 import 'package:mongo_ai/core/debounce/debounce.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/enum/allowed_extension_type.dart';
-import 'package:mongo_ai/core/event/app_event.dart';
-import 'package:mongo_ai/core/event/app_event_provider.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
+import 'package:mongo_ai/core/extension/ref_extension.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/core/utils/app_dialog.dart';
@@ -67,7 +66,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
         });
         break;
       case Error(:final error):
-        _readyForSnackBar(error.userFriendlyMessage);
+        ref.showSnackBar(error.userFriendlyMessage);
         debugPrint(error.stackTrace.toString());
         break;
     }
@@ -85,7 +84,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
         });
         break;
       case Error(:final error):
-        _readyForSnackBar(error.userFriendlyMessage);
+        ref.showSnackBar(error.userFriendlyMessage);
         debugPrint(error.stackTrace.toString());
         break;
     }
@@ -95,14 +94,14 @@ class UploadRawViewModel extends _$UploadRawViewModel {
   Future<void> handleSubmitForm() async {
     final pState = state.value;
     if (pState == null) {
-      _readyForSnackBar('에러가 발생하였습니다. 다시 시도해주세요.');
+      ref.showSnackBar('에러가 발생하였습니다. 다시 시도해주세요.');
       return;
     }
     // 텍스트 타입인데 입력된 텍스트가 없다면 에러처리
     if (pState.selectedUploadType == AiConstant.inputText) {
       final text = pState.textController.text.trim();
       if (text.isEmpty) {
-        _readyForSnackBar('텍스트를 입력해주세요.');
+        ref.showSnackBar('텍스트를 입력해주세요.');
         return;
       }
     }
@@ -112,9 +111,9 @@ class UploadRawViewModel extends _$UploadRawViewModel {
     // 현재 데이터 타입이 텍스트가 아니고, file 데이터가 없다면 에러처리
     if (file == null && pState.selectedUploadType != AiConstant.inputText) {
       if (pState.selectedUploadType == AiConstant.inputImage) {
-        _readyForSnackBar('이미지를 선택해주세요.');
+        ref.showSnackBar('이미지를 선택해주세요.');
       } else {
-        _readyForSnackBar('PDF 파일을 선택해주세요.');
+        ref.showSnackBar('PDF 파일을 선택해주세요.');
       }
       return;
     }
@@ -151,19 +150,12 @@ class UploadRawViewModel extends _$UploadRawViewModel {
         state = AsyncValue.data(pState.copyWith(result: result.data));
         _successOCR(result.data);
       case Error<OpenAiResponse, AppException>():
-        _readyForSnackBar(result.error.userFriendlyMessage);
+        ref.showSnackBar(result.error.userFriendlyMessage);
         state = AsyncValue.error(
           result.error,
           result.error.stackTrace ?? StackTrace.empty,
         );
     }
-  }
-
-  // 하단 스낵바 출력
-  void _readyForSnackBar(String message) {
-    ref
-        .read(appEventProvider.notifier)
-        .addEvent(AppEventState.showSnackBar(message: message));
   }
 
   // 텍스트 지우기
@@ -187,7 +179,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
     final pState = state.value;
     // 값이 할당되지 않은 경우 에러
     if (pState == null) {
-      _readyForSnackBar('에러가 발생하였습니다.');
+      ref.showSnackBar('에러가 발생하였습니다.');
       return;
     }
     pState.debouncer.run(action);
@@ -198,7 +190,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
     final pState = state.value;
     // 값이 할당되지 않은 경우 에러
     if (pState == null || pState.dropController == null) {
-      _readyForSnackBar('에러가 발생하였습니다.');
+      ref.showSnackBar('에러가 발생하였습니다.');
       return;
     }
     final ctrl = pState.dropController!;
@@ -213,7 +205,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
         .map((e) => e.name)
         .where((e) => e != 'pdf')
         .contains(fileExtension)) {
-      _readyForSnackBar('지원되지 않는 파일 형식입니다.(지원되는 형식: jpg, png, jpeg)');
+      ref.showSnackBar('지원되지 않는 파일 형식입니다.(지원되는 형식: jpg, png, jpeg)');
       return;
     }
 
@@ -234,7 +226,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
     final pState = state.value;
     // 값이 할당되지 않은 경우 에러
     if (pState == null || pState.dropController == null) {
-      _readyForSnackBar('에러가 발생하였습니다.');
+      ref.showSnackBar('에러가 발생하였습니다.');
       return;
     }
     final ctrl = pState.dropController!;
@@ -246,7 +238,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
     final fileExtension = (await ctrl.getFilename(event)).split('.').last;
 
     if (fileExtension != AllowedExtensionType.pdf.name) {
-      _readyForSnackBar('지원되지 않는 파일 형식입니다.(지원되는 형식: pdf)');
+      ref.showSnackBar('지원되지 않는 파일 형식입니다.(지원되는 형식: pdf)');
       return;
     }
 
@@ -263,23 +255,19 @@ class UploadRawViewModel extends _$UploadRawViewModel {
   }
 
   void _successOCR(OpenAiResponse response) {
-    ref
-        .read(appEventProvider.notifier)
-        .addEvent(
-          AppEventState.showDialog(
-            builder: (ctx) {
-              final parts = response.getContent().split(AiConstant.splitEmoji);
-              return AppDialog.cleanText(
-                content: (idx) => '${idx + 1}번: ${parts[idx]}',
-                okTap: () {
-                  ctx.pop();
-                  ctx.push(Routes.createProblem, extra: response);
-                },
-                cancelTap: () => ctx.pop(),
-                itemCount: parts.length,
-              );
-            },
-          ),
+    ref.showDialog(
+      builder: (ctx) {
+        final parts = response.getContent().split(AiConstant.splitEmoji);
+        return AppDialog.cleanText(
+          content: (idx) => '${idx + 1}번: ${parts[idx]}',
+          okTap: () {
+            ctx.pop();
+            ctx.push(Routes.createProblem, extra: response);
+          },
+          cancelTap: () => ctx.pop(),
+          itemCount: parts.length,
         );
+      },
+    );
   }
 }

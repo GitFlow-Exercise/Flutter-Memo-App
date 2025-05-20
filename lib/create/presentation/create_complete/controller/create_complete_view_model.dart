@@ -2,9 +2,8 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'package:mongo_ai/core/component/pdf_generator.dart';
 import 'package:mongo_ai/core/di/providers.dart';
-import 'package:mongo_ai/core/event/app_event.dart';
-import 'package:mongo_ai/core/event/app_event_provider.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
+import 'package:mongo_ai/core/extension/ref_extension.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/core/state/current_folder_id_state.dart';
 import 'package:mongo_ai/core/state/current_team_id_state.dart';
@@ -64,7 +63,7 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
       case Success<void, AppException>():
         break;
       case Error<void, AppException>():
-        _readyForSnackBar('다운로드 중 에러가 발생하였습니다.');
+        ref.showSnackBar('다운로드 중 에러가 발생하였습니다.');
         break;
     }
   }
@@ -129,12 +128,12 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
         case Success(data: final user):
           userId = user.userId;
         case Error():
-          _readyForSnackBar('유저 정보를 불러오는데 실패했습니다.');
+          ref.showSnackBar('유저 정보를 불러오는데 실패했습니다.');
       }
     });
 
     if (teamId == null || folderId == null || userId == null) {
-      _readyForSnackBar('필요한 정보를 불러오는 데 실패하였습니다.');
+      ref.showSnackBar('필요한 정보를 불러오는 데 실패하였습니다.');
       return false;
     }
 
@@ -158,19 +157,12 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
           case Success():
             return true;
           case Error():
-            _readyForSnackBar('문제집에 문제를 저장하는 데 실패하였습니다.');
+            ref.showSnackBar('문제집에 문제를 저장하는 데 실패하였습니다.');
             return false;
         }
       case Error():
-        _readyForSnackBar('문제집 생성에 실패하였습니다.');
+        ref.showSnackBar('문제집 생성에 실패하였습니다.');
         return false;
     }
-  }
-
-  // 하단 스낵바 출력
-  void _readyForSnackBar(String message) {
-    ref
-        .read(appEventProvider.notifier)
-        .addEvent(AppEventState.showSnackBar(message: message));
   }
 }

@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/core/constants/ai_constant.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/event/app_event.dart';
-import 'package:mongo_ai/core/event/app_event_provider.dart';
+import 'package:mongo_ai/core/extension/ref_extension.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/core/utils/app_dialog.dart';
@@ -37,7 +37,7 @@ class CreateProblemViewModel extends _$CreateProblemViewModel {
       return;
     }
     if (pState.selectedProblemTypes.isEmpty) {
-      _readyForSnackBar('문제 유형을 선택해주세요.');
+      ref.showSnackBar('문제 유형을 선택해주세요.');
       return;
     }
     CreateTemplateParams? params;
@@ -72,25 +72,21 @@ class CreateProblemViewModel extends _$CreateProblemViewModel {
 
       if (state is AsyncError) {
         final error = (state as AsyncError).error;
-        _readyForSnackBar('정보를 불러오는데 실패했습니다: $error');
+        ref.showSnackBar('정보를 불러오는데 실패했습니다: $error');
       }
     }
     // 만약 보낼 parameter 값에 문제가 있다면 에러처리
     if (params == null) {
       final error = '문제 생성 중 에러가 발생하였습니다.';
       state = AsyncValue.error(error, StackTrace.empty);
-      _readyForSnackBar(error);
+      ref.showSnackBar(error);
       return;
     }
-    ref
-        .read(appEventProvider.notifier)
-        .addEvent(
-          AppEventState.navigate(
-            routeName: Routes.createTemplate,
-            navigateMethod: NavigationMethod.push,
-            extra: params,
-          ),
-        );
+    ref.navigate(
+      Routes.createTemplate,
+      navigateMethod: NavigationMethod.push,
+      extra: params,
+    );
   }
 
   // prompt 데이터 조회
@@ -113,7 +109,7 @@ class CreateProblemViewModel extends _$CreateProblemViewModel {
 
     if (state is AsyncError) {
       final error = (state as AsyncError).error;
-      _readyForSnackBar('정보를 불러오는데 실패했습니다: $error');
+      ref.showSnackBar('정보를 불러오는데 실패했습니다: $error');
     }
   }
 
@@ -136,27 +132,16 @@ class CreateProblemViewModel extends _$CreateProblemViewModel {
     });
   }
 
-  // 문제 유형 설정
+  // 문제 유형 확인하기
   void longPressed(Prompt prompt) {
-    ref
-        .read(appEventProvider.notifier)
-        .addEvent(
-          AppEventState.showDialog(
-            builder:
-                (ctx) => AppDialog.promptPreview(
-                  ctx,
-                  title: '내용',
-                  content: prompt.detail,
-                  buttonTap: () => ctx.pop(),
-                ),
+    ref.showDialog(
+      builder:
+          (ctx) => AppDialog.promptPreview(
+            ctx,
+            title: '내용',
+            content: prompt.detail,
+            buttonTap: () => ctx.pop(),
           ),
-        );
-  }
-
-  // 하단 스낵바 출력
-  void _readyForSnackBar(String message) {
-    ref
-        .read(appEventProvider.notifier)
-        .addEvent(AppEventState.showSnackBar(message: message));
+    );
   }
 }

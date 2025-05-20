@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mongo_ai/core/event/app_event.dart';
 import 'package:mongo_ai/core/event/app_event_provider.dart';
@@ -22,6 +23,18 @@ extension EventHelpers on Ref {
         routeName: routeName,
         extra: extra,
         navigateMethod: navigateMethod,
+      ),
+    );
+  }
+
+  void showDialog({
+    required Widget Function(BuildContext) builder,
+    bool barrierDismissible = true,
+  }) {
+    read(appEventProvider.notifier).addEvent(
+      AppEventState.showDialog(
+        builder: builder,
+        barrierDismissible: barrierDismissible,
       ),
     );
   }
