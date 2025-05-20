@@ -149,7 +149,7 @@ class SelectTeamViewModel extends _$SelectTeamViewModel {
 
         switch (metadataResult) {
           case Success():
-            _eventController.add(const SelectTeamEvent.confirmSuccess());
+            _eventController.add(const SelectTeamEvent.navigateToMyFile());
           case Error(error: final error):
             _eventController.add(
               SelectTeamEvent.showSnackBar(error.userFriendlyMessage),
@@ -162,9 +162,9 @@ class SelectTeamViewModel extends _$SelectTeamViewModel {
     }
   }
 
-  Future<void> cancelTeamSelect(VoidCallback onComplete) async {
+  Future<void> cancelTeamSelect() async {
     await ref.read(authRepositoryProvider).setIsPreferredTeamSelected(true);
-    onComplete();
+    _eventController.add(const SelectTeamEvent.navigateToMyFile());
   }
 
   Future<void> checkIsUserInAnyTeam() async {

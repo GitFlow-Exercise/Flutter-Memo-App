@@ -56,7 +56,7 @@ class _SelectGroupScreenRootState extends ConsumerState<SelectTeamScreenRoot> {
           ).showSnackBar(SnackBar(content: Text(message)));
         }
         break;
-      case ConfirmSuccess():
+      case NavigateToMyFile():
         if (mounted) {
           context.go(Routes.myFiles);
         }
@@ -90,9 +90,7 @@ class _SelectGroupScreenRootState extends ConsumerState<SelectTeamScreenRoot> {
         viewModel.toggleCreateNewTeam();
         break;
       case OnCancel():
-        viewModel.cancelTeamSelect(() {
-          context.go(Routes.myFiles);
-        });
+        viewModel.cancelTeamSelect();
     }
   }
 }
