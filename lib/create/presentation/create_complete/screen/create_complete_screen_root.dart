@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -6,7 +5,6 @@ import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/create/presentation/create_complete/widget/pdf_preview_dialog.dart';
 import 'package:mongo_ai/create/presentation/base/layout/ai_base_layout.dart';
 import 'package:mongo_ai/create/presentation/create_complete/controller/create_complete_action.dart';
-import 'package:mongo_ai/create/presentation/create_complete/controller/create_complete_event.dart';
 import 'package:mongo_ai/create/presentation/create_complete/controller/create_complete_view_model.dart';
 import 'package:mongo_ai/create/presentation/create_complete/screen/create_complete_screen.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
@@ -22,35 +20,6 @@ class CreateCompleteScreenRoot extends ConsumerStatefulWidget {
 
 class _CreateCompleteScreenRootState
     extends ConsumerState<CreateCompleteScreenRoot> {
-  StreamSubscription? _subscription;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final viewModel = ref.read(
-        createCompleteViewModelProvider(widget.problems).notifier,
-      );
-
-      _subscription = viewModel.eventStream.listen(_handleEvent);
-    });
-  }
-
-  @override
-  void dispose() {
-    _subscription?.cancel();
-    super.dispose();
-  }
-
-  void _handleEvent(CreateCompleteEvent event) {
-    switch (event) {
-      case ShowSnackBar(message: final message):
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(message)));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(createCompleteViewModelProvider(widget.problems));

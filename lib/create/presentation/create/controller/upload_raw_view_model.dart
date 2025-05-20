@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/core/constants/ai_constant.dart';
 import 'package:mongo_ai/core/debounce/debounce.dart';
 import 'package:mongo_ai/core/di/providers.dart';
@@ -10,6 +11,8 @@ import 'package:mongo_ai/core/event/app_event.dart';
 import 'package:mongo_ai/core/event/app_event_provider.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
+import 'package:mongo_ai/core/routing/routes.dart';
+import 'package:mongo_ai/core/utils/app_dialog.dart';
 import 'package:mongo_ai/create/domain/model/pick_file.dart';
 import 'package:mongo_ai/create/domain/model/request/input_content.dart';
 import 'package:mongo_ai/create/domain/model/request/message_input.dart';
@@ -146,7 +149,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
       case Success<OpenAiResponse, AppException>():
         debugPrint(result.data.toString());
         state = AsyncValue.data(pState.copyWith(result: result.data));
-      // _eventController.add(UploadRawEvent.successOCR(result.data));
+        _successOCR(result.data);
       case Error<OpenAiResponse, AppException>():
         _readyForSnackBar(result.error.userFriendlyMessage);
         state = AsyncValue.error(
@@ -259,42 +262,24 @@ class UploadRawViewModel extends _$UploadRawViewModel {
     });
   }
 
-  void _successOCR() {
-    // ref
-    //     .read(appEventProvider.notifier)
-    //     .addEvent(
-    //       AppEventState.showDialog(
-    //         builder:
-    //             (ctx) => AlertDialog(
-    //             backgroundColor: AppColor.white,
-    //             title: const Text(
-    //               '아래 텍스트가 추출된 내용입니다.\n확인 후 이상 없으면 ‘확인’하고 다음 단계로 이동해주세요.',
-    //             ),
-    //             shape: RoundedRectangleBorder(
-    //               borderRadius: BorderRadius.circular(12),
-    //             ),
-    //             content: SizedBox(
-    //               width: double.maxFinite,
-    //               child: ListView.separated(
-    //                 shrinkWrap: true,
-    //                 itemCount: parts.length,
-    //                 itemBuilder:
-    //                     (ctx, idx) => Text('${idx + 1}번: ${parts[idx]}'),
-    //                 separatorBuilder: (ctx, idx) => const SizedBox(height: 50),
-    //               ),
-    //             ),
-    //             actions: [
-    //               BaseAppButton(onTap: () => context.pop(), text: '취소'),
-    //               BaseAppButton(
-    //                 onTap: () {
-    //                   ctx.pop();
-    //                   context.push(Routes.createProblem, extra: response);
-    //                 },
-    //                 text: '확인',
-    //               ),
-    //             ],
-    //           );,
-    //       ),
-    //     );
+  void _successOCR(OpenAiResponse response) {
+    ref
+        .read(appEventProvider.notifier)
+        .addEvent(
+          AppEventState.showDialog(
+            builder: (ctx) {
+              final parts = response.getContent().split(AiConstant.splitEmoji);
+              return AppDialog.cleanText(
+                content: (idx) => '${idx + 1}번: ${parts[idx]}',
+                okTap: () {
+                  ctx.pop();
+                  ctx.push(Routes.createProblem, extra: response);
+                },
+                cancelTap: () => ctx.pop(),
+                itemCount: parts.length,
+              );
+            },
+          ),
+        );
   }
 }

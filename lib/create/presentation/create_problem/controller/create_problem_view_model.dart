@@ -1,14 +1,18 @@
 import 'dart:async';
+import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/core/constants/ai_constant.dart';
 import 'package:mongo_ai/core/di/providers.dart';
+import 'package:mongo_ai/core/event/app_event.dart';
+import 'package:mongo_ai/core/event/app_event_provider.dart';
 import 'package:mongo_ai/core/result/result.dart';
+import 'package:mongo_ai/core/routing/routes.dart';
+import 'package:mongo_ai/core/utils/app_dialog.dart';
 import 'package:mongo_ai/create/domain/model/create_template_params.dart';
 import 'package:mongo_ai/create/domain/model/prompt.dart';
 import 'package:mongo_ai/create/domain/model/request/input_content.dart';
 import 'package:mongo_ai/create/domain/model/request/message_input.dart';
 import 'package:mongo_ai/create/domain/model/request/open_ai_body.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
-import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_event.dart';
 import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -16,16 +20,8 @@ part 'create_problem_view_model.g.dart';
 
 @riverpod
 class CreateProblemViewModel extends _$CreateProblemViewModel {
-  final _eventController = StreamController<CreateProblemEvent>.broadcast();
-
-  Stream<CreateProblemEvent> get eventStream => _eventController.stream;
-
   @override
   Future<CreateProblemState> build(OpenAiResponse response) async {
-    ref.onDispose(() {
-      _eventController.close();
-    });
-
     await getPrompts();
 
     return CreateProblemState(response: response);
@@ -41,9 +37,7 @@ class CreateProblemViewModel extends _$CreateProblemViewModel {
       return;
     }
     if (pState.selectedProblemTypes.isEmpty) {
-      _eventController.add(
-        const CreateProblemEvent.showSnackBar('문제 유형을 선택해주세요.'),
-      );
+      _readyForSnackBar('문제 유형을 선택해주세요.');
       return;
     }
     CreateTemplateParams? params;
@@ -78,19 +72,24 @@ class CreateProblemViewModel extends _$CreateProblemViewModel {
 
       if (state is AsyncError) {
         final error = (state as AsyncError).error;
-        _eventController.add(
-          CreateProblemEvent.showSnackBar('정보를 불러오는데 실패했습니다: $error'),
-        );
+        _readyForSnackBar('정보를 불러오는데 실패했습니다: $error');
       }
     }
     // 만약 보낼 parameter 값에 문제가 있다면 에러처리
     if (params == null) {
       final error = '문제 생성 중 에러가 발생하였습니다.';
       state = AsyncValue.error(error, StackTrace.empty);
-      CreateProblemEvent.showSnackBar(error);
+      _readyForSnackBar(error);
       return;
     }
-    _eventController.add(CreateProblemEvent.successOpenAIRequest(params));
+    ref
+        .read(appEventProvider.notifier)
+        .addEvent(
+          AppEventState.navigate(
+            routeName: Routes.createTemplate,
+            extra: params,
+          ),
+        );
   }
 
   // prompt 데이터 조회
@@ -113,9 +112,7 @@ class CreateProblemViewModel extends _$CreateProblemViewModel {
 
     if (state is AsyncError) {
       final error = (state as AsyncError).error;
-      _eventController.add(
-        CreateProblemEvent.showSnackBar('정보를 불러오는데 실패했습니다: $error'),
-      );
+      _readyForSnackBar('정보를 불러오는데 실패했습니다: $error');
     }
   }
 
@@ -140,6 +137,25 @@ class CreateProblemViewModel extends _$CreateProblemViewModel {
 
   // 문제 유형 설정
   void longPressed(Prompt prompt) {
-    _eventController.add(CreateProblemEvent.showDetailDialog(prompt.detail));
+    ref
+        .read(appEventProvider.notifier)
+        .addEvent(
+          AppEventState.showDialog(
+            builder:
+                (ctx) => AppDialog.promptPreview(
+                  ctx,
+                  title: '내용',
+                  content: prompt.detail,
+                  buttonTap: () => ctx.pop(),
+                ),
+          ),
+        );
+  }
+
+  // 하단 스낵바 출력
+  void _readyForSnackBar(String message) {
+    ref
+        .read(appEventProvider.notifier)
+        .addEvent(AppEventState.showSnackBar(message: message));
   }
 }

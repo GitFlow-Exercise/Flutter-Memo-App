@@ -16,7 +16,7 @@ sealed class AppEventState with _$AppEventState {
   const factory AppEventState.navigate({
     required String routeName,
     dynamic extra,
-    @Default(NavigationMethod.push) NavigationMethod navigateMethod,
+    @Default(NavigationMethod.go) NavigationMethod navigateMethod,
   }) = Navigate;
 
   // 3) 다이아로그 이벤트 처리

@@ -66,12 +66,10 @@ class PracticeApp extends ConsumerWidget {
       if (prevEvent == null) {
         switch (newEvent) {
           case ShowSnackBar():
-            print('show snackbar');
             appEventKey.scaffoldKey.currentState?.showSnackBar(
               SnackBar(content: Text(newEvent.message)),
             );
           case Navigate():
-            print('navigate');
             switch (newEvent.navigateMethod) {
               case NavigationMethod.push:
                 appEventKey.navigateKey.currentContext?.push(
@@ -79,14 +77,12 @@ class PracticeApp extends ConsumerWidget {
                   extra: newEvent.extra,
                 );
               case NavigationMethod.go:
-                appEventKey.navigateKey.currentContext?.push(
+                appEventKey.navigateKey.currentContext?.go(
                   newEvent.routeName,
                   extra: newEvent.extra,
                 );
             }
           case ShowDialog():
-            print('show dialog');
-
             if (appEventKey.navigateKey.currentContext == null) {
               return;
             }

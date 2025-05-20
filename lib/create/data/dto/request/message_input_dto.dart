@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mongo_ai/core/constants/ai_constant.dart';
-import 'package:mongo_ai/core/converter/input_converter.dart';
+import 'package:mongo_ai/core/utils/input_converter.dart';
 import 'package:mongo_ai/create/data/dto/request/input_content_dto.dart';
 
 part 'message_input_dto.g.dart';
