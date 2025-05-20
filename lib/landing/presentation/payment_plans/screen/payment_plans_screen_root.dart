@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/landing/domain/enum/landing_header_menu_type.dart';
 import 'package:mongo_ai/landing/presentation/landing_shell/controller/landing_shell_view_model.dart';
 import 'package:mongo_ai/landing/presentation/payment_plans/controller/payment_plans_action.dart';
@@ -71,6 +73,8 @@ class _PaymentPlansScreenRootState
       case OnFreeTrialClick():
         viewModel.showFreeTrial();
         debugPrint('무료로 시작하기 버튼 클릭');
+      case OnPressedPrivacyPolicies():
+        context.go(Routes.privacyPolicies);
     }
   }
 }

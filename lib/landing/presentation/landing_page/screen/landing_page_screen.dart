@@ -38,6 +38,8 @@ class LandingPageScreen extends StatelessWidget {
     switch (action) {
       case GoToSignIn():
         context.go(Routes.signIn);
+      case OnPressedPrivacyPolicies():
+        context.go(Routes.privacyPolicies);
     }
   }
 }
