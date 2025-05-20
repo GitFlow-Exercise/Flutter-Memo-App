@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mongo_ai/core/extension/ref_extension.dart';
+import 'package:mongo_ai/core/service/portone_payment_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'payment_plans_view_model.g.dart';
@@ -18,6 +19,7 @@ class PaymentPlansViewModel extends _$PaymentPlansViewModel {
   void showUpgradeButtonClicked() {
     ref.showSnackBar('지금 업그레이드 버튼이 클릭되었습니다');
     debugPrint('지금 업그레이드 버튼이 클릭되었습니다');
+    startPayment();
   }
 
   void showFreeTrial() {
