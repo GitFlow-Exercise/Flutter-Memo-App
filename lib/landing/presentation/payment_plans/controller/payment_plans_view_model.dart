@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:mongo_ai/core/service/portone_payment_service.dart';
 import 'package:mongo_ai/landing/presentation/payment_plans/controller/payment_plans_event.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -32,6 +33,7 @@ class PaymentPlansViewModel extends _$PaymentPlansViewModel {
       const PaymentPlansEvent.showSnackBar('지금 업그레이드 버튼이 클릭되었습니다'),
     );
     debugPrint('지금 업그레이드 버튼이 클릭되었습니다');
+    startPayment();
   }
 
   void showFreeTrial() {
