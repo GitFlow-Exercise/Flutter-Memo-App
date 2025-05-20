@@ -4,6 +4,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mongo_ai/core/event/app_event.dart';
+import 'package:mongo_ai/core/event/app_event_provider.dart';
+import 'package:mongo_ai/core/event/key/event_key.dart';
 import 'package:mongo_ai/core/routing/router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -48,8 +51,56 @@ class PracticeApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
+    final appEventKey = ref.watch(appEventKeyProvider);
+    ref.listen<AppEventState?>(appEventProvider, (
+      AppEventState? prevEvent,
+      AppEventState? newEvent,
+    ) {
+      // 만약 이벤트값을 되돌리는 경우라면,
+      // 어떠한 이벤트도 발생시키지 않습니다.
+      if (newEvent == null) {
+        return;
+      }
+      // 새로운 이벤트를 등록하는 경우라면,
+      // 해당 이벤트를 실행시킵니다.
+      if (prevEvent == null) {
+        switch (newEvent) {
+          case ShowSnackBar():
+            print('show snackbar');
+            appEventKey.scaffoldKey.currentState?.showSnackBar(
+              SnackBar(content: Text(newEvent.message)),
+            );
+          case Navigate():
+            print('navigate');
+            switch (newEvent.navigateMethod) {
+              case NavigationMethod.push:
+                appEventKey.navigateKey.currentContext?.push(
+                  newEvent.routeName,
+                  extra: newEvent.extra,
+                );
+              case NavigationMethod.go:
+                appEventKey.navigateKey.currentContext?.push(
+                  newEvent.routeName,
+                  extra: newEvent.extra,
+                );
+            }
+          case ShowDialog():
+            print('show dialog');
+
+            if (appEventKey.navigateKey.currentContext == null) {
+              return;
+            }
+            showDialog(
+              context: appEventKey.navigateKey.currentContext!,
+              barrierDismissible: newEvent.barrierDismissible,
+              builder: newEvent.builder,
+            );
+        }
+      }
+    });
     return MaterialApp.router(
       routerConfig: router,
+      scaffoldMessengerKey: appEventKey.scaffoldKey,
       debugShowCheckedModeBanner: false,
     );
   }

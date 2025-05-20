@@ -5,6 +5,7 @@ import 'package:mongo_ai/core/constants/ai_constant.dart';
 import 'package:mongo_ai/core/debounce/debounce.dart';
 import 'package:mongo_ai/create/domain/model/pick_file.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
+import 'package:mongo_ai/create/presentation/create/controller/upload_raw_event.dart';
 
 part 'upload_raw_state.freezed.dart';
 

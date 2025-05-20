@@ -6,6 +6,8 @@ import 'package:mongo_ai/core/constants/ai_constant.dart';
 import 'package:mongo_ai/core/debounce/debounce.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/enum/allowed_extension_type.dart';
+import 'package:mongo_ai/core/event/app_event.dart';
+import 'package:mongo_ai/core/event/app_event_provider.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/create/domain/model/pick_file.dart';
@@ -13,7 +15,6 @@ import 'package:mongo_ai/create/domain/model/request/input_content.dart';
 import 'package:mongo_ai/create/domain/model/request/message_input.dart';
 import 'package:mongo_ai/create/domain/model/request/open_ai_body.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
-import 'package:mongo_ai/create/presentation/create/controller/upload_raw_event.dart';
 import 'package:mongo_ai/create/presentation/create/controller/upload_raw_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -21,17 +22,12 @@ part 'upload_raw_view_model.g.dart';
 
 @riverpod
 class UploadRawViewModel extends _$UploadRawViewModel {
-  final _eventController = StreamController<UploadRawEvent>();
-
-  Stream<UploadRawEvent> get eventStream => _eventController.stream;
-
   @override
   Future<UploadRawState> build() async {
     final textController = TextEditingController();
     final debouncer = Debouncer(delay: const Duration(seconds: 1));
 
     ref.onDispose(() {
-      _eventController.close();
       textController.dispose();
     });
 
@@ -150,7 +146,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
       case Success<OpenAiResponse, AppException>():
         debugPrint(result.data.toString());
         state = AsyncValue.data(pState.copyWith(result: result.data));
-        _eventController.add(UploadRawEvent.successOCR(result.data));
+      // _eventController.add(UploadRawEvent.successOCR(result.data));
       case Error<OpenAiResponse, AppException>():
         _readyForSnackBar(result.error.userFriendlyMessage);
         state = AsyncValue.error(
@@ -162,7 +158,9 @@ class UploadRawViewModel extends _$UploadRawViewModel {
 
   // 하단 스낵바 출력
   void _readyForSnackBar(String message) {
-    _eventController.add(UploadRawEvent.showSnackBar(message));
+    ref
+        .read(appEventProvider.notifier)
+        .addEvent(AppEventState.showSnackBar(message: message));
   }
 
   // 텍스트 지우기
@@ -259,5 +257,44 @@ class UploadRawViewModel extends _$UploadRawViewModel {
     state = state.whenData((cb) {
       return cb.copyWith(pickFile: dropedFile);
     });
+  }
+
+  void _successOCR() {
+    // ref
+    //     .read(appEventProvider.notifier)
+    //     .addEvent(
+    //       AppEventState.showDialog(
+    //         builder:
+    //             (ctx) => AlertDialog(
+    //             backgroundColor: AppColor.white,
+    //             title: const Text(
+    //               '아래 텍스트가 추출된 내용입니다.\n확인 후 이상 없으면 ‘확인’하고 다음 단계로 이동해주세요.',
+    //             ),
+    //             shape: RoundedRectangleBorder(
+    //               borderRadius: BorderRadius.circular(12),
+    //             ),
+    //             content: SizedBox(
+    //               width: double.maxFinite,
+    //               child: ListView.separated(
+    //                 shrinkWrap: true,
+    //                 itemCount: parts.length,
+    //                 itemBuilder:
+    //                     (ctx, idx) => Text('${idx + 1}번: ${parts[idx]}'),
+    //                 separatorBuilder: (ctx, idx) => const SizedBox(height: 50),
+    //               ),
+    //             ),
+    //             actions: [
+    //               BaseAppButton(onTap: () => context.pop(), text: '취소'),
+    //               BaseAppButton(
+    //                 onTap: () {
+    //                   ctx.pop();
+    //                   context.push(Routes.createProblem, extra: response);
+    //                 },
+    //                 text: '확인',
+    //               ),
+    //             ],
+    //           );,
+    //       ),
+    //     );
   }
 }
