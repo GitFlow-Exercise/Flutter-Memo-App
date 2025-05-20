@@ -60,7 +60,6 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
       pdfBytes: state.bytes,
       fileName: state.fileName,
     );
-
     switch (result) {
       case Success<void, AppException>():
         break;
@@ -159,7 +158,7 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
           case Success():
             return true;
           case Error():
-            _readyForSnackBar('문제집에 문제를 저장하는 데 실패하였씁니다.');
+            _readyForSnackBar('문제집에 문제를 저장하는 데 실패하였습니다.');
             return false;
         }
       case Error():

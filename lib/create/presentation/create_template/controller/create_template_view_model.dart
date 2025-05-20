@@ -1,8 +1,6 @@
-import 'dart:async';
 import 'package:mongo_ai/core/component/pdf_generator.dart';
 import 'package:mongo_ai/create/domain/model/create_template_params.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
-import 'package:mongo_ai/create/presentation/create_template/controller/create_template_event.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -10,17 +8,9 @@ part 'create_template_view_model.g.dart';
 
 @riverpod
 class CreateTemplateViewModel extends _$CreateTemplateViewModel {
-  final _eventController = StreamController<CreateTemplateEvent>();
-
-  Stream<CreateTemplateEvent> get eventStream => _eventController.stream;
-
   @override
   CreateTemplateState build(CreateTemplateParams params) {
     final pdfGenerator = PdfGenerator();
-
-    ref.onDispose(() {
-      _eventController.close();
-    });
 
     final problems = parseCreateTemplateParamsToProblems(params);
 
