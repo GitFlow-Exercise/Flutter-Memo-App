@@ -74,8 +74,6 @@
 
 - **Figma**: UI/UX 디자인 - [Figma 디자인 바로가기](https://www.figma.com/design/XqEZ6dBUOKMbyUnnLNENFP/Mongo-AI-%EC%9E%90%EC%B2%B4-%EB%94%94%EC%9E%90%EC%9D%B8?node-id=0-1&t=5eBEk9YAAfiydj2h-1)
 
-  [![스크린샷 2025-05-20 오후 3.36.36](/Users/okstring/Documents/image/스크린샷 2025-05-20 오후 3.36.36.png)](https://www.figma.com/design/XqEZ6dBUOKMbyUnnLNENFP/Mongo-AI-%EC%9E%90%EC%B2%B4-%EB%94%94%EC%9E%90%EC%9D%B8?node-id=0-1&t=5eBEk9YAAfiydj2h-1)
-
 ## 아키텍처 🏗️
 
 MongoAI는 MVI + MVVM, Clean Architecture 패턴을 사용합니다. 이를 통해 확장성, 테스트 용이성, 코드 품질을 보장합니다.
