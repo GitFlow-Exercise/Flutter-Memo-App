@@ -13,7 +13,7 @@ abstract class AppRedirect {
   }) {
     // 0. 모든 사용자는 랜딩페이지, 요금제 안내 페이지에 접근 가능
     if (nowPath == Routes.landingPage ||
-        nowPath == Routes.paymentPlans) {
+        nowPath == Routes.paymentPlans || nowPath == Routes.privacyPolicies) {
       return null;
     }
 

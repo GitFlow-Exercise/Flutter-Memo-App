@@ -16,6 +16,8 @@ class _PrivacyPoliciesScreenRootState extends ConsumerState<PrivacyPoliciesScree
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final viewModel = ref.watch(privacyPoliciesViewModelProvider.notifier);
+
+      viewModel.fetchPrivacyPolicies();
     });
   }
 

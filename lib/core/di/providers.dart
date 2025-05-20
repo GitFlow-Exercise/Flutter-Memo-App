@@ -50,6 +50,10 @@ import 'package:mongo_ai/dashboard/domain/repository/user_profile_repository.dar
 import 'package:mongo_ai/dashboard/domain/repository/workbook_repository.dart';
 import 'package:mongo_ai/dashboard/domain/use_case/delete_workbook_use_case.dart';
 import 'package:mongo_ai/dashboard/domain/use_case/toggle_bookmark_use_case.dart';
+import 'package:mongo_ai/landing/data/data_source/privacy_policies_data_source.dart';
+import 'package:mongo_ai/landing/data/data_source/privacy_policies_data_source_impl.dart';
+import 'package:mongo_ai/landing/data/repository/privacy_policies_repository_impl.dart';
+import 'package:mongo_ai/landing/domain/repository/privacy_policies_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final supabaseClientProvider = Provider<SupabaseClient>((ref) {
@@ -239,4 +243,21 @@ final problemDataSourceProvider = Provider<ProblemDataSource>((ref) {
 final problemRepositoryProvider = Provider<ProblemRepository>((ref) {
   final dataSource = ref.watch(problemDataSourceProvider);
   return ProblemRepositoryImpl(dataSource: dataSource);
+});
+
+// -----------------------------------
+// landing
+// -----------------------------------
+// DataSource
+final privacyPoliciesDataSourceProvider = Provider<PrivacyPoliciesDataSource>((ref) {
+  final client = ref.watch(supabaseClientProvider);
+  return PrivacyPoliciesDataSourceImpl(client: client);
+});
+
+// -----------------------------------
+// Repository
+
+final privacyPoliciesRepositoryProvider = Provider<PrivacyPoliciesRepository>((ref) {
+  final dataSource = ref.watch(privacyPoliciesDataSourceProvider);
+  return PrivacyPoliciesRepositoryImpl(privacyPoliciesDataSource: dataSource);
 });

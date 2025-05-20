@@ -25,13 +25,14 @@ import 'package:mongo_ai/dashboard/presentation/recent_files/recent_files_screen
 import 'package:mongo_ai/landing/presentation/landing_page/screen/landing_page_screen.dart';
 import 'package:mongo_ai/landing/presentation/landing_shell/screen/landing_shell_screen_root.dart';
 import 'package:mongo_ai/landing/presentation/payment_plans/screen/payment_plans_screen_root.dart';
+import 'package:mongo_ai/landing/presentation/privacy_policies/screen/privacy_policies_screen_root.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final auth = ref.watch(authRepositoryProvider);
   return GoRouter(
     //TODO(ok): 배포 전 랜딩페이지로 변경 예정
-    initialLocation: Routes.landingPage,
+    initialLocation: Routes.privacyPolicies,
     // auth 관찰해서 변화가 있다면,
     // 새로 reidrect 함수 실행
     refreshListenable: auth,
@@ -120,6 +121,14 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: Routes.paymentPlans,
                 builder: (context, state) => const PaymentPlansScreenRoot(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.privacyPolicies,
+                builder: (context, state) => const PrivacyPoliciesScreenRoot(),
               ),
             ],
           ),
