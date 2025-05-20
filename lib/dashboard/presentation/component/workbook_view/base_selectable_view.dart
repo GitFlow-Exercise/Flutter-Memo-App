@@ -42,6 +42,12 @@ class _BaseSelectableViewState<T> extends State<BaseSelectableView<T>> {
   }
 
   @override
+  void dispose() {
+    _dragState.dispose();   // ValueNotifier 해제
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // 각 아이템(GridItem 등)을 KeyedSubtree로 감싸서 고유한 키를 부여함.
     final children = List.generate(widget.items.length, (i) {

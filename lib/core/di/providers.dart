@@ -92,7 +92,7 @@ final teamRepositoryProvider = Provider<TeamRepository>((ref) {
 });
 
 final getTeamsByCurrentUserProvider =
-    FutureProvider<Result<List<Team>, AppException>>((ref) async {
+    FutureProvider.autoDispose<Result<List<Team>, AppException>>((ref) async {
       final repository = ref.watch(teamRepositoryProvider);
       return repository.getTeamsByCurrentUser();
     });
