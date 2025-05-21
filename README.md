@@ -45,7 +45,7 @@
 | 김옥현 | 사용자 인증, 디자인, 기획 | [okstring](https://github.com/okstring)     |
 | 임명우 | (추가, 수정 예정)         | [Dansot4891](https://github.com/Dansot4891) |
 | 최지민 | (추가, 수정 예정)         | [irmu98](https://github.com/irmu98)         |
-| 허준호 | (추가, 수정 예정)         | [helljh](https://github.com/helljh)         |
+| 허준호 | 문제집 생성(순서 배치, 수정, 저장), 결제 | [helljh](https://github.com/helljh)         |
 
 
 
