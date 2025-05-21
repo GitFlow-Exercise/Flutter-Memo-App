@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/result/result.dart';
+import 'package:mongo_ai/core/state/current_team_id_state.dart';
+import 'package:mongo_ai/core/state/deleted_workbook_state.dart';
 import 'package:mongo_ai/core/state/workbook_filter_state.dart';
 import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
 import 'package:mongo_ai/dashboard/presentation/deleted_files/controller/deleted_files_state.dart';
@@ -12,6 +14,7 @@ part 'deleted_files_view_model.g.dart';
 class DeletedFilesViewModel extends _$DeletedFilesViewModel {
   @override
   DeletedFilesState build() {
+    final currentTeamId = ref.watch(currentTeamIdStateProvider);
     final workbookResult = ref.watch(getWorkbooksByCurrentTeamIdProvider);
     final filter = ref.watch(workbookFilterStateProvider);
 
@@ -29,6 +32,7 @@ class DeletedFilesViewModel extends _$DeletedFilesViewModel {
     });
 
     return DeletedFilesState(
+      currentTeamId: currentTeamId,
       workbookList: workbookList,
       showGridView: filter.showGridView,
     );
@@ -69,4 +73,7 @@ class DeletedFilesViewModel extends _$DeletedFilesViewModel {
     }
   }
 
+  Future<void> selectWorkbook(Workbook workbook) async {
+    ref.read(deletedWorkbookStateProvider.notifier).selectDeletedWorkbook(workbook);
+  }
 }

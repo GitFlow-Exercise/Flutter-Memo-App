@@ -12,21 +12,26 @@ import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/create/domain/model/create_complete_params.dart';
 import 'package:mongo_ai/create/domain/model/create_template_params.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
-import 'package:mongo_ai/create/presentation/create_complete/screen/create_complete_screen_root.dart';
 import 'package:mongo_ai/create/presentation/create/screen/upload_raw_screen_root.dart';
+import 'package:mongo_ai/create/presentation/create_complete/screen/create_complete_screen_root.dart';
 import 'package:mongo_ai/create/presentation/create_problem/screen/create_problem_screen_root.dart';
 import 'package:mongo_ai/create/presentation/create_template/screen/create_template_screen_root.dart';
 import 'package:mongo_ai/dashboard/presentation/dashboard_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/deleted_files/deleted_files_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/folder/folder_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/my_files/my_files_screen.dart';
+import 'package:mongo_ai/dashboard/presentation/my_profile/screen/my_profile_screen_root.dart';
 import 'package:mongo_ai/dashboard/presentation/recent_files/recent_files_screen.dart';
+import 'package:mongo_ai/landing/presentation/landing_page/screen/landing_page_screen.dart';
+import 'package:mongo_ai/landing/presentation/landing_shell/screen/landing_shell_screen_root.dart';
+import 'package:mongo_ai/landing/presentation/payment_plans/screen/payment_plans_screen_root.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final auth = ref.watch(authRepositoryProvider);
   return GoRouter(
-    initialLocation: Routes.folder,
+    //TODO(ok): 배포 전 랜딩페이지로 변경 예정
+    initialLocation: Routes.landingPage,
     // auth 관찰해서 변화가 있다면,
     // 새로 reidrect 함수 실행
     refreshListenable: auth,
@@ -98,6 +103,30 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const SignUpCompleteScreenRoot(),
       ),
       StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return LandingShellScreenRoot(navigationShell: navigationShell);
+        },
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.landingPage,
+                builder: (context, state) => const LandingPageScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.paymentPlans,
+                builder: (context, state) => const PaymentPlansScreenRoot(),
+              ),
+            ],
+          ),
+        ],
+      ),
+
+      StatefulShellRoute.indexedStack(
         builder:
             (context, state, navigationShell) =>
                 DashboardScreen(navigationShell: navigationShell),
@@ -131,6 +160,14 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: Routes.deletedFiles,
                 builder: (context, state) => const DeletedFilesScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.myProfile,
+                builder: (context, state) => const MyProfileScreenRoot(),
               ),
             ],
           ),

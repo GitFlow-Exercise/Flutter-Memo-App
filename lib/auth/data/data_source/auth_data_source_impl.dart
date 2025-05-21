@@ -5,11 +5,25 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class AuthDataSourceImpl implements AuthDataSource {
   final SupabaseClient _client;
 
+  static const _url = 'https://gitflow-exercise.github.io/MongoAI-web';
+
   AuthDataSourceImpl({required SupabaseClient client}) : _client = client;
+
+  @override
+  Stream<AuthState> get authStateChanges => _client.auth.onAuthStateChange;
 
   @override
   Future<void> login(String email, String password) async {
     await _client.auth.signInWithPassword(email: email, password: password);
+  }
+
+  @override
+  Future<void> signInWithGoogle() async {
+    final redirectUrl = '$_url/auth/callback';
+    await _client.auth.signInWithOAuth(
+      OAuthProvider.google,
+      redirectTo: redirectUrl,
+    );
   }
 
   @override
@@ -24,9 +38,17 @@ class AuthDataSourceImpl implements AuthDataSource {
       password: password,
     );
 
-    await updateUserMetadata('is_initial_setup_user');
-
     return authResponse;
+  }
+
+  @override
+  Future<void> deleteUser(String id) async {
+    final response = await _client.functions.invoke(
+      'delete-user',
+      body: {'authorization': session!.accessToken},
+    );
+
+    print(response);
   }
 
   @override
@@ -102,24 +124,52 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
+  Future<void> saveSelectedTeamId(int teamId) async {
+    await _client.auth.updateUser(
+      UserAttributes(data: {'current_team_id': teamId}),
+    );
+  }
+
+  @override
+  int? getSelectedTeamId() {
+    final metadata = _client.auth.currentUser?.userMetadata;
+    if (metadata != null && metadata.containsKey('current_team_id')) {
+      return metadata['current_team_id'] as int?;
+    }
+    return null;
+  }
+
+  @override
   Future<String?> getCurrentUserEmail() async {
     return _client.auth.currentUser?.email;
   }
 
   @override
   bool isInitialSetupUser() {
-    return _client.auth.currentUser?.userMetadata?['is_initial_setup_user'] ==
-        true;
+    return checkMetadata('is_initial_setup_user');
   }
 
   @override
   bool isSelectTeam() {
-    return _client.auth.currentUser?.userMetadata?['is_select_team'] ==
-        true;
+    return checkMetadata('is_select_team');
   }
 
   @override
   String? userId() {
     return _client.auth.currentUser?.id;
   }
+
+  @override
+  bool checkMetadata(String key) {
+    return _client.auth.currentUser?.userMetadata?[key] == true;
+  }
+
+  @override
+  String? getUserProvider() {
+    final user = _client.auth.currentUser;
+    return user?.appMetadata['provider'] as String?;
+  }
+
+  @override
+  Session? get session => _client.auth.currentSession;
 }

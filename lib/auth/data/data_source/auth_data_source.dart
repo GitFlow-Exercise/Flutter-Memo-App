@@ -1,11 +1,19 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract interface class AuthDataSource {
+  Stream<AuthState> get authStateChanges;
+
+  Session? get session;
+
   Future<void> login(String email, String password);
+
+  Future<void> signInWithGoogle();
 
   Future<AuthResponse> signUp(String email, String password);
 
   Future<void> logout();
+
+  Future<void> deleteUser(String id);
 
   Future<bool> isEmailExist(String email);
 
@@ -23,6 +31,10 @@ abstract interface class AuthDataSource {
 
   Future<void> updateUserMetadata(String key);
 
+  Future<void> saveSelectedTeamId(int teamId);
+
+  int? getSelectedTeamId();
+
   bool isAuthenticated();
 
   bool isInitialSetupUser();
@@ -30,4 +42,8 @@ abstract interface class AuthDataSource {
   bool isSelectTeam();
 
   String? userId();
+
+  bool checkMetadata(String key);
+
+  String? getUserProvider();
 }

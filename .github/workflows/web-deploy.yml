@@ -1,0 +1,59 @@
+name: deploy flutter web to github pages
+
+on:
+  # main branch에 푸쉬가 들어올 경우 실행
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # git 기본 세팅
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 플러터 세팅
+      - name: Setup flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.29.2
+
+      # 임의로 .env 파일 생성
+      - name: Generate .env
+        run: |
+          cat <<EOF > .env
+          SUPABASE_URL=${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
+          EOF
+
+      #  추가: 의존성 설치
+      - name: Install dependencies
+        run: flutter pub get
+
+      # Generator 빌드
+      - name: Run Code Generation
+        run: flutter pub run build_runner build --delete-conflicting-outputs
+
+      # Flutter Test 진행
+      # => test에서 실패하면 배포가 되지 않도록 설정
+      - name: Run Tests
+        run: flutter test
+
+      # 플러터 웹 빌드
+      - name: Build web
+        run: flutter build web --base-href "/${{ github.event.repository.name }}/"
+      
+      # 404.html = index.html 복사
+      # => 강제 url로 라우팅이 404에러를 해결
+      - name: Copy index.html to 404.html
+        run: cp build/web/index.html build/web/404.html
+
+      # github page 배포
+      - name: Deploy to github pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.WEB_DEPLOY_KEY }}
+          publish_dir: ./build/web

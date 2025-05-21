@@ -26,6 +26,8 @@ abstract class AppColor {
   static const Color mediumGrayBorder = Color(0xFFCED4DA); // 외부 테두리
   static const Color destructive = Color(0xFFFF6B6B); // Destructive actions
   static const Color circle = Color(0xFF4ECDC4); // circle
+  static const Color visibility = Color(0xFF7BC68C); // visibility
+  static const Color landingIcon = Color(0xFF64B5F6); // visibility
 
   // Black & White
   static const Color white = Color(0xFFFFFFFF); // white

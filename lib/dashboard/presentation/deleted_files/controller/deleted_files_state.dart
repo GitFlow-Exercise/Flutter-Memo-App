@@ -9,5 +9,6 @@ abstract class DeletedFilesState with _$DeletedFilesState{
   const factory DeletedFilesState({
     required AsyncValue<List<Workbook>> workbookList,
     required bool showGridView,
+    int? currentTeamId,
   }) = _DeletedFilesState;
 }

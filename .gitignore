@@ -14,14 +14,14 @@
 pubspec.lock
 package_config.json
 
-# Flutter Web 관련
-/web/favicon.png
-/web/icons/
-/web/splash/
-/web/manifest.json
-/web/index.html
-/web/flutter_service_worker.js
-/web/assets/
+# Flutter Web 관련 ignore 설정 주석처리
+# /web/favicon.png
+# /web/icons/
+# /web/splash/
+# /web/manifest.json
+# /web/index.html
+# /web/flutter_service_worker.js
+# /web/assets/
 
 # Android 관련
 **/android/**/gradle-wrapper.jar
@@ -146,8 +146,14 @@ pubspec_overrides.yaml
 *.freezed.dart
 *.g.dart
 
+# mockito 생성 파일
+*.mocks.dart
+
 # 빌드 디렉토리 및 로그
 out/
 logs/
 
 devtools_options.yaml
+
+# Firebase
+# lib/firebase_options.dart

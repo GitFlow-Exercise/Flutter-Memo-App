@@ -10,21 +10,22 @@ import 'package:mongo_ai/core/state/current_team_id_state.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/dashboard/domain/model/folder.dart';
+import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
 
 class FolderListWidget extends ConsumerStatefulWidget {
   final void Function(Folder folder) onClickFolder;
   final void Function(String folderName) onCreateFolder;
   final void Function(Folder folder) onEditFolder;
   final void Function(Folder folder) onDeleteFolder;
-  final void Function() onClickExpand;
+  final void Function(int folderId) onChangeFolderWorkbookList;
 
   const FolderListWidget({
     super.key,
     required this.onClickFolder,
-    required this.onClickExpand,
     required this.onEditFolder,
     required this.onCreateFolder,
     required this.onDeleteFolder,
+    required this.onChangeFolderWorkbookList,
   });
 
   @override
@@ -34,7 +35,6 @@ class FolderListWidget extends ConsumerStatefulWidget {
 class _FolderListWidgetState extends ConsumerState<FolderListWidget> {
   final _createController = TextEditingController();
   final _editController = TextEditingController();
-  final MenuController _menuController = MenuController();
   late final FocusNode _createFocusNode;
   late final FocusNode _editFocusNode;
 
@@ -79,7 +79,6 @@ class _FolderListWidgetState extends ConsumerState<FolderListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // Todo : arguments 리팩토링 고민하기
     final folderList = ref.watch(getFoldersByCurrentTeamIdProvider);
     final currentFolderId = ref.watch(currentFolderIdStateProvider);
     final currentTeamId = ref.read(currentTeamIdStateProvider);
@@ -209,56 +208,76 @@ class _FolderListWidgetState extends ConsumerState<FolderListWidget> {
                         // 폴더 리스트 UI
                         // 각 항목마다 MenuController를 생성해야 정확한 위치 리턴 가능.
                         final controller = MenuController();
-                        return MenuAnchor(
-                          controller: controller,
-                          menuChildren: [
-                              MenuItemButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _editFolderId = folder.folderId;
-                                  });
-                                  // 폴더 수정 시 textField에 Focus 주기
-                                  Future.microtask(() => _editFocusNode.requestFocus());
-                                },
-                                leadingIcon: const Icon(Icons.edit),
-                                child: const Text('폴더 수정하기'),
-                              ),
-                              MenuItemButton(
-                                onPressed: () {
-                                  widget.onDeleteFolder(folder);
-                                },
-                                leadingIcon: const Icon(Icons.delete),
-                                child: const Text('폴더 삭제하기'),
-                              ),
-                          ],
-                          style: MenuStyle(
-                              backgroundColor: WidgetStateProperty.all(AppColor.white),
-                          ),
-                          builder: (context, controller, child) {
-                            return GestureDetector(
-                              onSecondaryTapDown: (details) {
-                                controller.open(position: details.localPosition);
-                              },
-                              onLongPressStart: (details) {
-                                controller.open(position: details.localPosition);
-                              },
-                              child: ListTile(
-                                title: Text(
-                                  folder.folderName,
-                                  style: AppTextStyle.bodyRegular.copyWith(
-                                    color: selected ? AppColor.primary : AppColor.mediumGray,
+                        return DragTarget<List<Workbook>>(
+                            onWillAcceptWithDetails: (details) => details.data.isNotEmpty,
+                            // 드롭됐을 때 호출
+                            onAcceptWithDetails: (details) {
+                              widget.onChangeFolderWorkbookList(folder.folderId);
+                            },
+                          builder: (context, candidateData, rejectedData) {
+                            final isHover = candidateData.isNotEmpty;
+                            return MenuAnchor(
+                              controller: controller,
+                              menuChildren: [
+                                  MenuItemButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _editFolderId = folder.folderId;
+                                      });
+                                      // 폴더 수정 시 textField에 Focus 주기
+                                      Future.microtask(() => _editFocusNode.requestFocus());
+                                    },
+                                    leadingIcon: const Icon(Icons.edit),
+                                    child: const Text('폴더 수정하기'),
                                   ),
-                                ),
-                                tileColor: selected ? AppColor.paleBlue : AppColor.white,
-                                leading: Icon(
-                                  Icons.folder,
-                                  color: selected ? AppColor.primary : AppColor.mediumGray,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                onTap: () => widget.onClickFolder(folder),
+                                  MenuItemButton(
+                                    onPressed: () {
+                                      widget.onDeleteFolder(folder);
+                                    },
+                                    leadingIcon: const Icon(Icons.delete),
+                                    child: const Text('폴더 삭제하기'),
+                                  ),
+                              ],
+                              style: MenuStyle(
+                                  backgroundColor: WidgetStateProperty.all(AppColor.white),
                               ),
+                              builder: (context, controller, child) {
+                                return GestureDetector(
+                                  onSecondaryTapDown: (details) {
+                                    controller.open(position: details.localPosition);
+                                  },
+                                  onLongPressStart: (details) {
+                                    controller.open(position: details.localPosition);
+                                  },
+                                  child: Container(
+                                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: isHover ? AppColor.primary : Colors.transparent,
+                                        width: 2,
+                                      ),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: ListTile(
+                                      title: Text(
+                                        folder.folderName,
+                                        style: AppTextStyle.bodyRegular.copyWith(
+                                          color: selected ? AppColor.primary : AppColor.mediumGray,
+                                        ),
+                                      ),
+                                      tileColor: selected ? AppColor.paleBlue : AppColor.white,
+                                      leading: Icon(
+                                        Icons.folder,
+                                        color: selected ? AppColor.primary : AppColor.mediumGray,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      onTap: () => widget.onClickFolder(folder),
+                                    ),
+                                  ),
+                                );
+                              }
                             );
                           }
                         );

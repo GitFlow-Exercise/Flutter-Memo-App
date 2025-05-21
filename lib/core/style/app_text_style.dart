@@ -5,6 +5,20 @@ abstract class AppTextStyle {
   // Pretendard Variable Font
   static const String fontFamily = 'PretendardVariable';
 
+  // 랜딩 페이지 헤더
+  static const TextStyle landingHeader = TextStyle(
+    fontFamily: fontFamily,
+    fontSize: 48,
+    fontWeight: FontWeight.w700,
+  );
+
+  // 랜딩 페이지 작은 헤더
+  static const TextStyle landingSubHeader = TextStyle(
+    fontFamily: fontFamily,
+    fontSize: 30,
+    fontWeight: FontWeight.w700,
+  );
+
   // Logo, Header 등 - Bold(700), 20px
   static const TextStyle titleBold = TextStyle(
     fontFamily: fontFamily,
