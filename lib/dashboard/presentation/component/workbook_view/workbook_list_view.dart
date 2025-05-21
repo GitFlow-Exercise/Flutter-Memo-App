@@ -7,17 +7,29 @@ import 'package:mongo_ai/dashboard/presentation/component/workbook_view/base_sel
 import 'package:mongo_ai/dashboard/presentation/component/workbook_view/workbook_list_item.dart';
 import 'package:mongo_ai/dashboard/presentation/controller/dashboard_navigation_view_model.dart';
 
-class WorkbookListView<T extends DashboardNavigationViewModel> extends ConsumerStatefulWidget {
-  final void Function(int workbookId) onClick;
+class WorkbookListView extends ConsumerStatefulWidget {
   final List<Workbook> workbookList;
-  final T viewModel;
-  const WorkbookListView({super.key, required this.onClick, required this.workbookList, required this.viewModel});
+  final void Function(int workbookId) onClick;
+  final void Function(Workbook workbook) onSelectWorkbook;
+  final void Function(Workbook workbook) onToggleBookmark;
+  final void Function(Workbook workbook) onMoveTrashWorkbook;
+  final void Function(List<Workbook> workbookList) onDrag;
+
+  const WorkbookListView({
+    super.key,
+    required this.onClick,
+    required this.workbookList,
+    required this.onSelectWorkbook,
+    required this.onToggleBookmark,
+    required this.onMoveTrashWorkbook,
+    required this.onDrag,
+  });
 
   @override
-  ConsumerState<WorkbookListView<T>> createState() => _WorkbookListViewState<T>();
+  ConsumerState<WorkbookListView> createState() => _WorkbookListViewState();
 }
 
-class _WorkbookListViewState<T extends DashboardNavigationViewModel> extends ConsumerState<WorkbookListView<T>> {
+class _WorkbookListViewState extends ConsumerState<WorkbookListView> {
 
   bool _isDragging = false;
 
@@ -72,10 +84,8 @@ class _WorkbookListViewState<T extends DashboardNavigationViewModel> extends Con
           return const SizedBox(height: 10);
         },
       ),
-      onSelection: (selected) {
-        for (var workbook in selected) {
-          widget.viewModel.selectWorkbook(workbook);
-        }
+      onSelection: (List<Workbook> selectedList) {
+        widget.onDrag(selectedList);
       },
     );
   }
@@ -84,9 +94,9 @@ class _WorkbookListViewState<T extends DashboardNavigationViewModel> extends Con
     return WorkbookListItem(
       workbook: workbook,
       onClick: () => widget.onClick(workbook.workbookId),
-      onSelect: () => widget.viewModel.selectWorkbook(workbook),
-      onBookmark: () => widget.viewModel.toggleBookmark(workbook),
-      onMoveTrash: () => widget.viewModel.moveTrashWorkbook(workbook),
+      onSelect: () => widget.onSelectWorkbook(workbook),
+      onBookmark: () => widget.onToggleBookmark(workbook),
+      onMoveTrash: () => widget.onMoveTrashWorkbook(workbook),
     );
   }
 }

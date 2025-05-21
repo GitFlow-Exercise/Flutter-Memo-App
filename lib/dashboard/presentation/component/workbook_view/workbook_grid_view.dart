@@ -8,17 +8,29 @@ import 'package:mongo_ai/dashboard/presentation/component/workbook_view/workbook
 import 'package:mongo_ai/dashboard/presentation/controller/dashboard_navigation_view_model.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
 
-class WorkbookGridView<T extends DashboardNavigationViewModel> extends ConsumerStatefulWidget {
-  final void Function(int workbookId) onClick;
+class WorkbookGridView extends ConsumerStatefulWidget {
   final List<Workbook> workbookList;
-  final T viewModel;
-  const WorkbookGridView({super.key, required this.onClick, required this.workbookList, required this.viewModel});
+  final void Function(int workbookId) onClick;
+  final void Function(Workbook workbook) onSelectWorkbook;
+  final void Function(Workbook workbook) onToggleBookmark;
+  final void Function(Workbook workbook) onMoveTrashWorkbook;
+  final void Function(List<Workbook> workbookList) onDrag;
+
+  const WorkbookGridView({
+    super.key,
+    required this.onClick,
+    required this.workbookList,
+    required this.onSelectWorkbook,
+    required this.onToggleBookmark,
+    required this.onMoveTrashWorkbook,
+    required this.onDrag,
+  });
 
   @override
-  ConsumerState<WorkbookGridView<T>> createState() => _WorkbookGridViewState<T>();
+  ConsumerState<WorkbookGridView> createState() => _WorkbookGridViewState();
 }
 
-class _WorkbookGridViewState<T extends DashboardNavigationViewModel> extends ConsumerState<WorkbookGridView<T>> {
+class _WorkbookGridViewState extends ConsumerState<WorkbookGridView> {
 
   bool _isDragging = false;
 
@@ -67,10 +79,8 @@ class _WorkbookGridViewState<T extends DashboardNavigationViewModel> extends Con
         minItemWidth: 280,
         children: children,
       ),
-      onSelection: (selected) {
-        for (var workbook in selected) {
-          widget.viewModel.selectWorkbook(workbook);
-        }
+      onSelection: (List<Workbook> selectedList) {
+        widget.onDrag(selectedList);
       },
     );
   }
@@ -81,10 +91,9 @@ class _WorkbookGridViewState<T extends DashboardNavigationViewModel> extends Con
       child: WorkbookGridItem(
         workbook: workbook,
         onClick: () => widget.onClick(workbook.workbookId),
-        onSelect: () => widget.viewModel.selectWorkbook(workbook),
-        onBookmark: () => widget.viewModel.toggleBookmark(workbook),
-        onMoveTrash: () => widget.viewModel.moveTrashWorkbook(workbook)
-        ,
+        onSelect: () => widget.onSelectWorkbook(workbook),
+        onBookmark: () => widget.onToggleBookmark(workbook),
+        onMoveTrash: () => widget.onMoveTrashWorkbook(workbook),
       ),
     );
   }
