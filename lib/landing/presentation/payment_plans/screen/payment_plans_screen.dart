@@ -112,12 +112,13 @@ class _PaymentPlansScreenState extends State<PaymentPlansScreen> {
                     isRecommended: true,
                     isPremium: widget.state.isPremiumUser,
                     onButtonPressed: () {
-                      if (widget.state.isAuthenticated &&
-                          !widget.state.isPremiumUser) {
-                        widget.onAction(
-                          const PaymentPlansAction.onUpgradeClick(),
-                        );
-                      }
+                      if (widget.state.isPremiumUser &&
+                          widget.state.isAuthenticated) {
+                        return;
+                      } // 로그인 및 구독 중인 경우 클릭 무시
+                      widget.onAction(
+                        const PaymentPlansAction.onUpgradeClick(),
+                      );
                     },
                   ),
                 ],
@@ -216,6 +217,10 @@ class _PaymentPlansScreenState extends State<PaymentPlansScreen> {
                       height: 48,
                       child: ElevatedButton(
                         onPressed: () {
+                          if (widget.state.isPremiumUser &&
+                              widget.state.isAuthenticated) {
+                            return;
+                          } // 로그인 및 구독 중인 경우 클릭 무시
                           widget.onAction(
                             const PaymentPlansAction.onUpgradeClick(),
                           );
@@ -226,9 +231,9 @@ class _PaymentPlansScreenState extends State<PaymentPlansScreen> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                        child: const Text(
-                          '지금 업그레이드',
-                          style: TextStyle(
+                        child: Text(
+                          widget.state.isPremiumUser ? '구독 중' : '지금 업그레이드',
+                          style: const TextStyle(
                             fontFamily: 'Inter',
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
