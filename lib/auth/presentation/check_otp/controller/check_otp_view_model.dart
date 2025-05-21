@@ -1,28 +1,24 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:mongo_ai/auth/presentation/check_otp/controller/check_otp_event.dart';
 import 'package:mongo_ai/auth/presentation/check_otp/controller/check_otp_state.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
+import 'package:mongo_ai/core/extension/ref_extension.dart';
 import 'package:mongo_ai/core/result/result.dart';
+import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'check_otp_view_model.g.dart';
 
 @riverpod
 class CheckOtpViewModel extends _$CheckOtpViewModel {
-  final _eventController = StreamController<CheckOtpEvent>();
   Timer? _countdownTimer;
-
-  Stream<CheckOtpEvent> get eventStream => _eventController.stream;
 
   @override
   Future<CheckOtpState> build(String email) async {
     final codeController = TextEditingController();
 
     ref.onDispose(() {
-      _eventController.close();
       codeController.dispose();
       _countdownTimer?.cancel();
     });
@@ -58,14 +54,17 @@ class CheckOtpViewModel extends _$CheckOtpViewModel {
     }
 
     final authRepository = ref.read(authRepositoryProvider);
-    final result = await authRepository.verifyEmailOtp(state.value!.email, code);
+    final result = await authRepository.verifyEmailOtp(
+      state.value!.email,
+      code,
+    );
 
     switch (result) {
       case Success<void, AppException>():
         state = state.whenData(
           (value) => value.copyWith(isOtpVerified: const AsyncData(true)),
         );
-        _eventController.add(CheckOtpEvent.navigateToPasswordScreen(email),);
+        ref.navigate(Routes.signUpPassword, extra: email);
         return;
       case Error<void, AppException>():
         // 이전에 OTP 기록이 있으므로 매직링크 체크
@@ -79,19 +78,22 @@ class CheckOtpViewModel extends _$CheckOtpViewModel {
   Future<bool> verifyMagicLinkOtp() async {
     final code = state.value!.codeController.text.trim();
     final authRepository = ref.read(authRepositoryProvider);
-    final result = await authRepository.verifyEmailOtp(state.value!.email, code);
+    final result = await authRepository.verifyEmailOtp(
+      state.value!.email,
+      code,
+    );
 
     switch (result) {
       case Success<void, AppException>():
         state = state.whenData(
-              (value) => value.copyWith(isOtpVerified: const AsyncData(true)),
+          (value) => value.copyWith(isOtpVerified: const AsyncData(true)),
         );
-        _eventController.add(CheckOtpEvent.navigateToPasswordScreen(email),);
+        ref.navigate(Routes.signUpPassword, extra: email);
         return true;
       case Error<void, AppException>():
         _setError(result.error.message);
         state = state.whenData(
-              (value) => value.copyWith(isOtpVerified: const AsyncData(false)),
+          (value) => value.copyWith(isOtpVerified: const AsyncData(false)),
         );
         return false;
     }
@@ -106,7 +108,7 @@ class CheckOtpViewModel extends _$CheckOtpViewModel {
     // 바로 성공 처리
     _resetTimer();
     _resetCodeField();
-    _eventController.add(const CheckOtpEvent.showSnackBar('인증번호가 재전송되었습니다.'));
+    ref.showSnackBar('인증번호가 재전송되었습니다.');
   }
 
   void _resetCodeField() {
@@ -148,7 +150,7 @@ class CheckOtpViewModel extends _$CheckOtpViewModel {
         isOtpVerified: const AsyncData(false),
       ),
     );
-    _eventController.add(CheckOtpEvent.showSnackBar(message));
+    ref.showSnackBar(message);
   }
 
   // 남은 시간을 포맷팅

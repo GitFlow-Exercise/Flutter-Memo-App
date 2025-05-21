@@ -1,16 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:mongo_ai/core/component/base_app_button.dart';
-import 'package:mongo_ai/core/routing/routes.dart';
-import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
 import 'package:mongo_ai/create/presentation/base/layout/ai_base_layout.dart';
 import 'package:mongo_ai/create/presentation/base/widgets/ai_error_view.dart';
 import 'package:mongo_ai/create/presentation/base/widgets/ai_loading_view.dart';
 import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_action.dart';
-import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_event.dart';
 import 'package:mongo_ai/create/presentation/create_problem/controller/create_problem_view_model.dart';
 import 'package:mongo_ai/create/presentation/create_problem/screen/create_problem_screen.dart';
 
@@ -25,77 +20,13 @@ class CreateProblemScreenRoot extends ConsumerStatefulWidget {
 
 class _CreateProblemScreenRootState
     extends ConsumerState<CreateProblemScreenRoot> {
-  StreamSubscription? _subscription;
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final viewModel = ref.watch(
-        createProblemViewModelProvider(widget.response).notifier,
-      );
       _handleAction(const CreateProblemAction.getPrompts());
-
-      _subscription = viewModel.eventStream.listen(_handleEvent);
-
       _handleAction(CreateProblemAction.setResponse(widget.response));
     });
-  }
-
-  // 1회성 이벤트 처리 메서드
-  void _handleEvent(CreateProblemEvent event) {
-    switch (event) {
-      case ShowSnackBar(message: final message):
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(message)));
-      case SuccessOpenAIRequest(:final response):
-        if (mounted) {
-          // showDialog(
-          //   context: context,
-          //   builder:
-          //       (ctx) => AlertDialog(
-          //         backgroundColor: AppColor.white,
-          //         title: const Text('내용'),
-          //         content: Row(
-          //           children:
-          //               response.response
-          //                   .map(
-          //                     (e) => Expanded(
-          //                       child: SingleChildScrollView(
-          //                         child: Text(e.getContent()),
-          //                       ),
-          //                     ),
-          //                   )
-          //                   .toList(),
-          //         ),
-          //         actions: [
-          //           BaseAppButton(onTap: () => context.pop(), text: '확인'),
-          //         ],
-          //       ),
-          // );
-          context.go(Routes.createTemplate, extra: response);
-        }
-      case ShowDetailDialog(:final detail):
-        showDialog(
-          context: context,
-          builder:
-              (ctx) => AlertDialog(
-                backgroundColor: AppColor.white,
-                title: const Text('내용'),
-                content: SingleChildScrollView(child: Text(detail)),
-                actions: [
-                  BaseAppButton(onTap: () => context.pop(), text: '확인'),
-                ],
-              ),
-        );
-    }
-  }
-
-  @override
-  void dispose() {
-    _subscription?.cancel();
-    super.dispose();
   }
 
   @override

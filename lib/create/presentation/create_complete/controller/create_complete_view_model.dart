@@ -3,11 +3,11 @@ import 'dart:typed_data';
 import 'package:mongo_ai/core/component/pdf_generator.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
+import 'package:mongo_ai/core/extension/ref_extension.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/core/state/current_folder_id_state.dart';
 import 'package:mongo_ai/core/state/current_team_id_state.dart';
 import 'package:mongo_ai/create/domain/model/create_complete_params.dart';
-import 'package:mongo_ai/create/presentation/create_complete/controller/create_complete_event.dart';
 import 'package:mongo_ai/create/presentation/create_complete/controller/create_complete_state.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
 import 'package:mongo_ai/dashboard/data/dto/workbook_table_dto.dart';
@@ -17,16 +17,8 @@ part 'create_complete_view_model.g.dart';
 
 @riverpod
 class CreateCompleteViewModel extends _$CreateCompleteViewModel {
-  final _eventController = StreamController<CreateCompleteEvent>();
-
-  Stream<CreateCompleteEvent> get eventStream => _eventController.stream;
-
   @override
   CreateCompleteState build(CreateCompleteParams params) {
-    ref.onDispose(() {
-      _eventController.close();
-    });
-
     return CreateCompleteState(
       bytes: Uint8List(0),
       problems: params.problems,
@@ -69,14 +61,11 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
       pdfBytes: state.bytes,
       fileName: state.fileName,
     );
-
     switch (result) {
       case Success<void, AppException>():
         break;
       case Error<void, AppException>():
-        _eventController.add(
-          const CreateCompleteEvent.showSnackBar('다운로드 중 에러가 발생하였습니다.'),
-        );
+        ref.showSnackBar('다운로드 중 에러가 발생하였습니다.');
         break;
     }
   }
@@ -141,16 +130,12 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
         case Success(data: final user):
           userId = user.userId;
         case Error():
-          _eventController.add(
-            const CreateCompleteEvent.showSnackBar('유저 정보를 불러오는데 실패했습니다.'),
-          );
+          ref.showSnackBar('유저 정보를 불러오는데 실패했습니다.');
       }
     });
 
-    if (teamId == null || userId == null) {
-      _eventController.add(
-        const CreateCompleteEvent.showSnackBar('필요한 정보를 불러오는 데 실패하였습니다.'),
-      );
+    if (teamId == null || folderId == null || userId == null) {
+      ref.showSnackBar('필요한 정보를 불러오는 데 실패하였습니다.');
       return false;
     }
 
@@ -174,17 +159,11 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
           case Success():
             return true;
           case Error():
-            _eventController.add(
-              const CreateCompleteEvent.showSnackBar(
-                '문제집에 문제를 저장하는 데 실패하였씁니다.',
-              ),
-            );
+            ref.showSnackBar('문제집에 문제를 저장하는 데 실패하였습니다.');
             return false;
         }
       case Error():
-        _eventController.add(
-          const CreateCompleteEvent.showSnackBar('문제집 생성에 실패하였습니다.'),
-        );
+        ref.showSnackBar('문제집 생성에 실패하였습니다.');
         return false;
     }
   }

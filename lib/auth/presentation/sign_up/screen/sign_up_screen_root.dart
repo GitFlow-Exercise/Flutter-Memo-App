@@ -1,60 +1,29 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/controller/sign_up_action.dart';
-import 'package:mongo_ai/auth/presentation/sign_up/controller/sign_up_event.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/controller/sign_up_view_model.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/screen/sign_up_screen.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 
-class SignUpScreenRoot extends ConsumerStatefulWidget {
+class SignUpScreenRoot extends ConsumerWidget {
   const SignUpScreenRoot({super.key});
 
   @override
-  ConsumerState<SignUpScreenRoot> createState() => _SignUpScreenRootState();
-}
-
-class _SignUpScreenRootState extends ConsumerState<SignUpScreenRoot> {
-  StreamSubscription? _subscription;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final viewModel = ref.watch(signUpViewModelProvider.notifier);
-
-      _subscription = viewModel.eventStream.listen(_handleEvent);
-    });
-  }
-
-  @override
-  void dispose() {
-    _subscription?.cancel();
-    super.dispose();
-  }
-
-  void _handleEvent(SignUpEvent event) {
-    switch (event) {
-      case ShowSnackBar(message: final message):
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(message)));
-        break;
-      case NavigateToCheckOtp(email: final email):
-        context.go(Routes.checkOtp, extra: email);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(signUpViewModelProvider);
 
-    return SignUpScreen(state: state, onAction: _handleAction);
+    return SignUpScreen(
+      state: state,
+      onAction: (action) => _handleAction(ref, context, action: action),
+    );
   }
 
-  void _handleAction(SignUpAction action) async {
+  void _handleAction(
+    WidgetRef ref,
+    BuildContext context, {
+    required SignUpAction action,
+  }) async {
     final viewModel = ref.read(signUpViewModelProvider.notifier);
 
     switch (action) {

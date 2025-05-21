@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
@@ -42,7 +41,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      unawaited(ref.read(dashboardViewModelProvider.notifier).fetchSelectedTeam());
+      unawaited(
+        ref.read(dashboardViewModelProvider.notifier).fetchSelectedTeam(),
+      );
     });
   }
 
@@ -56,7 +57,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       _currentPath = ['최근 항목'];
     } else if (selectedIndex == 3) {
       _currentPath = ['휴지통'];
-    } else if(selectedIndex == 4) {
+    } else if (selectedIndex == 4) {
       _currentPath = ['내 정보'];
     }
 
@@ -101,8 +102,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   Text(
                                     dashboard.userProfile.userName,
                                     style: AppTextStyle.bodyMedium.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColor.black
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColor.black,
                                     ),
                                   ),
                                 ],
@@ -121,7 +122,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           const Spacer(),
                           selectedIndex == 3
                               ? _trashButtonBar(dashboard.currentTeamId)
-                              : _buttonBar(dashboard.currentTeamId)
+                              : _buttonBar(dashboard.currentTeamId),
                         ],
                       ),
                     ),
@@ -181,9 +182,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           const Gap(10),
           WorkbookFilterTabBar(
             toggleGridView: (bool showGridView) {
-              viewModel.toggleFilterShowGridView(
-                showGridView,
-              );
+              viewModel.toggleFilterShowGridView(showGridView);
             },
           ),
         ],
@@ -199,16 +198,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
-              height: 40,
-              child: ButtonWidget(
-                  onClick: () {
-                    if(currentTeamId != null) {
-                      context.go(Routes.create);
-                    }
-                  },
-                  icon: Icons.auto_awesome,
-                  text: '새로 만들기'
-              )
+            height: 40,
+            child: ButtonWidget(
+              onClick: () {
+                if (currentTeamId != null) {
+                  context.go(Routes.create);
+                }
+              },
+              icon: Icons.auto_awesome,
+              text: '새로 만들기',
+            ),
           ),
           const Gap(10),
           MergeButtonWidget(
@@ -216,7 +215,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               print('onMerge');
             },
             onToggleSelectMode: () {
-              if(currentTeamId != null) {
+              if (currentTeamId != null) {
                 viewModel.toggleSelectMode();
               }
             },
@@ -224,11 +223,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           const Gap(10),
           SelectModeButtonWidget(
             onToggleSelectMode: () {
-              if(currentTeamId != null) {
+              if (currentTeamId != null) {
                 viewModel.toggleSelectMode();
               }
             },
-          )
+          ),
         ],
       ),
     );
@@ -242,28 +241,28 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         children: [
           RestoreButtonWidget(
             onRestoreAll: () {
-              if(currentTeamId != null) {
+              if (currentTeamId != null) {
                 viewModel.selectAll();
                 viewModel.toggleDeleteMode();
               }
             },
             onRestoreSelected: () {
-              if(currentTeamId != null) {
+              if (currentTeamId != null) {
                 viewModel.restoreWorkbookList();
                 viewModel.toggleDeleteMode();
               }
-            }
+            },
           ),
           const Gap(10),
           CleanTrashButton(
             onCleanAll: () {
-              if(currentTeamId != null) {
+              if (currentTeamId != null) {
                 viewModel.selectAll();
                 viewModel.toggleDeleteMode();
               }
             },
             onDeleteSelected: () {
-              if(currentTeamId != null) {
+              if (currentTeamId != null) {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -282,11 +281,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           const Gap(10),
           DeleteModeButtonWidget(
             onToggleDeleteMode: () {
-              if(currentTeamId != null) {
+              if (currentTeamId != null) {
                 viewModel.toggleDeleteMode();
               }
-            }
-          )
+            },
+          ),
         ],
       ),
     );
@@ -408,12 +407,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: _sideBarTile(
-                    selectedIndex,
-                    3,
-                    '휴지통',
-                    Icons.delete,
-                  ),
+                  child: _sideBarTile(selectedIndex, 3, '휴지통', Icons.delete),
                 );
               },
             ),

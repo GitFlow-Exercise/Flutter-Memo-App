@@ -7,6 +7,7 @@ import 'package:mongo_ai/auth/presentation/sign_up/screen/sign_up_screen_root.da
 import 'package:mongo_ai/auth/presentation/sign_up_complete/screen/sign_up_complete_screen_root.dart';
 import 'package:mongo_ai/auth/presentation/sign_up_password/screen/sign_up_password_screen_root.dart';
 import 'package:mongo_ai/core/di/providers.dart';
+import 'package:mongo_ai/core/event/key/event_key.dart';
 import 'package:mongo_ai/core/routing/redirect.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/create/domain/model/create_complete_params.dart';
@@ -30,11 +31,13 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final auth = ref.watch(authRepositoryProvider);
+  final appEventKey = ref.watch(appEventKeyProvider);
   return GoRouter(
     initialLocation: Routes.landingPage,
     // auth 관찰해서 변화가 있다면,
     // 새로 reidrect 함수 실행
     refreshListenable: auth,
+    navigatorKey: appEventKey.navigateKey,
     redirect: (context, state) {
       final path = state.fullPath;
       final extra = state.extra;

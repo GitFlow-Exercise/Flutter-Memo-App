@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -7,7 +5,6 @@ import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/landing/domain/enum/landing_header_menu_type.dart';
 import 'package:mongo_ai/landing/presentation/landing_shell/controller/landing_shell_view_model.dart';
 import 'package:mongo_ai/landing/presentation/payment_plans/controller/payment_plans_action.dart';
-import 'package:mongo_ai/landing/presentation/payment_plans/controller/payment_plans_event.dart';
 import 'package:mongo_ai/landing/presentation/payment_plans/controller/payment_plans_view_model.dart';
 import 'package:mongo_ai/landing/presentation/payment_plans/screen/payment_plans_screen.dart';
 
@@ -21,38 +18,18 @@ class PaymentPlansScreenRoot extends ConsumerStatefulWidget {
 
 class _PaymentPlansScreenRootState
     extends ConsumerState<PaymentPlansScreenRoot> {
-  StreamSubscription? _subscription;
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final viewModel = ref.watch(paymentPlansViewModelProvider.notifier);
       final landingShellViewModel = ref.watch(
         landingShellViewModelProvider.notifier,
       );
-
-      _subscription = viewModel.eventStream.listen(_handleEvent);
 
       landingShellViewModel.setNavigationItem(
         LandingHeaderMenuType.paymentPlans,
       );
     });
-  }
-
-  @override
-  void dispose() {
-    _subscription?.cancel();
-    super.dispose();
-  }
-
-  void _handleEvent(PaymentPlansEvent event) {
-    switch (event) {
-      case ShowSnackBar(message: final message):
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(message)));
-    }
   }
 
   @override

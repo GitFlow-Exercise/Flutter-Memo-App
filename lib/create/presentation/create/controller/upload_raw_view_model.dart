@@ -2,18 +2,21 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/core/constants/ai_constant.dart';
 import 'package:mongo_ai/core/debounce/debounce.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/enum/allowed_extension_type.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
+import 'package:mongo_ai/core/extension/ref_extension.dart';
 import 'package:mongo_ai/core/result/result.dart';
+import 'package:mongo_ai/core/routing/routes.dart';
+import 'package:mongo_ai/core/utils/app_dialog.dart';
 import 'package:mongo_ai/create/domain/model/pick_file.dart';
 import 'package:mongo_ai/create/domain/model/request/input_content.dart';
 import 'package:mongo_ai/create/domain/model/request/message_input.dart';
 import 'package:mongo_ai/create/domain/model/request/open_ai_body.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
-import 'package:mongo_ai/create/presentation/create/controller/upload_raw_event.dart';
 import 'package:mongo_ai/create/presentation/create/controller/upload_raw_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -21,17 +24,12 @@ part 'upload_raw_view_model.g.dart';
 
 @riverpod
 class UploadRawViewModel extends _$UploadRawViewModel {
-  final _eventController = StreamController<UploadRawEvent>();
-
-  Stream<UploadRawEvent> get eventStream => _eventController.stream;
-
   @override
   Future<UploadRawState> build() async {
     final textController = TextEditingController();
     final debouncer = Debouncer(delay: const Duration(seconds: 1));
 
     ref.onDispose(() {
-      _eventController.close();
       textController.dispose();
     });
 
@@ -68,7 +66,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
         });
         break;
       case Error(:final error):
-        _readyForSnackBar(error.userFriendlyMessage);
+        ref.showSnackBar(error.userFriendlyMessage);
         debugPrint(error.stackTrace.toString());
         break;
     }
@@ -86,7 +84,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
         });
         break;
       case Error(:final error):
-        _readyForSnackBar(error.userFriendlyMessage);
+        ref.showSnackBar(error.userFriendlyMessage);
         debugPrint(error.stackTrace.toString());
         break;
     }
@@ -96,14 +94,14 @@ class UploadRawViewModel extends _$UploadRawViewModel {
   Future<void> handleSubmitForm() async {
     final pState = state.value;
     if (pState == null) {
-      _readyForSnackBar('에러가 발생하였습니다. 다시 시도해주세요.');
+      ref.showSnackBar('에러가 발생하였습니다. 다시 시도해주세요.');
       return;
     }
     // 텍스트 타입인데 입력된 텍스트가 없다면 에러처리
     if (pState.selectedUploadType == AiConstant.inputText) {
       final text = pState.textController.text.trim();
       if (text.isEmpty) {
-        _readyForSnackBar('텍스트를 입력해주세요.');
+        ref.showSnackBar('텍스트를 입력해주세요.');
         return;
       }
     }
@@ -113,9 +111,9 @@ class UploadRawViewModel extends _$UploadRawViewModel {
     // 현재 데이터 타입이 텍스트가 아니고, file 데이터가 없다면 에러처리
     if (file == null && pState.selectedUploadType != AiConstant.inputText) {
       if (pState.selectedUploadType == AiConstant.inputImage) {
-        _readyForSnackBar('이미지를 선택해주세요.');
+        ref.showSnackBar('이미지를 선택해주세요.');
       } else {
-        _readyForSnackBar('PDF 파일을 선택해주세요.');
+        ref.showSnackBar('PDF 파일을 선택해주세요.');
       }
       return;
     }
@@ -150,19 +148,14 @@ class UploadRawViewModel extends _$UploadRawViewModel {
       case Success<OpenAiResponse, AppException>():
         debugPrint(result.data.toString());
         state = AsyncValue.data(pState.copyWith(result: result.data));
-        _eventController.add(UploadRawEvent.successOCR(result.data));
+        _successOCR(result.data);
       case Error<OpenAiResponse, AppException>():
-        _readyForSnackBar(result.error.userFriendlyMessage);
+        ref.showSnackBar(result.error.userFriendlyMessage);
         state = AsyncValue.error(
           result.error,
           result.error.stackTrace ?? StackTrace.empty,
         );
     }
-  }
-
-  // 하단 스낵바 출력
-  void _readyForSnackBar(String message) {
-    _eventController.add(UploadRawEvent.showSnackBar(message));
   }
 
   // 텍스트 지우기
@@ -186,7 +179,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
     final pState = state.value;
     // 값이 할당되지 않은 경우 에러
     if (pState == null) {
-      _readyForSnackBar('에러가 발생하였습니다.');
+      ref.showSnackBar('에러가 발생하였습니다.');
       return;
     }
     pState.debouncer.run(action);
@@ -197,7 +190,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
     final pState = state.value;
     // 값이 할당되지 않은 경우 에러
     if (pState == null || pState.dropController == null) {
-      _readyForSnackBar('에러가 발생하였습니다.');
+      ref.showSnackBar('에러가 발생하였습니다.');
       return;
     }
     final ctrl = pState.dropController!;
@@ -212,7 +205,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
         .map((e) => e.name)
         .where((e) => e != 'pdf')
         .contains(fileExtension)) {
-      _readyForSnackBar('지원되지 않는 파일 형식입니다.(지원되는 형식: jpg, png, jpeg)');
+      ref.showSnackBar('지원되지 않는 파일 형식입니다.(지원되는 형식: jpg, png, jpeg)');
       return;
     }
 
@@ -233,7 +226,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
     final pState = state.value;
     // 값이 할당되지 않은 경우 에러
     if (pState == null || pState.dropController == null) {
-      _readyForSnackBar('에러가 발생하였습니다.');
+      ref.showSnackBar('에러가 발생하였습니다.');
       return;
     }
     final ctrl = pState.dropController!;
@@ -245,7 +238,7 @@ class UploadRawViewModel extends _$UploadRawViewModel {
     final fileExtension = (await ctrl.getFilename(event)).split('.').last;
 
     if (fileExtension != AllowedExtensionType.pdf.name) {
-      _readyForSnackBar('지원되지 않는 파일 형식입니다.(지원되는 형식: pdf)');
+      ref.showSnackBar('지원되지 않는 파일 형식입니다.(지원되는 형식: pdf)');
       return;
     }
 
@@ -259,5 +252,22 @@ class UploadRawViewModel extends _$UploadRawViewModel {
     state = state.whenData((cb) {
       return cb.copyWith(pickFile: dropedFile);
     });
+  }
+
+  void _successOCR(OpenAiResponse response) {
+    ref.showDialog(
+      builder: (ctx) {
+        final parts = response.getContent().split(AiConstant.splitEmoji);
+        return AppDialog.cleanText(
+          content: (idx) => '${idx + 1}번: ${parts[idx]}',
+          okTap: () {
+            ctx.pop();
+            ctx.push(Routes.createProblem, extra: response);
+          },
+          cancelTap: () => ctx.pop(),
+          itemCount: parts.length,
+        );
+      },
+    );
   }
 }

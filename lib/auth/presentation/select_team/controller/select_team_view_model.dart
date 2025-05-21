@@ -1,10 +1,10 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:mongo_ai/auth/presentation/select_team/controller/select_team_event.dart';
 import 'package:mongo_ai/auth/presentation/select_team/controller/select_team_state.dart';
 import 'package:mongo_ai/core/di/providers.dart';
+import 'package:mongo_ai/core/extension/ref_extension.dart';
 import 'package:mongo_ai/core/result/result.dart';
+import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/core/state/current_team_id_state.dart';
 import 'package:mongo_ai/dashboard/domain/model/team.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -13,16 +13,11 @@ part 'select_team_view_model.g.dart';
 
 @riverpod
 class SelectTeamViewModel extends _$SelectTeamViewModel {
-  final _eventController = StreamController<SelectTeamEvent>();
-
-  Stream<SelectTeamEvent> get eventStream => _eventController.stream;
-
   @override
   SelectTeamState build() {
     final teamNameController = TextEditingController();
 
     ref.onDispose(() {
-      _eventController.close();
       teamNameController.dispose();
     });
 
@@ -40,9 +35,7 @@ class SelectTeamViewModel extends _$SelectTeamViewModel {
     if (userId != null) {
       state = state.copyWith(userId: userId);
     } else {
-      _eventController.add(
-        const SelectTeamEvent.showSnackBar('사용자 정보를 가져올 수 없습니다'),
-      );
+      ref.showSnackBar('사용자 정보를 가져올 수 없습니다');
     }
   }
 
@@ -63,9 +56,7 @@ class SelectTeamViewModel extends _$SelectTeamViewModel {
             error.stackTrace ?? StackTrace.current,
           ),
         );
-        _eventController.add(
-          SelectTeamEvent.showSnackBar(error.userFriendlyMessage),
-        );
+        ref.showSnackBar(error.userFriendlyMessage);
     }
   }
 
@@ -84,7 +75,7 @@ class SelectTeamViewModel extends _$SelectTeamViewModel {
     final newTeamName = state.teamNameController.text.trim();
 
     if (newTeamName.isEmpty) {
-      _eventController.add(const SelectTeamEvent.showSnackBar('팀 이름을 입력해주세요'));
+      ref.showSnackBar('팀 이름을 입력해주세요');
       return;
     }
 
@@ -93,7 +84,7 @@ class SelectTeamViewModel extends _$SelectTeamViewModel {
 
     switch (result) {
       case Success(data: final newTeam):
-      // 팀 목록에 새로 생성된 팀 추가 및 선택
+        // 팀 목록에 새로 생성된 팀 추가 및 선택
         final currentTeams = state.teams.value ?? [];
         state = state.copyWith(
           teams: AsyncValue.data([...currentTeams, newTeam]),
@@ -102,13 +93,9 @@ class SelectTeamViewModel extends _$SelectTeamViewModel {
         );
         // 컨트롤러 초기화
         state.teamNameController.clear();
-        _eventController.add(
-          const SelectTeamEvent.showSnackBar('새 팀이 생성되었습니다'),
-        );
+        ref.showSnackBar('새 팀이 생성되었습니다');
       case Error(error: final error):
-        _eventController.add(
-          SelectTeamEvent.showSnackBar(error.userFriendlyMessage),
-        );
+        ref.showSnackBar(error.userFriendlyMessage);
     }
   }
 
@@ -117,16 +104,12 @@ class SelectTeamViewModel extends _$SelectTeamViewModel {
     final userId = state.userId;
 
     if (selectedTeam == null) {
-      _eventController.add(
-        const SelectTeamEvent.showSnackBar('팀을 선택하거나 생성해주세요'),
-      );
+      ref.showSnackBar('팀을 선택하거나 생성해주세요');
       return;
     }
 
     if (userId == null) {
-      _eventController.add(
-        const SelectTeamEvent.showSnackBar('사용자 정보를 가져올 수 없습니다'),
-      );
+      ref.showSnackBar('사용자 정보를 가져올 수 없습니다');
       return;
     }
 
@@ -140,31 +123,29 @@ class SelectTeamViewModel extends _$SelectTeamViewModel {
 
     switch (assignResult) {
       case Success():
-      // 현재 선택된 팀 ID 설정
+        // 현재 선택된 팀 ID 설정
         ref.read(currentTeamIdStateProvider.notifier).set(selectedTeam.teamId);
 
         await authRepository.saveSelectedTeamId(selectedTeam.teamId);
 
-        final metadataResult = await authRepository.setIsPreferredTeamSelected(true);
+        final metadataResult = await authRepository.setIsPreferredTeamSelected(
+          true,
+        );
 
         switch (metadataResult) {
           case Success():
-            _eventController.add(const SelectTeamEvent.navigateToMyFile());
+            ref.navigate(Routes.myFiles);
           case Error(error: final error):
-            _eventController.add(
-              SelectTeamEvent.showSnackBar(error.userFriendlyMessage),
-            );
+            ref.showSnackBar(error.userFriendlyMessage);
         }
       case Error(error: final error):
-        _eventController.add(
-          SelectTeamEvent.showSnackBar(error.userFriendlyMessage),
-        );
+        ref.showSnackBar(error.userFriendlyMessage);
     }
   }
 
   Future<void> cancelTeamSelect() async {
     await ref.read(authRepositoryProvider).setIsPreferredTeamSelected(true);
-    _eventController.add(const SelectTeamEvent.navigateToMyFile());
+    ref.navigate(Routes.myFiles);
   }
 
   Future<void> checkIsUserInAnyTeam() async {
@@ -175,9 +156,7 @@ class SelectTeamViewModel extends _$SelectTeamViewModel {
         final isUserInAnyTeam = result.data;
         state = state.copyWith(isUserInAnyTeam: isUserInAnyTeam);
       case Error(error: final error):
-        _eventController.add(
-          SelectTeamEvent.showSnackBar(error.userFriendlyMessage),
-        );
+        ref.showSnackBar(error.userFriendlyMessage);
     }
   }
 }

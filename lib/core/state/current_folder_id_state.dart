@@ -1,4 +1,3 @@
-import 'package:mongo_ai/dashboard/domain/model/folder.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'current_folder_id_state.g.dart';

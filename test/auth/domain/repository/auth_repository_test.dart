@@ -439,7 +439,10 @@ void main() {
   group('setIsPreferredTeamSelected', () {
     test('팀 선택 메타데이터 설정이 성공했을 때 Success를 반환해야 한다', () async {
       when(
-        mockAuthDataSource.updateUserMetadata('is_preferred_team_selected', true),
+        mockAuthDataSource.updateUserMetadata(
+          'is_preferred_team_selected',
+          true,
+        ),
       ).thenAnswer((_) async {});
 
       final result = await authRepository.setIsPreferredTeamSelected(true);
@@ -452,12 +455,20 @@ void main() {
           fail('메타데이터 설정이 성공해야 하지만 Error가 반환되었습니다.');
       }
 
-      verify(mockAuthDataSource.updateUserMetadata('is_preferred_team_selected', true)).called(1);
+      verify(
+        mockAuthDataSource.updateUserMetadata(
+          'is_preferred_team_selected',
+          true,
+        ),
+      ).called(1);
     });
 
     test('메타데이터 설정이 실패했을 때 Error를 반환해야 한다', () async {
       when(
-        mockAuthDataSource.updateUserMetadata('is_preferred_team_selected', true),
+        mockAuthDataSource.updateUserMetadata(
+          'is_preferred_team_selected',
+          true,
+        ),
       ).thenThrow(Exception('Metadata update failed'));
 
       final result = await authRepository.setIsPreferredTeamSelected(true);
@@ -472,7 +483,12 @@ void main() {
           );
       }
 
-      verify(mockAuthDataSource.updateUserMetadata('is_preferred_team_selected', true)).called(1);
+      verify(
+        mockAuthDataSource.updateUserMetadata(
+          'is_preferred_team_selected',
+          true,
+        ),
+      ).called(1);
     });
   });
 }

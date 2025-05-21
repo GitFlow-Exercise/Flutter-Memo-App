@@ -1,33 +1,26 @@
 import 'dart:async';
-
 import 'package:flutter/widgets.dart';
-import 'package:mongo_ai/auth/presentation/sign_up/controller/sign_up_event.dart';
 import 'package:mongo_ai/auth/presentation/sign_up/controller/sign_up_state.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
+import 'package:mongo_ai/core/extension/ref_extension.dart';
 import 'package:mongo_ai/core/result/result.dart';
+import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'sign_up_view_model.g.dart';
 
 @riverpod
 class SignUpViewModel extends _$SignUpViewModel {
-  final _eventController = StreamController<SignUpEvent>();
-
-  Stream<SignUpEvent> get eventStream => _eventController.stream;
-
   @override
   SignUpState build() {
     final emailController = TextEditingController();
 
     ref.onDispose(() {
-      _eventController.close();
       emailController.dispose();
     });
 
-    return SignUpState(
-      emailController: emailController,
-    );
+    return SignUpState(emailController: emailController);
   }
 
   Future<bool> checkEmail() async {
@@ -40,7 +33,7 @@ class SignUpViewModel extends _$SignUpViewModel {
       case Success<bool, AppException>():
         return true;
       case Error<bool, AppException>():
-        _eventController.add(SignUpEvent.showSnackBar(result.error.message));
+        ref.showSnackBar(result.error.message);
         return false;
     }
   }
@@ -53,12 +46,12 @@ class SignUpViewModel extends _$SignUpViewModel {
     switch (result) {
       case Success<void, AppException>():
         state = state.copyWith(hasOtpBeenSent: const AsyncData(true));
-        _eventController.add(const SignUpEvent.showSnackBar('인증번호가 발송되었습니다.'));
-        _eventController.add(SignUpEvent.navigateToCheckOtp(state.emailController.text));
+        ref.showSnackBar('인증번호가 발송되었습니다.');
+        ref.navigate(Routes.checkOtp, extra: state.emailController.text);
         return;
       case Error<void, AppException>():
         state = state.copyWith(hasOtpBeenSent: const AsyncData(false));
-        _eventController.add(SignUpEvent.showSnackBar(result.error.message));
+        ref.showSnackBar(result.error.message);
         return;
     }
   }
