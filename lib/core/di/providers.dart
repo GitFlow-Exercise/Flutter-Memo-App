@@ -254,6 +254,10 @@ final paymentDataSourceProvider = Provider<PaymentDataSource>((ref) {
 });
 
 final paymentRepositoryProvider = Provider<PaymentRepository>((ref) {
-  final dataSource = ref.watch(paymentDataSourceProvider);
-  return PaymentRepositoryImpl(dataSource: dataSource);
+  final paymentDataSource = ref.watch(paymentDataSourceProvider);
+  final authDataSource = ref.watch(authDataSourceProvider);
+  return PaymentRepositoryImpl(
+    dataSource: paymentDataSource,
+    authDataSource: authDataSource,
+  );
 });

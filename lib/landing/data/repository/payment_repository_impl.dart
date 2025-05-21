@@ -1,3 +1,4 @@
+import 'package:mongo_ai/auth/data/data_source/auth_data_source.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/landing/data/data_source/payment_data_source.dart';
@@ -7,9 +8,13 @@ import 'package:mongo_ai/landing/domain/repository/payment_repository.dart';
 
 class PaymentRepositoryImpl implements PaymentRepository {
   final PaymentDataSource _dataSource;
+  final AuthDataSource _authDataSource;
 
-  PaymentRepositoryImpl({required PaymentDataSource dataSource})
-    : _dataSource = dataSource;
+  PaymentRepositoryImpl({
+    required PaymentDataSource dataSource,
+    required AuthDataSource authDataSource,
+  }) : _dataSource = dataSource,
+       _authDataSource = authDataSource;
 
   @override
   Future<Result<void, AppException>> payWithKakao(PaymentData data) async {
@@ -32,5 +37,10 @@ class PaymentRepositoryImpl implements PaymentRepository {
         ),
       );
     }
+  }
+
+  @override
+  Future<void> setPremiumUser() async {
+    await _authDataSource.updateUserMetadata('is_premium');
   }
 }
