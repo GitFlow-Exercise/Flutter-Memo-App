@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
+import 'package:mongo_ai/create/domain/model/problem.dart';
 import 'package:mongo_ai/create/presentation/create_complete/controller/create_complete_state.dart';
 import 'package:mongo_ai/create/presentation/create_complete/controller/problem_editor_state.dart';
 import 'package:mongo_ai/create/presentation/create_complete/widget/problem_content_editor.dart';
 import 'package:mongo_ai/create/presentation/create_complete/widget/problem_options_editor.dart';
 import 'package:mongo_ai/create/presentation/create_complete/widget/problem_question_editor.dart';
 import 'package:mongo_ai/create/presentation/create_complete/widget/problem_title_editor.dart';
-import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
 
 class ProblemPreviewWidget extends StatefulWidget {
   final CreateCompleteState state;
