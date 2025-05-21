@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mongo_ai/core/di/providers.dart';
+import 'package:mongo_ai/core/extension/ref_extension.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/core/state/current_team_id_state.dart';
 import 'package:mongo_ai/core/state/deleted_workbook_state.dart';
@@ -25,8 +26,8 @@ class DeletedFilesViewModel extends _$DeletedFilesViewModel {
         case Success(data: final data):
           final deletedWorkbookList = data.where((workbook) => workbook.deletedAt != null).toList();
           return WorkbookFilterState.applyWorkbookViewOption(deletedWorkbookList, filter);
-        case Error():
-        // 여기서 알림등 에러 처리 가능.
+        case Error(error: final error):
+          debugPrint('Error: $error');
           return <Workbook>[];
       }
     });
@@ -49,12 +50,12 @@ class DeletedFilesViewModel extends _$DeletedFilesViewModel {
     final result = await ref.read(workbookRepositoryProvider).updateWorkbook(restoredWorkbook);
     switch (result) {
       case Success(data: final data):
-        // 성공 시 문제집 리스트를 리프레시
+        ref.showSnackBar('${data.workbookName}이(가) 복원되었습니다.');
         refreshWorkbookList();
         break;
       case Error(error: final error):
         debugPrint(error.message);
-        // 여기서 알림등 에러 처리 가능.
+        ref.showSnackBar('복원에 실패하였습니다.');
         break;
     }
   }
@@ -63,12 +64,12 @@ class DeletedFilesViewModel extends _$DeletedFilesViewModel {
     final result = await ref.read(workbookRepositoryProvider).deleteWorkbook(workbook);
     switch (result) {
       case Success(data: final data):
-        // 성공 시 문제집 리스트를 리프레시
+        ref.showSnackBar('${data.workbookName}이(가) 삭제되었습니다.');
         refreshWorkbookList();
         break;
       case Error(error: final error):
         debugPrint(error.message);
-        // 여기서 알림등 에러 처리 가능.
+        ref.showSnackBar('삭제가 실패하였습니다.');
         break;
     }
   }

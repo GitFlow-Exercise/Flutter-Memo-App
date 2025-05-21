@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/enum/workbook_sort_option.dart';
+import 'package:mongo_ai/core/extension/ref_extension.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/core/state/current_folder_id_state.dart';
 import 'package:mongo_ai/core/state/current_team_id_state.dart';
@@ -92,7 +93,7 @@ class DashboardViewModel extends _$DashboardViewModel {
           break;
         case Error(error: final error):
           debugPrint(error.message);
-          // 여기서 알림등 에러 처리 가능.
+          ref.showSnackBar('폴더 생성에 실패하였습니다.');
           break;
       }
     }
@@ -110,7 +111,7 @@ class DashboardViewModel extends _$DashboardViewModel {
         break;
       case Error(error: final error):
         debugPrint(error.message);
-        // 여기서 알림등 에러 처리 가능.
+        ref.showSnackBar('폴더 수정을 실패하였습니다.');
         break;
     }
   }
@@ -127,7 +128,7 @@ class DashboardViewModel extends _$DashboardViewModel {
         break;
       case Error(error: final error):
         debugPrint(error.message);
-        // 여기서 알림등 에러 처리 가능.
+        ref.showSnackBar('폴더 삭제를 실패하였습니다.');
         break;
     }
   }
@@ -155,13 +156,13 @@ class DashboardViewModel extends _$DashboardViewModel {
     final result = await ref.read(changeFolderWorkbookListUseCaseProvider).execute(workbookList, folderId);
     switch (result) {
       case Success(data: final data):
-        // 성공 시 workbook 리스트를 리프레시
+        ref.showSnackBar('$data개의 문제집이 이동되었습니다.');
         ref.read(selectedWorkbookStateProvider.notifier).clear();
         refreshWorkbookList();
         break;
       case Error(error: final error):
         debugPrint(error.message);
-        // 여기서 알림등 에러 처리 가능.
+        ref.showSnackBar('문제집 폴더 이동을 실패하였습니다.');
         break;
     }
   }
@@ -171,13 +172,13 @@ class DashboardViewModel extends _$DashboardViewModel {
     final result = await ref.read(moveTrashWorkbookListUseCaseProvider).execute(workbookList);
     switch (result) {
       case Success(data: final data):
-        // 성공 시 workbook 리스트를 리프레시
+        ref.showSnackBar('$data개의 문제집이 휴지통으로 이동되었습니다.');
         ref.read(selectedWorkbookStateProvider.notifier).clear();
         refreshWorkbookList();
         break;
       case Error(error: final error):
         debugPrint(error.message);
-        // 여기서 알림등 에러 처리 가능.
+        ref.showSnackBar('휴지통 이동에 실패하였습니다.');
         break;
     }
   }
@@ -216,13 +217,13 @@ class DashboardViewModel extends _$DashboardViewModel {
     final result = await ref.read(restoreWorkbookListUseCaseProvider).execute(deletedWorkbookList);
     switch (result) {
       case Success(data: final data):
-        // 성공 시 workbook 리스트를 리프레시
+        ref.showSnackBar('$data개의 문제집이 복원되었습니다.');
         ref.read(deletedWorkbookStateProvider.notifier).clear();
         refreshWorkbookList();
         break;
       case Error(error: final error):
         debugPrint(error.message);
-        // 여기서 알림등 에러 처리 가능.
+        ref.showSnackBar('복원에 실패하였습니다.');
         break;
     }
   }
@@ -237,13 +238,13 @@ class DashboardViewModel extends _$DashboardViewModel {
     final result = await ref.read(deleteWorkbookListUseCaseProvider).execute(deletedWorkbookList);
     switch (result) {
       case Success(data: final data):
-        // 성공 시 workbook 리스트를 리프레시
+        ref.showSnackBar('$data개의 문제집이 삭제되었습니다.');
         ref.read(deletedWorkbookStateProvider.notifier).clear();
         refreshWorkbookList();
         break;
       case Error(error: final error):
         debugPrint(error.message);
-        // 여기서 알림등 에러 처리 가능.
+        ref.showSnackBar('삭제를 실패하였습니다.');
         break;
     }
   }
@@ -260,7 +261,7 @@ class DashboardViewModel extends _$DashboardViewModel {
         break;
       case Error(error: final error):
         debugPrint(error.message);
-        // 여기서 알림등 에러 처리 가능.
+        ref.showSnackBar('전체 선택을 실패하였습니다.');
         break;
     }
   }
