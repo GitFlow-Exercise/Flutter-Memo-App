@@ -411,7 +411,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 );
               },
             ),
-            const Gap(20),
+            const Gap(50),
           ],
         ),
       ),
