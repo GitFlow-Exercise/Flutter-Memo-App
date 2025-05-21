@@ -268,15 +268,48 @@ class _SignUpPasswordScreenState extends State<SignUpPasswordScreen> {
                                     const SignUpPasswordAction.onTapCheckPrivacyPolicy(),
                                   ),
                             ),
-                            const Expanded(
-                              child: Text(
-                                'Mongo AI의 개인정보처리방침 및 이용약관에 동의합니다.',
-                                style: TextStyle(
-                                  fontFamily: AppTextStyle.fontFamily,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColor.black,
-                                ),
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  const Text(
+                                    'Mongo AI의 ',
+                                    style: TextStyle(
+                                      fontFamily: AppTextStyle.fontFamily,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColor.black,
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      widget.onAction(const SignUpPasswordAction.onPressedPrivacyPolicies());
+                                    },
+                                    style: TextButton.styleFrom(
+                                      padding: EdgeInsets.zero,
+                                      minimumSize: Size.zero,
+                                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                      overlayColor: Colors.transparent
+                                    ),
+                                    child: const Text(
+                                      '개인정보처리방침',
+                                      style: TextStyle(
+                                        fontFamily: AppTextStyle.fontFamily,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColor.landingIcon,
+                                      ),
+                                    ),
+                                  ),
+                                  const Text(
+                                    '에 동의합니다.',
+                                    style: TextStyle(
+                                      fontFamily: AppTextStyle.fontFamily,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColor.black,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],

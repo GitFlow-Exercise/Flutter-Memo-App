@@ -8,4 +8,5 @@ abstract class AppTableName {
   static const String prompt = 'prompt';
   static const String userPrivate = 'userPrivate';
   static const String users = 'users';
+  static const String privacyPolicies = 'privacy_policies';
 }

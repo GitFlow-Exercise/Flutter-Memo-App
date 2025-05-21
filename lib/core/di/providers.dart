@@ -55,6 +55,10 @@ import 'package:mongo_ai/dashboard/domain/use_case/move_trash_workbook_list_use_
 import 'package:mongo_ai/dashboard/domain/use_case/move_trash_workbook_use_case.dart';
 import 'package:mongo_ai/dashboard/domain/use_case/restore_workbook_list_use_case.dart';
 import 'package:mongo_ai/dashboard/domain/use_case/toggle_bookmark_use_case.dart';
+import 'package:mongo_ai/landing/data/data_source/privacy_policies_data_source.dart';
+import 'package:mongo_ai/landing/data/data_source/privacy_policies_data_source_impl.dart';
+import 'package:mongo_ai/landing/data/repository/privacy_policies_repository_impl.dart';
+import 'package:mongo_ai/landing/domain/repository/privacy_policies_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final supabaseClientProvider = Provider<SupabaseClient>((ref) {
@@ -76,7 +80,7 @@ final userProfileRepositoryProvider = Provider<UserProfileRepository>((ref) {
 });
 
 final getCurrentUserProfileProvider =
-    FutureProvider<Result<UserProfile, AppException>>((ref) async {
+    FutureProvider.autoDispose<Result<UserProfile, AppException>>((ref) async {
       final repository = ref.watch(userProfileRepositoryProvider);
       return repository.getCurrentUserProfile();
     });
@@ -269,4 +273,21 @@ final problemDataSourceProvider = Provider<ProblemDataSource>((ref) {
 final problemRepositoryProvider = Provider<ProblemRepository>((ref) {
   final dataSource = ref.watch(problemDataSourceProvider);
   return ProblemRepositoryImpl(dataSource: dataSource);
+});
+
+// -----------------------------------
+// landing
+// -----------------------------------
+// DataSource
+final privacyPoliciesDataSourceProvider = Provider<PrivacyPoliciesDataSource>((ref) {
+  final client = ref.watch(supabaseClientProvider);
+  return PrivacyPoliciesDataSourceImpl(client: client);
+});
+
+// -----------------------------------
+// Repository
+
+final privacyPoliciesRepositoryProvider = Provider<PrivacyPoliciesRepository>((ref) {
+  final dataSource = ref.watch(privacyPoliciesDataSourceProvider);
+  return PrivacyPoliciesRepositoryImpl(privacyPoliciesDataSource: dataSource);
 });
