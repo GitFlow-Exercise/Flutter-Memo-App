@@ -4,7 +4,9 @@ import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/extension/ref_extension.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/core/service/portone_payment_service.dart';
+import 'package:mongo_ai/create/domain/model/create_complete_params.dart';
 import 'package:mongo_ai/landing/domain/model/payment_data.dart';
+import 'package:mongo_ai/landing/presentation/payment_plans/controller/payment_plans_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'payment_plans_view_model.g.dart';
@@ -12,7 +14,17 @@ part 'payment_plans_view_model.g.dart';
 @riverpod
 class PaymentPlansViewModel extends _$PaymentPlansViewModel {
   @override
-  void build() {}
+  PaymentPlansState build(CreateCompleteParams? params) {
+    bool isAuthenticated = ref.read(authRepositoryProvider).isAuthenticated;
+    bool isPremiumUser = ref
+        .read(authRepositoryProvider)
+        .checkMetadata('is_premium');
+    return PaymentPlansState(
+      isAuthenticated: isAuthenticated,
+      isPremiumUser: isPremiumUser,
+      params: params,
+    );
+  }
 
   // 추가 메서드 정의
   void showStartButtonClicked() {
@@ -21,13 +33,11 @@ class PaymentPlansViewModel extends _$PaymentPlansViewModel {
   }
 
   void showUpgradeButtonClicked() async {
-    final isAuthenticated = ref.read(authRepositoryProvider).isAuthenticated;
-
-    if (!isAuthenticated) {
+    if (!state.isAuthenticated) {
       ref.showSnackBar('로그인 후 결제 가능합니다');
       return;
     }
-    // No need for a separate variable here as we're using the result directly in payResult
+
     final result = await ref
         .read(paymentRepositoryProvider)
         .payWithKakao(

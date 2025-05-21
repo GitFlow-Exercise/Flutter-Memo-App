@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
+import 'package:mongo_ai/create/domain/model/create_complete_params.dart';
 import 'package:mongo_ai/landing/domain/enum/landing_header_menu_type.dart';
 import 'package:mongo_ai/landing/presentation/landing_shell/controller/landing_shell_view_model.dart';
 import 'package:mongo_ai/landing/presentation/payment_plans/controller/payment_plans_action.dart';
@@ -9,7 +10,8 @@ import 'package:mongo_ai/landing/presentation/payment_plans/controller/payment_p
 import 'package:mongo_ai/landing/presentation/payment_plans/screen/payment_plans_screen.dart';
 
 class PaymentPlansScreenRoot extends ConsumerStatefulWidget {
-  const PaymentPlansScreenRoot({super.key});
+  final CreateCompleteParams? params;
+  const PaymentPlansScreenRoot(this.params, {super.key});
 
   @override
   ConsumerState<PaymentPlansScreenRoot> createState() =>
@@ -25,6 +27,7 @@ class _PaymentPlansScreenRootState
       final landingShellViewModel = ref.watch(
         landingShellViewModelProvider.notifier,
       );
+      ref.watch(paymentPlansViewModelProvider(widget.params));
 
       landingShellViewModel.setNavigationItem(
         LandingHeaderMenuType.paymentPlans,
@@ -38,7 +41,9 @@ class _PaymentPlansScreenRootState
   }
 
   void _handleAction(PaymentPlansAction action) {
-    final viewModel = ref.read(paymentPlansViewModelProvider.notifier);
+    final viewModel = ref.read(
+      paymentPlansViewModelProvider(widget.params).notifier,
+    );
 
     switch (action) {
       case OnStartClick():

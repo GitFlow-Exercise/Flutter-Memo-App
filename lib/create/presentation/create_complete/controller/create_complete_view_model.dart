@@ -49,7 +49,14 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
           return AppDialog.paymentAlertDialog(
             title: '멤버십 구독자 전용 기능',
             content: '프로 플랜 구독하고\n 더 많은 기능을 사용해보세요!',
-            buttonTap: () => ref.navigate(Routes.paymentPlans),
+            buttonTap:
+                () => ref.navigate(
+                  Routes.paymentPlans,
+                  extra: CreateCompleteParams(
+                    problems: state.problems,
+                    isDoubleColumns: state.isDoubleColumns,
+                  ),
+                ),
           );
         },
       );
