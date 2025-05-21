@@ -37,7 +37,8 @@ class _PaymentPlansScreenRootState
 
   @override
   Widget build(BuildContext context) {
-    return PaymentPlansScreen(onAction: _handleAction);
+    final state = ref.watch(paymentPlansViewModelProvider(widget.params));
+    return PaymentPlansScreen(state: state, onAction: _handleAction);
   }
 
   void _handleAction(PaymentPlansAction action) {

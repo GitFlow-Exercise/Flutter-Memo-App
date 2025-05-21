@@ -19,6 +19,7 @@ class PaymentPlansViewModel extends _$PaymentPlansViewModel {
     bool isPremiumUser = ref
         .read(authRepositoryProvider)
         .checkMetadata('is_premium');
+
     return PaymentPlansState(
       isAuthenticated: isAuthenticated,
       isPremiumUser: isPremiumUser,
