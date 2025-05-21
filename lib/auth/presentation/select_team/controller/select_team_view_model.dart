@@ -145,16 +145,35 @@ class SelectTeamViewModel extends _$SelectTeamViewModel {
 
         await authRepository.saveSelectedTeamId(selectedTeam.teamId);
 
-        final metadataResult = await authRepository.setSelectTeamMetadata();
+        final metadataResult = await authRepository.setIsPreferredTeamSelected(true);
 
         switch (metadataResult) {
           case Success():
-            _eventController.add(const SelectTeamEvent.confirmSuccess());
+            _eventController.add(const SelectTeamEvent.navigateToMyFile());
           case Error(error: final error):
             _eventController.add(
               SelectTeamEvent.showSnackBar(error.userFriendlyMessage),
             );
         }
+      case Error(error: final error):
+        _eventController.add(
+          SelectTeamEvent.showSnackBar(error.userFriendlyMessage),
+        );
+    }
+  }
+
+  Future<void> cancelTeamSelect() async {
+    await ref.read(authRepositoryProvider).setIsPreferredTeamSelected(true);
+    _eventController.add(const SelectTeamEvent.navigateToMyFile());
+  }
+
+  Future<void> checkIsUserInAnyTeam() async {
+    final result = await ref.read(teamRepositoryProvider).isUserInAnyTeam();
+
+    switch (result) {
+      case Success():
+        final isUserInAnyTeam = result.data;
+        state = state.copyWith(isUserInAnyTeam: isUserInAnyTeam);
       case Error(error: final error):
         _eventController.add(
           SelectTeamEvent.showSnackBar(error.userFriendlyMessage),

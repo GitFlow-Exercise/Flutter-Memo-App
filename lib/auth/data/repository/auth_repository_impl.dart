@@ -51,7 +51,7 @@ class AuthRepositoryImpl extends AuthRepository {
     switch (result) {
       case Success():
       // 첫 로그인 여부 확인(팀 선택 미완료인지 아닌지)
-        final hasTeamNotSelected = !isSelectTeam;
+        final hasTeamNotSelected = !isPreferredTeamSelected;
         _notifyListeners(
           AuthStateChange.signedInWithGoogle(hasTeamNotSelected: hasTeamNotSelected),
         );
@@ -257,7 +257,7 @@ class AuthRepositoryImpl extends AuthRepository {
       await _authDataSource.saveUser();
 
       // 메타데이터 업데이트
-      await _authDataSource.updateUserMetadata('is_initial_setup_user');
+      await _authDataSource.updateUserMetadata('is_initial_setup_user', true);
       notifyListeners();
       return const Result.success(null);
     } catch (e) {
@@ -379,14 +379,14 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
-  Future<Result<void, AppException>> setSelectTeamMetadata() async {
+  Future<Result<void, AppException>> setIsPreferredTeamSelected(bool isSelect) async {
     try {
-      await _authDataSource.updateUserMetadata('is_select_team');
+      await _authDataSource.updateUserMetadata('is_preferred_team_selected', isSelect);
       return const Result.success(null);
     } catch (e) {
       return Result.error(
         AppException.unknown(
-          message: 'Metadata를 설정하던 중 오류가 발생했습니다: is_select_team',
+          message: 'Metadata를 설정하던 중 오류가 발생했습니다: is_preferred_team_selected',
           error: e,
           stackTrace: StackTrace.current,
         ),
@@ -405,8 +405,8 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
-  bool get isSelectTeam {
-    return _authDataSource.isSelectTeam();
+  bool get isPreferredTeamSelected {
+    return _authDataSource.isPreferredTeamSelected();
   }
 
   @override

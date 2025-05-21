@@ -75,6 +75,22 @@ class MainContentPanel extends StatelessWidget {
                 ),
                 child: state.teams.when(
                   data: (teams) {
+                    if (teams.isEmpty) {
+                      return Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        child: const Text(
+                          '선택 가능한 팀이 없습니다. 팀을 새로 만들어보세요',
+                          style: TextStyle(
+                            fontFamily: AppTextStyle.fontFamily,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: AppColor.lightGray,
+                          ),
+                        ),
+                      );
+                    }
+
                     return DropdownButtonHideUnderline(
                       child: DropdownButton<Team>(
                         value: state.isCreatingNewTeam ? null : state.selectedTeam,
@@ -267,6 +283,37 @@ class MainContentPanel extends StatelessWidget {
                   ),
                 ),
               ),
+
+              if (state.isUserInAnyTeam)
+                Column(
+                  children: [
+                    const Gap(16),
+
+                    Container(
+                      width: double.infinity,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColor.lighterGray),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: ElevatedButton(
+                        onPressed: () => onAction(const SelectTeamAction.onCancel()),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColor.white,
+                          foregroundColor: AppColor.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: Text(
+                          '취소',
+                          style: AppTextStyle.bodyRegular.copyWith(color: AppColor.deepBlack)
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
 
               if (showInfoInSmallScreen) ...[
                 const Gap(32),

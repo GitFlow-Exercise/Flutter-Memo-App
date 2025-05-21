@@ -195,6 +195,11 @@ class DashboardViewModel extends _$DashboardViewModel {
     ref.read(currentTeamIdStateProvider.notifier).set(teamId);
   }
 
+  Future<void> selectNewTeam(VoidCallback onComplete) async {
+    await ref.read(authRepositoryProvider).setIsPreferredTeamSelected(false);
+    onComplete();
+  }
+
   // -----------------
   // 휴지통 관련 메서드
   Future<void> toggleDeleteMode() async {

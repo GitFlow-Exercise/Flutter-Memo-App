@@ -13,4 +13,6 @@ sealed class SelectTeamAction with _$SelectTeamAction {
 
   const factory SelectTeamAction.onToggleCreateNewTeam() =
       OnToggleCreateNewTeam;
+
+  const factory SelectTeamAction.onCancel() = OnCancel;
 }

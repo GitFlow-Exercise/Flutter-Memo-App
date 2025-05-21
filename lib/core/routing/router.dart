@@ -41,7 +41,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       return AppRedirect.authRedirect(
         isAuthenticated: auth.isAuthenticated,
         isInitialSetupUser: auth.isInitialSetupUser,
-        isSelectTeam: auth.isSelectTeam,
+        isPreferredTeamSelected: auth.isPreferredTeamSelected,
         nowPath: path,
         extra: extra,
       );
