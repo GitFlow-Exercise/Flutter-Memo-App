@@ -1,23 +1,28 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
 import 'package:mongo_ai/create/presentation/create_template/widget/problem_card_widget.dart';
 
 class CreateProblemOrderSettingBox extends StatelessWidget {
-  final List<Problem> orderedProblemList;
-  final int totalLength;
+  final CreateTemplateState state;
   final void Function(Problem problem) onAcceptOrderedProblem;
+  final void Function(Problem problem) onTapReCreate;
   final VoidCallback onTapClear;
+  final void Function(Problem problem) onDoubleTapProblem;
+  final void Function(bool isTypeGroup) onTapSortBtn;
 
   const CreateProblemOrderSettingBox({
     super.key,
-    required this.orderedProblemList,
+    required this.state,
     required this.onAcceptOrderedProblem,
+    required this.onTapReCreate,
     required this.onTapClear,
-    required this.totalLength,
+    required this.onDoubleTapProblem,
+    required this.onTapSortBtn,
   });
 
   @override
@@ -53,13 +58,14 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
                           ),
                         ),
                         TextSpan(
-                          text: ' ${orderedProblemList.length}',
+                          text: ' ${state.orderedProblemList.length}',
                           style: AppTextStyle.labelMedium.copyWith(
                             color: AppColor.primary,
                           ),
                         ),
                         TextSpan(
-                          text: '/$totalLength',
+                          text:
+                              '/${state.problemList.length + state.orderedProblemList.length}',
                           style: AppTextStyle.labelMedium.copyWith(
                             color: AppColor.lightGray,
                           ),
@@ -111,27 +117,59 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
                           ),
                           const Gap(12),
                           Text(
-                            '왼쪽의 문제를 이곳에 드래그하여 추가하세요',
+                            '왼쪽의 문제를 오른쪽으로 드래그하여 추가하세요',
+                            style: AppTextStyle.bodyMedium.copyWith(
+                              color: AppColor.paleGray,
+                            ),
+                          ),
+                          const Gap(12),
+                          Text(
+                            '추가되지 않은 문제는 마지막 순서로 배치됩니다',
                             style: AppTextStyle.bodyMedium.copyWith(
                               color: AppColor.paleGray,
                             ),
                           ),
                           const Gap(22),
-                          Container(
-                            constraints: const BoxConstraints(minHeight: 500),
-                            child: ListView.separated(
-                              shrinkWrap: true,
-                              itemCount: orderedProblemList.length,
-                              separatorBuilder:
-                                  (context, index) => const Gap(24),
-                              itemBuilder: (context, index) {
-                                return Draggable<Problem>(
-                                  data: orderedProblemList[index],
+                          if (state.orderedProblemList.isEmpty)
+                            Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () => onTapSortBtn(true),
+                                  child: _OrderTypeButton(
+                                    title: '문항별',
+                                    onTapSortBtn: () => onTapSortBtn(false),
+                                  ),
+                                ),
+                                const Gap(24),
+                                _OrderTypeButton(
+                                  title: '유형별',
+                                  onTapSortBtn: () => onTapSortBtn(true),
+                                ),
+                              ],
+                            ),
+                          const Gap(22),
+                          ListView.separated(
+                            shrinkWrap: true,
+                            itemCount: state.orderedProblemList.length,
+                            separatorBuilder: (context, index) => const Gap(24),
+                            itemBuilder: (context, index) {
+                              final problem = state.orderedProblemList[index];
+                              return GestureDetector(
+                                onDoubleTap: () {
+                                  if (state.reCreatingNumber ==
+                                      problem.number) {
+                                    return;
+                                  }
+                                  onDoubleTapProblem(problem);
+                                },
+                                child: Draggable<Problem>(
+                                  data: state.orderedProblemList[index],
                                   feedback: Material(
                                     child: SizedBox(
                                       width: 300,
                                       child: ProblemCardWidget(
-                                        problem: orderedProblemList[index],
+                                        problem:
+                                            state.orderedProblemList[index],
                                         maxLines: 5,
                                       ),
                                     ),
@@ -139,17 +177,20 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
                                   childWhenDragging: Opacity(
                                     opacity: 0.5,
                                     child: ProblemCardWidget(
-                                      problem: orderedProblemList[index],
+                                      problem: state.orderedProblemList[index],
                                       maxLines: 5,
                                     ),
                                   ),
                                   child: ProblemCardWidget(
-                                    problem: orderedProblemList[index],
+                                    problem: state.orderedProblemList[index],
                                     maxLines: 5,
+                                    onTapReCreate: onTapReCreate,
+                                    reCreatingNum: state.reCreatingNumber,
+                                    isOrdered: true,
                                   ),
-                                );
-                              },
-                            ),
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),
@@ -160,6 +201,30 @@ class CreateProblemOrderSettingBox extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _OrderTypeButton extends StatelessWidget {
+  final String title;
+  final VoidCallback onTapSortBtn;
+  const _OrderTypeButton({required this.title, required this.onTapSortBtn});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onTapSortBtn,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColor.white,
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(color: AppColor.lightGrayBorder, width: 0.5),
+          borderRadius: BorderRadius.circular(4),
+        ),
+      ),
+      child: Text(
+        title,
+        style: AppTextStyle.bodyMedium.copyWith(color: AppColor.lightGray),
       ),
     );
   }

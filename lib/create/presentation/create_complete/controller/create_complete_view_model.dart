@@ -6,6 +6,7 @@ import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/core/state/current_folder_id_state.dart';
 import 'package:mongo_ai/core/state/current_team_id_state.dart';
+import 'package:mongo_ai/create/domain/model/create_complete_params.dart';
 import 'package:mongo_ai/create/presentation/create_complete/controller/create_complete_event.dart';
 import 'package:mongo_ai/create/presentation/create_complete/controller/create_complete_state.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
@@ -21,15 +22,16 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
   Stream<CreateCompleteEvent> get eventStream => _eventController.stream;
 
   @override
-  CreateCompleteState build(List<Problem> problems) {
+  CreateCompleteState build(CreateCompleteParams params) {
     ref.onDispose(() {
       _eventController.close();
     });
 
     return CreateCompleteState(
       bytes: Uint8List(0),
-      problems: problems,
-      problemTypes: problems.map((e) => e.problemType).toSet().toList(),
+      problems: params.problems,
+      isDoubleColumns: params.isDoubleColumns,
+      problemTypes: params.problems.map((e) => e.problemType).toSet().toList(),
     );
   }
 
@@ -145,7 +147,7 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
       }
     });
 
-    if (teamId == null || folderId == null || userId == null) {
+    if (teamId == null || userId == null) {
       _eventController.add(
         const CreateCompleteEvent.showSnackBar('필요한 정보를 불러오는 데 실패하였습니다.'),
       );

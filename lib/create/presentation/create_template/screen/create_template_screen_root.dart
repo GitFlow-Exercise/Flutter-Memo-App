@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
+import 'package:mongo_ai/create/domain/model/create_complete_params.dart';
 import 'package:mongo_ai/create/presentation/base/layout/ai_base_layout.dart';
 import 'package:mongo_ai/create/domain/model/create_template_params.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_action.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_event.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_view_model.dart';
 import 'package:mongo_ai/create/presentation/create_template/screen/create_template_screen.dart';
+import 'package:mongo_ai/create/presentation/create_template/widget/problem_detail_dialog.dart';
 
 class CreateTemplateScreenRoot extends ConsumerStatefulWidget {
   final CreateTemplateParams params;
@@ -73,6 +75,7 @@ class _CreateTemplateScreenRootState
   }
 
   void _handleAction(CreateTemplateAction action) {
+    final state = ref.watch(createTemplateViewModelProvider(widget.params));
     final viewModel = ref.watch(
       createTemplateViewModelProvider(widget.params).notifier,
     );
@@ -92,7 +95,25 @@ class _CreateTemplateScreenRootState
 
       case OnTapNext():
         final orderedList = viewModel.fixProblemList();
-        context.push(Routes.createComplete, extra: orderedList);
+        context.push(
+          Routes.createComplete,
+          extra: CreateCompleteParams(
+            problems: orderedList,
+            isDoubleColumns: !state.isSingleColumns,
+          ),
+        );
+
+      case OnTapReCreate():
+        viewModel.reCreateProblem(action.problem);
+
+      case OnDoubleTapProblem():
+        showDialog(
+          context: context,
+          builder: (context) => ProblemDetailDialog(problem: action.problem),
+        );
+
+      case OnTapQuickSort():
+        viewModel.quickOrderProblemList(action.isTypeGroup);
     }
   }
 }

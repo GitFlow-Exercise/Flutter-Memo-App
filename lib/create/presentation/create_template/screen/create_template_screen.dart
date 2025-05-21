@@ -89,7 +89,7 @@ class _CreateTemplateScreenState extends State<CreateTemplateScreen> {
           child: SizedBox(
             height: _leftColumnHeight,
             child: CreateProblemOrderSettingBox(
-              orderedProblemList: widget.state.orderedProblemList,
+              state: widget.state,
               onAcceptOrderedProblem: (problem) {
                 widget.onAction(
                   CreateTemplateAction.onAcceptOrderedProblem(problem),
@@ -98,9 +98,21 @@ class _CreateTemplateScreenState extends State<CreateTemplateScreen> {
               onTapClear:
                   () =>
                       widget.onAction(const CreateTemplateAction.onTapReset()),
-              totalLength:
-                  widget.state.problemList.length +
-                  widget.state.orderedProblemList.length,
+
+              onTapReCreate: (Problem problem) {
+                widget.onAction(CreateTemplateAction.onTapReCreate(problem));
+              },
+
+              onDoubleTapProblem: (Problem problem) {
+                widget.onAction(
+                  CreateTemplateAction.onDoubleTapProblem(problem),
+                );
+              },
+              onTapSortBtn: (bool isTypeGroup) {
+                widget.onAction(
+                  CreateTemplateAction.onTapQuickSort(isTypeGroup),
+                );
+              },
             ),
           ),
         ),
