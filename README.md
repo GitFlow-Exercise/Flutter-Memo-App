@@ -87,6 +87,7 @@ lib/
 │   ├── enum/             # 열거형 정의
 │   ├── extension/        # 확장 메서드
 │   ├── result/           # 결과 처리 래퍼
+│   ├── event/            # 전역 이벤트 처리
 │   ├── routing/          # 라우팅 설정
 │   ├── state/            # 전역 상태 관리
 │   ├── style/            # 스타일 정의
