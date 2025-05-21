@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:mongo_ai/core/component/base_app_button.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
+import 'package:mongo_ai/core/style/app_text_style.dart';
 
 class AppDialog {
   // 기본 다이아로그
@@ -59,6 +61,40 @@ class AppDialog {
       title: Text(title),
       content: SingleChildScrollView(child: Text(content)),
       actions: [BaseAppButton(onTap: buttonTap, text: '확인')],
+    );
+  }
+
+  // 결제 유도 다이아로그
+  static Widget paymentAlertDialog({
+    required String title,
+    required String content,
+    required VoidCallback buttonTap,
+  }) {
+    return Dialog(
+      backgroundColor: AppColor.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(title, style: AppTextStyle.titleBold),
+            const Gap(12),
+            Text(
+              content,
+              style: AppTextStyle.bodyMedium,
+              textAlign: TextAlign.center,
+            ),
+            const Gap(24),
+            BaseAppButton(
+              onTap: buttonTap,
+              text: '구독하러 가기',
+              textColor: AppColor.white,
+              bgColor: AppColor.primary,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
