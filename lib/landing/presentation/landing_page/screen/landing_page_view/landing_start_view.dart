@@ -64,7 +64,9 @@ class LandingStartView extends StatelessWidget {
             ),
           ),
         ),
-        const LandingFooter(),
+        LandingFooter(onPressedPrivacyPolicies: () {
+          onAction(const LandingPageAction.onPressedPrivacyPolicies());
+        },),
       ],
     );
   }

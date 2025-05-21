@@ -15,9 +15,9 @@ abstract class AuthRepository extends ChangeNotifier {
   /// true: 초기 설정 완료, false: 초기 설정 미완료
   bool get isInitialSetupUser;
 
-  /// 사용자가 팀 선택을 완료했는지 여부를 반환합니다.
+  /// 사용자가 팀 선택을 완료했는지 여부를 반환합니다. 팀을 추가 선택시에도 사용됩니다.
   /// true: 팀 선택 완료, false: 팀 선택 미완료
-  bool get isSelectTeam;
+  bool get isPreferredTeamSelected;
 
   /// 현재 로그인된 사용자의 ID를 반환합니다.
   /// 로그인 되어 있지 않은 경우 null을 반환합니다.
@@ -111,7 +111,7 @@ abstract class AuthRepository extends ChangeNotifier {
   Future<Result<String, AppException>> getCurrentUserEmail();
 
   /// 팀 선택 완료 메타데이터를 설정합니다.
-  Future<Result<void, AppException>> setSelectTeamMetadata();
+  Future<Result<void, AppException>> setIsPreferredTeamSelected(bool isSelect);
 
   /// 현재 사용자의 인증 제공자(구글, 이메일/비밀번호 등)를 반환합니다.
   ///

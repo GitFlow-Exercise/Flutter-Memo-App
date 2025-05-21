@@ -20,4 +20,5 @@ abstract class Routes {
 
   static const landingPage = '/home';
   static const paymentPlans = '/payment-plans';
+  static const privacyPolicies = '/privacy-policies';
 }

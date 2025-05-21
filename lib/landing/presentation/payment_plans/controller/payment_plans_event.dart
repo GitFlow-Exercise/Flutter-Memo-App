@@ -1,8 +1,8 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+// import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'payment_plans_event.freezed.dart';
+// part 'payment_plans_event.freezed.dart';
 
-@freezed
-sealed class PaymentPlansEvent with _$PaymentPlansEvent {
-  const factory PaymentPlansEvent.showSnackBar(String message) = ShowSnackBar;
-}
+// @freezed
+// sealed class PaymentPlansEvent with _$PaymentPlansEvent {
+//   const factory PaymentPlansEvent.showSnackBar(String message) = ShowSnackBar;
+// }

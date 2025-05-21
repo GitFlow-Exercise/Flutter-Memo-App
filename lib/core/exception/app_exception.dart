@@ -84,6 +84,12 @@ sealed class AppException with _$AppException implements Exception {
     StackTrace? stackTrace,
   }) = TempStoreException;
 
+  const factory AppException.privacyPolicies({
+    required String message,
+    Object? error,
+    StackTrace? stackTrace,
+  }) = PrivacyPoliciesException;
+
   const factory AppException.unknownUser({
     required String message,
     Object? error,
@@ -119,6 +125,8 @@ sealed class AppException with _$AppException implements Exception {
         return '오류가 발생했습니다. 다시 시도해주세요.';
       case UnknownUserException():
         return '사용자를 불러올 수 없습니다.';
+      case PrivacyPoliciesException():
+        return '개인정보처리방침을 불러올 수 없습니다.';
     }
   }
 }

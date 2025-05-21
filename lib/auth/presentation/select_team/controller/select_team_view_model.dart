@@ -128,7 +128,9 @@ class SelectTeamViewModel extends _$SelectTeamViewModel {
 
         await authRepository.saveSelectedTeamId(selectedTeam.teamId);
 
-        final metadataResult = await authRepository.setSelectTeamMetadata();
+        final metadataResult = await authRepository.setIsPreferredTeamSelected(
+          true,
+        );
 
         switch (metadataResult) {
           case Success():
@@ -136,6 +138,23 @@ class SelectTeamViewModel extends _$SelectTeamViewModel {
           case Error(error: final error):
             ref.showSnackBar(error.userFriendlyMessage);
         }
+      case Error(error: final error):
+        ref.showSnackBar(error.userFriendlyMessage);
+    }
+  }
+
+  Future<void> cancelTeamSelect() async {
+    await ref.read(authRepositoryProvider).setIsPreferredTeamSelected(true);
+    ref.navigate(Routes.myFiles);
+  }
+
+  Future<void> checkIsUserInAnyTeam() async {
+    final result = await ref.read(teamRepositoryProvider).isUserInAnyTeam();
+
+    switch (result) {
+      case Success():
+        final isUserInAnyTeam = result.data;
+        state = state.copyWith(isUserInAnyTeam: isUserInAnyTeam);
       case Error(error: final error):
         ref.showSnackBar(error.userFriendlyMessage);
     }

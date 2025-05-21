@@ -12,6 +12,7 @@ abstract class SelectTeamState with _$SelectTeamState {
     @Default(null) Team? selectedTeam,
     @Default(false) bool isCreatingNewTeam,
     @Default(null) String? userId,
+    @Default(false) bool isUserInAnyTeam,
     required TextEditingController teamNameController,
   }) = _SelectTeamState;
 }

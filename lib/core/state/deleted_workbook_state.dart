@@ -32,7 +32,7 @@ class DeletedWorkbookState extends _$DeletedWorkbookState {
   }
 
   /// 워크북을 삭제(또는 복원) 리스트에 추가/제거
-  void toggleDeletedWorkbook(Workbook workbook) {
+  void selectDeletedWorkbook(Workbook workbook) {
     final current = state;
     final updatedList = current.deletedWorkbooks.contains(workbook)
         ? current.deletedWorkbooks.where((w) => w != workbook).toList()
@@ -41,7 +41,7 @@ class DeletedWorkbookState extends _$DeletedWorkbookState {
   }
 
   /// 모든 삭제 리스트 비우기
-  void clearDeleted() {
+  void clear() {
     state = state.copyWith(deletedWorkbooks: <Workbook>[]);
   }
 
@@ -50,7 +50,7 @@ class DeletedWorkbookState extends _$DeletedWorkbookState {
     if (state.isDeleteMode) {
       // 모드 off 시, 리스트도 초기화
       state = state.copyWith(isDeleteMode: false);
-      clearDeleted();
+      clear();
     } else {
       state = state.copyWith(isDeleteMode: true);
     }

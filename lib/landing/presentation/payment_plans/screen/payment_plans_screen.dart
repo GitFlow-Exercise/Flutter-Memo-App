@@ -223,7 +223,9 @@ class _PaymentPlansScreenState extends State<PaymentPlansScreen> {
             ),
 
 
-            const LandingFooter(),
+            LandingFooter(onPressedPrivacyPolicies: () {
+              widget.onAction(const PaymentPlansAction.onPressedPrivacyPolicies());
+            },),
           ],
         ),
       ),

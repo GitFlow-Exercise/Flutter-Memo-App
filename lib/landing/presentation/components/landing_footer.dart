@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
+import 'package:mongo_ai/landing/presentation/components/landing_footer_social_icon.dart';
 
 class LandingFooter extends StatelessWidget {
-  const LandingFooter({super.key});
+  final VoidCallback onPressedPrivacyPolicies;
+
+  const LandingFooter({super.key, required this.onPressedPrivacyPolicies});
 
   @override
   Widget build(BuildContext context) {
@@ -43,15 +46,15 @@ class LandingFooter extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 16),
-                          Wrap(
+                          const Wrap(
                             children: [
-                              _buildSocialIcon(Icons.facebook),
-                              const SizedBox(width: 16),
-                              _buildSocialIcon(Icons.web),
-                              const SizedBox(width: 16),
-                              _buildSocialIcon(Icons.email),
-                              const SizedBox(width: 16),
-                              _buildSocialIcon(Icons.chat),
+                              LandingFooterSocialIcon(icon: Icons.facebook),
+                              SizedBox(width: 16),
+                              LandingFooterSocialIcon(icon: Icons.web),
+                              SizedBox(width: 16),
+                              LandingFooterSocialIcon(icon: Icons.email),
+                              SizedBox(width: 16),
+                              LandingFooterSocialIcon(icon: Icons.chat),
                             ],
                           ),
                         ],
@@ -69,13 +72,13 @@ class LandingFooter extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 16),
-                          _buildFooterLink('기능'),
+                          const LandingFooterLinkButton(text: '기능'),
                           const SizedBox(height: 8),
-                          _buildFooterLink('요금제'),
+                          const LandingFooterLinkButton(text: '요금제'),
                           const SizedBox(height: 8),
-                          _buildFooterLink('로드맵'),
+                          const LandingFooterLinkButton(text: '로드맵'),
                           const SizedBox(height: 8),
-                          _buildFooterLink('업데이트'),
+                          const LandingFooterLinkButton(text: '업데이트'),
                         ],
                       ),
                     ),
@@ -91,13 +94,13 @@ class LandingFooter extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 16),
-                          _buildFooterLink('도움말 센터'),
+                          const LandingFooterLinkButton(text: '도움말 센터'),
                           const SizedBox(height: 8),
-                          _buildFooterLink('튜토리얼'),
+                          const LandingFooterLinkButton(text: '튜토리얼'),
                           const SizedBox(height: 8),
-                          _buildFooterLink('FAQ'),
+                          const LandingFooterLinkButton(text: 'FAQ'),
                           const SizedBox(height: 8),
-                          _buildFooterLink('문의하기'),
+                          const LandingFooterLinkButton(text: '문의하기'),
                         ],
                       ),
                     ),
@@ -113,13 +116,13 @@ class LandingFooter extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 16),
-                          _buildFooterLink('소개'),
+                          const LandingFooterLinkButton(text: '소개'),
                           const SizedBox(height: 8),
-                          _buildFooterLink('블로그'),
+                          const LandingFooterLinkButton(text: '블로그'),
                           const SizedBox(height: 8),
-                          _buildFooterLink('채용'),
+                          const LandingFooterLinkButton(text: '채용'),
                           const SizedBox(height: 8),
-                          _buildFooterLink('연락처'),
+                          const LandingFooterLinkButton(text: '연락처'),
                         ],
                       ),
                     ),
@@ -151,11 +154,15 @@ class LandingFooter extends StatelessWidget {
                       ),
                       Row(
                         children: [
-                          _buildFooterLink('이용약관', fontSize: 14),
+                          const LandingFooterLinkButton(text: '이용약관', fontSize: 14),
                           const SizedBox(width: 16),
-                          _buildFooterLink('개인정보처리방침', fontSize: 14),
+                          LandingFooterLinkButton(
+                            onPressed: onPressedPrivacyPolicies,
+                            text: '개인정보처리방침',
+                            fontSize: 14,
+                          ),
                           const SizedBox(width: 16),
-                          _buildFooterLink('쿠키 정책', fontSize: 14),
+                          const LandingFooterLinkButton(text: '쿠키 정책', fontSize: 14),
                         ],
                       ),
                     ],
@@ -168,25 +175,30 @@ class LandingFooter extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildSocialIcon(IconData icon) {
-    return Container(
-      width: 32,
-      height: 32,
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Icon(icon, color: AppColor.paleGray, size: 16),
-    );
-  }
+class LandingFooterLinkButton extends StatelessWidget {
+  final String text;
+  final double fontSize;
+  final VoidCallback? onPressed;
 
-  Widget _buildFooterLink(String text, {double fontSize = 16}) {
-    return Text(
-      text,
-      style: AppTextStyle.bodyRegular.copyWith(
-        color: AppColor.paleGray,
-        fontSize: fontSize,
+  const LandingFooterLinkButton({
+    super.key,
+    required this.text,
+    this.onPressed,
+    double? fontSize,
+  }) : fontSize = fontSize ?? 16;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: onPressed,
+      child: Text(
+        text,
+        style: AppTextStyle.bodyRegular.copyWith(
+          color: AppColor.paleGray,
+          fontSize: fontSize,
+        ),
       ),
     );
   }

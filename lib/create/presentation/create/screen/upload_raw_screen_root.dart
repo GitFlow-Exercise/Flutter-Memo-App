@@ -36,7 +36,7 @@ class UploadRawScreenRoot extends ConsumerWidget {
         );
       },
       error: (obj, stackTrace) => const AiErrorView(),
-      loading: () => const AiLoadingView(),
+      loading: () => const AiLoadingView(text: '클린 텍스트 추출 중...'),
     );
   }
 

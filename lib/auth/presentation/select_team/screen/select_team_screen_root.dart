@@ -53,6 +53,9 @@ class _SelectGroupScreenRootState extends ConsumerState<SelectTeamScreenRoot> {
       case OnToggleCreateNewTeam():
         viewModel.toggleCreateNewTeam();
         break;
+      case OnCancel():
+        viewModel.cancelTeamSelect();
+        break;
     }
   }
 }

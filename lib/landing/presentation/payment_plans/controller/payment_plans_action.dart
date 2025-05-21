@@ -9,4 +9,6 @@ sealed class PaymentPlansAction with _$PaymentPlansAction {
   const factory PaymentPlansAction.onUpgradeClick() = OnUpgradeClick;
 
   const factory PaymentPlansAction.onFreeTrialClick() = OnFreeTrialClick;
+
+  const factory PaymentPlansAction.onPressedPrivacyPolicies() = OnPressedPrivacyPolicies;
 }

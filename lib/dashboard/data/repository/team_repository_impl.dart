@@ -36,7 +36,6 @@ class TeamRepositoryImpl implements TeamRepository {
       final teams = teamDtos.map((e) => e.toTeam()).toList();
       return Result.success(teams);
     } catch (e) {
-      print(e);
       return Result.error(
         AppException.remoteDataBase(
           message: '팀 목록을 가져오는 중 오류가 발생했습니다.',
@@ -79,6 +78,22 @@ class TeamRepositoryImpl implements TeamRepository {
       return Result.error(
         AppException.remoteDataBase(
           message: '사용자를 팀에 할당하는 중 오류가 발생했습니다.',
+          error: e,
+          stackTrace: StackTrace.current,
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Result<bool, AppException>> isUserInAnyTeam() async {
+    try {
+      final isUserNotInAnyTeam = await _dataSource.isUserInAnyTeam();
+      return Result.success(isUserNotInAnyTeam);
+    } catch (e) {
+      return Result.error(
+        AppException.remoteDataBase(
+          message: '사용자가 속한 팀이 있는지 확인하는 중 오류가 발생했습니다.',
           error: e,
           stackTrace: StackTrace.current,
         ),

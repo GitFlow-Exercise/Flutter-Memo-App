@@ -44,6 +44,8 @@ class SignUpPasswordScreenRoot extends ConsumerWidget {
       case SubmitForm():
         viewModel.submitForm();
         break;
+      case OnPressedPrivacyPolicies():
+        context.go(Routes.privacyPolicies);
     }
   }
 }

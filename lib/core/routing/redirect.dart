@@ -1,19 +1,19 @@
 import 'package:mongo_ai/core/routing/routes.dart';
+import 'package:mongo_ai/create/domain/model/create_complete_params.dart';
 import 'package:mongo_ai/create/domain/model/create_template_params.dart';
 import 'package:mongo_ai/create/domain/model/response/open_ai_response.dart';
-import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
 
 abstract class AppRedirect {
   static String? authRedirect({
     required bool isAuthenticated,
     required bool isInitialSetupUser,
-    required bool isSelectTeam,
+    required bool isPreferredTeamSelected,
     required String? nowPath,
     required Object? extra,
   }) {
     // 0. 모든 사용자는 랜딩페이지, 요금제 안내 페이지에 접근 가능
     if (nowPath == Routes.landingPage ||
-        nowPath == Routes.paymentPlans) {
+        nowPath == Routes.paymentPlans || nowPath == Routes.privacyPolicies) {
       return null;
     }
 
@@ -50,8 +50,8 @@ abstract class AppRedirect {
       return null;
     }
 
-    // 3. 인증은 됐고 초기설정은 됐지만 팀 설정이 안됐을 경우
-    if (!isSelectTeam) {
+    // 3. 인증은 됐고 초기설정은 됐지만 팀 설정이 안됐을 경우 또는 팀을 추가 선택할 경우
+    if (!isPreferredTeamSelected) {
       return Routes.selectTeam;
     }
 
@@ -82,7 +82,7 @@ abstract class AppRedirect {
   static String? createCompleteRedirect(Object? extra) {
     // 만약 화면 이동간 필요한 데이터가 타입과 일치하지 않는다면,
     // 강제로 문제 생성 처음 화면으로 이동시킵니다.
-    if (extra is! List<Problem>) {
+    if (extra is! CreateCompleteParams) {
       return Routes.create;
     }
     return null;

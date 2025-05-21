@@ -119,8 +119,8 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
-  Future<void> updateUserMetadata(String key) async {
-    await _client.auth.updateUser(UserAttributes(data: {key: true}));
+  Future<void> updateUserMetadata(String key, bool isSelect) async {
+    await _client.auth.updateUser(UserAttributes(data: {key: isSelect}));
   }
 
   @override
@@ -150,8 +150,8 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
-  bool isSelectTeam() {
-    return checkMetadata('is_select_team');
+  bool isPreferredTeamSelected() {
+    return checkMetadata('is_preferred_team_selected');
   }
 
   @override

@@ -9,6 +9,7 @@ import 'package:mongo_ai/create/presentation/create_template/widget/problem_card
 class CreateProblemListWidget extends StatefulWidget {
   final List<Problem> problemList;
   final void Function(Problem problem) onAcceptProblem;
+
   const CreateProblemListWidget({
     super.key,
     required this.problemList,
