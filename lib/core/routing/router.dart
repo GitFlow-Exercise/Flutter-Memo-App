@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mongo_ai/auth/presentation/check_otp/screen/check_otp_screen_root.dart';
@@ -28,8 +29,9 @@ import 'package:mongo_ai/landing/presentation/payment_plans/screen/payment_plans
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
+  final analytics = FirebaseAnalytics.instance;
   final auth = ref.watch(authRepositoryProvider);
-  return GoRouter(
+  final router = GoRouter(
     //TODO(ok): 배포 전 랜딩페이지로 변경 예정
     initialLocation: Routes.landingPage,
     // auth 관찰해서 변화가 있다면,
@@ -130,6 +132,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder:
             (context, state, navigationShell) =>
                 DashboardScreen(navigationShell: navigationShell),
+
         branches: [
           StatefulShellBranch(
             routes: [
@@ -218,4 +221,17 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
     ],
   );
+
+  router.routerDelegate.addListener(() {
+    // 실제 화면이 그려진 후 analytics에 현재 화면 이름을 전달
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final matches = router.routerDelegate.currentConfiguration;
+      if (matches.isNotEmpty) {
+        final screen = matches.last.matchedLocation;
+        analytics.logScreenView(screenName: screen);
+      }
+    });
+  });
+
+  return router;
 });

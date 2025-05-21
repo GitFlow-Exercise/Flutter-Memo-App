@@ -1,11 +1,14 @@
 import 'dart:async';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/enum/workbook_sort_option.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
+import 'package:mongo_ai/core/state/current_team_id_state.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/dashboard/domain/model/folder.dart';
@@ -44,6 +47,22 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       unawaited(ref.read(dashboardViewModelProvider.notifier).fetchSelectedTeam());
     });
+
+    FirebaseAnalytics.instance.setUserId(
+      id: ref.read(authRepositoryProvider).userId
+    );
+
+    ref.listenManual<int?>(
+      currentTeamIdStateProvider,
+          (previous, next) {
+        FirebaseAnalytics.instance.setUserProperty(
+          name: 'team_id',
+          value: next?.toString() ?? 'no_team',
+        );
+        print('팀 아이디: $next');
+      },
+      fireImmediately: true, // 초기값도 한 번 처리
+    );
   }
 
   @override
