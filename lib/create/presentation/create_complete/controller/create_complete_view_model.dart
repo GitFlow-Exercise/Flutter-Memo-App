@@ -142,22 +142,17 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
   }
 
   Future<bool> saveProblems() async {
-    String? userId;
     final teamId = ref.watch(currentTeamIdStateProvider);
     final folderId = ref.watch(currentFolderIdStateProvider);
-    final userProfile = ref.watch(getCurrentUserProfileProvider);
+    final userId = ref.watch(authRepositoryProvider).userId;
 
-    userProfile.whenData((user) {
-      switch (user) {
-        case Success(data: final user):
-          userId = user.userId;
-        case Error():
-          ref.showSnackBar('유저 정보를 불러오는데 실패했습니다.');
-      }
-    });
+    if (userId == null) {
+      ref.showSnackBar('사용자 정보가 존재하지 않습니다.');
+      return false;
+    }
 
-    if (teamId == null || folderId == null || userId == null) {
-      ref.showSnackBar('필요한 정보를 불러오는 데 실패하였습니다.');
+    if (teamId == null) {
+      ref.showSnackBar('선택된 팀이 없습니다.');
       return false;
     }
 
