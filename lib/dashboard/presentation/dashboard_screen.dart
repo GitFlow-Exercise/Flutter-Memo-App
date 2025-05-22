@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/enum/workbook_sort_option.dart';
 import 'package:mongo_ai/core/routing/routes.dart';
+import 'package:mongo_ai/core/state/current_team_id_state.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/dashboard/domain/model/folder.dart';
@@ -45,6 +48,23 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         ref.read(dashboardViewModelProvider.notifier).fetchSelectedTeam(),
       );
     });
+
+    FirebaseAnalytics.instance.setUserId(
+        id: ref.read(authRepositoryProvider).userId
+    );
+
+    ref.listenManual<int?>(
+      currentTeamIdStateProvider,
+          (previous, next) {
+        if (next == null) return;
+        FirebaseAnalytics.instance.setUserProperty(
+          name: 'team_id',
+          value: next.toString(),
+        );
+        print('팀 아이디: $next');
+      },
+      fireImmediately: true, // 초기값도 한 번 처리
+    );
   }
 
   @override
@@ -55,9 +75,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       _currentPath = ['내 항목'];
     } else if (selectedIndex == 1) {
       _currentPath = ['최근 항목'];
-    } else if (selectedIndex == 3) {
-      _currentPath = ['휴지통'];
+    } else if (selectedIndex == 2) {
+      _currentPath = ['폴더 없음'];
     } else if (selectedIndex == 4) {
+      _currentPath = ['휴지통'];
+    } else if (selectedIndex == 5) {
       _currentPath = ['내 정보'];
     }
 
@@ -120,7 +142,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         children: [
                           _filterBar(),
                           const Spacer(),
-                          selectedIndex == 3
+                          selectedIndex == 4
                               ? _trashButtonBar(dashboard.currentTeamId)
                               : _buttonBar(dashboard.currentTeamId),
                         ],
@@ -209,23 +231,26 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               text: '새로 만들기',
             ),
           ),
-          const Gap(10),
-          MergeButtonWidget(
-            onMerge: () {
-              print('onMerge');
-            },
-            onToggleSelectMode: () {
-              if (currentTeamId != null) {
-                viewModel.toggleSelectMode();
-              }
-            },
-          ),
+          // const Gap(10),
+          // MergeButtonWidget(
+          //   onMerge: () {
+          //     print('onMerge');
+          //   },
+          //   onToggleSelectMode: () {
+          //     if (currentTeamId != null) {
+          //       viewModel.toggleSelectMode();
+          //     }
+          //   },
+          // ),
           const Gap(10),
           SelectModeButtonWidget(
             onToggleSelectMode: () {
               if (currentTeamId != null) {
                 viewModel.toggleSelectMode();
               }
+            },
+            onRemoveSelectedWorkbook: (Workbook workbook) {
+              viewModel.selectWorkbook(workbook);
             },
           ),
         ],
@@ -361,6 +386,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   const Gap(10),
                   _sideBarTile(selectedIndex, 1, '최근 항목', Icons.timelapse),
                   const Gap(10),
+                  _sideBarTile(selectedIndex, 2, '폴더 없음', Icons.folder_off),
+                  const Gap(10),
                 ],
               ),
             ),
@@ -369,7 +396,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               child: FolderListWidget(
                 onClickFolder: (Folder folder) {
                   viewModel.selectFolderId(folder.folderId);
-                  _onTap(context, 2);
+                  _onTap(context, 3);
                   setState(() {
                     _currentPath = [folder.folderName];
                   });
@@ -407,7 +434,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: _sideBarTile(selectedIndex, 3, '휴지통', Icons.delete),
+                  child: _sideBarTile(selectedIndex, 4, '휴지통', Icons.delete),
                 );
               },
             ),

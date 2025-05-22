@@ -189,6 +189,10 @@ class DashboardViewModel extends _$DashboardViewModel {
     ref.read(selectedWorkbookStateProvider.notifier).toggleSelectMode();
   }
 
+  Future<void> selectWorkbook(Workbook workbook) async {
+    ref.read(selectedWorkbookStateProvider.notifier).selectWorkbook(workbook);
+  }
+
   // -----------------
   // Team 선택 메서드
   /// 팀 선택 시 currentTeamIdStateProvider 변하면서 자동 리빌드 됨.

@@ -6,6 +6,7 @@ import 'package:mongo_ai/core/state/deleted_workbook_state.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
+import 'package:mongo_ai/dashboard/presentation/component/button/hover_icon_button.dart';
 
 class DeletedGridItem extends ConsumerWidget {
   final void Function() onSelect;
@@ -37,6 +38,13 @@ class DeletedGridItem extends ConsumerWidget {
         width: 250,
         decoration: BoxDecoration(
           boxShadow: [
+            isSelected
+                ? BoxShadow(
+              color: AppColor.primary.withAlpha(150),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            )
+                :
             BoxShadow(
               color: AppColor.deepBlack.withAlpha(50),
               blurRadius: 5,
@@ -82,7 +90,10 @@ class DeletedGridItem extends ConsumerWidget {
                               const Gap(10),
                               Align(
                                 alignment: Alignment.topRight,
-                                child: GestureDetector(
+                                child: HoverIconButton(
+                                  icon: Icons.restore,
+                                  color: AppColor.primary,
+                                  hideHover: isDeleteMode,
                                   onTap: () {
                                     if (isDeleteMode) {
                                       onSelect();
@@ -90,12 +101,7 @@ class DeletedGridItem extends ConsumerWidget {
                                       onRestore();
                                     }
                                   },
-                                  child: const Icon(
-                                    Icons.restore,
-                                    size: 24,
-                                    color: AppColor.primary
-                                  ),
-                                ),
+                                )
                               ),
                             ],
                           ),
@@ -150,7 +156,10 @@ class DeletedGridItem extends ConsumerWidget {
                           ).format(workbook.deletedAt!),
                         ),
                         const Spacer(),
-                        GestureDetector(
+                        HoverIconButton(
+                          icon: Icons.close,
+                          color: AppColor.destructive,
+                          hideHover: isDeleteMode,
                           onTap: () {
                             if (isDeleteMode) {
                               onSelect();
@@ -158,11 +167,6 @@ class DeletedGridItem extends ConsumerWidget {
                               onPermanentDelete();
                             }
                           },
-                          child: const Icon(
-                              Icons.close,
-                              size: 24,
-                              color: AppColor.destructive
-                          ),
                         ),
                       ],
                     ),
