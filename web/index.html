@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -27,12 +28,59 @@
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" type="image/png" href="favicon.png" />
 
   <title>mongoai_web</title>
   <link rel="manifest" href="manifest.json">
+
+  <!-- PortOne v2 SDK 모듈 방식 -->
+  <script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
+  <script>
+    let widget = null;
+
+    window.startPortOnePayment = async function (paymentData) {
+      try {
+        const paymentId = crypto.randomUUID();  // 또는 직접 생성
+
+        const paymentResult = await PortOne.requestPayment({
+          storeId: paymentData.storeId,
+          channelKey: paymentData.channelKey,
+          paymentId,
+          orderName: paymentData.orderName,
+          totalAmount: paymentData.totalAmount,
+          currency: paymentData.currency,
+          payMethod: paymentData.payMethod,
+        });
+
+        console.log(paymentResult);
+
+        if (paymentResult.code !== undefined) {
+          // 결제 실패
+          window.dispatchEvent(new CustomEvent("paymentResult", {
+            detail: { success: false, error_msg: paymentResult.message }
+          }));
+          return;
+        }
+
+        // ✅ 백엔드 없이 바로 결제 성공 처리
+        console.log("결제 성공:", paymentResult);
+        window.dispatchEvent(new CustomEvent("paymentResult", {
+          detail: { success: true, ...paymentResult }
+        }));
+      } catch (error) {
+        console.log("결제 오류:", error);
+        window.dispatchEvent(new CustomEvent("paymentResult", {
+          detail: { success: false, error_msg: error.message }
+        }));
+      }
+    }
+
+  </script>
+
 </head>
+
 <body>
-  <script src="flutter_bootstrap.js" async></script>
+  <script src="flutter_bootstrap.js"></script>
 </body>
+
 </html>

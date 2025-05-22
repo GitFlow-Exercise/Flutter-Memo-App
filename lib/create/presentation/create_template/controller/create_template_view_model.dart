@@ -132,9 +132,7 @@ class CreateTemplateViewModel extends _$CreateTemplateViewModel {
     ); // 문제 '재생성 중'으로 상태 변경
     final body = OpenAiBody(
       input: [
-        MessageInput(
-          content: [InputContent.text(text: problem.requestContent)],
-        ),
+        MessageInput(content: [InputContent.text(text: problem.cleanText)]),
       ],
       instructions: problem.promptDetail,
     );
