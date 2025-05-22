@@ -34,6 +34,7 @@ class _MyFilesScreenRootState extends ConsumerState<MyFilesScreenRoot> {
     switch (action) {
       case OnClick(workbookId: final workbookId):
         print('클릭: $workbookId');
+        viewModel.getProblemsByWorkbookId(workbookId);
         break;
       case OnSelectWorkbook(workbook: final workbook):
         viewModel.selectWorkbook(workbook);

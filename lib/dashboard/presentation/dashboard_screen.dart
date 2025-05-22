@@ -224,7 +224,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             child: ButtonWidget(
               onClick: () {
                 if (currentTeamId != null) {
-                  context.go(Routes.create);
+                  context.push(Routes.create);
                 }
               },
               icon: Icons.auto_awesome,
