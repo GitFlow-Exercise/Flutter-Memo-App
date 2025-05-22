@@ -12,16 +12,15 @@ import 'package:mongo_ai/create/domain/model/create_complete_params.dart';
 import 'package:mongo_ai/create/domain/model/problem.dart';
 import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
 import 'package:mongo_ai/dashboard/presentation/controller/dashboard_navigation_view_model.dart';
-import 'package:mongo_ai/dashboard/presentation/my_files/controller/my_files_state.dart';
+import 'package:mongo_ai/dashboard/presentation/no_folder/controller/no_folder_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'my_files_view_model.g.dart';
+part 'no_folder_view_model.g.dart';
 
 @riverpod
-class MyFilesViewModel extends _$MyFilesViewModel implements DashboardNavigationViewModel {
+class NoFolderViewModel extends _$NoFolderViewModel implements DashboardNavigationViewModel {
   @override
-  MyFilesState build() {
-    final currentUserId = ref.read(authRepositoryProvider).userId;
+  NoFolderState build() {
     final currentTeamId = ref.watch(currentTeamIdStateProvider);
     final workbookResult = ref.watch(getWorkbooksByCurrentTeamIdProvider);
     final filter = ref.watch(workbookFilterStateProvider);
@@ -29,30 +28,26 @@ class MyFilesViewModel extends _$MyFilesViewModel implements DashboardNavigation
     final workbookList = workbookResult.whenData((result) {
       switch (result) {
         case Success(data: final data):
-          final workbookData = data.where((workbook) => workbook.deletedAt == null && workbook.userId == currentUserId).toList();
-          return WorkbookFilterState.applyWorkbookViewOption(workbookData, filter);
+          final folderData = data.where((workbook) => workbook.deletedAt == null && workbook.folderId == null).toList();
+          return WorkbookFilterState.applyWorkbookViewOption(folderData, filter);
         case Error(error: final error):
           debugPrint('Error: $error');
           return <Workbook>[];
       }
     });
 
-    return MyFilesState(
+    return NoFolderState(
       currentTeamId: currentTeamId,
       workbookList: workbookList,
       showGridView: filter.showGridView,
     );
   }
 
-  // ------------------------
-  // 문서 병합모드 메서드
   @override
   Future<void> selectWorkbook(Workbook workbook) async {
     ref.read(selectedWorkbookStateProvider.notifier).selectWorkbook(workbook);
   }
 
-  // ------------------------
-  // Workbook DB 메서드
   @override
   Future<void> refreshWorkbookList() async {
     ref.refresh(getWorkbooksByCurrentTeamIdProvider);

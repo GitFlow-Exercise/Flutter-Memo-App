@@ -6,6 +6,7 @@ import 'package:mongo_ai/core/state/selected_workbook_state.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
+import 'package:mongo_ai/dashboard/presentation/component/button/hover_icon_button.dart';
 
 class WorkbookGridItem extends ConsumerWidget {
   final void Function() onClick;
@@ -43,6 +44,13 @@ class WorkbookGridItem extends ConsumerWidget {
         width: 250,
         decoration: BoxDecoration(
           boxShadow: [
+            isSelected
+                ? BoxShadow(
+                    color: AppColor.primary.withAlpha(150),
+                    blurRadius: 10,
+                    offset: const Offset(0, 2),
+                  )
+                :
             BoxShadow(
               color: AppColor.deepBlack.withAlpha(50),
               blurRadius: 5,
@@ -88,24 +96,21 @@ class WorkbookGridItem extends ConsumerWidget {
                               const Gap(10),
                               Align(
                                 alignment: Alignment.topRight,
-                                child: GestureDetector(
+                                child: HoverIconButton(
+                                  icon: workbook.bookmark
+                                      ? Icons.star
+                                      : Icons.star_border,
+                                  color: workbook.bookmark
+                                      ? AppColor.secondary
+                                      : AppColor.paleGray,
+                                  hideHover: isSelectMode,
                                   onTap: () {
-                                    if (isSelectMode) {
-                                      onSelect();
-                                    } else {
-                                      onBookmark();
-                                    }
-                                  },
-                                  child: Icon(
-                                    workbook.bookmark
-                                        ? Icons.star
-                                        : Icons.star_border,
-                                    size: 24,
-                                    color:
-                                        workbook.bookmark
-                                            ? AppColor.secondary
-                                            : AppColor.paleGray,
-                                  ),
+                                        if (isSelectMode) {
+                                          onSelect();
+                                        } else {
+                                          onBookmark();
+                                        }
+                                      },
                                 ),
                               ),
                             ],
@@ -161,20 +166,18 @@ class WorkbookGridItem extends ConsumerWidget {
                           ).format(workbook.createdAt),
                         ),
                         const Spacer(),
-                        GestureDetector(
-                          onTap: () {
-                            if (isSelectMode) {
-                              onSelect();
-                            } else {
-                              onMoveTrash();
-                            }
-                          },
-                          child: const Icon(
-                            Icons.close,
-                            size: 24,
-                            color: AppColor.destructive,
-                          ),
-                        ),
+                        HoverIconButton(
+                          icon: Icons.close,
+                          color: AppColor.destructive,
+                          hideHover: isSelectMode,
+                            onTap: () {
+                              if (isSelectMode) {
+                                onSelect();
+                              } else {
+                                onMoveTrash();
+                              }
+                            },
+                        )
                       ],
                     ),
                   ),

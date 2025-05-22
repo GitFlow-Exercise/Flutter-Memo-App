@@ -6,6 +6,7 @@ import 'package:mongo_ai/core/state/selected_workbook_state.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
+import 'package:mongo_ai/dashboard/presentation/component/button/hover_icon_button.dart';
 
 class WorkbookListItem extends ConsumerWidget {
   final void Function() onClick;
@@ -47,6 +48,13 @@ class WorkbookListItem extends ConsumerWidget {
           ),
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
+            isSelected
+                ? BoxShadow(
+              color: AppColor.primary.withAlpha(150),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            )
+                :
             BoxShadow(
               color: AppColor.deepBlack.withAlpha(50),
               blurRadius: 5,
@@ -139,40 +147,35 @@ class WorkbookListItem extends ConsumerWidget {
               ),
               Column(
                 children: [
-                  GestureDetector(
+                  HoverIconButton(
+                    icon: workbook.bookmark
+                        ? Icons.star
+                        : Icons.star_border,
+                    color: workbook.bookmark
+                        ? AppColor.secondary
+                        : AppColor.paleGray,
+                    hideHover: isSelectMode,
                     onTap: () {
-                      if(isSelectMode) {
+                      if (isSelectMode) {
                         onSelect();
                       } else {
                         onBookmark();
                       }
                     },
-                    child: Icon(
-                      workbook.bookmark
-                          ? Icons.star
-                          : Icons.star_border,
-                      size: 24,
-                      color:
-                      workbook.bookmark
-                          ? AppColor.secondary
-                          : AppColor.paleGray,
-                    ),
                   ),
                   const Gap(10),
-                  GestureDetector(
+                  HoverIconButton(
+                    icon: Icons.close,
+                    color: AppColor.destructive,
+                    hideHover: isSelectMode,
                     onTap: () {
-                      if(isSelectMode) {
+                      if (isSelectMode) {
                         onSelect();
                       } else {
                         onMoveTrash();
                       }
                     },
-                    child: const Icon(
-                        Icons.close,
-                        size: 24,
-                        color: AppColor.destructive
-                    ),
-                  ),
+                  )
                 ],
               ),
             ],

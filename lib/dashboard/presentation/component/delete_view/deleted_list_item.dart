@@ -6,6 +6,7 @@ import 'package:mongo_ai/core/state/deleted_workbook_state.dart';
 import 'package:mongo_ai/core/style/app_color.dart';
 import 'package:mongo_ai/core/style/app_text_style.dart';
 import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
+import 'package:mongo_ai/dashboard/presentation/component/button/hover_icon_button.dart';
 
 class DeletedListItem extends ConsumerWidget {
   final void Function() onSelect;
@@ -23,6 +24,7 @@ class DeletedListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isDeleteMode = ref.watch(deletedWorkbookStateProvider).isDeleteMode;
     final isSelected = ref
         .watch(deletedWorkbookStateProvider)
         .deletedWorkbooks
@@ -36,6 +38,13 @@ class DeletedListItem extends ConsumerWidget {
         ),
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
+          isSelected
+              ? BoxShadow(
+            color: AppColor.primary.withAlpha(150),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          )
+              :
           BoxShadow(
             color: AppColor.deepBlack.withAlpha(50),
             blurRadius: 5,
@@ -128,26 +137,30 @@ class DeletedListItem extends ConsumerWidget {
             ),
             Column(
               children: [
-                GestureDetector(
+                HoverIconButton(
+                  icon: Icons.restore,
+                  color: AppColor.primary,
+                  hideHover: isDeleteMode,
                   onTap: () {
-                    onRestore();
+                    if (isDeleteMode) {
+                      onSelect();
+                    } else {
+                      onRestore();
+                    }
                   },
-                  child: const Icon(
-                      Icons.restore,
-                      size: 24,
-                      color: AppColor.primary
-                  ),
                 ),
                 const Gap(10),
-                GestureDetector(
+                HoverIconButton(
+                  icon: Icons.close,
+                  color: AppColor.destructive,
+                  hideHover: isDeleteMode,
                   onTap: () {
-                    onPermanentDelete();
+                    if (isDeleteMode) {
+                      onSelect();
+                    } else {
+                      onPermanentDelete();
+                    }
                   },
-                  child: const Icon(
-                      Icons.close,
-                      size: 24,
-                      color: AppColor.destructive
-                  ),
                 ),
               ],
             )

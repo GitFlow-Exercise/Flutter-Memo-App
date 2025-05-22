@@ -1,6 +1,7 @@
 abstract class Routes {
   static const myFiles = '/my-files';
   static const recentFiles = '/recent-files';
+  static const noFolder = '/no-folder';
   static const folder = '/folder';
   static const myProfile = '/profile';
   static const deletedFiles = '/deleted-files';

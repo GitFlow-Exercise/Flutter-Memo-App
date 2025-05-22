@@ -1,36 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mongo_ai/dashboard/presentation/component/empty_screen/empty_folder_screen.dart';
 import 'package:mongo_ai/dashboard/presentation/component/empty_screen/team_not_selected_screen.dart';
-import 'package:mongo_ai/dashboard/presentation/component/workbook_view/workbook_grid_view.dart';
-import 'package:mongo_ai/dashboard/presentation/component/workbook_view/workbook_list_view.dart';
-import 'package:mongo_ai/dashboard/presentation/my_files/controller/my_files_action.dart';
-import 'package:mongo_ai/dashboard/presentation/my_files/controller/my_files_view_model.dart';
-import 'package:mongo_ai/dashboard/presentation/my_files/screen/my_files_screen.dart';
+import 'package:mongo_ai/dashboard/presentation/no_folder/controller/no_folder_action.dart';
+import 'package:mongo_ai/dashboard/presentation/no_folder/controller/no_folder_view_model.dart';
+import 'package:mongo_ai/dashboard/presentation/no_folder/screen/no_folder_screen.dart';
 
-class MyFilesScreenRoot extends ConsumerStatefulWidget {
-  const MyFilesScreenRoot({super.key});
+class NoFolderScreenRoot extends ConsumerStatefulWidget {
+  const NoFolderScreenRoot({super.key});
 
   @override
-  ConsumerState<MyFilesScreenRoot> createState() => _MyFilesScreenRootState();
+  ConsumerState<NoFolderScreenRoot> createState() => _NoFolderScreenRootState();
 }
 
-class _MyFilesScreenRootState extends ConsumerState<MyFilesScreenRoot> {
+class _NoFolderScreenRootState extends ConsumerState<NoFolderScreenRoot> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(myFilesViewModelProvider);
+    final state = ref.watch(noFolderViewModelProvider);
     if (state.currentTeamId == null) {
       return const TeamNotSelectedScreen();
     }
-    return MyFilesScreen(
+    return NoFolderScreen(
       state: state,
-      onAction: _handleAction,
+      onAction: _handleAction
     );
   }
 
-  void _handleAction(MyFilesAction action) {
-    final viewModel = ref.read(myFilesViewModelProvider.notifier);
+  void _handleAction(NoFolderAction action) {
+    final viewModel = ref.read(noFolderViewModelProvider.notifier);
     switch (action) {
       case OnClick(workbookId: final workbookId):
         print('클릭: $workbookId');

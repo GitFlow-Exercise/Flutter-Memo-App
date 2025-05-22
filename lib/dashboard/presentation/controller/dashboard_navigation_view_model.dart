@@ -12,4 +12,6 @@ abstract interface class DashboardNavigationViewModel {
 
   // 문제집 휴지통 이동
   Future<void> moveTrashWorkbook(Workbook workbook);
+
+  Future<void> getProblemsByWorkbookId(int workbookId);
 }

@@ -19,4 +19,14 @@ class ProblemDataSourceImpl implements ProblemDataSource {
 
     await _client.from(AppTableName.problem).insert(data);
   }
+
+  @override
+  Future<List<ProblemDto>> getProblemsByWorkbookId(int workbookId) async {
+    final response = await _client
+        .from(AppTableName.problem)
+        .select()
+        .eq('workbook_id', workbookId);
+
+    return response.map((e) => ProblemDto.fromJson(e)).toList();
+  }
 }

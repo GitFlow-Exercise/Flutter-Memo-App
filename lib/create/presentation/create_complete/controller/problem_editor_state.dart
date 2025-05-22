@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/material.dart';
-import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
+import 'package:mongo_ai/create/domain/model/problem.dart';
 
 part 'problem_editor_state.freezed.dart';
 
