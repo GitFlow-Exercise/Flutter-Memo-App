@@ -95,6 +95,7 @@ class MainContentPanel extends StatelessWidget {
                       child: DropdownButton<Team>(
                         value: state.isCreatingNewTeam ? null : state.selectedTeam,
                         isExpanded: true,
+                        dropdownColor: AppColor.white,
                         hint: const Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16),
                           child: Text(
