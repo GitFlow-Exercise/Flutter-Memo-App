@@ -171,7 +171,7 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
       case Success(data: final workbook):
         final result = await ref
             .read(problemRepositoryProvider)
-            .createProblems(state.problems, workbook.workbookId.toString());
+            .createProblems(state.problems, workbook.workbookId);
         switch (result) {
           case Success():
             return true;

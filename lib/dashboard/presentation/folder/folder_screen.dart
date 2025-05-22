@@ -13,7 +13,7 @@ class FolderScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(folderViewModelProvider);
     final viewModel = ref.read(folderViewModelProvider.notifier);
-    if(state.currentTeamId == null) {
+    if (state.currentTeamId == null) {
       return const TeamNotSelectedScreen();
     }
     return state.workbookList.when(
@@ -22,8 +22,21 @@ class FolderScreen extends ConsumerWidget {
           return const EmptyFolderScreen();
         }
         return state.showGridView
-            ? WorkbookGridView(workbookList: data, viewModel: viewModel, onClick: (int workbookId) {print('클릭: $workbookId');},)
-            : WorkbookListView(workbookList: data, viewModel: viewModel, onClick: (int workbookId) {print('클릭: $workbookId');},);
+            ? WorkbookGridView(
+              workbookList: data,
+              viewModel: viewModel,
+              onClick: (int workbookId) {
+                print('클릭: $workbookId');
+                viewModel.getProblemsByWorkbookId(workbookId);
+              },
+            )
+            : WorkbookListView(
+              workbookList: data,
+              viewModel: viewModel,
+              onClick: (int workbookId) {
+                print('클릭: $workbookId');
+              },
+            );
       },
       loading: () => const SizedBox.shrink(),
       error: (e, _) => const SizedBox.shrink(),

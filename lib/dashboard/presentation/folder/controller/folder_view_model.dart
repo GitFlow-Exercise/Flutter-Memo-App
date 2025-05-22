@@ -1,9 +1,14 @@
 import 'package:mongo_ai/core/di/providers.dart';
+import 'package:mongo_ai/core/exception/app_exception.dart';
+import 'package:mongo_ai/core/extension/ref_extension.dart';
 import 'package:mongo_ai/core/result/result.dart';
+import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/core/state/current_folder_id_state.dart';
 import 'package:mongo_ai/core/state/current_team_id_state.dart';
 import 'package:mongo_ai/core/state/selected_workbook_state.dart';
 import 'package:mongo_ai/core/state/workbook_filter_state.dart';
+import 'package:mongo_ai/create/domain/model/create_complete_params.dart';
+import 'package:mongo_ai/create/domain/model/problem.dart';
 import 'package:mongo_ai/dashboard/domain/model/workbook.dart';
 import 'package:mongo_ai/dashboard/presentation/controller/dashboard_navigation_view_model.dart';
 import 'package:mongo_ai/dashboard/presentation/folder/controller/folder_state.dart';
@@ -12,7 +17,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'folder_view_model.g.dart';
 
 @riverpod
-class FolderViewModel extends _$FolderViewModel implements DashboardNavigationViewModel{
+class FolderViewModel extends _$FolderViewModel
+    implements DashboardNavigationViewModel {
   @override
   FolderState build() {
     final currentTeamId = ref.watch(currentTeamIdStateProvider);
@@ -23,8 +29,18 @@ class FolderViewModel extends _$FolderViewModel implements DashboardNavigationVi
     final workbookList = workbookResult.whenData((result) {
       switch (result) {
         case Success(data: final data):
-          final folderData = data.where((workbook) => workbook.deletedAt == null && workbook.folderId == currentFolderId).toList();
-          return WorkbookFilterState.applyWorkbookViewOption(folderData, filter);
+          final folderData =
+              data
+                  .where(
+                    (workbook) =>
+                        workbook.deletedAt == null &&
+                        workbook.folderId == currentFolderId,
+                  )
+                  .toList();
+          return WorkbookFilterState.applyWorkbookViewOption(
+            folderData,
+            filter,
+          );
         case Error():
           // 여기서 알림등 에러 처리 가능.
           return <Workbook>[];
@@ -54,8 +70,10 @@ class FolderViewModel extends _$FolderViewModel implements DashboardNavigationVi
 
   @override
   Future<void> toggleBookmark(Workbook workbook) async {
-    final result = await ref.read(toggleBookmarkUseCaseProvider).execute(workbook);
-    switch(result) {
+    final result = await ref
+        .read(toggleBookmarkUseCaseProvider)
+        .execute(workbook);
+    switch (result) {
       case Success(data: final data):
         refreshWorkbookList();
         break;
@@ -68,8 +86,10 @@ class FolderViewModel extends _$FolderViewModel implements DashboardNavigationVi
 
   @override
   Future<void> moveTrashWorkbook(Workbook workbook) async {
-    final result = await ref.read(moveTrashWorkbookUseCaseProvider).execute(workbook);
-    switch(result) {
+    final result = await ref
+        .read(moveTrashWorkbookUseCaseProvider)
+        .execute(workbook);
+    switch (result) {
       case Success(data: final data):
         refreshWorkbookList();
         break;
@@ -77,6 +97,25 @@ class FolderViewModel extends _$FolderViewModel implements DashboardNavigationVi
         print('Error: ${result.error}');
         // 여기서 알림등 에러 처리 가능.
         break;
+    }
+  }
+
+  Future<void> getProblemsByWorkbookId(int workbookId) async {
+    final result = await ref
+        .watch(problemRepositoryProvider)
+        .getProblemsByWorkbookId(workbookId);
+
+    switch (result) {
+      case Success<List<Problem>, AppException>():
+        ref.navigate(
+          Routes.createComplete,
+          extra: CreateCompleteParams(
+            problems: result.data,
+            isDoubleColumns: false,
+          ),
+        );
+      case Error<List<Problem>, AppException>():
+        ref.showSnackBar('문제 조회 중 오류가 발생했습니다.');
     }
   }
 }

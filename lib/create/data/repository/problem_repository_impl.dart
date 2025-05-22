@@ -14,7 +14,7 @@ class ProblemRepositoryImpl implements ProblemRepository {
   @override
   Future<Result<void, AppException>> createProblems(
     List<Problem> problems,
-    String workbookId,
+    int workbookId,
   ) async {
     try {
       await _dataSource.createProblems(

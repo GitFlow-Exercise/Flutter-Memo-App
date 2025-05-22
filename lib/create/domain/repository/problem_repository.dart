@@ -5,7 +5,7 @@ import 'package:mongo_ai/create/domain/model/problem.dart';
 abstract interface class ProblemRepository {
   Future<Result<void, AppException>> createProblems(
     List<Problem> problemsm,
-    String workbookId,
+    int workbookId,
   );
 
   Future<Result<List<Problem>, AppException>> getProblemsByWorkbookId(

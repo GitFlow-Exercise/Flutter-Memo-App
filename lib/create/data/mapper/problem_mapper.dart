@@ -17,7 +17,7 @@ extension ProblemMapper on ProblemDto {
 }
 
 extension ProblemDtoMapper on Problem {
-  ProblemDto toProblemDto(String workbookId) {
+  ProblemDto toProblemDto(int workbookId) {
     return ProblemDto(
       workbookId: workbookId,
       problemLabel: problemType,
