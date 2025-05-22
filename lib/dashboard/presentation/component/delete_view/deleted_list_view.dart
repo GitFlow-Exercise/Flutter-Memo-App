@@ -7,25 +7,27 @@ import 'package:mongo_ai/dashboard/presentation/component/delete_workbook_alert_
 import 'package:mongo_ai/dashboard/presentation/component/workbook_view/base_selectable_view.dart';
 import 'package:mongo_ai/dashboard/presentation/deleted_files/controller/deleted_files_view_model.dart';
 
-class DeletedListView<T extends DeletedFilesViewModel>
-    extends ConsumerStatefulWidget {
+class DeletedListView extends ConsumerStatefulWidget {
   final List<Workbook> workbookList;
-  final T viewModel;
+  final void Function(Workbook workbook) onSelectWorkbook;
+  final void Function(Workbook workbook) onPermanentDeleteWorkbook;
+  final void Function(Workbook workbook) onRestoreWorkbook;
+  final void Function(List<Workbook> workbookList) onDrag;
 
   const DeletedListView({
     super.key,
     required this.workbookList,
-    required this.viewModel,
+    required this.onSelectWorkbook,
+    required this.onPermanentDeleteWorkbook,
+    required this.onRestoreWorkbook,
+    required this.onDrag,
   });
 
   @override
-  ConsumerState<DeletedListView<T>> createState() =>
-      _DeletedListViewState<T>();
+  ConsumerState<DeletedListView> createState() => _DeletedListViewState();
 }
 
-class _DeletedListViewState<T extends DeletedFilesViewModel>
-    extends ConsumerState<DeletedListView<T>> {
-
+class _DeletedListViewState extends ConsumerState<DeletedListView> {
   @override
   Widget build(BuildContext context) {
     final isDeleteMode = ref.watch(deletedWorkbookStateProvider).isDeleteMode;
@@ -57,36 +59,18 @@ class _DeletedListViewState<T extends DeletedFilesViewModel>
           return const SizedBox(height: 10);
         },
       ),
-      onSelection: (selected) {
-        for (var workbook in selected) {
-          widget.viewModel.selectWorkbook(workbook);
-        }
+      onSelection: (List<Workbook> selectedList) {
+        widget.onDrag(selectedList);
       },
     );
   }
 
   Widget _buildItem(Workbook workbook) {
     return DeletedListItem(
-      workbook: workbook,
-      onSelect: () {
-        widget.viewModel.selectWorkbook(workbook);
-      },
-      onPermanentDelete: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return DeleteWorkbookAlertDialog(
-              onDeleteWorkbook: () {
-                widget.viewModel.permanentDeleteWorkbook(workbook);
-              },
-              title: '문제집 삭제하기',
-            );
-          },
-        );
-      },
-      onRestore: () {
-        widget.viewModel.restoreWorkbook(workbook);
-      },
+        workbook: workbook,
+        onSelect: () => widget.onSelectWorkbook(workbook),
+        onPermanentDelete: () => widget.onPermanentDeleteWorkbook(workbook),
+        onRestore: () => widget.onRestoreWorkbook(workbook)
     );
   }
 }

@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:mongo_ai/core/di/providers.dart';
+import 'package:mongo_ai/core/extension/ref_extension.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/core/state/current_folder_id_state.dart';
 import 'package:mongo_ai/core/state/current_team_id_state.dart';
@@ -25,8 +27,8 @@ class FolderViewModel extends _$FolderViewModel implements DashboardNavigationVi
         case Success(data: final data):
           final folderData = data.where((workbook) => workbook.deletedAt == null && workbook.folderId == currentFolderId).toList();
           return WorkbookFilterState.applyWorkbookViewOption(folderData, filter);
-        case Error():
-          // 여기서 알림등 에러 처리 가능.
+        case Error(error: final error):
+          debugPrint('Error: $error');
           return <Workbook>[];
       }
     });
@@ -59,9 +61,9 @@ class FolderViewModel extends _$FolderViewModel implements DashboardNavigationVi
       case Success(data: final data):
         refreshWorkbookList();
         break;
-      case Error():
-        print('Error: ${result.error}');
-        // 여기서 알림등 에러 처리 가능.
+      case Error(error: final error):
+        debugPrint(error.message);
+        ref.showSnackBar('북마크 수정에 실패하였습니다.');
         break;
     }
   }
@@ -71,11 +73,12 @@ class FolderViewModel extends _$FolderViewModel implements DashboardNavigationVi
     final result = await ref.read(moveTrashWorkbookUseCaseProvider).execute(workbook);
     switch(result) {
       case Success(data: final data):
+        ref.showSnackBar('${data.workbookName}이(가) 휴지통으로 이동되었습니다.');
         refreshWorkbookList();
         break;
-      case Error():
-        print('Error: ${result.error}');
-        // 여기서 알림등 에러 처리 가능.
+      case Error(error: final error):
+        debugPrint(error.message);
+        ref.showSnackBar('휴지통 이동에 실패하였습니다.');
         break;
     }
   }

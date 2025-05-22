@@ -8,25 +8,27 @@ import 'package:mongo_ai/dashboard/presentation/component/delete_view/deleted_gr
 import 'package:mongo_ai/dashboard/presentation/deleted_files/controller/deleted_files_view_model.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
 
-class DeletedGridView<T extends DeletedFilesViewModel>
-    extends ConsumerStatefulWidget {
+class DeletedGridView extends ConsumerStatefulWidget {
   final List<Workbook> workbookList;
-  final T viewModel;
+  final void Function(Workbook workbook) onSelectWorkbook;
+  final void Function(Workbook workbook) onPermanentDeleteWorkbook;
+  final void Function(Workbook workbook) onRestoreWorkbook;
+  final void Function(List<Workbook> workbookList) onDrag;
 
   const DeletedGridView({
     super.key,
     required this.workbookList,
-    required this.viewModel,
+    required this.onSelectWorkbook,
+    required this.onPermanentDeleteWorkbook,
+    required this.onRestoreWorkbook,
+    required this.onDrag,
   });
 
   @override
-  ConsumerState<DeletedGridView<T>> createState() =>
-      _DeletedGridViewState<T>();
+  ConsumerState<DeletedGridView> createState() => _DeletedGridViewState();
 }
 
-class _DeletedGridViewState<T extends DeletedFilesViewModel>
-    extends ConsumerState<DeletedGridView<T>> {
-
+class _DeletedGridViewState extends ConsumerState<DeletedGridView> {
   @override
   Widget build(BuildContext context) {
     final isDeleteMode = ref.watch(deletedWorkbookStateProvider).isDeleteMode;
@@ -54,10 +56,8 @@ class _DeletedGridViewState<T extends DeletedFilesViewModel>
           children: children,
         );
       },
-      onSelection: (selected) {
-        for (var workbook in selected) {
-          widget.viewModel.selectWorkbook(workbook);
-        }
+      onSelection: (List<Workbook> selectedList) {
+        widget.onDrag(selectedList);
       },
     );
   }
@@ -67,25 +67,9 @@ class _DeletedGridViewState<T extends DeletedFilesViewModel>
       aspectRatio: 1, // 비율 유지
       child: DeletedGridItem(
         workbook: workbook,
-        onSelect: () {
-          widget.viewModel.selectWorkbook(workbook);
-        },
-        onPermanentDelete: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return DeleteWorkbookAlertDialog(
-                onDeleteWorkbook: () {
-                  widget.viewModel.permanentDeleteWorkbook(workbook);
-                },
-                title: '문제집 삭제하기',
-              );
-            },
-          );
-        },
-        onRestore: () {
-          widget.viewModel.restoreWorkbook(workbook);
-        },
+        onSelect: () => widget.onSelectWorkbook(workbook),
+        onPermanentDelete: () => widget.onPermanentDeleteWorkbook(workbook),
+        onRestore: () => widget.onRestoreWorkbook(workbook)
       ),
     );
   }

@@ -19,11 +19,11 @@ import 'package:mongo_ai/create/presentation/create_problem/screen/create_proble
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_view_model.dart';
 import 'package:mongo_ai/create/presentation/create_template/screen/create_template_screen_root.dart';
 import 'package:mongo_ai/dashboard/presentation/dashboard_screen.dart';
-import 'package:mongo_ai/dashboard/presentation/deleted_files/deleted_files_screen.dart';
-import 'package:mongo_ai/dashboard/presentation/folder/folder_screen.dart';
-import 'package:mongo_ai/dashboard/presentation/my_files/my_files_screen.dart';
+import 'package:mongo_ai/dashboard/presentation/deleted_files/screen/deleted_files_screen_root.dart';
+import 'package:mongo_ai/dashboard/presentation/folder/screen/folder_screen_root.dart';
+import 'package:mongo_ai/dashboard/presentation/my_files/screen/my_files_screen_root.dart';
 import 'package:mongo_ai/dashboard/presentation/my_profile/screen/my_profile_screen_root.dart';
-import 'package:mongo_ai/dashboard/presentation/recent_files/recent_files_screen.dart';
+import 'package:mongo_ai/dashboard/presentation/recent_files/screen/recent_files_screen_root.dart';
 import 'package:mongo_ai/landing/presentation/landing_page/screen/landing_page_screen.dart';
 import 'package:mongo_ai/landing/presentation/landing_shell/screen/landing_shell_screen_root.dart';
 import 'package:mongo_ai/landing/presentation/payment_plans/screen/payment_plans_screen_root.dart';
@@ -150,7 +150,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: Routes.myFiles,
-                builder: (context, state) => const MyFilesScreen(),
+                builder: (context, state) => const MyFilesScreenRoot(),
               ),
             ],
           ),
@@ -158,7 +158,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: Routes.recentFiles,
-                builder: (context, state) => const RecentFilesScreen(),
+                builder: (context, state) => const RecentFilesScreenRoot(),
               ),
             ],
           ),
@@ -166,7 +166,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: Routes.folder,
-                builder: (context, state) => const FolderScreen(),
+                builder: (context, state) => const FolderScreenRoot(),
               ),
             ],
           ),
@@ -174,7 +174,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: Routes.deletedFiles,
-                builder: (context, state) => const DeletedFilesScreen(),
+                builder: (context, state) => const DeletedFilesScreenRoot(),
               ),
             ],
           ),
