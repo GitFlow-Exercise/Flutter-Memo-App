@@ -55,9 +55,13 @@ import 'package:mongo_ai/dashboard/domain/use_case/move_trash_workbook_list_use_
 import 'package:mongo_ai/dashboard/domain/use_case/move_trash_workbook_use_case.dart';
 import 'package:mongo_ai/dashboard/domain/use_case/restore_workbook_list_use_case.dart';
 import 'package:mongo_ai/dashboard/domain/use_case/toggle_bookmark_use_case.dart';
+import 'package:mongo_ai/landing/data/data_source/payment_data_source.dart';
+import 'package:mongo_ai/landing/data/data_source/payment_data_source_impl.dart';
 import 'package:mongo_ai/landing/data/data_source/privacy_policies_data_source.dart';
 import 'package:mongo_ai/landing/data/data_source/privacy_policies_data_source_impl.dart';
+import 'package:mongo_ai/landing/data/repository/payment_repository_impl.dart';
 import 'package:mongo_ai/landing/data/repository/privacy_policies_repository_impl.dart';
+import 'package:mongo_ai/landing/domain/repository/payment_repository.dart';
 import 'package:mongo_ai/landing/domain/repository/privacy_policies_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -158,32 +162,41 @@ final toggleBookmarkUseCaseProvider = Provider<ToggleBookmarkUseCase>((ref) {
   return ToggleBookmarkUseCase(workbookRepository);
 });
 
-final moveTrashWorkbookUseCaseProvider = Provider<MoveTrashWorkbookUseCase>((ref) {
+final moveTrashWorkbookUseCaseProvider = Provider<MoveTrashWorkbookUseCase>((
+  ref,
+) {
   final workbookRepository = ref.watch(workbookRepositoryProvider);
   return MoveTrashWorkbookUseCase(workbookRepository);
 });
 
-final moveTrashWorkbookListUseCaseProvider = Provider<MoveTrashWorkbookListUseCase>((ref) {
-   final workbookRepository = ref.watch(workbookRepositoryProvider);
-   return MoveTrashWorkbookListUseCase(workbookRepository);
-});
+final moveTrashWorkbookListUseCaseProvider =
+    Provider<MoveTrashWorkbookListUseCase>((ref) {
+      final workbookRepository = ref.watch(workbookRepositoryProvider);
+      return MoveTrashWorkbookListUseCase(workbookRepository);
+    });
 
-final changeFolderWorkbookListUseCaseProvider = Provider<ChangeFolderWorkbookListUseCase>((ref) {
-  final workbookRepository = ref.watch(workbookRepositoryProvider);
-  return ChangeFolderWorkbookListUseCase(workbookRepository);
-});
+final changeFolderWorkbookListUseCaseProvider =
+    Provider<ChangeFolderWorkbookListUseCase>((ref) {
+      final workbookRepository = ref.watch(workbookRepositoryProvider);
+      return ChangeFolderWorkbookListUseCase(workbookRepository);
+    });
 
-final bookmarkWorkbookListUseCaseProvider = Provider<BookmarkWorkbookListUseCase>((ref) {
-  final workbookRepository = ref.watch(workbookRepositoryProvider);
-  return BookmarkWorkbookListUseCase(workbookRepository);
-});
+final bookmarkWorkbookListUseCaseProvider =
+    Provider<BookmarkWorkbookListUseCase>((ref) {
+      final workbookRepository = ref.watch(workbookRepositoryProvider);
+      return BookmarkWorkbookListUseCase(workbookRepository);
+    });
 
-final restoreWorkbookListUseCaseProvider = Provider<RestoreWorkbookListUseCase>((ref) {
-  final workbookRepository = ref.watch(workbookRepositoryProvider);
-  return RestoreWorkbookListUseCase(workbookRepository);
-});
+final restoreWorkbookListUseCaseProvider = Provider<RestoreWorkbookListUseCase>(
+  (ref) {
+    final workbookRepository = ref.watch(workbookRepositoryProvider);
+    return RestoreWorkbookListUseCase(workbookRepository);
+  },
+);
 
-final deleteWorkbookListUseCaseProvider = Provider<DeleteWorkbookListUseCase>((ref) {
+final deleteWorkbookListUseCaseProvider = Provider<DeleteWorkbookListUseCase>((
+  ref,
+) {
   final workbookRepository = ref.watch(workbookRepositoryProvider);
   return DeleteWorkbookListUseCase(workbookRepository);
 });
@@ -276,10 +289,29 @@ final problemRepositoryProvider = Provider<ProblemRepository>((ref) {
 });
 
 // -----------------------------------
+// Payment
+
+final paymentDataSourceProvider = Provider<PaymentDataSource>((ref) {
+  final client = ref.watch(supabaseClientProvider);
+  return PaymentDataSourceImpl(client: client);
+});
+
+final paymentRepositoryProvider = Provider<PaymentRepository>((ref) {
+  final paymentDataSource = ref.watch(paymentDataSourceProvider);
+  final authDataSource = ref.watch(authDataSourceProvider);
+  return PaymentRepositoryImpl(
+    aymentDataSource: paymentDataSource,
+    authDataSource: authDataSource,
+  );
+});
+
+// -----------------------------------
 // landing
 // -----------------------------------
 // DataSource
-final privacyPoliciesDataSourceProvider = Provider<PrivacyPoliciesDataSource>((ref) {
+final privacyPoliciesDataSourceProvider = Provider<PrivacyPoliciesDataSource>((
+  ref,
+) {
   final client = ref.watch(supabaseClientProvider);
   return PrivacyPoliciesDataSourceImpl(client: client);
 });
@@ -287,7 +319,9 @@ final privacyPoliciesDataSourceProvider = Provider<PrivacyPoliciesDataSource>((r
 // -----------------------------------
 // Repository
 
-final privacyPoliciesRepositoryProvider = Provider<PrivacyPoliciesRepository>((ref) {
+final privacyPoliciesRepositoryProvider = Provider<PrivacyPoliciesRepository>((
+  ref,
+) {
   final dataSource = ref.watch(privacyPoliciesDataSourceProvider);
   return PrivacyPoliciesRepositoryImpl(privacyPoliciesDataSource: dataSource);
 });

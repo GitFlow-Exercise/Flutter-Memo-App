@@ -5,13 +5,16 @@ import 'package:mongo_ai/landing/presentation/components/faq_item.dart';
 import 'package:mongo_ai/landing/presentation/components/landing_footer.dart';
 import 'package:mongo_ai/landing/presentation/components/price_card.dart';
 import 'package:mongo_ai/landing/presentation/payment_plans/controller/payment_plans_action.dart';
+import 'package:mongo_ai/landing/presentation/payment_plans/controller/payment_plans_state.dart';
 
 class PaymentPlansScreen extends StatefulWidget {
+  final PaymentPlansState state;
   final void Function(PaymentPlansAction action) onAction;
 
   const PaymentPlansScreen({
     super.key,
-    required this.onAction
+    required this.onAction,
+    required this.state,
   });
 
   @override
@@ -43,7 +46,7 @@ class _PaymentPlansScreenState extends State<PaymentPlansScreen> {
                   const SizedBox(height: 24),
                   const Text(
                     '하나의 지문으로 여러 유형의 문제를 손쉽게 만들어내는\n교사를 위한 AI 기반 문제집 생성 도구를 확장시켜보세요',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 18,
                       fontWeight: FontWeight.w400,
@@ -75,8 +78,13 @@ class _PaymentPlansScreenState extends State<PaymentPlansScreen> {
                       '기본 문제 유형 지원',
                       '기본 폴더 관리 시스템',
                     ],
-                    buttonText: '시작하기',
+                    isHighlighted: false,
+                    isPremium: widget.state.isPremiumUser,
+                    buttonText: !widget.state.isAuthenticated ? '시작하기' : '사용 중',
                     onButtonPressed: () {
+                      if (widget.state.isAuthenticated) {
+                        return;
+                      }
                       widget.onAction(const PaymentPlansAction.onStartClick());
                     },
                   ),
@@ -98,11 +106,19 @@ class _PaymentPlansScreenState extends State<PaymentPlansScreen> {
                       '고급 문제 유형 지원',
                       '우선 기술 지원',
                     ],
-                    buttonText: '지금 업그레이드',
+                    buttonText:
+                        widget.state.isPremiumUser ? '구독 중' : '지금 업그레이드',
                     isHighlighted: true,
                     isRecommended: true,
+                    isPremium: widget.state.isPremiumUser,
                     onButtonPressed: () {
-                      widget.onAction(const PaymentPlansAction.onUpgradeClick());
+                      if (widget.state.isPremiumUser &&
+                          widget.state.isAuthenticated) {
+                        return;
+                      } // 로그인 및 구독 중인 경우 클릭 무시
+                      widget.onAction(
+                        const PaymentPlansAction.onUpgradeClick(),
+                      );
                     },
                   ),
                 ],
@@ -127,18 +143,21 @@ class _PaymentPlansScreenState extends State<PaymentPlansScreen> {
                   Container(
                     constraints: const BoxConstraints(maxWidth: 800),
                     child: const Column(
-                      children: const [
+                      children: [
                         FaqItem(
                           question: '무료 플랜과 프로 플랜의 주요 차이점은 무엇인가요?',
-                          answer: '프로 플랜은 무제한 문제 생성, 무제한 이메일 전송, 문서 병합 기능, 무제한 사용자 등 더 많은 고급 기능을 제공합니다. 대규모 팀이나 많은 문제집을 생성해야 하는 교사에게 적합합니다.',
+                          answer:
+                              '프로 플랜은 무제한 문제 생성, 무제한 이메일 전송, 문서 병합 기능, 무제한 사용자 등 더 많은 고급 기능을 제공합니다. 대규모 팀이나 많은 문제집을 생성해야 하는 교사에게 적합합니다.',
                         ),
                         FaqItem(
                           question: '결제는 어떻게 이루어지나요?',
-                          answer: '프로 플랜은 월간 또는 연간 구독으로 이용 가능합니다. 신용카드, 계좌이체 등 다양한 결제 방법을 지원합니다. 연간 결제 시 20% 할인 혜택이 적용됩니다.',
+                          answer:
+                              '프로 플랜은 월간 또는 연간 구독으로 이용 가능합니다. 신용카드, 계좌이체 등 다양한 결제 방법을 지원합니다. 연간 결제 시 20% 할인 혜택이 적용됩니다.',
                         ),
                         FaqItem(
                           question: '언제든지 플랜을 변경할 수 있나요?',
-                          answer: '네, 언제든지 플랜을 업그레이드하거나 다운그레이드할 수 있습니다. 업그레이드는 즉시 적용되며, 다운그레이드는 현재 구독 기간이 끝난 후 적용됩니다.',
+                          answer:
+                              '네, 언제든지 플랜을 업그레이드하거나 다운그레이드할 수 있습니다. 업그레이드는 즉시 적용되며, 다운그레이드는 현재 구독 기간이 끝난 후 적용됩니다.',
                         ),
                       ],
                     ),
@@ -198,7 +217,13 @@ class _PaymentPlansScreenState extends State<PaymentPlansScreen> {
                       height: 48,
                       child: ElevatedButton(
                         onPressed: () {
-                          widget.onAction(const PaymentPlansAction.onUpgradeClick());
+                          if (widget.state.isPremiumUser &&
+                              widget.state.isAuthenticated) {
+                            return;
+                          } // 로그인 및 구독 중인 경우 클릭 무시
+                          widget.onAction(
+                            const PaymentPlansAction.onUpgradeClick(),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColor.primary,
@@ -206,9 +231,9 @@ class _PaymentPlansScreenState extends State<PaymentPlansScreen> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                        child: const Text(
-                          '지금 업그레이드',
-                          style: TextStyle(
+                        child: Text(
+                          widget.state.isPremiumUser ? '구독 중' : '지금 업그레이드',
+                          style: const TextStyle(
                             fontFamily: 'Inter',
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
@@ -222,10 +247,13 @@ class _PaymentPlansScreenState extends State<PaymentPlansScreen> {
               ),
             ),
 
-
-            LandingFooter(onPressedPrivacyPolicies: () {
-              widget.onAction(const PaymentPlansAction.onPressedPrivacyPolicies());
-            },),
+            LandingFooter(
+              onPressedPrivacyPolicies: () {
+                widget.onAction(
+                  const PaymentPlansAction.onPressedPrivacyPolicies(),
+                );
+              },
+            ),
           ],
         ),
       ),

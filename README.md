@@ -45,7 +45,7 @@
 | 김옥현 | 사용자 인증, 디자인, 기획 | [okstring](https://github.com/okstring)     |
 | 임명우 | (추가, 수정 예정)         | [Dansot4891](https://github.com/Dansot4891) |
 | 최지민 | (추가, 수정 예정)         | [irmu98](https://github.com/irmu98)         |
-| 허준호 | (추가, 수정 예정)         | [helljh](https://github.com/helljh)         |
+| 허준호 | 문제집 생성(순서 배치, 수정, 저장), 결제 | [helljh](https://github.com/helljh)         |
 
 
 
@@ -87,6 +87,7 @@ lib/
 │   ├── enum/             # 열거형 정의
 │   ├── extension/        # 확장 메서드
 │   ├── result/           # 결과 처리 래퍼
+│   ├── event/            # 전역 이벤트 처리
 │   ├── routing/          # 라우팅 설정
 │   ├── state/            # 전역 상태 관리
 │   ├── style/            # 스타일 정의

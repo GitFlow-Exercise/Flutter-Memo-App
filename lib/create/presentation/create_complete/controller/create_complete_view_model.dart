@@ -5,8 +5,10 @@ import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/exception/app_exception.dart';
 import 'package:mongo_ai/core/extension/ref_extension.dart';
 import 'package:mongo_ai/core/result/result.dart';
+import 'package:mongo_ai/core/routing/routes.dart';
 import 'package:mongo_ai/core/state/current_folder_id_state.dart';
 import 'package:mongo_ai/core/state/current_team_id_state.dart';
+import 'package:mongo_ai/core/utils/app_dialog.dart';
 import 'package:mongo_ai/create/domain/model/create_complete_params.dart';
 import 'package:mongo_ai/create/presentation/create_complete/controller/create_complete_state.dart';
 import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
@@ -35,10 +37,30 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
     state = state.copyWith(title: title);
   }
 
-  void toggleEditMode() {
-    state = state.copyWith(
-      isEditMode: false,
-    ); // TODO: 결제 기능 추가 후 결제한 유저만 수정가능하도록 설정할 예정
+  Future<void> toggleEditMode() async {
+    bool isPremium = ref
+        .read(authDataSourceProvider)
+        .checkMetadata('is_premium');
+    if (isPremium) {
+      state = state.copyWith(isEditMode: !state.isEditMode);
+    } else {
+      ref.showDialog(
+        builder: (context) {
+          return AppDialog.paymentAlertDialog(
+            title: '멤버십 구독자 전용 기능',
+            content: '프로 플랜 구독하고\n 더 많은 기능을 사용해보세요!',
+            buttonTap:
+                () => ref.navigate(
+                  Routes.paymentPlans,
+                  extra: CreateCompleteParams(
+                    problems: state.problems,
+                    isDoubleColumns: state.isDoubleColumns,
+                  ),
+                ),
+          );
+        },
+      );
+    }
   }
 
   // pdf data 설정
@@ -120,22 +142,17 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
   }
 
   Future<bool> saveProblems() async {
-    String? userId;
     final teamId = ref.watch(currentTeamIdStateProvider);
     final folderId = ref.watch(currentFolderIdStateProvider);
-    final userProfile = ref.watch(getCurrentUserProfileProvider);
+    final userId = ref.watch(authRepositoryProvider).userId;
 
-    userProfile.whenData((user) {
-      switch (user) {
-        case Success(data: final user):
-          userId = user.userId;
-        case Error():
-          ref.showSnackBar('유저 정보를 불러오는데 실패했습니다.');
-      }
-    });
+    if (userId == null) {
+      ref.showSnackBar('사용자 정보가 존재하지 않습니다.');
+      return false;
+    }
 
-    if (teamId == null || folderId == null || userId == null) {
-      ref.showSnackBar('필요한 정보를 불러오는 데 실패하였습니다.');
+    if (teamId == null) {
+      ref.showSnackBar('선택된 팀이 없습니다.');
       return false;
     }
 
