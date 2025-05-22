@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
+import 'package:mongo_ai/create/domain/model/problem.dart';
 
 part 'create_template_action.freezed.dart';
 

@@ -10,8 +10,8 @@ import 'package:mongo_ai/core/state/current_folder_id_state.dart';
 import 'package:mongo_ai/core/state/current_team_id_state.dart';
 import 'package:mongo_ai/core/utils/app_dialog.dart';
 import 'package:mongo_ai/create/domain/model/create_complete_params.dart';
+import 'package:mongo_ai/create/domain/model/problem.dart';
 import 'package:mongo_ai/create/presentation/create_complete/controller/create_complete_state.dart';
-import 'package:mongo_ai/create/presentation/create_template/controller/create_template_state.dart';
 import 'package:mongo_ai/dashboard/data/dto/workbook_table_dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -171,7 +171,7 @@ class CreateCompleteViewModel extends _$CreateCompleteViewModel {
       case Success(data: final workbook):
         final result = await ref
             .read(problemRepositoryProvider)
-            .createProblems(state.problems, workbook.workbookId.toString());
+            .createProblems(state.problems, workbook.workbookId);
         switch (result) {
           case Success():
             return true;

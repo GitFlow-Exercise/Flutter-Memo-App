@@ -5,10 +5,10 @@ part 'problem_dto.g.dart';
 @JsonSerializable()
 class ProblemDto {
   @JsonKey(name: 'problem_id')
-  final String? problemId;
+  final int? problemId;
 
   @JsonKey(name: 'workbook_id')
-  final String workbookId;
+  final int workbookId;
 
   @JsonKey(name: 'problem_label')
   final String problemLabel;

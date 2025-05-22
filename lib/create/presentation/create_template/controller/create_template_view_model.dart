@@ -3,6 +3,7 @@ import 'package:mongo_ai/core/di/providers.dart';
 import 'package:mongo_ai/core/extension/ref_extension.dart';
 import 'package:mongo_ai/core/result/result.dart';
 import 'package:mongo_ai/create/domain/model/create_template_params.dart';
+import 'package:mongo_ai/create/domain/model/problem.dart';
 import 'package:mongo_ai/create/domain/model/request/input_content.dart';
 import 'package:mongo_ai/create/domain/model/request/message_input.dart';
 import 'package:mongo_ai/create/domain/model/request/open_ai_body.dart';
