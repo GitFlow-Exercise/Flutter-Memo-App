@@ -43,7 +43,7 @@
 | 팀원   | 역할                      | github profile                              |
 | ------ | ------------------------- | ------------------------------------------- |
 | 김옥현 | 사용자 인증, 디자인, 기획 | [okstring](https://github.com/okstring)     |
-| 임명우 | (추가, 수정 예정)         | [Dansot4891](https://github.com/Dansot4891) |
+| 임명우 | 랜딩 페이지 UI, 문제집 생성(파일 Input, 문제 생성) | [Dansot4891](https://github.com/Dansot4891) |
 | 최지민 | 대시보드, SQL DB설계(RLS), 구글 애널리틱스  | [irmu98](https://github.com/irmu98)         |
 | 허준호 | 문제집 생성(순서 배치, 수정, 저장), 결제 | [helljh](https://github.com/helljh)         |
 
