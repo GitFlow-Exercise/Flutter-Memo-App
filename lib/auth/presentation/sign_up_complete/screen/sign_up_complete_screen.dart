@@ -72,7 +72,7 @@ class _SignUpCompleteScreenState extends State<SignUpCompleteScreen>
                   children: [
                     Center(
                       child: Lottie.asset(
-                        'lottie/check_lottie.json',
+                        'assets/lottie/check_lottie.json',
                         controller: _controller,
                         onLoaded: (composition) {
                           _controller

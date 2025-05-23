@@ -110,6 +110,7 @@ flutter:
   assets:
     - .env
     - assets/images/
+    - assets/lottie/
 
   fonts:
     - family: Pretendard
