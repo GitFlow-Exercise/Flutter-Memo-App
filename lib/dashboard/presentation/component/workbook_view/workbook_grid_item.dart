@@ -129,7 +129,7 @@ class WorkbookGridItem extends ConsumerWidget {
                               const Gap(10),
                               _gridTile(
                                 Icons.folder,
-                                workbook.folderName.toString(),
+                                (workbook.folderName ?? 'Unknown').toString(),
                               ),
                               const Spacer(),
                             ],
