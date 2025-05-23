@@ -340,7 +340,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                       child: Center(
                         child: Image.asset(
-                          'images/mongo_ai_logo.png',
+                          'assets/images/mongo_ai_logo.png',
                           width: 16,
                           height: 16,
                         ),
