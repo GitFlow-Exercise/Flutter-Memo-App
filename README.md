@@ -16,10 +16,11 @@
      font-weight: bold;
      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
      transition: background-color 0.3s ease;
-  " onmouseover="this.style.backgroundColor='#2bb67c'" onmouseout="this.style.backgroundColor='#3ECF8E'">
-    Mongo AI 바로가기 🚀
+  "onmouseover="this.style.backgroundColor='#2bb67c'" onmouseout="this.style.backgroundColor='#3ECF8E'">
+    <img width="200" alt="mongo_ai_button" src="https://github.com/user-attachments/assets/c3898fd6-a916-45f5-b1bf-c2714701423d" />
   </a>
 </div>
+
 
 ## 프로젝트 소개 🚀
 
@@ -27,7 +28,8 @@
 
 ### 왜 MongoAI인가요? 🤔
 
-교사들은 평균적으로 주당 10-15시간을 교육 자료 준비에 사용합니다. MongoAI는 이 시간을 획기적으로 단축시켜 교사들이 학생 지도에 더 집중할 수 있도록 합니다. 단 몇 분 만에 다양한 유형의 문제를 생성하고 커스터마이징할 수 있습니다.
+교사들은 많은 시간을 교육 자료 준비에 사용합니다. MongoAI는 이 시간을 획기적으로 단축시켜 교사들이 학생 지도에 더 집중할 수 있도록 합니다. 단 몇 분 만에 다양한 유형의 문제를 생성하고 커스터마이징할 수 있습니다.
+
 
 ## 주요 기능 ✨
 
@@ -42,7 +44,7 @@
 
 | 팀원   | 역할                      | github profile                              |
 | ------ | ------------------------- | ------------------------------------------- |
-| 김옥현 | 사용자 인증, 디자인, 기획 | [okstring](https://github.com/okstring)     |
+| 김옥현 | 사용자 인증, PDF 모듈, 디자인, 기획 | [okstring](https://github.com/okstring)     |
 | 임명우 | 웹 배포, 랜딩 페이지 UI, 문제집 생성(파일 Input, 문제 생성) | [Dansot4891](https://github.com/Dansot4891) |
 | 최지민 | 대시보드, SQL DB설계(RLS), 구글 애널리틱스  | [irmu98](https://github.com/irmu98)         |
 | 허준호 | 문제집 생성(순서 배치, 수정, 저장), 결제 | [helljh](https://github.com/helljh)         |
@@ -174,6 +176,39 @@ MongoAI 팀은 다음과 같은 문화를 가지고 있습니다:
 - **2주차(2025. 05. 13~ 2025. 05. 19)**: 디자인, 기획에 맞춰 개발 착수
 - **3주차(2025. 05. 20~ 2025. 05. 26)**: 추가 기능 구현, 리팩토링 및 시연 영상, 발표 준비
 - **2025. 05. 27**: 최종 발표
+
+
+## 스크린샷 🧑‍💻
+
+| 랜딩페이지 |
+| ------ |
+| ![스크린샷 2025-05-24 오후 6 17 24](https://github.com/user-attachments/assets/d2eef5b4-cd93-4a3f-821a-16b68da656ab) |
+
+| 사용자 인증 |
+| ------ |
+| ![스크린샷 2025-05-24 오후 6 17 35](https://github.com/user-attachments/assets/fc5fe2ee-d40b-4180-b3b9-11fb59bbef15) |
+
+| 대시보드 |
+| ------ |
+| ![스크린샷 2025-05-24 오후 6 29 32](https://github.com/user-attachments/assets/42c1a1e7-dc9d-48d1-9f9d-110195dc211d) |
+
+| 문제집 생성 |
+| ------ |
+| ![스크린샷 2025-05-24 오후 6 19 12](https://github.com/user-attachments/assets/02a155cc-8bf1-492f-a3de-3722e825ba63) |
+
+| 문제집 생성 |
+| ------ |
+| ![스크린샷 2025-05-24 오후 6 19 32](https://github.com/user-attachments/assets/527b8863-34ee-4819-9727-ed0d26a68a1a) |
+
+
+| 문제집 생성 |
+| ------ |
+| ![스크린샷 2025-05-24 오후 6 19 54](https://github.com/user-attachments/assets/fd1e9833-3be4-4a67-99f3-7b1b4d43c258) |
+
+
+| 문제집 생성 |
+| ------ |
+| ![스크린샷 2025-05-24 오후 6 20 27](https://github.com/user-attachments/assets/fd407559-57ee-4fee-8afc-f206c7910302) |
 
 ------
 
